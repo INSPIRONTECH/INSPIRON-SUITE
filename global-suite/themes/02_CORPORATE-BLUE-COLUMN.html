@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Corporate Blue &middot; Column Shell</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+		:root {
+			--accent: #2563EB; 
+			--accent-soft: #eff6ff; 
+			--accent-strong: #1e40af;
+			--text-main: #0f172a; 
+			--text-muted: #64748b;
+			--border: #e2e8f0; 
+			--border-soft: #f8fafc; 
+			--border-strong: #cbd5e1;
+			--inspiron-cyan: #00D2FF; 
+			--inspiron-gold: #FFD700;
+			--bg: #f5f5f5;
+			--paper: #fff;
+		}
+
+		body {
+			background-color: var(--bg);
+			display: flex;
+			margin: 0;
+			padding: 0;
+			font-family: 'Inter', "Helvetica Neue", Helvetica, Arial, sans-serif;
+			color: var(--text-main);
+			-webkit-font-smoothing: antialiased;
+		}
+
+		main {
+			background-color: var(--paper);
+			margin: 1.5rem auto;
+			border: 1px solid #e5e5e5;
+			border-radius: 5px;
+			box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.06);
+			padding: 35px;
+			width: 210mm;
+			min-height: 297mm;
+			box-sizing: border-box;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			:root {
+				--bg: #1c1917;
+				--paper: #1c1917;
+				--text-main: #f5f5f5;
+				--text-muted: #a8a29e;
+				--border: #2e2a24;
+				--border-strong: #443e34;
+				--accent-soft: #172554;
+				--accent-strong: #3b82f6;
+				--accent: #3b82f6;
+			}
+			main {
+				border: 1px solid #2e2a24;
+				box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.50);
+			}
+		}
+
+		@page { size: A4; margin: 0; }
+		@media print {
+			body { background-color: initial; display: initial; }
+			main {
+				padding: 0;
+				border: initial;
+				box-shadow: initial;
+				border-radius: initial;
+				margin: 0;
+				width: 100%;
+				min-height: initial;
+				background-color: transparent;
+			}
+		}
+
+		address { font-style: normal; line-height: 1.6; }
+		dt { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 2px; }
+		dd { font-weight: 700; font-size: 12px; margin-bottom: 14px; }
+		
+		.top-bar { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; border: 1px solid var(--border-strong); border-radius: 8px; overflow: hidden; margin-bottom: 18px; }
+		.top-col { padding: 14px 16px; background: var(--paper); }
+		.top-col.center { border-left: 1px solid var(--border-strong); border-right: 1px solid var(--border-strong); background: var(--accent); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-width: 220px; }
+		.top-col.right { display: flex; justify-content: flex-end; align-items: flex-start; }
+		
+		h1#title { font-size: 24px; font-weight: 900; letter-spacing: 0.18em; text-transform: uppercase; color: #fff; margin: 0; }
+		.title-kicker { font-size: 9px; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase; opacity: 0.75; margin-top: 5px; }
+		#business-logo img { max-height: 55px; max-width: 200px; object-fit: contain; display: inline-block; }
+		
+		.party-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: var(--accent-strong); margin-bottom: 6px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+		
+		.meta-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0; border: 1px solid var(--border-strong); border-radius: 8px; overflow: hidden; margin-bottom: 18px; }
+		.meta-cell { padding: 10px 14px; border-right: 1px solid var(--border-strong); background: var(--paper); }
+		.meta-cell:last-child { border-right: 0; }
+		.meta-cell-head { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-bottom: 4px; }
+		.meta-cell-value { font-size: 13px; font-weight: 700; color: var(--text-main); }
+		
+		#description { margin-bottom: 16px; padding: 10px 13px; background: var(--accent-soft); border-left: 3px solid var(--accent); font-size: 12px; font-weight: 600; color: var(--text-main); margin-top: 0; }
+		
+		.table-shell { border: 1px solid var(--border-strong); border-radius: 8px; overflow: hidden; background: var(--paper); }
+		table { width: 100%; border-collapse: collapse; font-size: 12px; }
+		tr#table-headers th { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: .11em; padding: 10px; background: var(--accent-strong); color: #fff; text-align: start; border-right: 1px solid rgba(255,255,255,.12); }
+		tr#table-headers th:last-child { border-right: 0; }
+		tbody#table-rows td { padding: 9px 10px; vertical-align: top; border-top: 1px solid var(--border-soft); color: var(--text-main); }
+		tbody#table-rows tr.row:nth-child(even) td { background: var(--border-soft); }
+		tbody#table-rows tr.last-row td { padding-bottom: 16px; border-bottom: 2px solid var(--border-strong); }
+		
+		/* TOTALS */
+		tbody#table-rows tr.total td {
+			border-top: none;
+		}
+		tbody#table-rows tr.total td:first-child { text-align: end; font-size: 10px; text-transform: uppercase; color: var(--text-muted); }
+		tbody#table-rows tr.total td:last-child { border: 1px solid var(--border-strong); text-align: right; font-weight: 700; background: var(--paper); padding: 7px 10px; min-width: 130px; color: var(--text-main); }
+		tbody#table-rows tr.total:last-child td:last-child { background: var(--accent-soft); color: var(--accent-strong); font-size: 16px; font-weight: 900; border-color: var(--accent); }
+	</style>
+</head>
+<body>
+	<main id="document-root">
+		<div style="padding: 2rem; text-align: center; color: var(--text-muted); font-weight: 600;">
+			Rearing System Architecture...
+		</div>
+	</main>
+
+	<script>
+		fetch('/api4/view-v1' + window.location.search, {
+			headers: { 'Accept': 'application/json' },
+			credentials: 'same-origin',
+		})
+		.then(res => {
+			if (!res.ok) throw new Error();
+			return res.json();
+		})
+		.then(data => {
+			if (data.title) {
+				document.title = `${data.title} ${data.reference || ''} — ${data.business?.name || data.businessName || "Document"}`;
+			}
+			renderDocument(data);
+		})
+		.catch(() => {
+			document.getElementById('document-root').innerHTML = `
+				<div style="padding: 3rem; color: #dc2626; font-weight: 700; text-align: center; font-family: monospace;">
+					SYSTEM FAULT: FAILED TO FETCH VIEW DATA
+				</div>
+			`;
+		});
+
+		function renderDocument(data) {
+			const root = document.getElementById('document-root');
+			
+			// Logo
+			let logoHtml = '';
+			if (data.business?.logo) {
+				logoHtml = `<div id="business-logo"><img src="${data.business.logo}" style="max-height: 55px; max-width: 200px; object-fit: contain;" alt="" /></div>`;
+			} else {
+				logoHtml = `<div style="font-weight: 800; font-size: 16px; color: var(--accent-strong); text-transform: uppercase;">${data.business?.name || data.businessName || ''}</div>`;
+			}
+
+			// Title / Header Center
+			let subtitlesHtml = (data.subtitles || []).map(s => `<p class="doc-subtitle" style="font-size: 10px; font-weight: 600; opacity: 0.85; margin: 3px 0 0 0; text-transform: uppercase; letter-spacing: 0.1em; color: #fff;">${s}</p>`).join('');
+			
+			// Recipient Column (Left of top bar)
+			let recipientColHtml = '';
+			if (data.recipient) {
+				let recDetails = [];
+				if (data.recipient.code) recDetails.push(`Code: ${data.recipient.code}`);
+				if (data.recipient.email) recDetails.push(`Email: ${data.recipient.email}`);
+
+				recipientColHtml = `
+					<div class="top-col">
+						<div class="party-label">Bill To</div>
+						<div class="party-name" style="font-size: 13px; font-weight: 700; margin-bottom: 4px; color: var(--text-main);">${data.recipient.name || ''}</div>
+						<div class="party-text" style="font-size: 11px; color: var(--text-muted); white-space: pre-line;">${data.recipient.address || ''}</div>
+						${recDetails.length ? `<div style="font-size: 10px; color: var(--text-muted); margin-top: 4px; font-family: monospace;">${recDetails.join('<br>')}</div>` : ''}
+					</div>
+				`;
+			} else {
+				recipientColHtml = `
+					<div class="top-col">
+						<div class="party-label">Issued By</div>
+						<div class="party-name" style="font-size: 13px; font-weight: 700; margin-bottom: 4px; color: var(--text-main);">${data.business?.name || data.businessName || ''}</div>
+						<div class="party-text" style="font-size: 11px; color: var(--text-muted); white-space: pre-line;">${data.business?.address || ''}</div>
+					</div>
+				`;
+			}
+
+			// Header assembly
+			let topBarHtml = `
+				<div class="top-bar">
+					${recipientColHtml}
+					<div class="top-col center">
+						<h1 id="title">${data.title || "Document"}</h1>
+						<div class="title-kicker">Corporate Blue &middot; Column Shell</div>
+						${subtitlesHtml}
+					</div>
+					<div class="top-col right">
+						${logoHtml}
+					</div>
+				</div>
+			`;
+
+			// Metadata Strip assembly
+			let metaFields = [];
+			if (data.reference) metaFields.push({ label: 'Reference', text: data.reference });
+			(data.fields || []).forEach(f => {
+				if (f.displayAtTheTop || !data.recipient) metaFields.push({ label: f.label, text: f.text });
+			});
+			metaFields.push({ label: 'Issued By', text: data.business?.name || data.businessName || '' });
+
+			let metaStripHtml = '';
+			if (metaFields.length > 0) {
+				metaStripHtml = `
+					<div class="meta-strip" id="meta-strip">
+						${metaFields.map(m => `
+							<div class="meta-cell">
+								<div class="meta-cell-head">${m.label}</div>
+								<div class="meta-cell-value">${m.text || ''}</div>
+							</div>
+						`).join('')}
+					</div>
+				`;
+			}
+
+			// Description paragraph
+			let descriptionHtml = '';
+			if (data.table?.description) {
+				descriptionHtml = `<p id="description">${data.table.description}</p>`;
+			}
+
+			// Table Column Headers and recursive rows processor
+			let tableHtml = '';
+			if (data.table) {
+				let headersHtml = '<tr>' + (data.table.columns || []).map(c => `<th class="align-${c.align || 'start'}" style="text-align: ${c.align === 'right' ? 'right' : (c.align === 'center' ? 'center' : 'left')}; ${c.shrinkToFit ? 'width: 1%; white-space: nowrap;' : ''}">${c.label}</th>`).join('') + '</tr>';
+				
+				let rowsHtml = '';
+				if (data.table.rows) {
+					function processRows(rowsArray) {
+						return rowsArray.map(r => {
+							if (!r.cells) return '';
+							let trClass = r.isTotalRow ? 'row row-total' : 'row';
+							let trStyle = r.isTotalRow ? 'font-weight: 700;' : '';
+							let inner = r.cells.length === 1 && r.rows ? `<td colspan="${data.table.columns.length}" style="font-weight: 700; color: var(--accent-strong);">${r.cells[0].text}</td>` :
+								r.cells.map((cell, idx) => {
+									const col = data.table.columns[idx] || {};
+									let cellContent = cell.image?.url ? `<img src="${cell.image.url}" style="max-width: 100px;" alt=""/>` : (cell.text || "").split("\n").join("<br />");
+									if (cell.link?.url) cellContent = `<a href="${cell.link.url}" target="_top" style="color: var(--accent); text-decoration: none;">${cellContent}</a>`;
+									
+									let alignStyle = col.align === 'right' ? 'text-align: right;' : (col.align === 'center' ? 'text-align: center;' : 'text-align: left;');
+									let nowrapStyle = col.nowrap ? 'white-space: nowrap;' : '';
+									let emphasisClass = (col.emphasis || r.isTotalRow) ? 'font-weight: 700;' : '';
+									
+									return `<td class="align-${col.align || 'start'}" style="${alignStyle} ${nowrapStyle} ${emphasisClass}">${cellContent}</td>`;
+								}).join('');
+							return `<tr class="${trClass}" style="${trStyle}">${inner}</tr>` + (r.rows ? processRows(r.rows) : '');
+						}).join('');
+					}
+
+					const tempTbody = document.createElement('tbody');
+					tempTbody.innerHTML = processRows(data.table.rows);
+					const rowEls = tempTbody.querySelectorAll('tr.row');
+					if (rowEls.length > 0) {
+						rowEls[rowEls.length - 1].classList.add('last-row');
+					}
+					
+					// Append totals
+					if (data.totals) {
+						data.totals.forEach((total, idx) => {
+							const isLast = idx === data.totals.length - 1;
+							const trClass = isLast ? 'total last-total' : 'total';
+							const labelStyle = total.emphasis ? 'font-weight: 800;' : 'font-weight: 700;';
+							const valueStyle = total.emphasis ? 'font-weight: 800;' : 'font-weight: 700;';
+							
+							const tr = document.createElement('tr');
+							tr.className = trClass;
+							tr.innerHTML = `
+								<td colspan="${data.table.columns.length - 1}" style="text-align: right; ${labelStyle}">${total.label}</td>
+								<td style="text-align: right; ${valueStyle}">${total.text}</td>
+							`;
+							tempTbody.appendChild(tr);
+						});
+					}
+					
+					rowsHtml = tempTbody.innerHTML;
+				}
+
+				tableHtml = `
+					<div class="table-shell" style="margin-bottom: 25px;">
+						<table style="width: 100%; border-collapse: collapse;">
+							<thead>
+								<tr id="table-headers">${headersHtml}</tr>
+							</thead>
+							<tbody id="table-rows">
+								${rowsHtml}
+							</tbody>
+						</table>
+					</div>
+				`;
+			}
+
+			// Under-table fields (non-displayAtTheTop)
+			let bodyFieldsHtml = '';
+			let customFields = (data.fields || []).filter(f => !f.displayAtTheTop);
+			if (customFields.length > 0) {
+				bodyFieldsHtml = `<div id="custom-fields" style="margin-top: 15px; font-size: 12px; color: var(--text-main);">` +
+					customFields.map(f => `<div style="margin-bottom: 10px;"><strong style="color: var(--accent-strong);">${f.label}:</strong><br/>${(f.text || "").split("\n").join("<br/>")}</div>`).join('') +
+					`</div>`;
+			}
+
+			// Footers
+			let footersHtml = '';
+			if (data.footers && data.footers.length > 0) {
+				footersHtml = `
+					<div id="footers" style="margin-top: 20px; font-size: 11px; line-height: 1.6; color: var(--text-muted);">
+						${data.footers.map(f => `<div style="margin-top: 15px;">${f}</div>`).join('')}
+					</div>
+				`;
+			}
+
+			// Status Badge stamp
+			let statusHtml = '';
+			if (data.status?.text) {
+				let badgeStyle = `border: 2px solid var(--accent); padding: 8px 18px; font-size: 16px; font-weight: 800; text-transform: uppercase; color: var(--accent-strong); background: var(--accent-soft); display: inline-block;`;
+				if (data.status.tone === 'negative') {
+					badgeStyle = `border: 2px solid red; padding: 8px 18px; font-size: 16px; font-weight: 800; text-transform: uppercase; color: red; background: #fff5f5; display: inline-block;`;
+				} else if (data.status.tone === 'positive') {
+					badgeStyle = `border: 2px solid #059669; padding: 8px 18px; font-size: 16px; font-weight: 800; text-transform: uppercase; color: #059669; background: #ecfdf5; display: inline-block;`;
+				}
+				statusHtml = `
+					<div id="status" style="text-align: center; margin-top: 15px; margin-bottom: 15px;">
+						<span style="${badgeStyle}">${data.status.text}</span>
+					</div>
+				`;
+			}
+
+			// Combine everything into main
+			root.innerHTML = `
+				<div style="flex-grow: 1;">
+					${topBarHtml}
+					${metaStripHtml}
+					${descriptionHtml}
+					${tableHtml}
+					${bodyFieldsHtml}
+					${footersHtml}
+					${statusHtml}
+				</div>
+				
+				<div class="footer-shell" style="margin-top: 40px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;">
+					<div class="it-authority-seal" style="display: flex; align-items: center; gap: 8px;">
+						<svg viewBox="0 0 358.846 350.3" width="22" height="22" fill="none" aria-hidden="true">
+							<path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
+							<path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
+							<circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
+						</svg>
+						<div class="it-authority-text" style="font-family: 'Neo Sans Pro', 'Inter', sans-serif; font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; line-height: 1.1;">
+							Architected by MD&nbsp;ABU&nbsp;HASAN<br>
+							<a href="https://inspiron.tech" target="_blank" class="it-link" style="color: var(--inspiron-cyan); text-decoration: none; font-weight: 900;">inspiron.tech</a>
+						</div>
+					</div>
+					<div class="footer-right" style="text-align: right; font-size: 8px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-muted);">
+						Corporate Billing Series<br>
+						<span style="display: block; color: var(--accent-strong); font-weight: 700; margin-top: 2px;">Blue Column Shell &middot; v2026</span>
+					</div>
+				</div>
+			`;
+
+			// Re-evaluate script elements inside dynamic footers
+			root.querySelectorAll('#footers script').forEach(script => {
+				const ns = document.createElement('script');
+				for (const attr of script.attributes) ns.setAttribute(attr.name, attr.value);
+				if (script.textContent) ns.textContent = script.textContent;
+				script.parentNode.replaceChild(ns, script);
+			});
+		}
+	</script>
+</body>
+</html>

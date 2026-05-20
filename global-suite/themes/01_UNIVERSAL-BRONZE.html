@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Universal Bronze — Secure Document</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+		:root {
+			--bg: #f5f5f5;
+			--paper: #fff;
+			--accent: #a67c3d;
+			--accent-soft: #fcfaf7;
+			--text-main: #171717;
+			--text-muted: #6b7280;
+			--border: #e5e7eb;
+			--border-strong: #d1d5db;
+			--inspiron-cyan: #00D2FF;
+			--inspiron-gold: #FFD700;
+		}
+
+		body {
+			background-color: var(--bg);
+			display: flex;
+			margin: 0;
+			padding: 0;
+			font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			color: var(--text-main);
+			-webkit-font-smoothing: antialiased;
+		}
+
+		main {
+			background-color: var(--paper);
+			margin: 1.5rem auto;
+			border: 1px solid #e5e5e5;
+			border-radius: 5px;
+			box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.06);
+			padding: 40px;
+			width: 210mm;
+			min-height: 297mm;
+			box-sizing: border-box;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			:root {
+				--bg: #1c1917;
+				--paper: #1c1917;
+				--text-main: #f5f5f5;
+				--text-muted: #a8a29e;
+				--border: #2e2a24;
+				--border-strong: #443e34;
+				--accent-soft: #272118;
+			}
+			main {
+				border: 1px solid #2e2a24;
+				box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.50);
+			}
+		}
+
+		@page { size: A4; margin: 0; }
+		@media print {
+			body { background-color: initial; display: initial; }
+			main {
+				padding: 0;
+				border: initial;
+				box-shadow: initial;
+				border-radius: initial;
+				margin: 0;
+				width: 100%;
+				min-height: initial;
+				background-color: transparent;
+			}
+		}
+
+		/* TABLE STYLES */
+		table { width: 100%; border-collapse: collapse; }
+		tr#table-headers th { 
+			font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+			padding: 10px; border: 1px solid var(--border-strong); 
+			background: #f9fafb; color: var(--accent); text-align: start;
+		}
+		tbody#table-rows td { padding: 10px; vertical-align: top; border-left: 1px solid var(--border); border-right: 1px solid var(--border); color: var(--text-main); }
+		tbody#table-rows tr.row:nth-child(even) td { background: #fafafa; }
+		tbody#table-rows tr.last-row td { border-bottom: 1px solid var(--border-strong); padding-bottom: 25px; }
+
+		/* TOTALS */
+		tbody#table-rows tr.total td {
+			border-left: none;
+			border-right: none;
+		}
+		tbody#table-rows tr.total td:first-child { text-align: end; font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
+		tbody#table-rows tr.total td:last-child { border: 1px solid var(--border-strong); text-align: right; padding: 8px 10px; font-weight: 700; background: #fff; color: var(--text-main); }
+		tbody#table-rows tr.total:last-child td:first-child { color: var(--accent); }
+		tbody#table-rows tr.total:last-child td:last-child { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-size: 16px; font-weight: 800; }
+
+		/* STATUS STAMP */
+		.status-badge {
+			display: inline-block;
+			font-size: 14px;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			padding: 8px 18px;
+			border: 3px solid var(--accent);
+			background: var(--accent-soft);
+			color: var(--accent);
+			font-family: 'Inter', sans-serif;
+			margin-bottom: 15px;
+		}
+		.status-badge.tone-positive {
+			border-color: #059669;
+			color: #059669;
+			background: rgba(5, 150, 105, 0.05);
+		}
+		.status-badge.tone-negative {
+			border-color: #dc2626;
+			color: #dc2626;
+			background: rgba(220, 38, 38, 0.05);
+		}
+		.status-badge.tone-neutral {
+			border-color: var(--accent);
+			color: var(--accent);
+			background: var(--accent-soft);
+		}
+	</style>
+</head>
+<body>
+	<main id="document-root">
+		<div style="padding: 2rem; text-align: center; color: var(--text-muted); font-weight: 600;">
+			Rearing System Architecture...
+		</div>
+	</main>
+
+	<script>
+		fetch('/api4/view-v1' + window.location.search, {
+			headers: { 'Accept': 'application/json' },
+			credentials: 'same-origin',
+		})
+		.then(res => {
+			if (!res.ok) throw new Error();
+			return res.json();
+		})
+		.then(data => {
+			if (data.title) {
+				document.title = `${data.title} ${data.reference || ''} — ${data.business?.name || data.businessName || "Document"}`;
+			}
+			renderDocument(data);
+		})
+		.catch(() => {
+			document.getElementById('document-root').innerHTML = `
+				<div style="padding: 3rem; color: #dc2626; font-weight: 700; text-align: center; font-family: monospace;">
+					SYSTEM FAULT: FAILED TO FETCH VIEW DATA
+				</div>
+			`;
+		});
+
+		function renderDocument(data) {
+			const root = document.getElementById('document-root');
+			
+			// Title & Subtitles
+			let subtitlesHtml = (data.subtitles || []).map(s => `<p class="doc-subtitle" style="font-size: 11px; font-family: 'Inter', sans-serif; color: var(--text-muted); margin: 3px 0 0 0;">${s}</p>`).join('');
+			let titleHtml = `
+				<div>
+					<h1 id="title" style="font-size: 32px; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; color: var(--text-main); margin: 0;">${data.title || "Document"}</h1>
+					<div class="title-kicker" style="font-size: 8px; font-weight: 700; letter-spacing: 3px; color: var(--accent); margin-top: 4px; text-transform: uppercase;">Universal Bronze · Secure Document</div>
+					${subtitlesHtml}
+				</div>
+			`;
+
+			// Logo
+			let logoHtml = '';
+			if (data.business?.logo) {
+				logoHtml = `<div id="business-logo" style="background: #fff; display: inline-block;"><img src="${data.business.logo}" style="max-height: 60px; max-width: 200px; object-fit: contain;" alt="" /></div>`;
+			} else {
+				logoHtml = `<div style="text-align: right; font-weight: 800; font-size: 18px; color: var(--accent); text-transform: uppercase;">${data.business?.name || data.businessName || ''}</div>`;
+			}
+
+			// Header wrap
+			let headerHtml = `
+				<div class="header-wrap" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 3px solid var(--accent);">
+					${titleHtml}
+					${logoHtml}
+				</div>
+			`;
+
+			// Info Grid
+			let recipientHtml = '';
+			let businessHtml = '';
+			let fieldsHtml = '';
+
+			// Recipient details
+			if (data.recipient) {
+				let recDetails = [];
+				if (data.recipient.code) recDetails.push(`Code: ${data.recipient.code}`);
+				if (data.recipient.email) recDetails.push(`Email: ${data.recipient.email}`);
+				
+				recipientHtml = `
+					<address id="recipient-info" style="font-style: normal; line-height: 1.6; flex: 1.2;">
+						<span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); display: block; margin-bottom: 4px;">Prepared For</span>
+						<strong style="font-size: 14px; display: block; margin-bottom: 4px; color: var(--text-main);">${data.recipient.name || ''}</strong>
+						<div style="font-size: 12px; color: var(--text-main); white-space: pre-line;">${data.recipient.address || ''}</div>
+						${recDetails.length ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 5px; font-family: monospace;">${recDetails.join('<br>')}</div>` : ''}
+					</address>
+				`;
+			} else {
+				// If no recipient, show business address on the left to balance the grid
+				recipientHtml = `
+					<address id="recipient-info" style="font-style: normal; line-height: 1.6; flex: 1.2;">
+						<span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); display: block; margin-bottom: 4px;">Issued By</span>
+						<strong style="font-size: 14px; display: block; margin-bottom: 4px; color: var(--text-main);">${data.business?.name || data.businessName || ''}</strong>
+						<div style="font-size: 12px; color: var(--text-main); white-space: pre-line;">${data.business?.address || ''}</div>
+					</address>
+				`;
+			}
+
+			// Business details (only if recipient is present, so we don't duplicate)
+			if (data.recipient) {
+				businessHtml = `
+					<address id="business-info" style="font-style: normal; line-height: 1.6; flex: 1; text-align: start; white-space: nowrap;">
+						<span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); display: block; margin-bottom: 4px;">Issued By</span>
+						<strong style="font-size: 14px; display: block; margin-bottom: 4px; color: var(--text-main);">${data.business?.name || data.businessName || ''}</strong>
+						<div style="font-size: 12px; color: var(--text-main); white-space: pre-line;">${data.business?.address || ''}</div>
+					</address>
+				`;
+			}
+
+			// Metadata fields
+			let metaList = [];
+			if (data.reference) metaList.push({ label: 'Reference', text: data.reference });
+			(data.fields || []).forEach(f => {
+				if (f.displayAtTheTop || !data.recipient) metaList.push({ label: f.label, text: f.text });
+			});
+			(data.business?.fields || []).forEach(f => {
+				metaList.push({ label: f.label, text: f.text });
+			});
+
+			if (metaList.length) {
+				let listContent = metaList.map(m => `
+					<dt style="font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 2px;">${m.label}</dt>
+					<dd style="font-weight: 700; font-size: 12px; margin-bottom: 12px; color: var(--text-main);">${m.text || ''}</dd>
+				`).join('');
+				fieldsHtml = `
+					<dl id="fields" style="flex: 1; text-align: right; margin: 0; padding: 0;">
+						${listContent}
+					</dl>
+				`;
+			}
+
+			// Construct Info Grid
+			let infoGridHtml = `
+				<section class="info-grid" style="display: flex; gap: 40px; margin-bottom: 25px; width: 100%; align-items: flex-start;">
+					${recipientHtml}
+					${fieldsHtml}
+					${businessHtml ? `<div class="info-sep" style="width: 2px; background: var(--accent); align-self: stretch; opacity: 0.3;"></div>` : ''}
+					${businessHtml}
+				</section>
+			`;
+
+			// Description
+			let descriptionHtml = '';
+			if (data.table?.description) {
+				descriptionHtml = `<p id="description" style="font-size: 14px; font-weight: 700; margin-top: 0; margin-bottom: 20px; padding: 10px 15px; background: var(--accent-soft); border-left: 4px solid var(--accent); color: var(--text-main);">${data.table.description}</p>`;
+			}
+
+			// Table columns & rows
+			let tableHtml = '';
+			if (data.table) {
+				let headersHtml = '<tr>' + (data.table.columns || []).map(c => `<th class="align-${c.align || 'start'}" style="text-align: ${c.align === 'right' ? 'right' : (c.align === 'center' ? 'center' : 'left')}; ${c.shrinkToFit ? 'width: 1%; white-space: nowrap;' : ''}">${c.label}</th>`).join('') + '</tr>';
+				
+				let rowsHtml = '';
+				if (data.table.rows) {
+					function processRows(rowsArray) {
+						return rowsArray.map(r => {
+							if (!r.cells) return '';
+							let trClass = r.isTotalRow ? 'row row-total' : 'row';
+							let trStyle = r.isTotalRow ? 'font-weight: 700;' : '';
+							let inner = r.cells.length === 1 && r.rows ? `<td colspan="${data.table.columns.length}" style="font-weight: 700; color: var(--accent);">${r.cells[0].text}</td>` :
+								r.cells.map((cell, idx) => {
+									const col = data.table.columns[idx] || {};
+									let cellContent = cell.image?.url ? `<img src="${cell.image.url}" style="max-width: 100px;" alt=""/>` : (cell.text || "").split("\n").join("<br />");
+									if (cell.link?.url) cellContent = `<a href="${cell.link.url}" target="_top" style="color: var(--accent); text-decoration: none;">${cellContent}</a>`;
+									
+									let alignStyle = col.align === 'right' ? 'text-align: right;' : (col.align === 'center' ? 'text-align: center;' : 'text-align: left;');
+									let nowrapStyle = col.nowrap ? 'white-space: nowrap;' : '';
+									let emphasisClass = (col.emphasis || r.isTotalRow) ? 'font-weight: 700;' : '';
+									
+									return `<td class="align-${col.align || 'start'}" style="${alignStyle} ${nowrapStyle} ${emphasisClass}">${cellContent}</td>`;
+								}).join('');
+							return `<tr class="${trClass}" style="${trStyle}">${inner}</tr>` + (r.rows ? processRows(r.rows) : '');
+						}).join('');
+					}
+
+					// Add tr.last-row using helper DOM parsing
+					const tempTbody = document.createElement('tbody');
+					tempTbody.innerHTML = processRows(data.table.rows);
+					const rowEls = tempTbody.querySelectorAll('tr.row');
+					if (rowEls.length > 0) {
+						rowEls[rowEls.length - 1].classList.add('last-row');
+					}
+					
+					// Append totals to the same table rows if present
+					if (data.totals) {
+						data.totals.forEach((total, idx) => {
+							const isLast = idx === data.totals.length - 1;
+							const trClass = isLast ? 'total last-total' : 'total';
+							const labelStyle = total.emphasis ? 'font-weight: 800;' : 'font-weight: 700;';
+							const valueStyle = total.emphasis ? 'font-weight: 800;' : 'font-weight: 700;';
+							
+							const tr = document.createElement('tr');
+							tr.className = trClass;
+							tr.innerHTML = `
+								<td colspan="${data.table.columns.length - 1}" style="text-align: right; ${labelStyle}">${total.label}</td>
+								<td style="text-align: right; ${valueStyle}">${total.text}</td>
+							`;
+							tempTbody.appendChild(tr);
+						});
+					}
+					
+					rowsHtml = tempTbody.innerHTML;
+				}
+				
+				tableHtml = `
+					<table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+						<thead>
+							<tr id="table-headers">${headersHtml}</tr>
+						</thead>
+						<tbody id="table-rows">
+							${rowsHtml}
+						</tbody>
+					</table>
+				`;
+			}
+
+			// Non-displayAtTheTop fields (Custom fields or body fields shown under table/status)
+			let bodyFieldsHtml = '';
+			let customFields = (data.fields || []).filter(f => !f.displayAtTheTop);
+			if (customFields.length > 0) {
+				bodyFieldsHtml = `<div id="custom-fields" style="margin-top: 20px; font-size: 12px; color: var(--text-main);">` +
+					customFields.map(f => `<div style="margin-bottom: 10px;"><strong style="color: var(--accent);">${f.label}:</strong><br/>${(f.text || "").split("\n").join("<br/>")}</div>`).join('') +
+					`</div>`;
+			}
+
+			// Pre-rendered HTML footers
+			let footersHtml = '';
+			if (data.footers && data.footers.length > 0) {
+				footersHtml = `
+					<div id="footers" style="margin-top: 20px; font-size: 11px; line-height: 1.6; color: var(--text-muted);">
+						${data.footers.map(f => `<div style="margin-top: 15px;">${f}</div>`).join('')}
+					</div>
+				`;
+			}
+
+			// Status stamp
+			let statusHtml = '';
+			if (data.status?.text) {
+				statusHtml = `
+					<div id="status" style="text-align: center; margin: 25px 0;">
+						<span class="status-badge tone-${data.status.tone || 'neutral'}">${data.status.text}</span>
+					</div>
+				`;
+			}
+
+			// Dynamic Content Assembly
+			root.innerHTML = `
+				<div style="flex-grow: 1;">
+					${headerHtml}
+					${infoGridHtml}
+					${descriptionHtml}
+					${tableHtml}
+					${bodyFieldsHtml}
+					${footersHtml}
+					${statusHtml}
+				</div>
+				
+				<div class="it-footer" style="margin-top: 40px; padding-top: 15px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end;">
+					<div class="it-authority-seal" style="display: flex; align-items: center; gap: 8px;">
+						<svg viewBox="0 0 358.846 350.3" width="22" height="22" fill="none">
+							<path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
+							<path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
+							<circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
+						</svg>
+						<div class="it-authority-text" style="font-family: 'Neo Sans Pro', 'Inter', sans-serif; font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; line-height: 1.1;">
+							Architected by MD ABU HASAN<br>
+							<a href="https://inspiron.tech" target="_blank" class="it-link" style="color: var(--inspiron-cyan); text-decoration: none; font-weight: 900;">inspiron.tech</a>
+						</div>
+					</div>
+
+					<div class="it-footer-text" style="font-size: 8px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); text-align: right;">
+						Precision · Authority · Control<br>
+						<span style="color: var(--accent); font-weight: 700;">Universal Bronze v2026</span>
+					</div>
+				</div>
+			`;
+
+			// Re-evaluate script elements inside the dynamic footers
+			root.querySelectorAll('#footers script').forEach(script => {
+				const ns = document.createElement('script');
+				for (const attr of script.attributes) ns.setAttribute(attr.name, attr.value);
+				if (script.textContent) ns.textContent = script.textContent;
+				script.parentNode.replaceChild(ns, script);
+			});
+		}
+	</script>
+</body>
+</html>

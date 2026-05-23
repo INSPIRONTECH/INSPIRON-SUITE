@@ -458,12 +458,12 @@
         background: #fff !important; 
         display: flex !important;
         flex-direction: column !important;
-        min-height: 277mm !important; /* Ch.10 — forces main to fill A4 printable area */
+        min-height: auto !important; /* Let container contract to prevent 2-page print overflow */
         box-sizing: border-box !important;
       }
       .it-content {
         flex: 1 0 auto !important;
-        min-height: 180mm !important;
+        min-height: auto !important; /* Remove millimetric constraints in print */
       }
       .it-footer-shell {
         flex-shrink: 0 !important;

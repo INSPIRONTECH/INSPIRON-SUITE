@@ -1,365 +1,388 @@
-# INSPIRON SUITE STRATEGY
-## The Architecture of Certainty (v2026.5)
+﻿# INSPIRON-SUITE — EXECUTION ARC: SLATE-1 (Season 01)
 
-**Last Updated:** 2026-05-22
-
----
-
-## 🏛️ OVERVIEW
-Open-source ecosystem for Manager.io focused on industrial logic and regulatory compliance. The "Logic Moat" protects proprietary engine code while providing global utility.
-
-## 📂 VERTICALS
-1. GLOBAL-SUITE: Themes (Bronze → Graphite) and Utilities (Audit Sentinel).
-2. TAX-SUITE: BD-specific NBR 2026 compliance tools (VAT, TDS, VDS).
-
-## 🚀 EXECUTION PHASES
-
-### PHASE A — INFRASTRUCTURE (COMPLETED)
-- Establish monorepo structure.
-- Deploy discovery.json v2.0 registry.
-- Hardened .gitignore and sanitization rules.
-
-### PHASE B — UTILITY DEPLOYMENT (ACTIVE)
-- Audit Sentinel (checklist-v1) live on suite.inspiron.tech.
-- BD Tax Suite (index.html) live on tools.inspiron.tech.
-- Integration of Claude-Enhanced Intelligence (AI Q&A).
-
-### PHASE C — COMPLIANCE EXPANSION (PLANNED)
-- Build Mushak 6.3, 6.4, and 9.1 functional logic.
-- Develop "Pre-Send" validation for VDS/TDS certificates.
-- Export-to-Journal templates for all NBR forms.
-
-### PHASE D — REGIONAL PIVOT (BACKLOG)
-- Port BD logic to PK (Pakistan) and UAE regulatory contexts.
-- Localized tax calendars and penalty calculators.
+**Arc Plan Created:** 2026-05-23
+**Last Updated:** 2026-05-23
+**Arc Owner:** INSPIRON-SUITE Opus (per INSPIRON-COMMAND brief 2026-05-23)
+**Scope:** Phases E.1.1 through E.7 — slate completion + v1.0 legacy resolution + doctrine formalization
+**Prior plan:** "Architecture of Certainty v2026.5" (A/B/C/D phases) archived in git history pre-2026-05-23. Superseded by this arc plan.
 
 ---
 
-# 🎨 PHASE E — COMMUNITY THEMES v1.1 RELEASE
+## CONTRACT
 
-**Status:** ACTIVE | **Author:** General Claude Opus 4.7 | **Date:** 2026-05-22
-**Doctrine Reference:** Head First Manager.io Theme Design — CONFIDENTIAL EDITION (Notion)
+This file is the only handoff channel between Opus and Sonnet. Sonnet executes the named phase only — one phase, then stop, then report. Opus reviews via OPUS CHECK after the report. Strategic-scope items route to INSPIRON-COMMAND.
 
-## 🎯 STRATEGIC CONTEXT
-
-1. **v1.0 incident closure.** Universal Bronze + Corporate Blue Column shipped 2026-05-20 with security gaps. @eko provided public review with working fixes. v1.1 must close those gaps and credit eko publicly.
-2. **KSA lead engagement.** Private Arabic-language inquiry received. Theme 4 (Riyadh RTL) is the silent demonstration to that prospect and every future Arabic-market user. There are 5 listed advisors in KSA — none have shipped a public RTL theme.
-3. **Architectural depth proof.** Single forum post with 4 distinct themes (different archetypes, ≤6% idea overlap) demonstrates that INSPIRON builds for verticals, not just paints invoices.
-4. **Repo doctrine.** `INSPIRON-THEMES` (Sector Charlie) is the lab. `INSPIRON-SUITE` (Sector Bravo) is the public release surface. Code flows lab → audit → suite → forum.
-
-## 🗺️ DECISIONS LOCKED
-
-- **Slate composition:** Midnight Executive · Atlas Statement · Jade Clinical · Riyadh RTL
-- **Graphite Industrial:** Deferred to v1.2 backlog. Removed from active README catalog. Existing file at `global-suite/themes/GRAPHITE-INDUSTRIAL-v1.html` moves to `global-suite/themes/_BACKLOG/`.
-- **v1.0 files (`01_UNIVERSAL-BRONZE.html`, `02_CORPORATE-BLUE-COLUMN.html`):** Overwritten in place with hardened v1.1 code carrying a deprecation banner pointing to the new four-theme slate. Forum links continue to resolve and now serve safe code.
-- **Filename convention:** ALL-CAPS-HYPHENS, sequential numbering: `01-MIDNIGHT-EXECUTIVE.html`, `02-ATLAS-STATEMENT.html`, `03-JADE-CLINICAL.html`, `04-RIYADH-RTL.html`.
-- **Kernel delivery:** Manager.io requires single-file themes. NEXUS shared safe-rendering kernel is inlined as a `<script>` block in each theme, with a canonical reference file at `global-suite/themes/_kernel/nexus-kernel.js` for documentation/audit.
-
-## 📂 REPO FLOW
-
-```
-INSPIRON-THEMES (lab)                       INSPIRON-SUITE (release)
-─────────────────────                       ────────────────────────
-COMMUNITY-EDITION/         build & test →   global-suite/themes/
-  01-MIDNIGHT-CORPORATE                       01-MIDNIGHT-EXECUTIVE.html
-  02-JADE-CLINICAL                            02-ATLAS-STATEMENT.html
-  03-GRAPHITE-INDUSTRIAL  (→ _BACKLOG)        03-JADE-CLINICAL.html
-  04-ATLAS-STATEMENT                          04-RIYADH-RTL.html
-  + 04-RIYADH-RTL (new)                       01_UNIVERSAL-BRONZE.html (legacy banner)
-                                              02_CORPORATE-BLUE-COLUMN.html (legacy banner)
-                                              _kernel/nexus-kernel.js
-                                              _BACKLOG/GRAPHITE-INDUSTRIAL-v1.html
-                                              README.md (updated)
-                                              CHANGELOG.md (new)
-```
-
-## 🛡️ DOCTRINE BASELINE (applies to every Phase E.x)
-
-Every theme built in Phase E must satisfy these doctrine checks (from Head First Manager.io Theme Design Ch 11 §11):
-
-1. **Idea 4 — Safe Rendering Core:** every dynamic value rendered via `textContent` or `appendTextWithBreaks`, never `innerHTML`.
-2. **Idea 121 — Self-hosted fonts:** Neo Sans Pro via `@font-face` from relative path. Zero `@import url('https://...')`.
-3. **Idea 11/14 — Layer separation:** `THEME_FLAGS` and `:root` CSS variables in SAFE SETTINGS zone; renderer in DO NOT EDIT zone. `.it-*` core classes, `.brand-*` overrides, `.user-*` open.
-4. **eko fix — No script re-execution:** `data.footers` rendered as plain text via `appendTextWithBreaks`. The `<script>` re-execution loop from v1.0 is forbidden.
-5. **eko fix — No nested `<tr>`:** `<thead>` contains exactly one `<tr>` with `<th>` cells.
-6. **Idea 87 — URL validation:** every URL through `safeLinkUrl` or `safeImageUrl`; protocol whitelist `http, https, mailto, tel` only.
-7. **Idea 24 — Density modes:** `applyDensityMode(data)` auto-triggers `document-long` at 20+ rows.
-8. **Idea 9 — Fault UX:** `renderFault(code)` shows branded SYSTEM FAULT on fetch failure.
-9. **Idea 18 — Customization API header:** HTML comment block at top of file declaring safe/unsupported edits.
-10. **Public-release flags:** `ENABLE_COMMISSION_LOGIC: false`, `ENABLE_MULTI_CURRENCY: false`, `ENABLE_QR_PANEL: false` (paid layer never ships in public themes).
-11. **Demo data discipline:** NEXUS PROPERTIES & MARKETING (PVT.) LTD. fictional identity per Appendix G. Zero ARGUS-derived data.
-12. **DEMO TEMPLATE strip** enabled by default for forum release (`ENABLE_DEMO_WATERMARK: true`).
+**Execution doctrine for this arc and forward (Visual QC Gate, Season/Episode versioning, Kernel Sync Rule) lives in Project Instructions → EXECUTION MODE → EXECUTION DOCTRINE.** Sonnet reads PI on every session per Step 0; doctrine is inherited, not duplicated here.
 
 ---
 
-## PHASE E.0 — REPO RECONCILIATION & KERNEL STAGING
+## ARC ENVELOPE (FROM INSPIRON-COMMAND 2026-05-23)
 
-### Permitted writes
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\_kernel\nexus-kernel.js` (new)
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\_BACKLOG\` (new directory)
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\_BACKLOG\GRAPHITE-INDUSTRIAL-v1.html` (moved from parent)
-- `D:\000. REPOS\SECTOR-CHARLIE-CONTRACTS\INSPIRON-THEMES\COMMUNITY-EDITION\_kernel\nexus-kernel.js` (mirror for lab use)
-
-### Files OFF LIMITS
-- All four v1.1 theme files (Phases E.1 – E.4)
-- `01_UNIVERSAL-BRONZE.html`, `02_CORPORATE-BLUE-COLUMN.html` (Phase E.5)
-- `UNIVERSAL-BRONZE-v1.html`, `MIDNIGHT-CORPORATE-v1.html`, `JADE-CLINICAL-v1.html` staged files (will be replaced in Phase E.5 cleanup)
-- `INTELLIGENCE-CORE\.context\` — read only
-- Anything under `ARCHIVED/`
-
-### Acceptance criteria
-- `nexus-kernel.js` exists in both lab and release locations with complete helper set: `safeText`, `safeUrl`, `safeLinkUrl`, `safeImageUrl`, `safeCssAlign`, `safeDimension`, `appendTextWithBreaks`, `THEME_DOM`, `THEME_FLAGS`, `detectArchetype`, `applyDensityMode`, `renderFault`, `processRows`, `appendTotals`, `buildCell`, `renderFooters`, `renderDebugOverlay`, `runIntegrityCheck`.
-- `_BACKLOG/` directory exists with `GRAPHITE-INDUSTRIAL-v1.html` moved into it.
-- Sonnet outputs Phase E.0 report.
+- **Hard date:** 2026-06-02 EOD — partner-readiness state for Karl Kadon's CPN Connect Program Launch on 2026-06-03
+- **Cross-project anchor:** LIS post-Eid launch (~2026-06-16) co-coordinated with Jade Clinical v1.1
+- **Lead conversion lever:** Riyadh RTL = the response to the private KSA WhatsApp lead. The theme IS the reply.
+- **Forum tone benchmark:** Lubos-as-reader — calm, specific, generous
 
 ---
 
-## PHASE E.1 — BUILD MIDNIGHT EXECUTIVE v1.1
+## CONSTRAINTS — HONORED EVERY PHASE
 
-### Source
-Read base: `D:\000. REPOS\SECTOR-CHARLIE-CONTRACTS\INSPIRON-THEMES\COMMUNITY-EDITION\01-MIDNIGHT-CORPORATE.html` (sanitized v1.0 base).
-
-### Permitted writes
-- `D:\000. REPOS\SECTOR-CHARLIE-CONTRACTS\INSPIRON-THEMES\COMMUNITY-EDITION\01-MIDNIGHT-EXECUTIVE.html` (lab build)
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\01-MIDNIGHT-EXECUTIVE.html` (release copy)
-
-### Composition (doctrine idea numbers — exact set)
-**4 + 11 + 13 + 14 + 15 + 16 + 18 + 19 + 26 + 28 + 30 + 31 + 32 + 33 + 36 + 39 + 46 + 50 + 51 + 57 + 61 + 66 + 70 + 73 + 76 + 77 + 78 + 79 + 87 + 89 + 92 + 98 + 102 + 104 + 121 + 122 + 123 + 124 + 131 + 132**
-
-### Build constraints
-- Inline NEXUS kernel as `<script>` block.
-- Dark canvas `#010409`, Action Gold `#FFD700` accent, Electric Cyan `#00D2FF` for logo drop-shadow and INSPIRON link only.
-- Inline SVG INSPIRON authority footer (golden dot at top-right of mark — Idea 78).
-- PAID/OVERDUE status stamp (Idea 87) — bordered badge, 2.5px tracking, uppercase.
-- Customization API HTML header comment block (Idea 18 canonical template).
-- `THEME_FLAGS.ENABLE_DEMO_WATERMARK: true` for forum release.
-- DEMO data: NEXUS PROPERTIES & MARKETING (PVT.) LTD.
-
-### Files OFF LIMITS
-- Other three theme files
-- Kernel (sealed in Phase E.0)
-- v1.0 legacy files
-- `INTELLIGENCE-CORE\.context\`
-
-### Acceptance criteria
-- Doctrine baseline checks 1–12 pass
-- Renders against `/api4/view-v1` test data
-- No console errors
-- `view-source:` confirms no `innerHTML` with API data, no script re-execution, no Google Fonts CDN
-- Lab and release copies are identical
+- No engine logic in community themes (R1–R7 IP protocol holds)
+- INSPIRON top-of-header logo: **FORBIDDEN** (Idea 104 final). Footer credit only.
+- INSPIRON footer credit: **NON-NEGOTIABLE**
+- CC BY 4.0 (locked)
+- Locale: en-IN
+- ALL-CAPS-HYPHENS for file naming
+- Commit format: `type(scope): short description`
+- Mabaega credit move → slate launch comms only (NOT v1.1 hotfix announcement)
+- Cleary/Damien inbound interrupts active phase (see PI Interruption Escape Hatch)
 
 ---
 
-## PHASE E.2 — BUILD ATLAS STATEMENT v1.1
+## OFF LIMITS (EVERY PHASE)
 
-### Source
-Read base: `D:\000. REPOS\SECTOR-CHARLIE-CONTRACTS\INSPIRON-THEMES\COMMUNITY-EDITION\04-ATLAS-STATEMENT.html` (sanitized v1.0 base).
-
-### Permitted writes
-- `D:\000. REPOS\SECTOR-CHARLIE-CONTRACTS\INSPIRON-THEMES\COMMUNITY-EDITION\02-ATLAS-STATEMENT.html` (lab build, renumbered)
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\02-ATLAS-STATEMENT.html` (release copy)
-
-### Composition
-**1 + 5 + 7 + 17 + 21 + 22 + 23 + 24 + 25 + 38 + 53 + 54 + 55 + 56 + 58 + 59 + 60 + 62 + 63 + 64 + 65 + 67 + 68 + 69 + 91 + 92 + 93 + 95 + 96 + 99 + 100 + 101 + 103 + 109 + 110 + 119 + 133 + 134 + 135**
-
-### Build constraints
-- Identity: information density, NOT visual decoration. Charcoal text on white. Single accent color (no Action Gold competition with Midnight).
-- `THEME_FLAGS.AUTO_DENSITY_LONG_THRESHOLD = 20`. Auto-trigger `document-long` when rows > 20.
-- `thead { display: table-header-group; }` to repeat table headers across pages (Idea 22).
-- `page-break-inside: avoid` on totals/status/signatures only — NOT on `tr` (Idea 23).
-- Footer band fix doctrine fully applied (Ideas 58–69): `flex: 1 0 auto` content, `flex-shrink: 0` footer, NO `position: absolute` ever.
-- Short-invoice spacer: `min-height: 60mm` when rows < 4 (Idea 64).
-- Test render must verify clean output at 1, 12, 35, 60 rows (Idea 68).
-
-### Acceptance criteria
-- All doctrine baseline checks pass
-- Multi-page test: 35+ rows → headers repeat, no mid-page footer banding, no orphan totals
-- Short-invoice test: 1 row → spacer pushes footer to natural bottom
-
----
-
-## PHASE E.3 — BUILD JADE CLINICAL v1.1
-
-### Source
-Read base: `D:\000. REPOS\SECTOR-CHARLIE-CONTRACTS\INSPIRON-THEMES\COMMUNITY-EDITION\02-JADE-CLINICAL.html` (sanitized v1.0 base).
-
-### Permitted writes
-- `D:\000. REPOS\SECTOR-CHARLIE-CONTRACTS\INSPIRON-THEMES\COMMUNITY-EDITION\03-JADE-CLINICAL.html` (lab build, renumbered)
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\03-JADE-CLINICAL.html` (release copy)
-
-### Composition
-**3 + 8 + 9 + 27 + 29 + 34 + 35 + 37 + 40 + 41 + 42 + 43 + 44 + 45 + 47 + 48 + 49 + 88 + 94 + 96 + 99 + 103 + 108 + 109 + 112 + 117 + 118 + 125 + 126 + 127**
-
-### Build constraints
-- Clinical teal palette: `#007A6E` accent, `#F0FAF8` soft surface. NOT cyan (reserved for INSPIRON brand mark only).
-- ECG heartbeat pulse bar: 6px gradient line under header (decorative — screen and print).
-- Profile-aware custom fields (Idea 8): if `data.fields` contains "Patient ID", "Doctor", "Department", "Visit Date" — place in a dedicated info zone above the table.
-- Mobile-first primary: `clamp(11px, 1.4vw, 13px)` font sizing on screen, fixed in print.
-- Action bar with three buttons: Print, Save PDF, Share (Ideas 47–49). Hidden in print.
-- 3-box signature panel (Idea 88): Authorized / Acknowledgment / Stamp.
-- Status: ALWAYS paired with text label, never color alone (Idea 99).
-- Glassmorphism allowed in screen, suppressed in print (Idea 117).
-- DEMO data: NEXUS CLINICAL LABS (fictional healthcare entity, not derived from real clients).
-
-### Acceptance criteria
-- Doctrine baseline checks pass
-- Mobile viewport test at 375px: header stacks, table scrolls horizontally, no overflow
-- Contrast check: body text ≥ 4.5:1 against background
-- Print test: glassmorphism suppressed, ECG line still visible
-
----
-
-## PHASE E.4 — BUILD RIYADH RTL v1.1 (NEW BUILD FROM SCRATCH)
-
-### Source
-No v1.0 base exists. Build from doctrine + NEXUS kernel.
-
-### Permitted writes
-- `D:\000. REPOS\SECTOR-CHARLIE-CONTRACTS\INSPIRON-THEMES\COMMUNITY-EDITION\04-RIYADH-RTL.html` (lab build)
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\04-RIYADH-RTL.html` (release copy)
-
-### Composition
-**2 + 6 + 7 + 10 + 12 + 20 + 72 + 80 + 81 + 82 + 83 + 84 + 86 + 90 + 97 + 106 + 108 + 111 + 113 + 114 + 115 + 116 + 120 + 128 + 129 + 130**
-
-### Build constraints
-- `<html dir="rtl" lang="ar">` as primary direction.
-- Layout fully respects `view.direction` and reverses on `dir="ltr"` (Idea 97). Test both modes.
-- Bilingual labels: Arabic primary + English secondary smaller below. Standard accounting vocabulary. Where Sonnet is uncertain about exact Arabic accounting terms, use placeholder `[AR: term-en-translation]` for Commander to fill before release.
-- Multi-currency pipeline scaffold (Idea 113): SAR primary, AED/USD detected via `data.business.division` (paid logic deferred — public theme ships with display-only currency adaptation).
-- ZATCA QR panel container (Idea 115): 80×80px fixed-position bottom-right with HTML comment:
-  ```html
-  <!-- ZATCA Phase 2 TLV encoding hook — paid layer feature.
-       Public theme ships with QR container scaffold only. -->
-  ```
-- Geometric ornament only (Idea 106): subtle diamond fret pattern in header strip. NO flags, NO calligraphy, NO Kaaba/mosque/landmark imagery.
-- Accent: Electric Cyan `#00D2FF` for headers — visually distinct from Midnight's gold.
-- DEMO data: `مؤسسة النخبة العقارية والخدمات` (Elite Real Estate & Services Establishment), Riyadh. VAT 15% applied. Side-by-side AR/EN line items.
-
-### Files OFF LIMITS
-- Same as other phases
-
-### Acceptance criteria
-- Doctrine baseline checks pass
-- Render in both `dir="rtl"` (default) and `dir="ltr"` (force via URL param `?dir=ltr` or kernel detection) — both directions produce clean layout
-- Numerals stay LTR while text flows RTL
-- ZATCA QR container is visible in screenshot (empty placeholder OK)
-- No `[AR: ...]` placeholders shipped — Commander fills before push to remote
-- Arabic text renders without mojibake
-
----
-
-## PHASE E.5 — V1.0 LEGACY HANDLING
-
-### Permitted writes
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\01_UNIVERSAL-BRONZE.html` (overwrite with hardened v1.1 code + deprecation banner)
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\02_CORPORATE-BLUE-COLUMN.html` (overwrite with hardened v1.1 code + deprecation banner)
-- Optional deletion: `UNIVERSAL-BRONZE-v1.html`, `MIDNIGHT-CORPORATE-v1.html`, `JADE-CLINICAL-v1.html` if redundant with new sequence-numbered files. Defer deletion decision to Commander — Sonnet flags but does not delete in this phase.
-
-### Build constraints (for v1.0 path overwrites)
-- The same security baseline as new themes — kernel inlined, no innerHTML, no Google Fonts.
-- Visual identity preserved (Universal Bronze stays bronze-accent on white; Corporate Blue Column keeps 3-column header).
-- At the top of the rendered output, a small dismissible banner (screen-only, hidden in print):
-  ```
-  ℹ This theme has been hardened and superseded. For the latest INSPIRON theme catalog visit:
-    suite.inspiron.tech/global-suite/themes/
-  ```
-- This preserves the existing forum links from the eko thread while making the upgrade path visible.
-
-### Acceptance criteria
-- Both v1.0 files lint-clean and doctrine-compliant
-- Banner visible in screen render, suppressed in print
-- Forum links continue to resolve and serve safe code
-- Sonnet flags any v1-suffix files that should be removed; does NOT delete
-
----
-
-## PHASE E.6 — RELEASE DOCS
-
-### Permitted writes
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\README.md` (rewrite for v1.1 four-theme catalog)
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\CHANGELOG.md` (new)
-- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\README.md` (update Community Edition table)
-
-### README must reflect
-- Four-theme slate (Midnight Executive, Atlas Statement, Jade Clinical, Riyadh RTL)
-- Universal Bronze + Corporate Blue Column listed as "Legacy v1.0 — superseded" with install URLs still pointing to hardened files
-- Graphite Industrial NOT listed (moved to backlog)
-- Install URL pattern: `https://suite.inspiron.tech/global-suite/themes/[01-04]-[THEME-NAME].html`
-
-### CHANGELOG.md must include
-- v1.0 release date and what shipped
-- @eko's security review (linked to forum thread URL)
-- v1.1 changes: kernel extraction, four-theme catalog, security hardening (XSS, script re-exec, font CDN, nested tr)
-- **Contributors section:** @eko credited as Security Reviewer; @lubos credited for `/api4/view-v1` framework
-- Backlog note: Graphite Industrial deferred to v1.2; Universal Bronze v1.0 + Corporate Blue Column v1.0 archived in place with deprecation banner
-
-### Acceptance criteria
-- README displays correctly in GitHub render
-- CHANGELOG is valid markdown
-- All install URLs in README resolve to existing files in the repo
-
----
-
-## PHASE E.7 — FORUM REPLY DRAFTS (OPUS DELIVERABLE)
-
-**This phase does NOT involve Sonnet.** Opus writes the forum replies after Phase E.6 closes and Commander confirms visual quality of all four themes.
-
-### Deliverables
-1. **Reply in eko's thread** (https://forum.manager.io/t/...universal-bronze-corporate-blue-column/68281): acknowledgment + adoption + named credit + link to v1.1 release post.
-2. **NEW forum thread:** "INSPIRON v1.1 — Four community themes for /api4/view-v1" featuring the four-theme slate.
-3. **Cross-link reply** in April 10 thread (https://forum.manager.io/t/.../67601) closing the original "clean generic versions" loop.
-
-### Tone constraints
-- Acknowledge eko sharply, no hedging — each technical point is correct.
-- Credit Lubos for framework. Credit eko by name as "Security Reviewer."
-- No defensive language about v1.0.
-- No marketing CTAs.
-- Riyadh RTL positioned last in the new-thread post (the reveal).
-
----
-
-## 🔒 OFF LIMITS — ALL PHASES, ALWAYS
-
-- `INTELLIGENCE-CORE\.context\` — read only unless triggered
-- `.env`, `.key`, `.pem`, `.manager` files
-- Hardcoded Manager.io API keys, business IDs, or customer credentials
-- ARGUS-derived data (real client) — must be scrubbed; replaced with NEXUS or generic fictional identities per doctrine Appendix G
-- `node_modules/`, `.next/`, `dist/`, `.vercel/`
+- `node_modules/` `.next/` `dist/` `.vercel/`
+- `.env` `.key` `.pem` `.manager` files
+- `INTELLIGENCE-CORE/.context/`
 - Any folder named `ARCHIVED`
-
-## 📝 RULE 3 — REPORT FORMAT (every Phase E.x)
-
-Save reports to:
-`D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\DOCS\STRATEGY\EXECUTION-REPORTS\PHASE-E[N]-REPORT-[YYYY-MM-DD].md`
-
-Required sections:
-- Phase executed
-- Files modified (full paths)
-- What was NOT done (scope respected)
-- Known issues (never hide)
-- Doctrine checklist results (the 12 baseline checks)
-- If failed: exact cause (file, line, error, root cause), what completed, what rolled back
-- Ready for: [next phase name]
-
-## 🚦 EXECUTION ORDER
-
-Phases run **strictly sequentially**. No phase begins until prior phase report is saved.
-
-**Recommended Sonnet trigger sequence:**
-1. `SONNET CODE PHASE E.0` → kernel + backlog move
-2. `SONNET CODE PHASE E.1` → Midnight Executive
-3. `SONNET CODE PHASE E.2` → Atlas Statement
-4. `SONNET CODE PHASE E.3` → Jade Clinical
-5. `SONNET CODE PHASE E.4` → Riyadh RTL
-6. `SONNET CODE PHASE E.5` → v1.0 legacy handling
-7. `SONNET CODE PHASE E.6` → release docs
-8. `OPUS DRAFT FORUM` → Phase E.7
-
-After Commander visual-checks each theme on live Manager.io, Opus runs `OPUS CHECK` per phase report and approves or routes back.
+- This file (EXECUTION-PHASES.md) — Sonnet reads only
+- CLAUDE.md — Sonnet reads only
+- README.md / sub-READMEs — Sonnet writes only when phase explicitly names them (E.6, E.7)
 
 ---
 
-## 🛡️ IP PROTECTION DOCTRINE (R1–R7)
-- No proprietary logic in browser-side files.
-- All high-fidelity analysis processed via INSPIRON NEXUS secure endpoint.
-- Zero-logic client-side components; all data flow through /lib/manager-client.ts.
+## PHASE TEMPLATE
+
+Each phase carries:
+
+1. Identifier + Season/Episode label
+2. Scope (one sentence)
+3. Pre-requisites
+4. Files to touch (full Windows paths)
+5. Files OFF LIMITS this phase
+6. Kernel Mirror Checklist (per PI Kernel Sync Rule, if helpers touched)
+7. Acceptance criteria
+8. Visual QC gate position (per PI Visual QC Gate, if visible output shipped)
+9. Execution report path
+10. Date target
+
+---
+
+# PHASES
+
+---
+
+## E.1 — DOCTRINE TO DISK
+
+**Scope:** Get the three doctrine items (Visual QC Gate, Season/Episode versioning, Kernel Sync Rule) into authoritative locations.
+
+**Date target:** 2026-05-23 (immediate)
+
+### E.1.1 — Project Instructions updated
+
+- **File:** INSPIRON-SUITE Project Instructions UI (Commander manual paste)
+- **Source:** Opus-produced full PROJECT-INSTRUCTIONS.md (2026-05-23 revision)
+- **Acceptance:** PI Execution Mode block contains EXECUTION DOCTRINE subsection with all three rules + Interruption Escape Hatch.
+- **Status:** Awaiting Commander paste.
+
+### E.1.2 — EXECUTION-PHASES.md saved to disk
+
+- **File:** `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\DOCS\STRATEGY\EXECUTION-PHASES.md`
+- **Source:** This file (Opus-produced, 2026-05-23 revision)
+- **Acceptance:** File on disk matches Opus-produced version.
+- **Status:** Awaiting Commander save.
+
+### E.1.3 — No Sonnet action required for E.1
+
+E.1 is Opus + Commander manual. No Sonnet phase. First SONNET CODE trigger = E.2.
+
+---
+
+## E.2 — MIDNIGHT EXECUTIVE v1.1.1 → LIVE — `S01E01`
+
+**Scope:** Ship the on-disk v1.1.1 patch (infinite scroll fix, header logo placement final, currency display rule resolved) to live Manager.io with version label visible in Manager.io UI.
+
+**Pre-requisites:** E.1 complete. Sonnet's first action is `dir global-suite\themes\` to confirm the actual on-disk v1.1.1 filename and adjust paths if different from the guess below.
+
+**Files to touch:**
+
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\MIDNIGHT-EXECUTIVE-v1.1.1.html` (verify; do not modify unless QC failure)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\utilities\transaction-themes-extension.html` (`MIDNIGHT_EXECUTIVE_HTML` constant + THEMES array entry)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\manifests\discovery.json` (theme_registry entry for v1.1.1; suite-level `version` bumped from `"1.1.0"`; `updated` field bumped to today)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\CHANGELOG.md` (S01E01 entry — create file if absent)
+
+**Files OFF LIMITS this phase:** Other theme files; README.md; global-suite/themes/README.md.
+
+**Kernel Mirror Checklist:**
+
+- [ ] Standalone v1.1.1 file verified on disk
+- [ ] `transaction-themes-extension.html` → `MIDNIGHT_EXECUTIVE_HTML` constant matches standalone
+- [ ] `transaction-themes-extension.html` → THEMES array entry updated (id, version, description)
+- [ ] `discovery.json` → theme_registry entry version `"1.1.1"`, status `"live"`
+- [ ] `discovery.json` → suite-level `version` bumped
+- [ ] `discovery.json` → `updated` field = today's date
+- [ ] `CHANGELOG.md` → S01E01 entry uses Season/Episode nomenclature
+
+**Acceptance criteria:**
+
+1. Execution report contains rendered preview link or screenshots at A4 portrait `min-width: 800px`
+2. After Commander upload, Manager.io UI version label reads `MIDNIGHT EXECUTIVE v1.1.1`
+3. No horizontal scrollbar at A4 portrait sizing (infinite scroll resolved)
+4. INSPIRON footer credit present; INSPIRON header logo absent
+5. Currency display correct across BDT, PKR, AED, USD branching
+
+**Visual QC gate:** YES. No Manager.io upload before Opus VERIFIED.
+
+**Execution report path:** `DOCS\STRATEGY\EXECUTION-REPORTS\PHASE-E.2-REPORT-[YYYY-MM-DD].md`
+
+**Date target:** Live in Manager.io by **2026-05-26 EOD**.
+
+---
+
+## E.3 — EKO FORUM REPLY + APRIL 10 CROSS-LINK POSTED
+
+**Scope:** Post the drafted eko reply + April 10 cross-link, both linking the v1.1.1 commit.
+
+**Pre-requisites:** E.2 LIVE.
+
+**Files to touch:** None — external forum posts. Commander posts manually using copy in execution report.
+
+**Files OFF LIMITS this phase:** All code files.
+
+**Acceptance criteria:**
+
+1. eko reply posted, links v1.1.1 commit SHA on GitHub
+2. April 10 cross-link reply posted, links v1.1.1 commit
+3. Lubos-as-reader tone holds; eko credited cleanly
+4. CPN sanitization rules respected (no Anthropic staff names, no internal program details)
+5. Mabaega credit NOT in this reply (wrong moment)
+
+**Visual QC gate:** N/A.
+
+**Execution report path:** `DOCS\STRATEGY\EXECUTION-REPORTS\PHASE-E.3-REPORT-[YYYY-MM-DD].md`
+
+**Date target:** Within 24h of E.2 live → **2026-05-27**.
+
+---
+
+## E.4 — RIYADH RTL v1.1 BUILD + SHIP — `S01E02`
+
+**Scope:** Build RTL-first Riyadh theme and ship to live. KSA WhatsApp lead is waiting; this theme IS the response.
+
+**Pre-requisites:** E.1 complete; E.2 live.
+
+**Files to touch:**
+
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\RIYADH-RTL-v1.1.html` (NEW)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\utilities\transaction-themes-extension.html` (add `RIYADH_RTL_HTML` constant + THEMES array entry with unique UUID)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\manifests\discovery.json` (new theme_registry entry; suite-level `version` bump; `updated` field bump)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\CHANGELOG.md` (S01E02 entry)
+
+**Files OFF LIMITS this phase:** Other theme files; README.md; global-suite/themes/README.md.
+
+**Kernel Mirror Checklist:**
+
+- [ ] Standalone `RIYADH-RTL-v1.1.html` created
+- [ ] `transaction-themes-extension.html` → `RIYADH_RTL_HTML` constant
+- [ ] `transaction-themes-extension.html` → THEMES array entry with new UUID (do not reuse existing UUIDs)
+- [ ] `discovery.json` → theme_registry entry, status `"live"`
+- [ ] `discovery.json` → suite-level `version` bumped
+- [ ] `discovery.json` → `updated` field = today's date
+- [ ] `CHANGELOG.md` → S01E02 entry
+
+**Acceptance criteria:**
+
+1. `<html dir="rtl">` at root; layout mirrors correctly
+2. Arabic-Indic numerals supported OR English-fallback path documented
+3. Currency: SAR primary; Hijri date secondary if Manager.io custom_field provides
+4. RTL is default but theme degrades gracefully on LTR context
+5. INSPIRON footer credit renders correctly in RTL-mirrored layout
+6. Sentinel pass/fail banner translated OR English-fallback documented
+7. Rendered preview in execution report covers both Arabic-primary and LTR-fallback contexts
+
+**Visual QC gate:** YES. Critical for RTL — Opus inspects both contexts before VERIFIED.
+
+**Execution report path:** `DOCS\STRATEGY\EXECUTION-REPORTS\PHASE-E.4-REPORT-[YYYY-MM-DD].md`
+
+**Date target:** Live by **2026-06-02 EOD**.
+
+---
+
+## E.5 — v1.0 LEGACY RESOLUTION (P1 priority)
+
+**Scope:** Remove public vulnerability exposure from forum threads carrying eko-flagged v1.0 themes.
+
+**Opus recommendation (Commander may override):** **Option A — Replace v1.0 files in-place with hardened versions + deprecation banner pointing to slate.** Rationale: retracting signals panic; replacing with hardened+banner signals mature CVE handling.
+
+**Hybrid mapping (themes without live slate equivalent yet):**
+
+| Old v1.0 theme | Action |
+|---|---|
+| `MIDNIGHT-CORPORATE-v1.html` | Replace with hardened stub + banner → Midnight Executive v1.1.1 (E.2 live) |
+| `JADE-CLINICAL-v1.html` | Security-hardening patch + banner → Jade Clinical v1.1 (E.7, ~2026-06-16) |
+| `GRAPHITE-INDUSTRIAL-v1.html` | Security-hardening patch + banner → Atlas Statement (E.6, ~2026-06-09) |
+| `UNIVERSAL-BRONZE-v1.html` | Security-hardening patch + banner → Riyadh RTL for Arabic-first (E.4 live) |
+
+**Files to touch:**
+
+- `global-suite\themes\MIDNIGHT-CORPORATE-v1.html`
+- `global-suite\themes\JADE-CLINICAL-v1.html`
+- `global-suite\themes\GRAPHITE-INDUSTRIAL-v1.html`
+- `global-suite\themes\UNIVERSAL-BRONZE-v1.html`
+- `manifests\discovery.json` (mark v1.0 entries `status: "deprecated"`; add `upgrade_url` field per row; suite-level `version` bump; `updated` field bump)
+- External (Commander posts): per-thread re-upload or pinned reply to patched GitHub Pages URL
+
+**Files OFF LIMITS this phase:** Slate v1.1 theme files; README.md; CLAUDE.md.
+
+**Acceptance criteria:**
+
+1. All four v1.0 files patched; specific diff documented in execution report
+2. Each file displays deprecation banner above document body (print + screen)
+3. Each banner names slate equivalent + upgrade URL
+4. `discovery.json` v1.0 entries: `deprecated` + `upgrade_url`
+5. Every public v1.0 forum thread updated in-place OR carries pinned reply to patched URL
+6. CPN log suggestion surfaced (see below)
+
+**Visual QC gate:** YES. Verify banner doesn't break print layout or re-expose eko vector via inherited CSS.
+
+**Execution report path:** `DOCS\STRATEGY\EXECUTION-REPORTS\PHASE-E.5-REPORT-[YYYY-MM-DD].md`
+
+**Date target:** Live by **2026-06-02 EOD**.
+
+**CPN LOG SUGGESTION (surface to INSPIRON-COMMAND after E.5 + E.3 close):**
+
+```
+CPN LOG SUGGESTION
+- Column: A
+- Project: INSPIRON-SUITE
+- Claude usage: Claude-built theme generation + community-reviewed (eko) vulnerability
+                response cycle: v1.0 ship → eko review → v1.1 hotfix → public deprecation
+                arc with upgrade path
+- Era: current (Pro)
+- Status: live
+- Date threshold crossed: 2026-06-02 (full arc closes)
+```
+
+INSPIRON-COMMAND formats and routes — this project surfaces only, never writes to CPN-COMMAND directly.
+
+---
+
+## E.6 — ATLAS STATEMENT v1.1 + DOCBOOK Ch 4 + README SWEEP — `S01E03`
+
+**Scope:** Build Atlas Statement (statement-doc gap), close Notion docbook Ch 4 (Vertical Rhythm & Sheet Illusion), sweep root README + sub-README + CHANGELOG to reflect full slate state.
+
+**Pre-requisites:** E.2, E.4, E.5 closed.
+
+**Files to touch:**
+
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\ATLAS-STATEMENT-v1.1.html` (NEW)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\utilities\transaction-themes-extension.html` (kernel mirror)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\manifests\discovery.json` (Atlas entry; suite-level `version` bump; `updated` field bump)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\CHANGELOG.md` (S01E03 entry)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\README.md` (root — slate table replacement; v1.0 themes → "Legacy / Superseded" section; preserve Upwork/WhatsApp/Strategic Engagement badges)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\README.md` (sub-README — replace roadmap table with current slate)
+- External (Notion): Ch 4 Vertical Rhythm & Sheet Illusion section closure
+
+**Files OFF LIMITS this phase:** Other slate theme files (Midnight, Riyadh, Jade); v1.0 legacy files.
+
+**Kernel Mirror Checklist:**
+
+- [ ] Standalone `ATLAS-STATEMENT-v1.1.html`
+- [ ] `transaction-themes-extension.html` → `ATLAS_STATEMENT_HTML` constant + THEMES entry with new UUID
+- [ ] `discovery.json` → Atlas entry live; suite-level `version` bump; `updated` field bump
+- [ ] `CHANGELOG.md` → S01E03 entry
+- [ ] Root `README.md` → slate table shows 4 v1.1 themes (Jade marked "shipping" until E.7); legacy section shows 4 v1.0 themes with upgrade-path
+- [ ] `global-suite/themes/README.md` → roadmap table reflects current slate, not old v1.0 plan
+- [ ] Notion Ch 4 closed
+
+**Acceptance criteria:**
+
+1. Atlas renders statement-format correctly: running balance column, ageing buckets (current/30/60/90+), prior-balance carry-forward
+2. Root README slate table = 4 v1.1 themes with install URLs; legacy section present
+3. Sub-README (global-suite/themes/README.md) reflects current slate
+4. Notion Ch 4 marked complete (14/15 → 15/15)
+5. Rendered preview in execution report
+
+**Visual QC gate:** YES. Atlas is statement-format, NOT invoice-format. Verify column structure correct.
+
+**Execution report path:** `DOCS\STRATEGY\EXECUTION-REPORTS\PHASE-E.6-REPORT-[YYYY-MM-DD].md`
+
+**Date target:** Live by **2026-06-09 EOD**.
+
+---
+
+## E.7 — JADE CLINICAL v1.1 + LIS LAUNCH COORDINATION — `S01E04`
+
+**Scope:** Ship Jade Clinical v1.1, time-align with LIS post-Eid launch.
+
+**Pre-requisites:** E.2, E.4, E.5, E.6 closed. LIS project signals launch-window confirmation (cross-project dependency, owned by LIS).
+
+**Files to touch:**
+
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\JADE-CLINICAL-v1.1.html` (NEW; supersedes v1.0)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\utilities\transaction-themes-extension.html` (`JADE_CLINICAL_HTML` constant updated to v1.1)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\manifests\discovery.json` (Jade v1.1 entry live; v1.0 stays deprecated; suite-level `version` bump; `updated` field bump)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\CHANGELOG.md` (S01E04 entry)
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\README.md` (mark Jade v1.1 "shipping" → "live")
+- `D:\000. REPOS\SECTOR-BRAVO-OPERATIONS\INSPIRON-SUITE\global-suite\themes\README.md` (mark Jade v1.1 live)
+
+**Files OFF LIMITS this phase:** Other slate theme files.
+
+**Kernel Mirror Checklist:**
+
+- [ ] Standalone `JADE-CLINICAL-v1.1.html`
+- [ ] `transaction-themes-extension.html` → `JADE_CLINICAL_HTML` updated
+- [ ] `discovery.json` → Jade v1.1 live; v1.0 deprecated; suite-level `version` bump; `updated` field bump
+- [ ] `CHANGELOG.md` → S01E04 entry
+- [ ] Root `README.md` → Jade v1.1 row marked live
+- [ ] `global-suite/themes/README.md` → Jade v1.1 row marked live
+
+**Acceptance criteria:**
+
+1. Healthcare fields render correctly: Patient ID, Facility, Procedure code (where present in custom_fields)
+2. LIS-compatible export hooks present; hook schema documented in execution report
+3. Coordinated launch post drafted in execution report — NOT POSTED. Opus reviews timing with INSPIRON-COMMAND.
+4. Mabaega credit appears in the draft (this IS the right moment per brief)
+5. Rendered preview in execution report
+
+**Visual QC gate:** YES.
+
+**Execution report path:** `DOCS\STRATEGY\EXECUTION-REPORTS\PHASE-E.7-REPORT-[YYYY-MM-DD].md`
+
+**Date target:** Live by **2026-06-16 EOD** (post-Eid).
+
+---
+
+# PHASE STATUS TABLE
+
+| Phase | Label | Status | Target Date | Visual QC |
+|---|---|---|---|---|
+| E.1.1 | PI updated | Awaiting Commander paste | 2026-05-23 | N |
+| E.1.2 | EXECUTION-PHASES.md saved | Awaiting Commander save | 2026-05-23 | N |
+| E.2 | S01E01 Midnight Executive → LIVE | Pending | 2026-05-26 | Y |
+| E.3 | eko reply + April 10 cross-link | Pending E.2 | 2026-05-27 | N |
+| E.4 | S01E02 Riyadh RTL → LIVE | Pending | 2026-06-02 | Y |
+| E.5 | v1.0 legacy resolution | Pending | 2026-06-02 | Y |
+| E.6 | S01E03 Atlas Statement + Notion Ch 4 + README | Pending | 2026-06-09 | Y |
+| E.7 | S01E04 Jade Clinical v1.1 + LIS coordination | Pending | 2026-06-16 | Y |
+
+---
+
+# CROSS-PROJECT COORDINATION
+
+- **HEALTHCARE-INSPIRON LIS:** E.7 timing aligns with LIS post-Eid launch; comms coordinated via INSPIRON-COMMAND
+- **Cleary Properties:** Damien inbound interrupts active phase (see PI Interruption Escape Hatch)
+- **KSA WhatsApp lead:** Riyadh RTL (E.4) IS the response; no separate sales follow-up triggered by this arc
+- **INSPIRON-COMMAND:** all CPN log routing happens upstream; this project surfaces only
+
+---
+
+# ARC CLOSURE
+
+When E.7 completes, Commander returns to INSPIRON-COMMAND with closing brief. INSPIRON-COMMAND handles CPN log entry, NEURAL-BRIDGE GLOBAL doctrine updates, cross-project session summary.
+
+This file remains as the historical execution record of SLATE-1.
+
+---
+
+**END EXECUTION-PHASES.md — Arc: SLATE-1 (Season 01)**

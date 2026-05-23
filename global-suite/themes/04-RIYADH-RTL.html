@@ -121,6 +121,12 @@
       direction: rtl;
     }
 
+    /* Iframe height helper to prevent feedback loop */
+    body.in-iframe,
+    body.in-iframe #it-shell {
+      min-height: auto !important;
+    }
+
     /* Action bar — Idea 46, screen only */
     #it-doc-actions {
       position: relative;
@@ -628,8 +634,8 @@
       #it-doc-actions { display: none !important; }
       .it-demo-strip  { display: none !important; }
 
-      html, body { background: #fff !important; color: #000 !important; font-size: 11px !important; }
-      #it-shell { box-shadow: none !important; max-width: 100% !important; background: #fff !important; }
+      html, body { min-height: auto !important; height: auto !important; background: #fff !important; color: #000 !important; font-size: 11px !important; }
+      #it-shell { min-height: auto !important; height: auto !important; box-shadow: none !important; max-width: 100% !important; background: #fff !important; }
       main { background: #fff !important; }
 
       .it-header-band { background: #1A3A5C !important; }
@@ -716,6 +722,10 @@
 
   <script>
     'use strict';
+
+    if (window.parent !== window) {
+      document.body.classList.add('in-iframe');
+    }
 
     /* ============================================================
        SAFE SETTINGS — edit these freely

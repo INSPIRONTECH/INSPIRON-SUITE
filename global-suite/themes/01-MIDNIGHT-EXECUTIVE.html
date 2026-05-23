@@ -447,7 +447,20 @@
 
       html, body { min-height: auto !important; height: auto !important; background: #fff !important; color: #000 !important; font-size: 11px !important; }
       #it-shell { min-height: auto !important; height: auto !important; box-shadow: none !important; max-width: 100% !important; background: #fff !important; }
-      main { background: #fff !important; }
+      main { 
+        background: #fff !important; 
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: 277mm !important; /* Ch.10 — forces main to fill A4 printable area */
+        box-sizing: border-box !important;
+      }
+      .it-content {
+        flex: 1 0 auto !important;
+        min-height: 180mm !important;
+      }
+      .it-footer-shell {
+        flex-shrink: 0 !important;
+      }
 
       .it-header-band { background: #f0f0f0 !important; border-bottom: 3px solid #FFD700 !important; }
       .it-header-title { color: #111 !important; }

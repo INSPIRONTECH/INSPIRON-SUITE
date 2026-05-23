@@ -168,7 +168,14 @@
 
     /* Idea 57, 66 — content grows, footer anchors bottom */
     .it-content { flex: 1 0 auto; }
-    .it-footer-shell { flex-shrink: 0; }
+    
+    /* Chapter 10: Footer Shell Print & Flexbox Anchoring */
+    .it-footer-shell {
+      flex-shrink: 0;
+      margin-top: auto !important;         /* Complementary push to the absolute bottom */
+      page-break-inside: avoid !important; /* Legacy engine protection against fracturing */
+      break-inside: avoid !important;      /* Modern engine protection against fracturing */
+    }
 
     /* DEMO STRIP — Idea 89 */
     .it-demo-strip {

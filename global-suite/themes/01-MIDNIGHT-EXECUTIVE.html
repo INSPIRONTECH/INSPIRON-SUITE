@@ -43,10 +43,6 @@
   ✅ Single <tr> in <thead> — no nested table rows
   ✅ No external font CDN — @font-face with relative paths only
   ✅ All URLs validated — http/https/mailto/tel whitelist only
-
-  v1.1.1 — MAJOR visual audit fixes (2026-05-22):
-  ✅ Relative logo paths now render (Manager.io /logo?Key=... URLs)
-  ✅ Inline <b>/<i>/<u>/<br> in user data render correctly via safeHtml
   ============================================================
 -->
 <!DOCTYPE html>
@@ -585,6 +581,16 @@
       return ({left:'left',center:'center',right:'right',start:'left',end:'right'})[v] || 'left';
     }
 
+    function sendResize() {
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          type: "resize",
+          width: document.documentElement.scrollWidth + 1,
+          height: document.documentElement.scrollHeight + 1
+        }, "*");
+      }
+    }
+
     /* Legacy helper — retained for backward compatibility.
        New code should use safeHtml() which handles \n AND whitelisted tags. */
     function appendTextWithBreaks(node, text) {
@@ -665,14 +671,45 @@
         if (col.shrinkToFit) td.style.width = '1%';
         if (col.emphasis) td.classList.add('it-cell-emphasis');
       }
+
+      // --- Percentage Normalization Engine ---
+      let cellText = cell.text;
+      if (col && col.label) {
+        const colLabelLower = String(col.label).toLowerCase();
+        const percentKeywords = ["rate", "percent", "percentage", "ratio", "com %", "commission", "unit price"];
+        
+        if (percentKeywords.some(keyword => colLabelLower.includes(keyword))) {
+          const trimmed = String(cellText).trim();
+          const num = parseFloat(trimmed);
+          
+          // Matches decimals like 0.0325, .04, 0.05 (fraction between 0 and 1)
+          if (!isNaN(num) && num > 0 && num < 1 && /^[0-9]*\.[0-9]+$/.test(trimmed)) {
+            cellText = (num * 100).toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '%';
+          }
+        }
+      }
+
       if (cell.image && cell.image.url) {
         const src = safeImageUrl(cell.image.url);
-        if (src) { const img = document.createElement('img'); img.src = src; img.alt = ''; img.style.maxWidth = '100px'; td.appendChild(img); }
+        if (src) {
+          const img = document.createElement('img');
+          img.addEventListener('load', sendResize);
+          img.src = src; img.alt = ''; img.style.maxWidth = '100px';
+          td.appendChild(img);
+        }
       } else if (cell.link && cell.link.url) {
         const href = safeLinkUrl(cell.link.url);
-        if (href) { const a = document.createElement('a'); a.href = href; a.target = '_top'; a.className = 'it-cell-link'; safeHtml(a, cell.text); td.appendChild(a); }
-        else { safeHtml(td, cell.text); }
-      } else { safeHtml(td, cell.text); }
+        if (href) {
+          const a = document.createElement('a');
+          a.href = href; a.target = '_top'; a.className = 'it-cell-link';
+          safeHtml(a, cellText);
+          td.appendChild(a);
+        } else {
+          safeHtml(td, cellText);
+        }
+      } else {
+        safeHtml(td, cellText);
+      }
       return td;
     }
 
@@ -778,7 +815,9 @@
       const logoWrap = document.createElement('div'); logoWrap.className = 'it-header-logo';
       const logoSrc = safeImageUrl(data.business && data.business.logo);
       if (logoSrc) {
-        const img = document.createElement('img'); img.src = logoSrc; img.alt = '';
+        const img = document.createElement('img');
+        img.addEventListener('load', sendResize);
+        img.src = logoSrc; img.alt = '';
         logoWrap.appendChild(img);
       } else {
         const placeholder = document.createElement('div'); placeholder.className = 'it-header-logo-placeholder';
@@ -809,24 +848,8 @@
         titleBlock.appendChild(refEl);
       }
 
-      /* Brand mark — Idea 78 */
-      const brand = document.createElement('div'); brand.className = 'it-header-brand';
-      const brandLogo = document.createElement('div'); brandLogo.className = 'it-header-brand-logo';
-      const brandSvgWrap = document.createElement('span');
-      brandSvgWrap.style.cssText = 'filter:drop-shadow(0 0 6px rgba(0,210,255,0.6));flex-shrink:0;';
-      brandSvgWrap.innerHTML = AUTHORITY_SVG;
-      const brandName = document.createElement('span'); brandName.className = 'it-brand-name';
-      brandName.textContent = 'inspiron ';
-      const brandSpan = document.createElement('span'); brandSpan.textContent = 'TECH';
-      brandName.appendChild(brandSpan);
-      brandLogo.appendChild(brandSvgWrap); brandLogo.appendChild(brandName);
-      const tagline = document.createElement('div'); tagline.className = 'it-brand-tagline';
-      tagline.textContent = 'I do not install software. I architect logic.';
-      brand.appendChild(brandLogo); brand.appendChild(tagline);
-
       headerBand.appendChild(logoWrap);
       headerBand.appendChild(titleBlock);
-      headerBand.appendChild(brand);
       root.appendChild(headerBand);
 
       /* Gold stripe */
@@ -991,6 +1014,17 @@
           const p = document.createElement('p'); p.textContent = line; overlay.appendChild(p);
         });
         document.body.appendChild(overlay);
+      }
+
+      sendResize();
+
+      if (typeof ResizeObserver !== 'undefined') {
+        const resizeObserver = new ResizeObserver(() => {
+          sendResize();
+        });
+        resizeObserver.observe(document.documentElement);
+      } else {
+        window.addEventListener('resize', sendResize);
       }
     }
 

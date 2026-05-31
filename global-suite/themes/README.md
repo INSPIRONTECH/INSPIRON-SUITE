@@ -8,6 +8,8 @@ Premium HTML/CSS invoice and document themes for Manager.io, rebuilt for the mod
 |---|---|---|---|
 | [`01_UNIVERSAL-BRONZE.html`](01_UNIVERSAL-BRONZE.html) | **Universal Bronze** | Modern grayscale layout with high-impact Bronze accents. Fully balances and adapts to empty recipient profiles. | ✅ Released |
 | [`02_CORPORATE-BLUE-COLUMN.html`](02_CORPORATE-BLUE-COLUMN.html) | **Corporate Blue Column** | Structured 3-column top bar layout with horizontal metadata strip. Premium corporate shell. | ✅ Released |
+| [`MIDNIGHT-EXECUTIVE-v1.1.html`](MIDNIGHT-EXECUTIVE-v1.1.html) | **Midnight Executive** | Premium dark mode datapad-style executive layout with whitelisted HTML sanitization and zero remote dependencies. | ✅ Released |
+| [`RIYADH-RTL-v1.1.html`](RIYADH-RTL-v1.1.html) | **Riyadh RTL** | Bilingual Arabic/English theme with RTL-first layout, automated duplicate label collapse, and ZATCA Compliant structures. | ✅ Released |
 | [`GRAPHITE-INDUSTRIAL-v1.html`](GRAPHITE-INDUSTRIAL-v1.html) | **Graphite Industrial** | Architectural monochrome theme with heavy structural borders. Bauhaus inspired. | 🟡 Staged |
 | [`JADE-CLINICAL-v1.html`](JADE-CLINICAL-v1.html) | **Jade Clinical** | Healthcare-inspired professional theme with clinical teal/mint accents and ECG pulse accenting. | 🟡 Staged |
 | [`MIDNIGHT-CORPORATE-v1.html`](MIDNIGHT-CORPORATE-v1.html) | **Midnight Corporate** | Dark/navy high-contrast corporate identity with clean, modern layout blocks. | 🟡 Staged |

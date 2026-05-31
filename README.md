@@ -25,6 +25,8 @@ Every theme in the Community Edition is built on the **Universal Canvas** protoc
 | Series | Identity | Purpose | Deployment |
 | :--- | :--- | :--- | :--- |
 | **UNIVERSAL BRONZE** | `Universal` | General B2B / Technical Authority | [Install URL](https://suite.inspiron.tech/global-suite/themes/UNIVERSAL-BRONZE-v1.html) |
+| **MIDNIGHT EXECUTIVE** | `Executive` | Premium Executive / Secure Datapad | [Install URL](https://suite.inspiron.tech/global-suite/themes/MIDNIGHT-EXECUTIVE-v1.1.html) |
+| **RIYADH RTL** | `Bilingual` | Arabic/English RTL-First Layout | [Install URL](https://suite.inspiron.tech/global-suite/themes/RIYADH-RTL-v1.1.html) |
 | **MIDNIGHT CORPORATE** | `Corporate` | CFO / Enterprise / Financial Control | [Install URL](https://suite.inspiron.tech/global-suite/themes/MIDNIGHT-CORPORATE-v1.html) |
 | **JADE CLINICAL** | `Clinical` | Healthcare / NGO / Laboratory (LIS) | [Install URL](https://suite.inspiron.tech/global-suite/themes/JADE-CLINICAL-v1.html) |
 | **GRAPHITE INDUSTRIAL** | `Industrial` | Supply Chain / Systems Logic / HMI | [Install URL](https://suite.inspiron.tech/global-suite/themes/GRAPHITE-INDUSTRIAL-v1.html) |

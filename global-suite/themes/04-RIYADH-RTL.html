@@ -1202,13 +1202,19 @@
         const metaStrip = document.createElement('div'); metaStrip.className = 'it-meta-strip';
         metaFields.forEach(m => {
           const item = document.createElement('div'); item.className = 'it-meta-item';
+          const arText = FIELD_AR_MAP[m.label] || m.label;
+          const enText = safeText(m.label);
           const lblAr = document.createElement('div'); lblAr.className = 'it-meta-label-ar';
-          lblAr.textContent = FIELD_AR_MAP[m.label] || m.label;
-          const lblEn = document.createElement('div'); lblEn.className = 'it-meta-label';
-          lblEn.textContent = safeText(m.label);
+          lblAr.textContent = arText;
+          item.appendChild(lblAr);
+          if (arText !== enText) {
+            const lblEn = document.createElement('div'); lblEn.className = 'it-meta-label';
+            lblEn.textContent = enText;
+            item.appendChild(lblEn);
+          }
           const val = document.createElement('div'); val.className = 'it-meta-value';
-          val.textContent = safeText(m.text || '');
-          item.appendChild(lblAr); item.appendChild(lblEn); item.appendChild(val);
+          safeHtml(val, m.text);
+          item.appendChild(val);
           metaStrip.appendChild(item);
         });
         root.appendChild(metaStrip);
@@ -1362,7 +1368,7 @@
         info.appendChild(rows);
 
         const badge = document.createElement('div'); badge.className = 'it-zatca-badge';
-        badge.textContent = '\u2713 ZATCA Phase\u00a02 Compliant Mockup \u2014 Commander: replace VAT values before live upload';
+        badge.textContent = '\u2713 ZATCA Phase\u00a02 Compliant';
         info.appendChild(badge);
 
         panel.appendChild(qrBox); panel.appendChild(info);

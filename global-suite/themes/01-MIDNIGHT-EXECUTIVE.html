@@ -900,7 +900,8 @@
         metaFields.forEach(m => {
           const item = document.createElement('div'); item.className = 'it-meta-item';
           const lbl = document.createElement('div'); lbl.className = 'it-meta-label'; lbl.textContent = safeText(m.label);
-          const val = document.createElement('div'); val.className = 'it-meta-value'; val.textContent = safeText(m.text || '');
+          const val = document.createElement('div'); val.className = 'it-meta-value';
+          safeHtml(val, m.text);
           item.appendChild(lbl); item.appendChild(val); metaStrip.appendChild(item);
         });
         root.appendChild(metaStrip);

@@ -18,7 +18,9 @@
     { "id": "universal-bronze-v1", "name": "UNIVERSAL BRONZE", "identity": "Warm Authority", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/UNIVERSAL-BRONZE-v1.html" },
     { "id": "midnight-corporate-v1", "name": "MIDNIGHT CORPORATE", "identity": "CFO Enterprise Control", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/MIDNIGHT-CORPORATE-v1.html" },
     { "id": "jade-clinical-v1", "name": "JADE CLINICAL", "identity": "Healthcare Precision", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/JADE-CLINICAL-v1.html" },
-    { "id": "graphite-industrial-v1", "name": "GRAPHITE INDUSTRIAL", "identity": "Industrial Logic", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/GRAPHITE-INDUSTRIAL-v1.html" }
+    { "id": "graphite-industrial-v1", "name": "GRAPHITE INDUSTRIAL", "identity": "Industrial Logic", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/GRAPHITE-INDUSTRIAL-v1.html" },
+    { "id": "midnight-executive-v1.1", "name": "MIDNIGHT EXECUTIVE", "identity": "Premium Sleek Datapad", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/MIDNIGHT-EXECUTIVE-v1.1.html" },
+    { "id": "riyadh-rtl-v1.1", "name": "RIYADH RTL", "identity": "Bilingual Arabic/English RTL", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/RIYADH-RTL-v1.1.html" }
   ],
   "utilities": [
     {

@@ -758,7 +758,7 @@
       ENABLE_MULTI_CURRENCY:       true,
       ENABLE_QR_PANEL:             true,
       ENABLE_DEBUG_OVERLAY:        false,
-      ENABLE_DEMO_WATERMARK:       true,
+      ENABLE_DEMO_WATERMARK:       false,
       ENABLE_AUTHORITY_FOOTER:     true,
       AUTO_DENSITY_LONG_THRESHOLD: 20,
       /* ── ZATCA e-invoicing fields ──────────────────────────────
@@ -1075,44 +1075,47 @@
        Commander fills before live upload.
        ---------------------------------------------------------- */
     const TITLE_MAP = {
-      'Invoice':        '\u0641\u0627\u062a\u0648\u0631\u0629',
-      'Receipt':        '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0625\u064a\u0635\u0627\u0644 \u0627\u0633\u062a\u0644\u0627\u0645]',
-      'Quote':          '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0639\u0631\u0636 \u0633\u0639\u0631]',
-      'Purchase Order': '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0623\u0645\u0631 \u0634\u0631\u0627\u0621]',
-      'Credit Note':    '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0625\u0634\u0639\u0627\u0631 \u062f\u0627\u0626\u0646]',
-      'Debit Note':     '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0625\u0634\u0639\u0627\u0631 \u0645\u062f\u064a\u0646]',
-      'Delivery Note':  '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0633\u0646\u062f \u062a\u0633\u0644\u064a\u0645]',
-      'Payment Receipt':'[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0625\u064a\u0635\u0627\u0644 \u062f\u0641\u0639]'
+      'Invoice':         'فاتورة ضريبية',
+      'Tax Invoice':     'فاتورة ضريبية',
+      'Receipt':         'إيصال استلام',
+      'Quote':           'عرض سعر',
+      'Purchase Order':  'أمر شراء',
+      'Credit Note':     'إشعار دائن',
+      'Debit Note':      'إشعار مدين',
+      'Delivery Note':   'سند تسليم',
+      'Payment Receipt': 'إيصال دفع'
     };
 
     const FIELD_AR_MAP = {
-      'Issue Date':   '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0625\u0635\u062f\u0627\u0631]',
-      'Due Date':     '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0627\u0633\u062a\u062d\u0642\u0627\u0642]',
-      'Reference':    '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0631\u0642\u0645 \u0627\u0644\u0645\u0631\u062c\u0639]',
-      'Currency':     '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0639\u0645\u0644\u0629]',
-      'Tax Number':   '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0636\u0631\u064a\u0628\u064a]',
-      'Phone':        '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0647\u0627\u062a\u0641]',
-      'Email':        '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0628\u0631\u064a\u062f \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a]',
-      'Website':      '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0645\u0648\u0642\u0639]',
-      'VAT Reg. No.': '\u0631\u0642\u0645 \u0627\u0644\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u0636\u0631\u064a\u0628\u064a',
-      'CR No.':       '\u0627\u0644\u0633\u062c\u0644 \u0627\u0644\u062a\u062c\u0627\u0631\u064a'
+      'Issue Date':        'تاريخ الإصدار',
+      'Invoice Date':      'تاريخ الفاتورة',
+      'Due Date':          'تاريخ الاستحقاق',
+      'Reference':         'رقم المرجع',
+      'Invoice Number':    'رقم الفاتورة',
+      'Currency':          'العملة',
+      'Tax Number':        'الرقم الضريبي',
+      'Phone':             'الهاتف',
+      'Email':             'البريد الإلكتروني',
+      'Website':           'الموقع',
+      'VAT Reg. No.':      'رقم التسجيل الضريبي',
+      'CR No.':            'السجل التجاري'
     };
 
     const COL_AR_MAP = {
-      'Description': '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0648\u0635\u0641]',
-      'Item':        '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0628\u0646\u062f]',
-      'Qty':         '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0643\u0645\u064a\u0629]',
-      'Quantity':    '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0643\u0645\u064a\u0629]',
-      'Unit Price':  '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0633\u0639\u0631 \u0627\u0644\u0648\u062d\u062f\u0629]',
-      'Price':       '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0633\u0639\u0631]',
-      'Amount':      '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0645\u0628\u0644\u063a]',
-      'Tax':         '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0636\u0631\u064a\u0628\u0629]',
-      'VAT':         '\u0636\u0631\u064a\u0628\u0629 \u0627\u0644\u0642\u064a\u0645\u0629 \u0627\u0644\u0645\u0636\u0627\u0641\u0629',
-      'Total':       '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a]',
-      'Date':        '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u062a\u0627\u0631\u064a\u062e]',
-      'Rate':        '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0646\u0633\u0628\u0629]',
-      'Discount':    '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u062e\u0635\u0645]',
-      'Account':     '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u062d\u0633\u0627\u0628]'
+      'Description': 'الوصف',
+      'Item':        'البند',
+      'Qty':         'الكمية',
+      'Quantity':    'الكمية',
+      'Unit Price':  'سعر الوحدة',
+      'Price':       'السعر',
+      'Amount':      'المبلغ',
+      'Tax':         'الضريبة',
+      'VAT':         'ضريبة القيمة المضافة',
+      'Total':       'الإجمالي',
+      'Date':        'التاريخ',
+      'Rate':        'النسبة',
+      'Discount':    'الخصم',
+      'Account':     'الحساب'
     };
 
     /* ----------------------------------------------------------
@@ -1255,14 +1258,14 @@
 
         /* RTL: "Prepared For" first (rightmost), "Issued By" second (leftmost) */
         parties.appendChild(makeParty(
-          '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0645\u064f\u0639\u062f \u0644\u0640]',
+          'معد ل',
           'Prepared For',
           data.recipient.name,
           data.recipient.address,
           recExtra
         ));
         parties.appendChild(makeParty(
-          '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0635\u0627\u062f\u0631 \u0639\u0646]',
+          'صادر عن',
           'Issued By',
           (data.business && data.business.name) || data.businessName || '',
           (data.business && data.business.address) || '',
@@ -1275,7 +1278,7 @@
       if (data.table && data.table.description) {
         const descBlock = document.createElement('div'); descBlock.className = 'it-description-block';
         const descLabelAr = document.createElement('div'); descLabelAr.className = 'it-description-label-ar';
-        descLabelAr.textContent = '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0648\u0635\u0641]';
+        descLabelAr.textContent = 'وصف الخدمة';
         const descLabelEn = document.createElement('div'); descLabelEn.className = 'it-description-label';
         descLabelEn.textContent = 'Description';
         const descText = document.createElement('div'); descText.className = 'it-description-text';
@@ -1324,12 +1327,15 @@
         const grandTotalRow = data.totals && data.totals.find(t => t.emphasis || t.key === 'Total');
         const totalVal = grandTotalRow ? safeText(grandTotalRow.text) : '0.00';
 
+        const tlvSellerName = (data.business && data.business.name) ? safeText(data.business.name) : THEME_FLAGS.ZATCA_SELLER_NAME;
+        const tlvVatRow = data.totals && data.totals.find(t => t.label && /vat|tax/i.test(t.label));
+        const tlvVatAmount = tlvVatRow ? safeText(tlvVatRow.text) : '0.00';
         const tlvBase64 = buildZatcaTlv(
-          THEME_FLAGS.ZATCA_SELLER_NAME,
+          tlvSellerName,
           THEME_FLAGS.ZATCA_VAT_NUMBER,
           now,
           totalVal,
-          '[AR: VAT_AMOUNT_PLACEHOLDER]' /* Commander fills before live */
+          tlvVatAmount
         );
         const qrSrc = renderZatcaQrSvg(tlvBase64);
 
@@ -1351,11 +1357,14 @@
         info.appendChild(zatcaTitleAr); info.appendChild(zatcaTitleEn);
 
         const rows = document.createElement('div'); rows.className = 'it-zatca-rows';
+        const vatRow = data.totals && data.totals.find(t => t.label && /vat|tax/i.test(t.label));
+        const vatVal = vatRow ? safeText(vatRow.text) : '';
+        const sellerName = (data.business && data.business.name) ? safeText(data.business.name) : THEME_FLAGS.ZATCA_SELLER_NAME;
         [
-          ['[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0633\u0645 \u0627\u0644\u0628\u0627\u0626\u0639]',              'Seller Name',   THEME_FLAGS.ZATCA_SELLER_NAME],
-          ['[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0636\u0631\u064a\u0628\u064a]', 'VAT Reg. No.',  THEME_FLAGS.ZATCA_VAT_NUMBER],
-          ['[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0641\u0627\u062a\u0648\u0631\u0629]', 'Invoice Total', totalVal + '\u00a0' + THEME_FLAGS.ZATCA_CURRENCY],
-          ['[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0636\u0631\u064a\u0628\u0629 \u0627\u0644\u0642\u064a\u0645\u0629 \u0627\u0644\u0645\u0636\u0627\u0641\u0629]', 'VAT (15%)', '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u064a\u062d\u0633\u0628 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b]']
+          ['اسم البائع',              'Seller Name',   sellerName],
+          ['الرقم الضريبي', 'VAT Reg. No.',  THEME_FLAGS.ZATCA_VAT_NUMBER],
+          ['إجمالي الفاتورة', 'Invoice Total', totalVal + ' ' + THEME_FLAGS.ZATCA_CURRENCY],
+          ['ضريبة القيمة المضافة', 'VAT (15%)', vatVal ? vatVal + ' ' + THEME_FLAGS.ZATCA_CURRENCY : 'يحسب تلقائياً']
         ].forEach(([arKey, enKey, value]) => {
           const row = document.createElement('div'); row.className = 'it-zatca-row';
           const key = document.createElement('div'); key.className = 'it-zatca-key';
@@ -1406,7 +1415,7 @@
       if (data.footers && data.footers.length) {
         const notesBlock = document.createElement('div'); notesBlock.className = 'it-notes-block';
         const notesLabel = document.createElement('div'); notesLabel.className = 'it-notes-label';
-        notesLabel.textContent = '[\u0627\u0644\u0639\u0631\u0628\u064a\u0629: \u0627\u0644\u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0648\u0627\u0644\u0634\u0631\u0648\u0637]  \u00b7  Notes & Terms';
+        notesLabel.textContent = 'الملاحظات والشروط  ·  Notes & Terms';
         const notesText = document.createElement('div'); notesText.className = 'it-notes-text';
         data.footers.forEach(f => {
           const div = document.createElement('div'); div.className = 'it-footer-item';

@@ -13,6 +13,7 @@ They are kept here for reference and continuity only. **Do not install these fil
 | `RIYADH-RTL-v1.1.html` | `COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html` |
 | `MIDNIGHT-CORPORATE-v1.html` | Superseded by Midnight Executive series |
 | `JADE-CLINICAL-v1.html` | Backlogged — not part of current release slate |
+| `GRAPHITE-INDUSTRIAL-v1.html` | Backlogged — not part of current release slate |
 
 ## Why kept?
 

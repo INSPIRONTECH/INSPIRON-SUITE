@@ -8,9 +8,9 @@
   "repository": "https://github.com/INSPIRONTECH/INSPIRON-SUITE",
   "nexus": "https://inspiron.tech",
   "endpoints": {
-    "global_themes": "https://suite.inspiron.tech/themes/",
+    "global_themes": "https://suite.inspiron.tech/global-suite/themes/",
     "global_utilities": "https://suite.inspiron.tech/utilities/",
-    "checklist": "https://suite.inspiron.tech/global-suite/utilities/checklist-v1.html",
+    "checklist": "https://suite.inspiron.tech/utilities/checklist-v1.html",
     "tax_suite": "https://tools.inspiron.tech/",
     "bd_compliance": "https://tools.inspiron.tech/"
   },
@@ -78,7 +78,7 @@
     {
       "id": "inspiron-pre-send-checklist",
       "name": "Invoice Pre-Send Checklist",
-      "url": "https://suite.inspiron.tech/global-suite/utilities/checklist-v1.html"
+      "url": "https://suite.inspiron.tech/utilities/checklist-v1.html"
     }
   ],
   "utility_registry": [
@@ -90,7 +90,7 @@
       "version": "1.1.0",
       "compliance": ["global", "bd-mushak-6.3"],
       "checks": ["billing-address", "reference-no", "mushak-6.3-bin", "total-balance", "issue-date"],
-      "url": "https://suite.inspiron.tech/global-suite/utilities/checklist-v1.html"
+      "url": "https://suite.inspiron.tech/utilities/checklist-v1.html"
     }
   ],
   "tax_registry": [

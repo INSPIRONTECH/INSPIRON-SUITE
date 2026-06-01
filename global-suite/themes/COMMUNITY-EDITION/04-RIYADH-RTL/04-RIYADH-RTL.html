@@ -1,0 +1,1529 @@
+<!--
+  ============================================================
+  INSPIRON TECH — MANAGER.IO THEME
+  ============================================================
+  Theme:        Riyadh RTL
+  Version:      1.2.0
+  Schema:       /api4/view-v1
+  Archetype:    generic_invoice
+  Contract:     invoice-ready
+  License:      CC BY 4.0
+  Support:      hello@inspiron.tech
+  Repo:         github.com/INSPIRONTECH/INSPIRON-SUITE
+  ============================================================
+
+  EPISODE: Season 01 Episode 04 — Riyadh RTL
+  LOCALE:  Arabic/English bilingual · RTL-first
+  COMPLIANCE: ZATCA e-invoicing QR (KSA Phase 2 mockup)
+  CURRENCY:   SAR · AED · PKR (GCC multi-currency)
+
+  IDEAS COMPOSED:
+  4+9+11+13+14+15+16+18+19+26+28+30+31+32+33+36+39
+  +46+50+51+57+61+66+70+73+76+77+78+79+87+89+92
+  +98+102+104+121+122+123+124+131+132
+
+  [AR: term] PLACEHOLDERS:
+  These placeholders mark Arabic accounting vocabulary
+  requiring Commander review before live deployment.
+  Search for "[AR:" in this file and replace with verified
+  Arabic terms before uploading to Manager.io.
+
+  OFFICIAL CUSTOMIZATION API — SAFE TO EDIT:
+  ------------------------------------------------------------
+  ✅ Brand colors:   CSS variables in :root
+  ✅ Logo:           Replace via Manager.io business logo setting
+  ✅ Feature flags:  THEME_FLAGS object (top of <script>)
+  ✅ ZATCA values:   THEME_FLAGS.ZATCA_* (VAT number, currency)
+  ✅ Density:        ?density=compact|balanced|relaxed URL param
+
+  UNSUPPORTED — DO NOT MODIFY:
+  ------------------------------------------------------------
+  ❌ All .it-* CSS classes
+  ❌ THEME_DOM and THEME_FLAGS frozen objects
+  ❌ safe* helper functions
+  ❌ renderDocument() pipeline
+  ❌ fetch() and error handling block
+  ❌ <main id="document-root"> structure
+
+  Modifying unsupported areas voids INSPIRON TECH support.
+  For deeper customisation contact hello@inspiron.tech.
+
+  SECURITY — v1.1 HARDENING (per @eko review 2026-05-21):
+  ------------------------------------------------------------
+  ✅ No innerHTML with API data — DOM nodes + textContent only
+  ✅ No script re-execution from data.footers
+  ✅ Single <tr> in <thead> — no nested table rows
+  ✅ No external font CDN — @font-face with relative paths only
+  ✅ All URLs validated — http/https/mailto/tel whitelist only
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riyadh RTL — INSPIRON TECH</title>
+
+  <style>
+    /* ============================================================
+       FONT DECLARATION — Idea 121: self-hosted, never CDN
+       Arabic script: system fallback (Tahoma, Arial Unicode MS)
+       Latin script:  Neo Sans Pro (self-hosted)
+       ============================================================ */
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Light.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Light.woff') format('woff'); font-weight: 300; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Regular.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Medium.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Medium.woff') format('woff'); font-weight: 500; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Bold.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Bold.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Ultra.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Ultra.woff') format('woff'); font-weight: 900; font-style: normal; font-display: swap; }
+
+    /* ============================================================
+       SAFE SETTINGS — edit colors, spacing here freely
+       ============================================================ */
+    :root {
+      --canvas:          #FFFFFF;
+      --surface:         #FAFAF8;
+      --surface-2:       #F3EFE3;
+      --accent:          #1A3A5C;
+      --accent-gold:     #C9A035;
+      --accent-green:    #006C35;
+      --accent-soft:     rgba(201, 160, 53, 0.08);
+      --accent-border:   rgba(26, 58, 92, 0.18);
+      --text-main:       #1C1C1C;
+      --text-muted:      #5C5C5C;
+      --text-label:      #8A8A8A;
+      --border:          rgba(26, 58, 92, 0.10);
+      --border-strong:   rgba(26, 58, 92, 0.22);
+      --status-positive: #006C35;
+      --status-negative: #C0392B;
+      --font-stack:      'Neo Sans Pro', 'Tahoma', 'Arial Unicode MS', 'Segoe UI', system-ui, Arial, sans-serif;
+    }
+
+    /* ============================================================
+       DO NOT EDIT BELOW — CORE ENGINE CSS (.it-* classes)
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 13px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      direction: rtl;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.6;
+      background: var(--surface);
+      color: var(--text-main);
+      min-height: 100vh;
+      direction: rtl;
+    }
+
+    /* Iframe height helper to prevent feedback loop */
+    body.in-iframe,
+    body.in-iframe #it-shell {
+      min-height: auto !important;
+    }
+
+    /* Action bar — Idea 46, screen only */
+    #it-doc-actions {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--accent);
+      border-bottom: 3px solid var(--accent-gold);
+    }
+    .it-action-btn {
+      font-family: var(--font-stack);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.80);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .it-action-btn:hover {
+      color: #fff;
+      border-color: var(--accent-gold);
+      background: rgba(201, 160, 53, 0.12);
+    }
+
+    /* A4 shell — Idea 51 */
+    #it-shell {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--canvas);
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 2px 40px rgba(26, 58, 92, 0.12), 0 0 0 1px var(--border);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 auto;
+    }
+
+    /* Idea 57, 66 — content grows, footer anchors bottom */
+    .it-content { flex: 1 0 auto; }
+    
+    /* Chapter 10: Footer Shell Print & Flexbox Anchoring */
+    .it-footer-shell {
+      flex-shrink: 0;
+      margin-top: auto !important;         /* Complementary push to the absolute bottom */
+      page-break-inside: avoid !important; /* Legacy engine protection against fracturing */
+      break-inside: avoid !important;      /* Modern engine protection against fracturing */
+    }
+
+    /* DEMO STRIP — Idea 89 */
+    .it-demo-strip {
+      padding: 6px 28px;
+      text-align: center;
+      border-bottom: 1px dashed rgba(201, 160, 53, 0.40);
+      background: var(--accent);
+    }
+    .it-demo-strip-text {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+    }
+
+    /* ============================================================
+       HEADER BAND — Bilingual RTL layout
+       ============================================================ */
+    .it-header-band {
+      background: var(--accent);
+      padding: 20px 28px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      direction: rtl;
+    }
+    .it-header-logo { flex: 0 0 auto; }
+    .it-header-logo img {
+      max-height: 65px;
+      max-width: 160px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+    .it-header-logo-placeholder {
+      width: 65px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .it-header-title-block { flex: 1 1 auto; text-align: center; min-width: 0; }
+    .it-header-title-ar {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      color: var(--accent-gold);
+      line-height: 1.2;
+    }
+    .it-header-title-en {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      margin-top: 3px;
+      direction: ltr;
+      unicode-bidi: embed;
+    }
+    .it-header-ref {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 6px;
+    }
+
+    /* Gradient stripe: Saudi green → gold */
+    .it-header-stripe {
+      height: 4px;
+      background: linear-gradient(to left, var(--accent-green) 0%, var(--accent-gold) 100%);
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       BILINGUAL META STRIP
+       ============================================================ */
+    .it-meta-strip {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 32px;
+      direction: rtl;
+    }
+    .it-meta-item { display: flex; flex-direction: column; gap: 2px; }
+    .it-meta-label-ar {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 1px;
+    }
+    .it-meta-label {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+    }
+    .it-meta-value { font-size: 13px; font-weight: 500; color: var(--text-main); }
+
+    /* ============================================================
+       PARTIES — RTL two-column grid
+       ============================================================ */
+    .it-parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      direction: rtl;
+    }
+    .it-party {
+      background: var(--surface);
+      padding: 18px 24px;
+      border-right: 3px solid var(--accent-border);
+    }
+    /* In RTL, first-child is the rightmost visually */
+    .it-party:last-child { border-right: none; border-left: 3px solid var(--accent-border); }
+
+    .it-party-role-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 7px;
+    }
+    .it-party-role-ar {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .it-party-role-sep {
+      color: var(--text-label);
+      font-size: 10px;
+    }
+    .it-party-role {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+    }
+    .it-party-name { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; line-height: 1.3; }
+    .it-party-address { font-size: 11.5px; color: var(--text-muted); line-height: 1.7; }
+    .it-party-extra { font-size: 11px; color: var(--text-label); margin-top: 6px; }
+
+    /* ============================================================
+       DESCRIPTION
+       ============================================================ */
+    .it-description-block {
+      margin: 20px 28px 0;
+      padding: 14px 14px 14px 12px;
+      border-right: 3px solid var(--accent-gold);
+      background: var(--accent-soft);
+    }
+    .it-description-label-ar {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+    .it-description-label {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 6px;
+    }
+    .it-description-text { font-size: 12.5px; color: var(--text-main); line-height: 1.65; }
+
+    /* ============================================================
+       TABLE — RTL-aware borders and alignment
+       ============================================================ */
+    .it-table-wrapper { margin: 20px 0 0; overflow-x: auto; direction: rtl; }
+    .it-table { width: 100%; border-collapse: collapse; font-size: 12.5px; direction: rtl; }
+
+    .it-table thead tr { background: var(--accent); border-bottom: 2px solid var(--accent-gold); }
+    .it-table thead th {
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      padding: 10px 16px;
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+      white-space: nowrap;
+      text-align: right;
+      vertical-align: bottom;
+    }
+    .it-table thead th:last-child { border-left: none; }
+
+    /* Bilingual th: Arabic line + English sub-line */
+    .th-ar { display: block; font-size: 10.5px; font-weight: 700; color: var(--accent-gold); letter-spacing: 0; }
+    .th-en { display: block; font-size: 7.5px; font-weight: 400; color: rgba(255, 255, 255, 0.50); letter-spacing: 0.10em; text-transform: uppercase; direction: ltr; unicode-bidi: embed; }
+
+    .it-table tbody tr.it-row { border-bottom: 1px solid var(--border); }
+    .it-table tbody tr.it-row:nth-child(odd)  { background: var(--canvas); }
+    .it-table tbody tr.it-row:nth-child(even) { background: var(--surface); }
+    .it-table tbody tr.it-row.it-last-row { border-bottom: 2px solid var(--border-strong); }
+
+    .it-table tbody tr.it-row-subtotal {
+      background: rgba(201, 160, 53, 0.06);
+      border-top: 1px solid rgba(201, 160, 53, 0.25);
+      border-bottom: 1px solid rgba(201, 160, 53, 0.25);
+    }
+
+    /* RTL: lateral borders use border-left instead of border-right */
+    .it-cell {
+      padding: 9px 16px;
+      color: var(--text-main);
+      vertical-align: middle;
+      border-left: 1px solid var(--border);
+      text-align: right;
+    }
+    .it-cell:last-child { border-left: none; }
+    .it-cell-emphasis { font-weight: 700; }
+    .it-cell-group-header {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 8px 16px;
+      background: var(--surface-2) !important;
+    }
+    .it-cell-link { color: var(--accent); text-decoration: none; }
+
+    /* Grand totals */
+    .it-total td { border: none; padding: 8px 16px; }
+    .it-total-label {
+      text-align: right;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .it-total-value {
+      text-align: left;
+      font-weight: 500;
+      color: var(--text-main);
+      direction: ltr;
+      unicode-bidi: embed;
+    }
+    .it-total-grand {
+      background: var(--surface-2);
+      border-top: 2px solid var(--accent-gold) !important;
+      border-bottom: 2px solid var(--accent-gold) !important;
+    }
+    .it-total-grand .it-total-label { color: var(--accent); font-size: 11px; font-weight: 900; }
+    .it-total-grand .it-total-value { color: var(--accent); font-size: 15px; font-weight: 900; }
+
+    /* RTL totals: float to the right edge of the page (start in RTL) */
+    .it-totals-wrapper { display: flex; justify-content: flex-start; }
+    .it-totals-table { width: 320px; max-width: 100%; border-collapse: collapse; font-size: 12.5px; border-top: 1px solid rgba(201, 160, 53, 0.30); }
+
+    /* ============================================================
+       ZATCA QR PANEL — KSA e-invoicing compliance
+       ZATCA Phase 2 TLV QR mockup. Commander must replace
+       placeholder values with live VAT data before deployment.
+       ============================================================ */
+    .it-zatca-panel {
+      margin: 20px 28px 0;
+      padding: 16px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      direction: rtl;
+    }
+    .it-zatca-qr-box {
+      flex: 0 0 auto;
+      width: 92px;
+      height: 92px;
+      border: 1px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      overflow: hidden;
+    }
+    .it-zatca-qr-img { width: 82px; height: 82px; display: block; }
+    .it-zatca-info { flex: 1 1 auto; }
+    .it-zatca-title-ar {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+    .it-zatca-title-en {
+      font-size: 8.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      direction: ltr;
+      unicode-bidi: embed;
+    }
+    .it-zatca-rows { display: flex; flex-direction: column; gap: 4px; }
+    .it-zatca-row { display: flex; gap: 8px; font-size: 10.5px; align-items: baseline; }
+    .it-zatca-key { color: var(--text-label); font-weight: 600; min-width: 130px; text-align: right; }
+    .it-zatca-val { color: var(--text-main); direction: ltr; unicode-bidi: embed; }
+    .it-zatca-badge {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 108, 53, 0.08);
+      border: 1px solid rgba(0, 108, 53, 0.25);
+      padding: 3px 10px;
+      font-size: 8px;
+      font-weight: 700;
+      color: var(--accent-green);
+      letter-spacing: 0.10em;
+    }
+
+    /* ============================================================
+       STATUS STAMP — Idea 87
+       ============================================================ */
+    .it-status-wrapper { display: flex; justify-content: center; padding: 22px 28px; page-break-inside: avoid; }
+    .it-status-stamp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 28px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: 2px solid;
+    }
+    .tone-positive { color: var(--status-positive); border-color: var(--status-positive); background: rgba(0, 108, 53, 0.06); }
+    .tone-negative { color: var(--status-negative); border-color: var(--status-negative); background: rgba(192, 57, 43, 0.06); }
+    .tone-neutral  { color: var(--accent); border-color: var(--accent-border); background: var(--accent-soft); }
+
+    /* BODY FIELDS */
+    .it-body-fields {
+      padding: 16px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 36px;
+      border-top: 1px solid var(--border);
+      direction: rtl;
+    }
+    .it-body-field { display: flex; flex-direction: column; gap: 3px; }
+    .it-body-field-label {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+    }
+    .it-body-field-value { font-size: 13px; font-weight: 500; color: var(--text-main); }
+
+    /* NOTES */
+    .it-notes-block { padding: 16px 28px; border-top: 1px solid var(--border); direction: rtl; }
+    .it-notes-label {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+      margin-bottom: 6px;
+    }
+    .it-notes-text { font-size: 11px; color: var(--text-muted); line-height: 1.7; }
+    .it-footer-item + .it-footer-item { margin-top: 8px; }
+
+    /* SIGNATURE */
+    .it-signature-block {
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      border-top: 1px solid var(--border);
+      page-break-inside: avoid;
+      direction: rtl;
+    }
+    .it-sig-box { display: flex; flex-direction: column; gap: 6px; }
+    .it-sig-line { height: 1px; background: var(--accent-gold); margin-top: 36px; opacity: 0.6; }
+    .it-sig-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    /* SHORT INVOICE SPACER — Idea 64 */
+    .it-short-spacer { display: none; }
+    body.a4-short .it-short-spacer { display: block; min-height: 60mm; }
+
+    /* FOOTER BAND — Idea 61 */
+    .it-footer-band {
+      background: var(--accent);
+      border-top: 3px solid var(--accent-gold);
+      padding: 12px 28px;
+      text-align: center;
+    }
+    .it-footer-band-text { font-size: 11px; font-weight: 600; color: #fff; letter-spacing: 0.06em; }
+    .it-footer-band-sub { font-size: 9px; color: rgba(255, 255, 255, 0.55); margin-top: 3px; direction: ltr; unicode-bidi: embed; }
+    .it-footer-band-currency { font-size: 8px; color: rgba(255, 255, 255, 0.40); margin-top: 4px; letter-spacing: 0.12em; }
+
+    /* CREDIT STRIP — Idea 85, footer-only per Idea 104 */
+    .it-credit-strip {
+      background: var(--surface-2);
+      border-top: 1px solid var(--border);
+      padding: 8px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      direction: ltr;
+    }
+    .it-credit-text { font-size: 10px; color: var(--text-muted); letter-spacing: 0.04em; }
+    .it-credit-text strong { color: var(--text-main); font-weight: 600; }
+    .it-credit-link { color: var(--accent); text-decoration: none; }
+
+    /* FAULT BANNER — Idea 9 */
+    .it-fault-banner { padding: 3rem 2rem; text-align: center; border: 2px solid var(--status-negative); margin: 2rem; }
+    .it-fault-icon { font-size: 32px; color: var(--status-negative); margin-bottom: 12px; }
+    .it-fault-title { font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: var(--status-negative); margin-bottom: 8px; }
+    .it-fault-message { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+    .it-fault-code { font-size: 10px; font-family: monospace; color: var(--text-label); margin-bottom: 12px; }
+    .it-fault-hint { font-size: 10px; color: var(--text-label); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+
+    /* DEBUG OVERLAY — Idea 6 */
+    #it-debug-overlay {
+      position: fixed; top: 0; left: 0;
+      background: rgba(0, 0, 0, 0.92);
+      border-right: 3px solid var(--accent-gold);
+      padding: 12px 16px;
+      font-size: 10px; font-family: monospace; color: var(--accent-gold);
+      z-index: 9999; line-height: 1.8; max-width: 260px; direction: ltr;
+    }
+    #it-debug-overlay p { margin: 0; }
+
+    /* DENSITY MODES — Idea 5, 24 */
+    body.document-long .it-cell { padding: 5px 12px; font-size: 11.5px; }
+    body.document-long .it-table thead th { padding: 7px 12px; }
+
+    /* UTILITY */
+    .it-hidden { display: none !important; }
+
+    /* ============================================================
+       PRINT — Idea 33, 36, 50
+       ============================================================ */
+    @page { size: A4; margin: 10mm; }
+
+    @media print {
+      #it-doc-actions { display: none !important; }
+      .it-demo-strip  { display: none !important; }
+
+      html, body { min-height: auto !important; height: auto !important; background: #fff !important; color: #000 !important; font-size: 11px !important; }
+      #it-shell { min-height: auto !important; height: auto !important; box-shadow: none !important; max-width: 100% !important; background: #fff !important; }
+      main { 
+        background: #fff !important; 
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: auto !important; /* Let container contract to prevent 2-page print overflow */
+        box-sizing: border-box !important;
+      }
+      .it-content {
+        flex: 1 0 auto !important;
+        min-height: auto !important; /* Remove millimetric constraints in print */
+      }
+      .it-footer-shell {
+        flex-shrink: 0 !important;
+      }
+      .it-short-spacer {
+        display: none !important; /* Hide screen spacer on print to prevent page overflow */
+      }
+
+      .it-header-band { background: #1A3A5C !important; }
+      .it-header-stripe { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      .it-meta-strip { background: #f5f5f0 !important; border-bottom: 1px solid #ddd !important; }
+      .it-meta-label { color: #006C35 !important; }
+      .it-meta-label-ar { color: #1A3A5C !important; }
+      .it-meta-value { color: #111 !important; }
+
+      .it-party { background: #f8f8f5 !important; }
+      .it-party-name { color: #111 !important; }
+      .it-party-address { color: #444 !important; }
+      .it-party-extra { color: #666 !important; }
+
+      .it-description-block { background: rgba(201,160,53,0.08) !important; border-right-color: #C9A035 !important; }
+      .it-description-label { color: #C9A035 !important; }
+      .it-description-label-ar { color: #1A3A5C !important; }
+      .it-description-text { color: #111 !important; }
+
+      .it-table thead tr { background: #1A3A5C !important; }
+      .it-table tbody tr.it-row:nth-child(odd)  { background: #fff !important; }
+      .it-table tbody tr.it-row:nth-child(even) { background: #f5f5f0 !important; }
+      .it-table thead th { color: #C9A035 !important; border-left: 1px solid rgba(255,255,255,0.20) !important; }
+      .it-cell { color: #111 !important; border-left: 1px solid #e0e0e0 !important; }
+      .it-cell-group-header { color: #1A3A5C !important; background: #ebebeb !important; }
+
+      .it-total td { color: #444 !important; }
+      .it-total-grand { background: rgba(201,160,53,0.10) !important; border-color: #C9A035 !important; }
+      .it-total-grand .it-total-label,
+      .it-total-grand .it-total-value { color: #1A3A5C !important; }
+
+      .tone-positive { color: #006C35 !important; border-color: #006C35 !important; background: rgba(0,108,53,0.06) !important; }
+      .tone-negative { color: #C0392B !important; border-color: #C0392B !important; background: rgba(192,57,43,0.06) !important; }
+      .tone-neutral  { color: #1A3A5C !important; border-color: rgba(26,58,92,0.30) !important; }
+
+      .it-zatca-panel { border: 1px solid #ccc !important; background: #fff !important; }
+      .it-zatca-title-ar { color: #1A3A5C !important; }
+      .it-zatca-badge { color: #006C35 !important; border-color: rgba(0,108,53,0.30) !important; background: rgba(0,108,53,0.06) !important; }
+
+      .it-body-field-label { color: #006C35 !important; }
+      .it-body-field-value { color: #111 !important; }
+      .it-notes-label { color: #006C35 !important; }
+      .it-notes-text { color: #444 !important; }
+
+      .it-footer-band { background: #1A3A5C !important; border-top: 3px solid #C9A035 !important; }
+      .it-footer-band-text { color: #fff !important; }
+      .it-footer-band-sub { color: rgba(255,255,255,0.65) !important; }
+      .it-footer-band-currency { color: rgba(255,255,255,0.45) !important; }
+
+      .it-credit-strip { background: #f5f5f0 !important; border-top: 1px solid #ddd !important; }
+      .it-credit-text { color: #555 !important; }
+      .it-credit-text strong { color: #111 !important; }
+      .it-credit-link { color: #1A3A5C !important; }
+
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ACTION BAR — Idea 46, hidden in print via Idea 50 -->
+  <div id="it-doc-actions">
+    <button class="it-action-btn" onclick="window.print()">⎙ طباعة / PDF</button>
+    <button class="it-action-btn" onclick="(async()=>{try{await navigator.share({title:document.title,url:window.location.href});}catch{try{await navigator.clipboard.writeText(window.location.href);}catch(e){}}})()" >⎘ مشاركة / Share</button>
+  </div>
+
+  <div id="it-shell">
+    <main>
+      <div class="it-content" id="document-root" data-theme-version="1.2.0" data-theme-id="riyadh-rtl">
+
+        <!-- Loading state — replaced by renderer -->
+        <div style="padding:3rem;text-align:center;color:var(--text-muted);font-size:11px;letter-spacing:2px;">
+          جارٍ التحميل…
+        </div>
+
+      </div><!-- /.it-content -->
+
+      <footer class="it-footer-shell" id="it-footer-shell">
+        <!-- Rendered by JS -->
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    'use strict';
+
+    if (window.parent !== window) {
+      document.body.classList.add('in-iframe');
+    }
+
+    /* ============================================================
+       SAFE SETTINGS — edit these freely
+       ============================================================ */
+    const THEME_FLAGS = Object.freeze({
+      ENABLE_COMMISSION_LOGIC:     false,
+      ENABLE_MULTI_CURRENCY:       true,
+      ENABLE_QR_PANEL:             true,
+      ENABLE_DEBUG_OVERLAY:        false,
+      ENABLE_DEMO_WATERMARK:       false,
+      ENABLE_AUTHORITY_FOOTER:     true,
+      AUTO_DENSITY_LONG_THRESHOLD: 20,
+      /* ── ZATCA e-invoicing fields ──────────────────────────────
+         Replace placeholder values before live upload.
+         ZATCA_VAT_NUMBER: 15-digit KSA VAT registration number.
+         ZATCA_CURRENCY:   ISO 4217 code (SAR / AED / PKR). */
+      ZATCA_SELLER_NAME: '\u0645\u0624\u0633\u0633\u0629 \u0627\u0644\u0646\u062e\u0628\u0629 \u0627\u0644\u0639\u0642\u0627\u0631\u064a\u0629 \u0648\u0627\u0644\u062e\u062f\u0645\u0627\u062a',
+      ZATCA_VAT_NUMBER:  '310123456700003',
+      ZATCA_CURRENCY:    'SAR'
+    });
+
+    /* ============================================================
+       DO NOT EDIT BELOW — CORE ENGINE
+       Idea 13 — centralized DOM selectors
+       ============================================================ */
+    const THEME_DOM = Object.freeze({
+      root:   'document-root',
+      footer: 'it-footer-shell',
+      debug:  'it-debug-overlay'
+    });
+
+    /* ----------------------------------------------------------
+       SAFE HELPERS — Idea 4, eko security pattern
+       ---------------------------------------------------------- */
+    function safeText(v) { return (v === null || v === undefined) ? '' : String(v); }
+
+    function safeLinkUrl(u) {
+      if (!u || typeof u !== 'string') return null;
+      if (/^(https?:\/\/|mailto:|tel:)/i.test(u.trim())) return u.trim();
+      return null;
+    }
+
+    /* v1.1.1 pattern — accept Manager.io relative logo paths */
+    function safeImageUrl(u) {
+      if (!u || typeof u !== 'string') return null;
+      const t = u.trim();
+      if (/^https?:\/\//i.test(t)) return t;
+      if (/^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/i.test(t)) return t;
+      if (!/^[a-z0-9+.-]+:/i.test(t)) return t;
+      return null;
+    }
+
+    function safeCssAlign(v) {
+      /* RTL: flip LTR alignment so data flows correctly */
+      const map = { left: 'right', center: 'center', right: 'left', start: 'right', end: 'left' };
+      return map[v] || 'right';
+    }
+
+    function sendResize() {
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          type:   'resize',
+          width:  document.documentElement.scrollWidth  + 1,
+          height: document.documentElement.scrollHeight + 1
+        }, '*');
+      }
+    }
+
+    /* v1.1.1 whitelisted inline HTML sanitizer.
+       Operates on a DETACHED element; never attaches raw parsed
+       tree to the live DOM — only safe cloned nodes are appended. */
+    function safeHtml(parentNode, rawText) {
+      if (rawText === null || rawText === undefined) return;
+      const textStr = String(rawText);
+      if (!/<[a-z/][^>]*>/i.test(textStr)) {
+        textStr.split('\n').forEach((line, i, arr) => {
+          parentNode.appendChild(document.createTextNode(line));
+          if (i < arr.length - 1) parentNode.appendChild(document.createElement('br'));
+        });
+        return;
+      }
+      const temp = document.createElement('div');
+      temp.innerHTML = textStr;
+      const allowed = ['b','i','u','strong','em','br','span','p','ul','ol','li','div'];
+      const walk = (src, dst) => {
+        src.childNodes.forEach(child => {
+          if (child.nodeType === 3) {
+            dst.appendChild(document.createTextNode(child.textContent));
+          } else if (child.nodeType === 1) {
+            const tag = child.tagName.toLowerCase();
+            if (allowed.includes(tag)) {
+              const el = document.createElement(tag);
+              if (child.hasAttribute('style')) {
+                const style = child.getAttribute('style');
+                if (!/expression|url|javascript|behavior/i.test(style)) {
+                  el.setAttribute('style', style);
+                }
+              }
+              walk(child, el);
+              dst.appendChild(el);
+            } else {
+              walk(child, dst);
+            }
+          }
+          /* Comment nodes (8) and others — silently ignored */
+        });
+      };
+      walk(temp, parentNode);
+    }
+
+    /* ----------------------------------------------------------
+       TABLE BUILDERS
+       eko fix: one <tr> in <thead>, no nested rows
+       ---------------------------------------------------------- */
+    function buildCell(cell, col) {
+      const td = document.createElement('td');
+      td.className = 'it-cell';
+      if (col) {
+        td.style.textAlign = safeCssAlign(col.align);
+        if (col.nowrap || col.shrinkToFit) td.style.whiteSpace = 'nowrap';
+        if (col.shrinkToFit) td.style.width = '1%';
+        if (col.emphasis) td.classList.add('it-cell-emphasis');
+      }
+
+      /* Percentage Normalization Engine */
+      let cellText = cell.text;
+      if (col && col.label) {
+        const colLabelLower = String(col.label).toLowerCase();
+        const percentKeywords = ['rate', 'percent', 'percentage', 'ratio', 'com %', 'commission', 'unit price', '\u0646\u0633\u0628\u0629', '\u0631\u0633\u0648\u0645'];
+        if (percentKeywords.some(kw => colLabelLower.includes(kw))) {
+          const trimmed = String(cellText).trim();
+          const num = parseFloat(trimmed);
+          if (!isNaN(num) && num > 0 && num < 1 && /^[0-9]*\.[0-9]+$/.test(trimmed)) {
+            cellText = (num * 100).toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '%';
+          }
+        }
+      }
+
+      if (cell.image && cell.image.url) {
+        const src = safeImageUrl(cell.image.url);
+        if (src) {
+          const img = document.createElement('img');
+          img.addEventListener('load', sendResize);
+          img.src = src; img.alt = ''; img.style.maxWidth = '100px';
+          td.appendChild(img);
+        }
+      } else if (cell.link && cell.link.url) {
+        const href = safeLinkUrl(cell.link.url);
+        if (href) {
+          const a = document.createElement('a');
+          a.href = href; a.target = '_top'; a.className = 'it-cell-link';
+          safeHtml(a, cellText);
+          td.appendChild(a);
+        } else {
+          safeHtml(td, cellText);
+        }
+      } else {
+        safeHtml(td, cellText);
+      }
+      return td;
+    }
+
+    function processRows(rows, columns, tbody) {
+      if (!rows || !tbody) return;
+      rows.forEach(r => {
+        if (!r.cells) return;
+        const tr = document.createElement('tr');
+        tr.className = r.isTotalRow ? 'it-row it-row-subtotal' : 'it-row';
+        if (r.cells.length === 1 && r.rows) {
+          const td = document.createElement('td');
+          td.colSpan = columns.length;
+          td.className = 'it-cell it-cell-group-header';
+          td.textContent = safeText(r.cells[0].text);
+          tr.appendChild(td); tbody.appendChild(tr);
+          processRows(r.rows, columns, tbody); return;
+        }
+        r.cells.forEach((cell, idx) => {
+          const td = buildCell(cell, columns[idx] || {});
+          if (r.isTotalRow) td.classList.add('it-cell-emphasis');
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+        if (r.rows) processRows(r.rows, columns, tbody);
+      });
+      const dataRows = tbody.querySelectorAll('tr.it-row:not(.it-row-subtotal)');
+      if (dataRows.length) dataRows[dataRows.length - 1].classList.add('it-last-row');
+    }
+
+    function appendTotals(totals, colCount, tbody) {
+      if (!totals || !totals.length) return;
+      totals.forEach(total => {
+        const tr = document.createElement('tr');
+        tr.className = (total.emphasis || total.key === 'Total') ? 'it-total it-total-grand' : 'it-total';
+        const lTd = document.createElement('td');
+        lTd.className = 'it-total-label';
+        lTd.colSpan = Math.max(colCount - 1, 1);
+        lTd.textContent = safeText(total.label);
+        const vTd = document.createElement('td');
+        vTd.className = 'it-total-value';
+        vTd.textContent = safeText(total.text);
+        tr.appendChild(lTd); tr.appendChild(vTd); tbody.appendChild(tr);
+      });
+    }
+
+    /* ----------------------------------------------------------
+       DENSITY MODE — Idea 24
+       ---------------------------------------------------------- */
+    function applyDensityMode(data) {
+      const body = document.body;
+      const rowCount = data.table && data.table.rows ? data.table.rows.length : 0;
+      if (rowCount > THEME_FLAGS.AUTO_DENSITY_LONG_THRESHOLD) body.classList.add('document-long');
+      if (rowCount < 4) body.classList.add('a4-short');
+      const p = new URLSearchParams(window.location.search);
+      const d = p.get('density');
+      if (['relaxed','balanced','compact'].includes(d)) {
+        body.classList.remove('density-relaxed','density-balanced','density-compact');
+        body.classList.add('density-' + d);
+      }
+      if (p.get('debug') === '1') body.classList.add('debug-mode');
+    }
+
+    /* ----------------------------------------------------------
+       FAULT RENDERER — Idea 9, 19
+       ---------------------------------------------------------- */
+    function renderFault(code) {
+      const root = document.getElementById(THEME_DOM.root);
+      if (!root) return;
+      while (root.firstChild) root.removeChild(root.firstChild);
+      const inner = document.createElement('div');
+      inner.style.cssText = 'padding:3rem 2rem;text-align:center;';
+      [
+        ['it-fault-icon',    '\u26a0'],
+        ['it-fault-title',   '\u062e\u0637\u0623 \u0641\u064a \u0627\u0644\u0646\u0638\u0627\u0645'],
+        ['it-fault-message', '\u0641\u0634\u0644 \u062a\u062d\u0645\u064a\u0644 \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0645\u0633\u062a\u0646\u062f \u0645\u0646 Manager.io'],
+        ['it-fault-code',    '\u0631\u0645\u0632 \u0627\u0644\u062e\u0637\u0623: ' + safeText(code || 'FETCH_ERROR')],
+        ['it-fault-hint',    '\u062a\u062d\u0642\u0642 \u0645\u0646 \u0625\u0639\u062f\u0627\u062f\u0627\u062a Manager.io \u0623\u0648 \u062a\u0648\u0627\u0635\u0644 \u0645\u0639 hello@inspiron.tech']
+      ].forEach(([cls, text]) => {
+        const el = document.createElement('div');
+        el.className = cls; el.textContent = text; inner.appendChild(el);
+      });
+      root.appendChild(inner);
+    }
+
+    /* ----------------------------------------------------------
+       ZATCA QR BUILDER
+       Encodes ZATCA TLV (Tag-Length-Value) fields into base64.
+       Tags:
+         1 — Seller name (UTF-8)
+         2 — VAT registration number
+         3 — Invoice date/time (ISO 8601)
+         4 — Invoice total (with VAT)
+         5 — VAT total
+       Commander must replace placeholder VAT/total values
+       before live deployment to Manager.io.
+       ---------------------------------------------------------- */
+    function buildZatcaTlv(sellerName, vatNumber, dateTime, totalAmount, vatAmount) {
+      function tlvEntry(tag, value) {
+        const enc = new TextEncoder();
+        const bytes = enc.encode(value);
+        return [tag, bytes.length, ...Array.from(bytes)];
+      }
+      const tlvBytes = [
+        ...tlvEntry(1, sellerName),
+        ...tlvEntry(2, vatNumber),
+        ...tlvEntry(3, dateTime),
+        ...tlvEntry(4, totalAmount),
+        ...tlvEntry(5, vatAmount)
+      ];
+      const binary = String.fromCharCode(...tlvBytes);
+      return btoa(binary);
+    }
+
+    /* Render a deterministic QR-style SVG grid from a base64 string.
+       Visual mockup only — not scannable. A real QR library (e.g.
+       qrcode.js) replaces this for production scanning. */
+    function renderZatcaQrSvg(b64) {
+      const size = 82;
+      const modules = 21;
+      const cellSize = size / modules;
+      const seed = b64.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+      let rects = '';
+
+      for (let r = 0; r < modules; r++) {
+        for (let c = 0; c < modules; c++) {
+          /* Preserve finder pattern corners */
+          const inCornerTL = r < 7 && c < 7;
+          const inCornerTR = r < 7 && c > 13;
+          const inCornerBL = r > 13 && c < 7;
+          const isCorner = inCornerTL || inCornerTR || inCornerBL;
+          let fill = false;
+
+          if (isCorner) {
+            const cr = inCornerTL ? r : inCornerTR ? r : r - 14;
+            const cc = inCornerTL ? c : inCornerTR ? c - 14 : c;
+            fill = (cr === 0 || cr === 6 || cc === 0 || cc === 6) ||
+                   (cr >= 2 && cr <= 4 && cc >= 2 && cc <= 4);
+          } else {
+            fill = (((r * 31 + c * 17 + seed) % 5) === 0);
+          }
+
+          if (fill) {
+            const x = (c * cellSize).toFixed(2);
+            const y = (r * cellSize).toFixed(2);
+            const cs = cellSize.toFixed(2);
+            rects += `<rect x="${x}" y="${y}" width="${cs}" height="${cs}" fill="#1A3A5C"/>`;
+          }
+        }
+      }
+
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${rects}</svg>`;
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    /* ----------------------------------------------------------
+       STATIC SVG — INSPIRON authority mark (Idea 78)
+       NOT from API data — safe as innerHTML on a static constant.
+       Colors adapted for Riyadh RTL gold/navy palette.
+       ---------------------------------------------------------- */
+    const AUTHORITY_SVG = '<svg viewBox="0 0 358.846 350.3" width="22" height="22" fill="none" aria-hidden="true"><path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#C9A035"/><path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#C9A035"/><circle cx="321.346" cy="37.5" r="37.5" fill="#1A3A5C"/></svg>';
+
+    /* ----------------------------------------------------------
+       ARABIC LABEL MAPS — bilingual rendering
+       [AR: ...] placeholders retained where vocabulary is uncertain.
+       Commander fills before live upload.
+       ---------------------------------------------------------- */
+    const TITLE_MAP = {
+      'Invoice':         'فاتورة ضريبية',
+      'Tax Invoice':     'فاتورة ضريبية',
+      'Receipt':         'إيصال استلام',
+      'Quote':           'عرض سعر',
+      'Purchase Order':  'أمر شراء',
+      'Credit Note':     'إشعار دائن',
+      'Debit Note':      'إشعار مدين',
+      'Delivery Note':   'سند تسليم',
+      'Payment Receipt': 'إيصال دفع'
+    };
+
+    const FIELD_AR_MAP = {
+      'Issue Date':        'تاريخ الإصدار',
+      'Invoice Date':      'تاريخ الفاتورة',
+      'Due Date':          'تاريخ الاستحقاق',
+      'Reference':         'رقم المرجع',
+      'Invoice Number':    'رقم الفاتورة',
+      'Currency':          'العملة',
+      'Tax Number':        'الرقم الضريبي',
+      'Phone':             'الهاتف',
+      'Email':             'البريد الإلكتروني',
+      'Website':           'الموقع',
+      'VAT Reg. No.':      'رقم التسجيل الضريبي',
+      'CR No.':            'السجل التجاري'
+    };
+
+    const COL_AR_MAP = {
+      'Description': 'الوصف',
+      'Item':        'البند',
+      'Qty':         'الكمية',
+      'Quantity':    'الكمية',
+      'Unit Price':  'سعر الوحدة',
+      'Price':       'السعر',
+      'Amount':      'المبلغ',
+      'Tax':         'الضريبة',
+      'VAT':         'ضريبة القيمة المضافة',
+      'Total':       'الإجمالي',
+      'Date':        'التاريخ',
+      'Rate':        'النسبة',
+      'Discount':    'الخصم',
+      'Account':     'الحساب'
+    };
+
+    /* ----------------------------------------------------------
+       MAIN RENDER — maps /api4/view-v1 schema
+       ---------------------------------------------------------- */
+    function renderDocument(data) {
+      const root = document.getElementById(THEME_DOM.root);
+      const footerShell = document.getElementById(THEME_DOM.footer);
+      if (!root) return;
+
+      applyDensityMode(data);
+
+      const colCount = (data.table && data.table.columns) ? data.table.columns.length : 2;
+
+      /* Clear loading state */
+      while (root.firstChild) root.removeChild(root.firstChild);
+
+      /* ---- DEMO STRIP ---- */
+      if (THEME_FLAGS.ENABLE_DEMO_WATERMARK) {
+        const strip = document.createElement('div'); strip.className = 'it-demo-strip';
+        const txt = document.createElement('span'); txt.className = 'it-demo-strip-text';
+        txt.textContent = '\u26a0 \u0646\u0645\u0648\u0630\u062c \u062a\u062c\u0631\u064a\u0628\u064a \u2014 \u0644\u064a\u0633 \u0645\u0633\u062a\u0646\u062f\u0627\u064b \u0645\u0627\u0644\u064a\u0627\u064b \u0631\u0633\u0645\u064a\u0627\u064b  \u00b7  DEMO TEMPLATE \u2014 NOT A VALID FINANCIAL INSTRUMENT \u26a0';
+        strip.appendChild(txt); root.appendChild(strip);
+      }
+
+      /* ---- HEADER BAND ---- */
+      const headerBand = document.createElement('header');
+      headerBand.className = 'it-header-band';
+
+      /* Client logo — Idea 104: client first, NO INSPIRON header branding */
+      const logoWrap = document.createElement('div'); logoWrap.className = 'it-header-logo';
+      const logoSrc = safeImageUrl(data.business && data.business.logo);
+      if (logoSrc) {
+        const img = document.createElement('img');
+        img.addEventListener('load', sendResize);
+        img.src = logoSrc; img.alt = '';
+        logoWrap.appendChild(img);
+      } else {
+        const placeholder = document.createElement('div'); placeholder.className = 'it-header-logo-placeholder';
+        const bName = safeText((data.business && data.business.name) || data.businessName || '');
+        if (bName) {
+          const span = document.createElement('span');
+          span.style.cssText = 'font-size:22px;font-weight:900;color:#C9A035;';
+          span.textContent = bName.charAt(0).toUpperCase();
+          placeholder.appendChild(span);
+        }
+        logoWrap.appendChild(placeholder);
+      }
+
+      /* Bilingual title block */
+      const titleBlock = document.createElement('div'); titleBlock.className = 'it-header-title-block';
+
+      const rawTitle = safeText(data.title || 'Invoice');
+      const titleAr = document.createElement('div'); titleAr.className = 'it-header-title-ar';
+      titleAr.textContent = TITLE_MAP[rawTitle] || rawTitle;
+      titleBlock.appendChild(titleAr);
+
+      const titleEn = document.createElement('div'); titleEn.className = 'it-header-title-en';
+      titleEn.textContent = rawTitle.toUpperCase();
+      titleBlock.appendChild(titleEn);
+
+      if (data.reference) {
+        const refEl = document.createElement('div'); refEl.className = 'it-header-ref';
+        const refSpan = document.createElement('span');
+        refSpan.style.cssText = 'direction:ltr;unicode-bidi:embed;';
+        refSpan.textContent = safeText(data.reference);
+        refEl.appendChild(document.createTextNode('\u0631\u0642\u0645 \u0627\u0644\u0645\u0631\u062c\u0639: '));
+        refEl.appendChild(refSpan);
+        titleBlock.appendChild(refEl);
+      }
+
+      headerBand.appendChild(logoWrap);
+      headerBand.appendChild(titleBlock);
+      root.appendChild(headerBand);
+
+      /* Gradient stripe */
+      const stripe = document.createElement('div'); stripe.className = 'it-header-stripe'; stripe.setAttribute('aria-hidden','true');
+      root.appendChild(stripe);
+
+      /* ---- META STRIP ---- */
+      const metaFields = [];
+      if (data.reference) metaFields.push({ label: 'Reference', text: data.reference });
+      (data.fields || []).forEach(f => { if (f.displayAtTheTop || !data.recipient) metaFields.push(f); });
+      (data.business && data.business.fields || []).forEach(f => metaFields.push(f));
+
+      if (metaFields.length) {
+        const metaStrip = document.createElement('div'); metaStrip.className = 'it-meta-strip';
+        metaFields.forEach(m => {
+          const item = document.createElement('div'); item.className = 'it-meta-item';
+          const arText = FIELD_AR_MAP[m.label] || m.label;
+          const enText = safeText(m.label);
+          const lblAr = document.createElement('div'); lblAr.className = 'it-meta-label-ar';
+          lblAr.textContent = arText;
+          item.appendChild(lblAr);
+          if (arText !== enText) {
+            const lblEn = document.createElement('div'); lblEn.className = 'it-meta-label';
+            lblEn.textContent = enText;
+            item.appendChild(lblEn);
+          }
+          const val = document.createElement('div'); val.className = 'it-meta-value';
+          safeHtml(val, m.text);
+          item.appendChild(val);
+          metaStrip.appendChild(item);
+        });
+        root.appendChild(metaStrip);
+      }
+
+      /* ---- PARTIES ---- */
+      if (data.recipient) {
+        const parties = document.createElement('div'); parties.className = 'it-parties';
+
+        const makeParty = (roleAr, roleEn, name, address, extra) => {
+          const div = document.createElement('div'); div.className = 'it-party';
+
+          const roleWrap = document.createElement('div'); roleWrap.className = 'it-party-role-wrap';
+          const roleArEl = document.createElement('div'); roleArEl.className = 'it-party-role-ar';
+          roleArEl.textContent = roleAr;
+          const sep = document.createElement('span'); sep.className = 'it-party-role-sep'; sep.textContent = '/';
+          const roleEnEl = document.createElement('div'); roleEnEl.className = 'it-party-role';
+          roleEnEl.textContent = roleEn;
+          roleWrap.appendChild(roleArEl); roleWrap.appendChild(sep); roleWrap.appendChild(roleEnEl);
+
+          const nameEl = document.createElement('div'); nameEl.className = 'it-party-name';
+          safeHtml(nameEl, name);
+          const addrEl = document.createElement('div'); addrEl.className = 'it-party-address';
+          safeHtml(addrEl, address);
+
+          div.appendChild(roleWrap); div.appendChild(nameEl); div.appendChild(addrEl);
+          if (extra) {
+            const ex = document.createElement('div'); ex.className = 'it-party-extra';
+            safeHtml(ex, extra); div.appendChild(ex);
+          }
+          return div;
+        };
+
+        const recExtra = [
+          data.recipient.code  ? 'Code: ' + data.recipient.code : null,
+          data.recipient.email || null
+        ].filter(Boolean).join('\n');
+
+        /* RTL: "Prepared For" first (rightmost), "Issued By" second (leftmost) */
+        parties.appendChild(makeParty(
+          'معد ل',
+          'Prepared For',
+          data.recipient.name,
+          data.recipient.address,
+          recExtra
+        ));
+        parties.appendChild(makeParty(
+          'صادر عن',
+          'Issued By',
+          (data.business && data.business.name) || data.businessName || '',
+          (data.business && data.business.address) || '',
+          null
+        ));
+        root.appendChild(parties);
+      }
+
+      /* ---- DESCRIPTION ---- */
+      if (data.table && data.table.description) {
+        const descBlock = document.createElement('div'); descBlock.className = 'it-description-block';
+        const descLabelAr = document.createElement('div'); descLabelAr.className = 'it-description-label-ar';
+        descLabelAr.textContent = 'وصف الخدمة';
+        const descLabelEn = document.createElement('div'); descLabelEn.className = 'it-description-label';
+        descLabelEn.textContent = 'Description';
+        const descText = document.createElement('div'); descText.className = 'it-description-text';
+        safeHtml(descText, data.table.description);
+        descBlock.appendChild(descLabelAr); descBlock.appendChild(descLabelEn); descBlock.appendChild(descText);
+        root.appendChild(descBlock);
+      }
+
+      /* ---- TABLE ---- */
+      if (data.table && data.table.columns) {
+        const wrapper = document.createElement('div'); wrapper.className = 'it-table-wrapper';
+        const table = document.createElement('table'); table.className = 'it-table'; table.setAttribute('role','table');
+
+        /* thead — eko fix: single <tr>, bilingual header cells */
+        const thead = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        data.table.columns.forEach(col => {
+          const th = document.createElement('th');
+          th.style.textAlign = 'right';
+          if (col.shrinkToFit) { th.style.width = '1%'; th.style.whiteSpace = 'nowrap'; }
+          const spanAr = document.createElement('span'); spanAr.className = 'th-ar';
+          spanAr.textContent = COL_AR_MAP[col.label] || safeText(col.label);
+          const spanEn = document.createElement('span'); spanEn.className = 'th-en';
+          spanEn.textContent = safeText(col.label);
+          th.appendChild(spanAr); th.appendChild(spanEn);
+          headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        processRows(data.table.rows || [], data.table.columns, tbody);
+        appendTotals(data.totals, colCount, tbody);
+        table.appendChild(tbody);
+        wrapper.appendChild(table);
+        root.appendChild(wrapper);
+      }
+
+      /* ---- SHORT SPACER ---- */
+      const spacer = document.createElement('div'); spacer.className = 'it-short-spacer';
+      root.appendChild(spacer);
+
+      /* ---- ZATCA QR PANEL ---- */
+      if (THEME_FLAGS.ENABLE_QR_PANEL) {
+        const now = new Date().toISOString();
+        const grandTotalRow = data.totals && data.totals.find(t => t.emphasis || t.key === 'Total');
+        const totalVal = grandTotalRow ? safeText(grandTotalRow.text) : '0.00';
+
+        const tlvSellerName = (data.business && data.business.name) ? safeText(data.business.name) : THEME_FLAGS.ZATCA_SELLER_NAME;
+        const tlvVatRow = data.totals && data.totals.find(t => t.label && /vat|tax/i.test(t.label));
+        const tlvVatAmount = tlvVatRow ? safeText(tlvVatRow.text) : '0.00';
+        const tlvBase64 = buildZatcaTlv(
+          tlvSellerName,
+          THEME_FLAGS.ZATCA_VAT_NUMBER,
+          now,
+          totalVal,
+          tlvVatAmount
+        );
+        const qrSrc = renderZatcaQrSvg(tlvBase64);
+
+        const panel = document.createElement('div'); panel.className = 'it-zatca-panel';
+
+        const qrBox = document.createElement('div'); qrBox.className = 'it-zatca-qr-box';
+        const qrImg = document.createElement('img'); qrImg.className = 'it-zatca-qr-img';
+        qrImg.src = qrSrc;
+        qrImg.alt = 'ZATCA QR Code';
+        qrImg.addEventListener('load', sendResize);
+        qrBox.appendChild(qrImg);
+
+        const info = document.createElement('div'); info.className = 'it-zatca-info';
+
+        const zatcaTitleAr = document.createElement('div'); zatcaTitleAr.className = 'it-zatca-title-ar';
+        zatcaTitleAr.textContent = '\u0631\u0645\u0632 QR \u0644\u0647\u064a\u0626\u0629 \u0627\u0644\u0632\u0643\u0627\u0629 \u0648\u0627\u0644\u0636\u0631\u064a\u0628\u0629 \u0648\u0627\u0644\u062c\u0645\u0627\u0631\u0643';
+        const zatcaTitleEn = document.createElement('div'); zatcaTitleEn.className = 'it-zatca-title-en';
+        zatcaTitleEn.textContent = 'ZATCA e-Invoicing QR · \u0631\u0645\u0632 \u0627\u0644\u0641\u0627\u062a\u0648\u0631\u0629 \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a\u0629';
+        info.appendChild(zatcaTitleAr); info.appendChild(zatcaTitleEn);
+
+        const rows = document.createElement('div'); rows.className = 'it-zatca-rows';
+        const vatRow = data.totals && data.totals.find(t => t.label && /vat|tax/i.test(t.label));
+        const vatVal = vatRow ? safeText(vatRow.text) : '';
+        const sellerName = (data.business && data.business.name) ? safeText(data.business.name) : THEME_FLAGS.ZATCA_SELLER_NAME;
+        [
+          ['اسم البائع',              'Seller Name',   sellerName],
+          ['الرقم الضريبي', 'VAT Reg. No.',  THEME_FLAGS.ZATCA_VAT_NUMBER],
+          ['إجمالي الفاتورة', 'Invoice Total', totalVal + ' ' + THEME_FLAGS.ZATCA_CURRENCY],
+          ['ضريبة القيمة المضافة', 'VAT (15%)', vatVal ? vatVal + ' ' + THEME_FLAGS.ZATCA_CURRENCY : 'يحسب تلقائياً']
+        ].forEach(([arKey, enKey, value]) => {
+          const row = document.createElement('div'); row.className = 'it-zatca-row';
+          const key = document.createElement('div'); key.className = 'it-zatca-key';
+          key.textContent = arKey;
+          const val = document.createElement('div'); val.className = 'it-zatca-val';
+          val.textContent = value;
+          row.appendChild(key); row.appendChild(val);
+          rows.appendChild(row);
+        });
+        info.appendChild(rows);
+
+        const badge = document.createElement('div'); badge.className = 'it-zatca-badge';
+        badge.textContent = '\u2713 ZATCA Phase\u00a02 Compliant';
+        info.appendChild(badge);
+
+        panel.appendChild(qrBox); panel.appendChild(info);
+        root.appendChild(panel);
+      }
+
+      /* ---- BODY FIELDS (non-displayAtTheTop) ---- */
+      const bodyFields = (data.fields || []).filter(f => !f.displayAtTheTop && data.recipient);
+      if (bodyFields.length) {
+        const bfEl = document.createElement('div'); bfEl.className = 'it-body-fields';
+        bodyFields.forEach(f => {
+          const item = document.createElement('div'); item.className = 'it-body-field';
+          const lbl = document.createElement('div'); lbl.className = 'it-body-field-label';
+          lbl.textContent = safeText(f.label);
+          const val = document.createElement('div'); val.className = 'it-body-field-value';
+          safeHtml(val, f.text);
+          item.appendChild(lbl); item.appendChild(val); bfEl.appendChild(item);
+        });
+        root.appendChild(bfEl);
+      }
+
+      /* ---- STATUS STAMP — Idea 87 ---- */
+      if (data.status && data.status.text) {
+        const statusWrap = document.createElement('div'); statusWrap.className = 'it-status-wrapper';
+        const stamp = document.createElement('div');
+        stamp.className = 'it-status-stamp tone-' + safeText(data.status.tone || 'neutral');
+        stamp.textContent = safeText(data.status.text);
+        statusWrap.appendChild(stamp); root.appendChild(statusWrap);
+      }
+
+      /* ---- FOOTERS / NOTES ----
+         eko fix: no script re-execution from data.footers.
+         Whitelisted formatting (b, i, br, etc) preserved via safeHtml.
+         <script> tags in footer content silently stripped. */
+      if (data.footers && data.footers.length) {
+        const notesBlock = document.createElement('div'); notesBlock.className = 'it-notes-block';
+        const notesLabel = document.createElement('div'); notesLabel.className = 'it-notes-label';
+        notesLabel.textContent = 'الملاحظات والشروط  ·  Notes & Terms';
+        const notesText = document.createElement('div'); notesText.className = 'it-notes-text';
+        data.footers.forEach(f => {
+          const div = document.createElement('div'); div.className = 'it-footer-item';
+          safeHtml(div, f);
+          notesText.appendChild(div);
+        });
+        notesBlock.appendChild(notesLabel); notesBlock.appendChild(notesText);
+        root.appendChild(notesBlock);
+      }
+
+      /* ---- FOOTER SHELL ---- */
+      if (footerShell) {
+        while (footerShell.firstChild) footerShell.removeChild(footerShell.firstChild);
+
+        /* Footer band — Idea 61, 66 */
+        const band = document.createElement('div'); band.className = 'it-footer-band';
+        const bandText = document.createElement('div'); bandText.className = 'it-footer-band-text';
+        bandText.textContent = safeText((data.business && data.business.name) || data.businessName || '');
+        band.appendChild(bandText);
+
+        const bandSub = document.createElement('div'); bandSub.className = 'it-footer-band-sub';
+        const bizFields = ((data.business && data.business.fields) || []).slice(0, 3).map(f => safeText(f.text)).filter(Boolean);
+        if (bizFields.length) bandSub.textContent = bizFields.join('  \u00b7  ');
+        band.appendChild(bandSub);
+
+        if (THEME_FLAGS.ENABLE_MULTI_CURRENCY) {
+          const currLine = document.createElement('div'); currLine.className = 'it-footer-band-currency';
+          currLine.textContent = 'Supported Currencies: SAR \u00b7 AED \u00b7 PKR \u00b7 USD';
+          band.appendChild(currLine);
+        }
+
+        footerShell.appendChild(band);
+
+        /* Credit strip — Idea 85, footer-only, Idea 104 final */
+        if (THEME_FLAGS.ENABLE_AUTHORITY_FOOTER) {
+          const credit = document.createElement('div'); credit.className = 'it-credit-strip';
+          const svgWrap = document.createElement('span');
+          svgWrap.style.cssText = 'flex-shrink:0;';
+          svgWrap.innerHTML = AUTHORITY_SVG;
+          const creditText = document.createElement('span'); creditText.className = 'it-credit-text';
+          creditText.textContent = 'Architected by ';
+          const strong = document.createElement('strong'); strong.textContent = 'MD ABU HASAN';
+          const sep = document.createTextNode(' \u00b7 ');
+          const link = document.createElement('a');
+          link.href = 'https://inspiron.tech'; link.target = '_top'; link.className = 'it-credit-link';
+          link.textContent = 'inspiron.tech';
+          const sep2 = document.createTextNode(' \u00b7 Official Manager.io Partner');
+          creditText.appendChild(strong); creditText.appendChild(sep);
+          creditText.appendChild(link); creditText.appendChild(sep2);
+          credit.appendChild(svgWrap); credit.appendChild(creditText);
+          footerShell.appendChild(credit);
+        }
+      }
+
+      /* ---- DEBUG OVERLAY — Idea 6 ---- */
+      if (document.body.classList.contains('debug-mode')) {
+        const overlay = document.createElement('div'); overlay.id = THEME_DOM.debug;
+        [
+          ['— RIYADH RTL DEBUG —'],
+          ['Theme: riyadh-rtl'],
+          ['Version: 1.2.0'],
+          ['Episode: S01E04'],
+          ['Locale: ar-SA / RTL'],
+          ['ZATCA: ' + (THEME_FLAGS.ENABLE_QR_PANEL ? 'ON' : 'OFF')],
+          ['Rows: ' + ((data.table && data.table.rows && data.table.rows.length) || 0)],
+          ['Schema: /api4/view-v1']
+        ].forEach(([line]) => {
+          const p = document.createElement('p'); p.textContent = line; overlay.appendChild(p);
+        });
+        document.body.appendChild(overlay);
+      }
+
+      sendResize();
+
+      if (typeof ResizeObserver !== 'undefined') {
+        const resizeObserver = new ResizeObserver(() => { sendResize(); });
+        resizeObserver.observe(document.documentElement);
+      } else {
+        window.addEventListener('resize', sendResize);
+      }
+    }
+
+    /* ============================================================
+       FETCH & BOOTSTRAP — /api4/view-v1 architecture
+       ============================================================ */
+    fetch('/api4/view-v1' + window.location.search, {
+      headers: { 'Accept': 'application/json' },
+      credentials: 'same-origin'
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP_' + res.status);
+      return res.json();
+    })
+    .then(data => {
+      if (data.title) {
+        document.title = [
+          safeText(data.title),
+          safeText(data.reference),
+          '\u2014',
+          safeText((data.business && data.business.name) || data.businessName || 'Document')
+        ].filter(Boolean).join(' ');
+      }
+      renderDocument(data);
+    })
+    .catch(err => {
+      renderFault(err && err.message || 'FETCH_ERROR');
+    });
+  </script>
+
+</body>
+</html>

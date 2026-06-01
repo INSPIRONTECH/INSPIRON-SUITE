@@ -22,14 +22,21 @@ The **INSPIRON Suite** is a global ecosystem of high-authority themes and functi
 ### 🚀 Community Edition: Theme Catalog
 Every theme in the Community Edition is built on the **Universal Canvas** protocol: Grayscale-neutral headers to support any brand logo color, optimized for A4 300 DPI output.
 
-| Series | Identity | Purpose | Deployment |
+Full catalog with preview images: [**THEMES.md →**](./global-suite/themes/THEMES.md)
+
+**SLATE-1 Series** — current release
+
+| Theme | Identity | Purpose | Install |
 | :--- | :--- | :--- | :--- |
-| **UNIVERSAL BRONZE** | `Universal` | General B2B / Technical Authority | [Install URL](https://suite.inspiron.tech/global-suite/themes/UNIVERSAL-BRONZE-v1.html) |
-| **MIDNIGHT EXECUTIVE** | `Executive` | Premium Executive / Secure Datapad | [Install URL](https://suite.inspiron.tech/global-suite/themes/MIDNIGHT-EXECUTIVE-v1.1.html) |
-| **RIYADH RTL** | `Bilingual` | Arabic/English RTL-First Layout | [Install URL](https://suite.inspiron.tech/global-suite/themes/RIYADH-RTL-v1.1.html) |
-| **MIDNIGHT CORPORATE** | `Corporate` | CFO / Enterprise / Financial Control | [Install URL](https://suite.inspiron.tech/global-suite/themes/MIDNIGHT-CORPORATE-v1.html) |
-| **JADE CLINICAL** | `Clinical` | Healthcare / NGO / Laboratory (LIS) | [Install URL](https://suite.inspiron.tech/global-suite/themes/JADE-CLINICAL-v1.html) |
-| **GRAPHITE INDUSTRIAL** | `Industrial` | Supply Chain / Systems Logic / HMI | [Install URL](https://suite.inspiron.tech/global-suite/themes/GRAPHITE-INDUSTRIAL-v1.html) |
+| **MIDNIGHT EXECUTIVE** | `Executive` | Premium dark invoice — EU/IE VAT-ready | [Raw Install](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html) |
+| **RIYADH RTL** | `Bilingual RTL` | Arabic/English RTL — ZATCA e-invoicing | [Raw Install](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html) |
+
+**Hardened Originals** — maintained, security-hardened, not series members
+
+| Theme | Identity | Purpose | Install |
+| :--- | :--- | :--- | :--- |
+| **UNIVERSAL BRONZE** | `Universal` | General B2B / Technical Authority | [Raw Install](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html) |
+| **CORPORATE BLUE COLUMN** | `Corporate` | Clean corporate B2B invoicing | [Raw Install](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html) |
 
 ---
 
@@ -59,6 +66,12 @@ For businesses operating under NBR jurisdiction, we provide a specialized compli
 All tools in this repository follow the **INSPIRON Logic Boundary**. We ship the **Presentation Layer** to the community while the **Proprietary Logic Engine** remains secured in private vaults.
 
 **Full Protocol Details:** [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+---
+
+### 🔒 Security
+
+All v1.1 themes were hardened following community security review by [@eko](https://forum.manager.io/u/eko). See the [commit history](https://github.com/INSPIRONTECH/INSPIRON-SUITE/commits/main) for the full change log. Pre-v1.1 files are archived in [`legacy/`](./global-suite/themes/legacy/) and are not actively maintained.
 
 ---
 

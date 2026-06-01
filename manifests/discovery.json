@@ -15,12 +15,64 @@
     "bd_compliance": "https://tools.inspiron.tech/"
   },
   "theme_registry": [
-    { "id": "universal-bronze-v1", "name": "UNIVERSAL BRONZE", "identity": "Warm Authority", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/UNIVERSAL-BRONZE-v1.html" },
-    { "id": "midnight-corporate-v1", "name": "MIDNIGHT CORPORATE", "identity": "CFO Enterprise Control", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/MIDNIGHT-CORPORATE-v1.html" },
-    { "id": "jade-clinical-v1", "name": "JADE CLINICAL", "identity": "Healthcare Precision", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/JADE-CLINICAL-v1.html" },
-    { "id": "graphite-industrial-v1", "name": "GRAPHITE INDUSTRIAL", "identity": "Industrial Logic", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/GRAPHITE-INDUSTRIAL-v1.html" },
-    { "id": "midnight-executive-v1.1", "name": "MIDNIGHT EXECUTIVE", "identity": "Premium Sleek Datapad", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/MIDNIGHT-EXECUTIVE-v1.1.html" },
-    { "id": "riyadh-rtl-v1.1", "name": "RIYADH RTL", "identity": "Bilingual Arabic/English RTL", "tier": "community", "status": "live", "url": "https://suite.inspiron.tech/global-suite/themes/RIYADH-RTL-v1.1.html" }
+    {
+      "id": "midnight-executive-v1.1",
+      "name": "MIDNIGHT EXECUTIVE",
+      "identity": "Premium Sleek Datapad",
+      "series": "SLATE-1",
+      "tier": "community",
+      "status": "live",
+      "version": "1.1.1",
+      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html",
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html"
+    },
+    {
+      "id": "riyadh-rtl-v1.1",
+      "name": "RIYADH RTL",
+      "identity": "Bilingual Arabic/English RTL",
+      "series": "SLATE-1",
+      "tier": "community",
+      "status": "live",
+      "version": "1.1.0",
+      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html",
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html"
+    },
+    {
+      "id": "universal-bronze-v1.1",
+      "name": "UNIVERSAL BRONZE",
+      "identity": "Warm Authority",
+      "tier": "community",
+      "status": "legacy",
+      "version": "1.1.0",
+      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html",
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html"
+    },
+    {
+      "id": "corporate-blue-column-v1.1",
+      "name": "CORPORATE BLUE COLUMN",
+      "identity": "Clean Corporate Structure",
+      "tier": "community",
+      "status": "legacy",
+      "version": "1.1.0",
+      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html",
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html"
+    },
+    {
+      "id": "atlas-v1",
+      "name": "ATLAS",
+      "identity": "Global Neutral Authority",
+      "series": "SLATE-1",
+      "tier": "community",
+      "status": "planned"
+    },
+    {
+      "id": "jade-clinical-v2",
+      "name": "JADE CLINICAL",
+      "identity": "Healthcare Precision",
+      "series": "SLATE-1",
+      "tier": "community",
+      "status": "planned"
+    }
   ],
   "utilities": [
     {
@@ -46,5 +98,5 @@
   ],
   "ip_protocol": "R1-R7",
   "license": "CC BY 4.0",
-  "updated": "2026-05-01"
+  "updated": "2026-06-01"
 }

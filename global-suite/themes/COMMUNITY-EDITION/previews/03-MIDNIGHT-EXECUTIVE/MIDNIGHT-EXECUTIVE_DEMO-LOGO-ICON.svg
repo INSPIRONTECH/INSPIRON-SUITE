@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 400" width="440" height="400" fill="none">
+  <defs>
+    <linearGradient id="dublin-gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF3A8" />
+      <stop offset="50%" stop-color="#FFD700" />
+      <stop offset="100%" stop-color="#B8860B" />
+    </linearGradient>
+    <linearGradient id="dublin-cyan-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B3F0FF" />
+      <stop offset="50%" stop-color="#00D2FF" />
+      <stop offset="100%" stop-color="#007BA8" />
+    </linearGradient>
+  </defs>
+  <g>
+    <!-- Left Pillar (Gold/Bronze) -->
+    <path id="dublin-pillar" d="M 100 80 L 135 80 L 135 320 L 100 320 Z" fill="url(#dublin-gold-grad)" stroke="#0A1118" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" />
+    <!-- Outer Sail (Gold/Bronze) -->
+    <path id="dublin-sail-1" d="M 135 80 C 270 80 340 140 340 200 C 340 260 270 320 135 320 C 180 280 200 240 200 200 C 200 160 180 120 135 80 Z" fill="url(#dublin-gold-grad)" stroke="#0A1118" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" />
+    <!-- Middle Sail (Cyan/Teal) -->
+    <path id="dublin-sail-2" d="M 135 120 C 230 120 290 160 290 200 C 290 240 230 280 135 280 C 160 250 170 220 170 200 C 170 180 160 150 135 120 Z" fill="url(#dublin-cyan-grad)" stroke="#0A1118" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" />
+    <!-- Inner Sail (Gold/Bronze) -->
+    <path id="dublin-sail-3" d="M 135 160 C 190 160 240 180 240 200 C 240 220 190 240 135 240 C 150 225 155 212 155 200 C 155 188 150 175 135 160 Z" fill="url(#dublin-gold-grad)" stroke="#0A1118" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" />
+  </g>
+</svg>

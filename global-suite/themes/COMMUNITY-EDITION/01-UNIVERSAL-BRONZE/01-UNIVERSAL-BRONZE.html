@@ -1,0 +1,1088 @@
+<!--
+  ============================================================
+  INSPIRON TECH — MANAGER.IO THEME
+  ============================================================
+  Theme:        Universal Bronze
+  Version:      1.1.0
+  Schema:       /api4/view-v1
+  Archetype:    generic_invoice
+  Contract:     invoice-ready
+  License:      CC BY 4.0
+  Support:      hello@inspiron.tech
+  Repo:         github.com/INSPIRONTECH/INSPIRON-SUITE
+  ============================================================
+
+  IDEAS COMPOSED:
+  4+11+13+14+15+16+18+19+26+28+30+31+32+33+36+39
+  +46+50+51+57+61+66+70+73+76+77+78+79+87+89+92
+  +98+102+104+121+122+123+124+131+132
+
+  OFFICIAL CUSTOMIZATION API — SAFE TO EDIT:
+  ------------------------------------------------------------
+  ✅ Brand colors:   CSS variables in :root (--accent, --surface)
+  ✅ Logo:           Replace via Manager.io business logo setting
+  ✅ Feature flags:  THEME_FLAGS object (top of <script>)
+  ✅ Density:        ?density=compact|balanced|relaxed URL param
+
+  UNSUPPORTED — DO NOT MODIFY:
+  ------------------------------------------------------------
+  ❌ All .it-* CSS classes
+  ❌ THEME_DOM and THEME_FLAGS frozen objects
+  ❌ safe* helper functions
+  ❌ renderDocument() pipeline
+  ❌ fetch() and error handling block
+  ❌ <main id="document-root"> structure
+
+  Modifying unsupported areas voids INSPIRON TECH support.
+  For deeper customisation contact hello@inspiron.tech.
+
+  SECURITY — v1.1 HARDENING (per @eko review 2026-05-21):
+  ------------------------------------------------------------
+  ✅ No innerHTML with API data — DOM nodes + textContent only
+  ✅ No script re-execution from data.footers
+  ✅ Single <tr> in <thead> — no nested table rows
+  ✅ No external font CDN — @font-face with relative paths only
+  ✅ All URLs validated — http/https/mailto/tel whitelist only
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Universal Bronze — Secure Document</title>
+
+  <style>
+    /* ============================================================
+       FONT DECLARATION — Idea 121: self-hosted, never CDN
+       Place Inter .woff files at resources/fonts/
+       Theme falls back gracefully to system stack if absent.
+       ============================================================ */
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-Light.woff2') format('woff2'), url('resources/fonts/Inter-Light.woff') format('woff'); font-weight: 300; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-Regular.woff2') format('woff2'), url('resources/fonts/Inter-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-Medium.woff2') format('woff2'), url('resources/fonts/Inter-Medium.woff') format('woff'); font-weight: 500; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-SemiBold.woff2') format('woff2'), url('resources/fonts/Inter-SemiBold.woff') format('woff'); font-weight: 600; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-Bold.woff2') format('woff2'), url('resources/fonts/Inter-Bold.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-ExtraBold.woff2') format('woff2'), url('resources/fonts/Inter-ExtraBold.woff') format('woff'); font-weight: 800; font-style: normal; font-display: swap; }
+
+    /* ============================================================
+       SAFE SETTINGS — edit colors, spacing here freely
+       ============================================================ */
+    :root {
+      --canvas:          #f5f5f5;
+      --surface:         #ffffff;
+      --accent:          #a67c3d;
+      --accent-soft:     #fcfaf7;
+      --accent-glow:     rgba(166, 124, 61, 0.15);
+      --accent-border:   rgba(166, 124, 61, 0.30);
+      --text-main:       #171717;
+      --text-muted:      #6b7280;
+      --text-label:      #9ca3af;
+      --border:          #e5e7eb;
+      --border-strong:   #d1d5db;
+      --status-positive: #059669;
+      --status-negative: #dc2626;
+      --font-stack:      'Inter', 'Neo Sans Pro', 'Segoe UI', -apple-system, system-ui, BlinkMacSystemFont, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --canvas:          #1c1917;
+        --surface:         #1c1917;
+        --text-main:       #f5f5f5;
+        --text-muted:      #a8a29e;
+        --border:          #2e2a24;
+        --border-strong:   #443e34;
+        --accent-soft:     #272118;
+        --accent-glow:     rgba(166, 124, 61, 0.15);
+        --accent-border:   rgba(166, 124, 61, 0.30);
+        --text-label:      #78716c;
+      }
+    }
+
+    /* ============================================================
+       DO NOT EDIT BELOW — CORE ENGINE CSS (.it-* classes)
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 13px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    body {
+      font-family: var(--font-stack);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.5;
+      background: var(--canvas);
+      color: var(--text-main);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.in-iframe,
+    body.in-iframe #it-shell {
+      min-height: auto !important;
+    }
+
+    /* Action bar — Idea 46, screen only */
+    #it-doc-actions {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--canvas);
+      border-bottom: 1px solid var(--border);
+    }
+    .it-action-btn {
+      font-family: var(--font-stack);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      background: var(--surface);
+      color: var(--text-muted);
+      border: 1px solid var(--border-strong);
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .it-action-btn:hover { color: var(--accent); border-color: var(--accent-border); }
+
+    /* A4 shell — Idea 51 */
+    #it-shell {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--surface);
+      max-width: 900px;
+      margin: 1.5rem auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 0 0 1px var(--border);
+      border-radius: 5px;
+      padding: 40px;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 auto;
+    }
+
+    .it-content { flex: 1 0 auto; }
+    
+    .it-footer-shell {
+      flex-shrink: 0;
+      margin-top: auto !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    /* DEMO STRIP — Idea 89 */
+    .it-demo-strip {
+      padding: 6px 28px;
+      text-align: center;
+      border-bottom: 1px dashed var(--accent-border);
+      background: var(--canvas);
+      margin: -40px -40px 25px -40px;
+    }
+    .it-demo-strip-text {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* HEADER WRAP — Idea 26, 30 */
+    .it-header-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid var(--accent);
+      gap: 24px;
+    }
+    
+    .it-header-title-block { flex: 1 1 auto; min-width: 0; }
+    .it-header-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      color: var(--text-main);
+      margin: 0;
+      line-height: 1.1;
+    }
+    .it-header-title-kicker {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--accent);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+    .it-header-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin: 3px 0 0 0;
+    }
+
+    .it-header-logo { flex: 0 0 auto; background: transparent; display: inline-block; }
+    .it-header-logo img {
+      max-height: 60px;
+      max-width: 200px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+    .it-header-logo-text {
+      text-align: right;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    /* INFO GRID — Idea 27 */
+    .it-info-grid {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 25px;
+      width: 100%;
+      align-items: flex-start;
+    }
+    
+    .it-party-recipient { flex: 1.2; font-style: normal; line-height: 1.6; }
+    .it-party-business { flex: 1; font-style: normal; line-height: 1.6; text-align: start; white-space: nowrap; }
+    
+    .it-party-role {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .it-party-name {
+      font-size: 14px;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+    .it-party-address {
+      font-size: 12px;
+      color: var(--text-main);
+    }
+    .it-party-extra {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 5px;
+      font-family: monospace;
+    }
+
+    .it-info-sep {
+      width: 2px;
+      background: var(--accent);
+      align-self: stretch;
+      opacity: 0.3;
+    }
+
+    .it-fields-dl {
+      flex: 1;
+      text-align: right;
+      margin: 0;
+      padding: 0;
+    }
+    .it-field-dt {
+      font-weight: 700;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .it-field-dd {
+      font-weight: 700;
+      font-size: 12px;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    /* DESCRIPTION */
+    .it-description-block {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 20px;
+      padding: 10px 15px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      color: var(--text-main);
+    }
+
+    /* TABLE — Idea 55, 56 */
+    .it-table-wrapper { margin: 20px 0 0; overflow-x: auto; }
+    .it-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .it-table thead tr { border: 1px solid var(--border-strong); }
+    .it-table thead th {
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px;
+      border: 1px solid var(--border-strong);
+      background: var(--canvas);
+      color: var(--accent);
+      text-align: start;
+    }
+    .it-cell {
+      padding: 10px;
+      vertical-align: top;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      color: var(--text-main);
+    }
+    .it-table tbody tr.it-row:nth-child(even) td.it-cell { background: var(--accent-soft); }
+    .it-table tbody tr.it-row.it-last-row td.it-cell { border-bottom: 1px solid var(--border-strong); padding-bottom: 25px; }
+
+    .it-table tbody tr.it-row-subtotal {
+      font-weight: 700;
+      background: var(--accent-soft);
+    }
+    .it-table tbody tr.it-row-subtotal td.it-cell {
+      border-top: 1px solid var(--accent-border);
+      border-bottom: 1px solid var(--accent-border);
+    }
+
+    .it-cell-emphasis { font-weight: 700; }
+    .it-cell-group-header { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); padding: 10px; background: var(--canvas) !important; }
+    .it-cell-link { color: var(--accent); text-decoration: none; }
+
+    /* Totals — Idea 102 */
+    .it-table tr.it-total td { border: none; }
+    .it-table tr.it-total .it-total-label { text-align: right; font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); padding: 8px 10px; }
+    .it-table tr.it-total .it-total-value { border: 1px solid var(--border-strong); text-align: right; padding: 8px 10px; font-weight: 700; background: var(--surface); color: var(--text-main); }
+    .it-table tr.it-total-grand .it-total-label { color: var(--accent); }
+    .it-table tr.it-total-grand .it-total-value { background: var(--accent-soft); border-color: var(--accent) !important; color: var(--accent); font-size: 16px; font-weight: 800; }
+
+    /* STATUS STAMP — Idea 87 */
+    .it-status-wrapper { display: flex; justify-content: center; padding: 22px 28px; page-break-inside: avoid; }
+    .it-status-stamp {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 8px 18px;
+      font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+      border: 3px solid var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .tone-positive { color: #059669; border-color: #059669; background: rgba(5, 150, 105, 0.05); }
+    .tone-negative { color: #dc2626; border-color: #dc2626; background: rgba(220, 38, 38, 0.05); }
+    .tone-neutral  { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+
+    /* BODY FIELDS */
+    .it-body-fields { margin-top: 20px; font-size: 12px; color: var(--text-main); }
+    .it-body-field { margin-bottom: 10px; }
+    .it-body-field-label { color: var(--accent); font-weight: 700; }
+    .it-body-field-value { margin-top: 2px; }
+
+    /* FOOTERS NOTES */
+    .it-notes-block { margin-top: 20px; font-size: 11px; line-height: 1.6; color: var(--text-muted); }
+    .it-footer-item + .it-footer-item { margin-top: 15px; }
+
+    /* SHORT INVOICE SPACER — Idea 64 */
+    .it-short-spacer { display: none; }
+    body.a4-short .it-short-spacer { display: block; min-height: 40mm; }
+
+    /* FOOTER WRAP — Idea 61 */
+    .it-footer-wrap {
+      margin-top: 40px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    
+    /* CREDIT STRIP — Idea 85 */
+    .it-credit-strip { display: flex; align-items: center; gap: 8px; }
+    .it-credit-text { font-family: var(--font-stack); font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; line-height: 1.1; }
+    .it-credit-link { color: var(--border-strong); text-decoration: none; font-weight: 900; }
+    /* Match colors exactly */
+    @media (prefers-color-scheme: dark) {
+      .it-credit-text { color: #57534e; }
+    }
+
+    .it-footer-right { font-size: 8px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); text-align: right; }
+    .it-footer-theme-tag { color: var(--accent); font-weight: 700; }
+
+    /* FAULT BANNER — Idea 9 */
+    .it-fault-banner { padding: 3rem 2rem; text-align: center; border: 2px solid var(--status-negative); margin: 2rem; }
+    .it-fault-icon { font-size: 32px; color: var(--status-negative); margin-bottom: 12px; }
+    .it-fault-title { font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: var(--status-negative); margin-bottom: 8px; }
+    .it-fault-message { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+    .it-fault-code { font-size: 10px; font-family: monospace; color: var(--text-label); margin-bottom: 12px; }
+    .it-fault-hint { font-size: 10px; color: var(--text-label); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+
+    /* DEBUG OVERLAY — Idea 6 */
+    #it-debug-overlay {
+      position: fixed; top: 0; right: 0; background: rgba(0,0,0,0.92);
+      border-left: 3px solid var(--accent); padding: 12px 16px;
+      font-size: 10px; font-family: monospace; color: var(--accent);
+      z-index: 9999; line-height: 1.8; max-width: 260px;
+    }
+    #it-debug-overlay p { margin: 0; }
+
+    /* DENSITY MODES — Idea 5, 24 */
+    body.document-long .it-cell { padding: 6px 10px; font-size: 11px; }
+    body.document-long .it-table thead th { padding: 7px 10px; }
+
+    /* UTILITY */
+    .it-hidden { display: none !important; }
+
+    /* ============================================================
+       PRINT — Idea 33, 36, 50
+       ============================================================ */
+    @page { size: A4; margin: 10mm; }
+
+    @media print {
+      body { background-color: initial; display: initial; }
+      body::before { display: none !important; }
+      #it-doc-actions { display: none !important; }
+      .it-demo-strip { display: none !important; }
+
+      html, body { min-height: auto !important; height: auto !important; background: #fff !important; color: #000 !important; font-size: 11px !important; }
+      #it-shell { 
+        min-height: auto !important; height: auto !important; box-shadow: none !important; 
+        max-width: 100% !important; background: #fff !important; margin: 0 !important; padding: 0 !important;
+      }
+      main { 
+        background: #fff !important; 
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: auto !important;
+        box-sizing: border-box !important;
+      }
+      .it-content {
+        flex: 1 0 auto !important;
+        min-height: auto !important;
+      }
+      .it-footer-shell {
+        flex-shrink: 0 !important;
+      }
+      .it-short-spacer {
+        display: none !important;
+      }
+
+      .it-header-wrap { border-bottom-color: #a67c3d !important; }
+      .it-header-title { color: #171717 !important; }
+      .it-header-title-kicker { color: #a67c3d !important; }
+      .it-header-subtitle { color: #6b7280 !important; }
+
+      .it-party-role { color: #6b7280 !important; }
+      .it-party-name { color: #171717 !important; }
+      .it-party-address { color: #171717 !important; }
+      .it-party-extra { color: #6b7280 !important; }
+      .it-info-sep { background: #a67c3d !important; }
+      .it-field-dt { color: #6b7280 !important; }
+      .it-field-dd { color: #171717 !important; }
+
+      .it-description-block { background: rgba(166, 124, 61, 0.05) !important; border-left-color: #a67c3d !important; color: #171717 !important; }
+
+      .it-table thead tr { border-color: #d1d5db !important; }
+      .it-table thead th { background: #f9fafb !important; color: #a67c3d !important; border-color: #d1d5db !important; }
+      .it-cell { color: #171717 !important; border-left-color: #e5e7eb !important; border-right-color: #e5e7eb !important; }
+      .it-table tbody tr.it-row:nth-child(even) td.it-cell { background: #fafafa !important; }
+      .it-table tbody tr.it-row.it-last-row td.it-cell { border-bottom-color: #d1d5db !important; }
+      
+      .it-table tr.it-total .it-total-label { color: #6b7280 !important; }
+      .it-table tr.it-total .it-total-value { border-color: #d1d5db !important; background: #fff !important; color: #171717 !important; }
+      .it-table tr.it-total-grand .it-total-label { color: #a67c3d !important; }
+      .it-table tr.it-total-grand .it-total-value { background: rgba(166, 124, 61, 0.05) !important; border-color: #a67c3d !important; color: #a67c3d !important; }
+
+      .tone-positive { color: #059669 !important; border-color: #059669 !important; background: rgba(5, 150, 105, 0.05) !important; }
+      .tone-negative { color: #dc2626 !important; border-color: #dc2626 !important; background: rgba(220, 38, 38, 0.05) !important; }
+      .tone-neutral  { color: #a67c3d !important; border-color: #a67c3d !important; background: rgba(166, 124, 61, 0.05) !important; }
+
+      .it-body-field-label { color: #a67c3d !important; }
+      .it-body-field-value { color: #171717 !important; }
+      .it-notes-block { color: #6b7280 !important; }
+      
+      .it-footer-wrap { border-top-color: #e5e7eb !important; }
+      .it-credit-text { color: #94a3b8 !important; }
+      .it-footer-right { color: #6b7280 !important; }
+      .it-footer-theme-tag { color: #a67c3d !important; }
+
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ACTION BAR — Idea 46, hidden in print via Idea 50 -->
+  <div id="it-doc-actions">
+    <button class="it-action-btn" onclick="window.print()">⎙ Print / Save PDF</button>
+    <button class="it-action-btn" onclick="(async()=>{try{await navigator.share({title:document.title,url:window.location.href});}catch{try{await navigator.clipboard.writeText(window.location.href);}catch(e){}}})()">⎘ Share</button>
+  </div>
+
+  <div id="it-shell">
+    <main>
+      <div class="it-content" id="document-root" data-theme-version="1.1.0" data-theme-id="universal-bronze">
+
+        <!-- Loading state — replaced by renderer -->
+        <div style="padding:3rem;text-align:center;color:var(--text-muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;">
+          Loading…
+        </div>
+
+      </div><!-- /.it-content -->
+
+      <footer class="it-footer-shell" id="it-footer-shell">
+        <!-- Rendered by JS -->
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    'use strict';
+
+    if (window.parent !== window) {
+      document.body.classList.add('in-iframe');
+    }
+
+    /* ============================================================
+       SAFE SETTINGS — edit these freely
+       ============================================================ */
+    const THEME_FLAGS = Object.freeze({
+      ENABLE_COMMISSION_LOGIC:     false,
+      ENABLE_MULTI_CURRENCY:       false,
+      ENABLE_QR_PANEL:             false,
+      ENABLE_DEBUG_OVERLAY:        false,
+      ENABLE_DEMO_WATERMARK:       false,
+      ENABLE_AUTHORITY_FOOTER:     true,
+      AUTO_DENSITY_LONG_THRESHOLD: 20
+    });
+
+    /* ============================================================
+       DO NOT EDIT BELOW — CORE ENGINE
+       Idea 13 — centralized DOM selectors
+       ============================================================ */
+    const THEME_DOM = Object.freeze({
+      root:   'document-root',
+      footer: 'it-footer-shell',
+      debug:  'it-debug-overlay'
+    });
+
+    /* ----------------------------------------------------------
+       SAFE HELPERS — Idea 4, eko security pattern
+       ---------------------------------------------------------- */
+    function safeText(v) { return (v === null || v === undefined) ? '' : String(v); }
+
+    function safeLinkUrl(u) {
+      if (!u || typeof u !== 'string') return null;
+      if (/^(https?:\/\/|mailto:|tel:)/i.test(u.trim())) return u.trim();
+      return null;
+    }
+
+    /* v1.1.1 fix: accept Manager.io relative logo paths */
+    function safeImageUrl(u) {
+      if (!u || typeof u !== 'string') return null;
+      const t = u.trim();
+      if (/^https?:\/\//i.test(t)) return t;
+      if (/^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/i.test(t)) return t;
+      if (!/^[a-z0-9+.-]+:/i.test(t)) return t;
+      return null;
+    }
+
+    function safeCssAlign(v) {
+      return ({left:'left',center:'center',right:'right',start:'left',end:'right'})[v] || 'left';
+    }
+
+    function sendResize() {
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          type: "resize",
+          width: document.documentElement.scrollWidth + 1,
+          height: document.documentElement.scrollHeight + 1
+        }, "*");
+      }
+    }
+
+    /* v1.1.1 fix: whitelisted inline HTML sanitizer. */
+    function safeHtml(parentNode, rawText) {
+      if (rawText === null || rawText === undefined) return;
+      const textStr = String(rawText);
+      if (!/<[a-z/][^>]*>/i.test(textStr)) {
+        textStr.split('\n').forEach((line, i, arr) => {
+          parentNode.appendChild(document.createTextNode(line));
+          if (i < arr.length - 1) parentNode.appendChild(document.createElement('br'));
+        });
+        return;
+      }
+      const temp = document.createElement('div');
+      temp.innerHTML = textStr;
+      const allowed = ['b','i','u','strong','em','br','span','p','ul','ol','li','div'];
+      const walk = (src, dst) => {
+        src.childNodes.forEach(child => {
+          if (child.nodeType === 3) {
+            dst.appendChild(document.createTextNode(child.textContent));
+          } else if (child.nodeType === 1) {
+            const tag = child.tagName.toLowerCase();
+            if (allowed.includes(tag)) {
+              const el = document.createElement(tag);
+              if (child.hasAttribute('style')) {
+                const style = child.getAttribute('style');
+                if (!/expression|url|javascript|behavior/i.test(style)) {
+                   el.setAttribute('style', style);
+                }
+              }
+              walk(child, el);
+              dst.appendChild(el);
+            } else {
+              walk(child, dst);
+            }
+          }
+        });
+      };
+      walk(temp, parentNode);
+    }
+
+    /* ----------------------------------------------------------
+       TABLE BUILDERS
+       ---------------------------------------------------------- */
+    function buildCell(cell, col) {
+      const td = document.createElement('td');
+      td.className = 'it-cell';
+      if (col) {
+        td.style.textAlign = safeCssAlign(col.align);
+        if (col.nowrap || col.shrinkToFit) td.style.whiteSpace = 'nowrap';
+        if (col.shrinkToFit) td.style.width = '1%';
+        if (col.emphasis) td.classList.add('it-cell-emphasis');
+      }
+
+      let cellText = cell.text;
+      if (col && col.label) {
+        const colLabelLower = String(col.label).toLowerCase();
+        const percentKeywords = ["rate", "percent", "percentage", "ratio", "com %", "commission", "unit price"];
+        
+        if (percentKeywords.some(keyword => colLabelLower.includes(keyword))) {
+          const trimmed = String(cellText).trim();
+          const num = parseFloat(trimmed);
+          if (!isNaN(num) && num > 0 && num < 1 && /^[0-9]*\.[0-9]+$/.test(trimmed)) {
+            cellText = (num * 100).toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '%';
+          }
+        }
+      }
+
+      if (cell.image && cell.image.url) {
+        const src = safeImageUrl(cell.image.url);
+        if (src) {
+          const img = document.createElement('img');
+          img.addEventListener('load', sendResize);
+          img.src = src; img.alt = ''; img.style.maxWidth = '100px';
+          td.appendChild(img);
+        }
+      } else if (cell.link && cell.link.url) {
+        const href = safeLinkUrl(cell.link.url);
+        if (href) {
+          const a = document.createElement('a');
+          a.href = href; a.target = '_top'; a.className = 'it-cell-link';
+          safeHtml(a, cellText);
+          td.appendChild(a);
+        } else {
+          safeHtml(td, cellText);
+        }
+      } else {
+        safeHtml(td, cellText);
+      }
+      return td;
+    }
+
+    function processRows(rows, columns, tbody) {
+      if (!rows || !tbody) return;
+      rows.forEach(r => {
+        if (!r.cells) return;
+        const tr = document.createElement('tr');
+        tr.className = r.isTotalRow ? 'it-row it-row-subtotal' : 'it-row';
+        if (r.cells.length === 1 && r.rows) {
+          const td = document.createElement('td');
+          td.colSpan = columns.length;
+          td.className = 'it-cell it-cell-group-header';
+          td.textContent = safeText(r.cells[0].text);
+          tr.appendChild(td); tbody.appendChild(tr);
+          processRows(r.rows, columns, tbody); return;
+        }
+        r.cells.forEach((cell, idx) => {
+          const td = buildCell(cell, columns[idx] || {});
+          if (r.isTotalRow) td.classList.add('it-cell-emphasis');
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+        if (r.rows) processRows(r.rows, columns, tbody);
+      });
+      const dataRows = tbody.querySelectorAll('tr.it-row:not(.it-row-subtotal)');
+      if (dataRows.length) dataRows[dataRows.length - 1].classList.add('it-last-row');
+    }
+
+    function appendTotals(totals, colCount, tbody) {
+      if (!totals || !totals.length) return;
+      totals.forEach((total, idx) => {
+        const tr = document.createElement('tr');
+        const isLast = idx === totals.length - 1;
+        tr.className = isLast ? 'it-total it-total-grand' : 'it-total';
+        
+        const lTd = document.createElement('td'); 
+        lTd.className = 'it-total-label'; 
+        lTd.colSpan = Math.max(colCount - 1, 1); 
+        lTd.textContent = safeText(total.label);
+        
+        const vTd = document.createElement('td'); 
+        vTd.className = 'it-total-value'; 
+        vTd.textContent = safeText(total.text);
+        
+        tr.appendChild(lTd); 
+        tr.appendChild(vTd); 
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ----------------------------------------------------------
+       DENSITY MODE
+       ---------------------------------------------------------- */
+    function applyDensityMode(data) {
+      const body = document.body;
+      const rowCount = data.table && data.table.rows ? data.table.rows.length : 0;
+      if (rowCount > THEME_FLAGS.AUTO_DENSITY_LONG_THRESHOLD) body.classList.add('document-long');
+      if (rowCount < 4) body.classList.add('a4-short');
+      const p = new URLSearchParams(window.location.search);
+      const d = p.get('density');
+      if (['relaxed','balanced','compact'].includes(d)) { body.classList.remove('density-relaxed','density-balanced','density-compact'); body.classList.add('density-' + d); }
+      if (p.get('debug') === '1') body.classList.add('debug-mode');
+    }
+
+    /* ----------------------------------------------------------
+       FAULT RENDERER
+       ---------------------------------------------------------- */
+    function renderFault(code) {
+      const root = document.getElementById(THEME_DOM.root);
+      if (!root) return;
+      while (root.firstChild) root.removeChild(root.firstChild);
+      const inner = document.createElement('div'); inner.className = 'it-fault-banner';
+      [['it-fault-icon','⚠'],['it-fault-title','SYSTEM FAULT'],['it-fault-message','Failed to load document data from Manager.io.'],['it-fault-code','Code: ' + safeText(code || 'FETCH_ERROR')],['it-fault-hint','Check your Manager.io instance or theme assignment. Restore original file or contact hello@inspiron.tech.']].forEach(([cls,text]) => {
+        const el = document.createElement('div'); el.className = cls; el.textContent = text; inner.appendChild(el);
+      });
+      root.appendChild(inner);
+    }
+
+    const AUTHORITY_SVG = '<svg viewBox="0 0 358.846 350.3" width="22" height="22" fill="none" aria-hidden="true"><path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/><path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/><circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/></svg>';
+
+    /* ----------------------------------------------------------
+       MAIN RENDER — maps /api4/view-v1 schema
+       ---------------------------------------------------------- */
+    function renderDocument(data) {
+      const root = document.getElementById(THEME_DOM.root);
+      const footerShell = document.getElementById(THEME_DOM.footer);
+      if (!root) return;
+
+      applyDensityMode(data);
+
+      const colCount = (data.table && data.table.columns) ? data.table.columns.length : 2;
+
+      /* Clear loading state */
+      while (root.firstChild) root.removeChild(root.firstChild);
+
+      /* ---- DEMO STRIP ---- */
+      if (THEME_FLAGS.ENABLE_DEMO_WATERMARK) {
+        const strip = document.createElement('div'); strip.className = 'it-demo-strip';
+        const stripText = document.createElement('span'); stripText.className = 'it-demo-strip-text';
+        stripText.textContent = '⚠ DEMO TEMPLATE — NOT A VALID FINANCIAL INSTRUMENT ⚠';
+        strip.appendChild(stripText); root.appendChild(strip);
+      }
+
+      /* ---- HEADER WRAP ---- */
+      const headerWrap = document.createElement('div');
+      headerWrap.className = 'it-header-wrap';
+
+      /* Title block */
+      const titleBlock = document.createElement('div'); titleBlock.className = 'it-header-title-block';
+      const titleEl = document.createElement('h1'); titleEl.id = 'title'; titleEl.className = 'it-header-title';
+      titleEl.textContent = safeText(data.title || 'INVOICE');
+      titleBlock.appendChild(titleEl);
+
+      const kicker = document.createElement('div'); kicker.className = 'it-header-title-kicker';
+      kicker.textContent = 'Universal Bronze · Secure Document';
+      titleBlock.appendChild(kicker);
+
+      (data.subtitles || []).forEach(s => {
+        const sub = document.createElement('p'); sub.className = 'it-header-subtitle';
+        sub.textContent = safeText(s); titleBlock.appendChild(sub);
+      });
+
+      /* Logo wrap */
+      const logoWrap = document.createElement('div'); logoWrap.className = 'it-header-logo';
+      const logoSrc = safeImageUrl(data.business && data.business.logo);
+      if (logoSrc) {
+        const img = document.createElement('img');
+        img.addEventListener('load', sendResize);
+        img.src = logoSrc; img.alt = '';
+        logoWrap.appendChild(img);
+      } else {
+        const logoText = document.createElement('div'); logoText.className = 'it-header-logo-text';
+        logoText.textContent = safeText(data.business && data.business.name || data.businessName || '');
+        logoWrap.appendChild(logoText);
+      }
+
+      headerWrap.appendChild(titleBlock);
+      headerWrap.appendChild(logoWrap);
+      root.appendChild(headerWrap);
+
+      /* ---- INFO GRID ---- */
+      const infoGrid = document.createElement('section');
+      infoGrid.className = 'it-info-grid';
+
+      /* Recipient / Client address */
+      const recAddress = document.createElement('address');
+      recAddress.className = 'it-party-recipient';
+      const recRole = document.createElement('span');
+      recRole.className = 'it-party-role';
+
+      if (data.recipient) {
+        recRole.textContent = 'Prepared For';
+        recAddress.appendChild(recRole);
+
+        const recName = document.createElement('strong');
+        recName.className = 'it-party-name';
+        safeHtml(recName, data.recipient.name);
+        recAddress.appendChild(recName);
+
+        const recAddr = document.createElement('div');
+        recAddr.className = 'it-party-address';
+        safeHtml(recAddr, data.recipient.address);
+        recAddress.appendChild(recAddr);
+
+        const recExtraList = [];
+        if (data.recipient.code) recExtraList.push('Code: ' + data.recipient.code);
+        if (data.recipient.email) recExtraList.push('Email: ' + data.recipient.email);
+        if (recExtraList.length) {
+          const recExtra = document.createElement('div');
+          recExtra.className = 'it-party-extra';
+          safeHtml(recExtra, recExtraList.join('\n'));
+          recAddress.appendChild(recExtra);
+        }
+      } else {
+        recRole.textContent = 'Issued By';
+        recAddress.appendChild(recRole);
+
+        const recName = document.createElement('strong');
+        recName.className = 'it-party-name';
+        safeHtml(recName, data.business && data.business.name || data.businessName || '');
+        recAddress.appendChild(recName);
+
+        const recAddr = document.createElement('div');
+        recAddr.className = 'it-party-address';
+        safeHtml(recAddr, data.business && data.business.address || '');
+        recAddress.appendChild(recAddr);
+      }
+      infoGrid.appendChild(recAddress);
+
+      /* Metadata fields */
+      const metaFields = [];
+      if (data.reference) metaFields.push({ label: 'Reference', text: data.reference });
+      (data.fields || []).forEach(f => { if (f.displayAtTheTop || !data.recipient) metaFields.push(f); });
+      (data.business && data.business.fields || []).forEach(f => metaFields.push(f));
+
+      const fieldsDl = document.createElement('dl');
+      fieldsDl.className = 'it-fields-dl';
+      metaFields.forEach(m => {
+        const dt = document.createElement('dt'); dt.className = 'it-field-dt'; dt.textContent = safeText(m.label);
+        const dd = document.createElement('dd'); dd.className = 'it-field-dd'; safeHtml(dd, m.text);
+        fieldsDl.appendChild(dt); fieldsDl.appendChild(dd);
+      });
+      infoGrid.appendChild(fieldsDl);
+
+      /* Business address (rightmost column, only if recipient exists) */
+      if (data.recipient) {
+        const sep = document.createElement('div');
+        sep.className = 'it-info-sep';
+        infoGrid.appendChild(sep);
+
+        const bizAddress = document.createElement('address');
+        bizAddress.className = 'it-party-business';
+        const bizRole = document.createElement('span');
+        bizRole.className = 'it-party-role';
+        bizRole.textContent = 'Issued By';
+        bizAddress.appendChild(bizRole);
+
+        const bizName = document.createElement('strong');
+        bizName.className = 'it-party-name';
+        safeHtml(bizName, data.business && data.business.name || data.businessName || '');
+        bizAddress.appendChild(bizName);
+
+        const bizAddr = document.createElement('div');
+        bizAddr.className = 'it-party-address';
+        safeHtml(bizAddr, data.business && data.business.address || '');
+        bizAddress.appendChild(bizAddr);
+
+        infoGrid.appendChild(bizAddress);
+      }
+
+      root.appendChild(infoGrid);
+
+      /* ---- DESCRIPTION ---- */
+      if (data.table && data.table.description) {
+        const descBlock = document.createElement('div'); descBlock.className = 'it-description-block';
+        safeHtml(descBlock, data.table.description);
+        root.appendChild(descBlock);
+      }
+
+      /* ---- TABLE ---- */
+      if (data.table && data.table.columns) {
+        const wrapper = document.createElement('div'); wrapper.className = 'it-table-wrapper';
+        const table = document.createElement('table'); table.className = 'it-table'; table.setAttribute('role','table');
+
+        const thead = document.createElement('thead');
+        const headRow = document.createElement('tr'); headRow.id = 'table-headers';
+        data.table.columns.forEach(col => {
+          const th = document.createElement('th');
+          th.style.textAlign = safeCssAlign(col.align);
+          if (col.shrinkToFit) { th.style.width = '1%'; th.style.whiteSpace = 'nowrap'; }
+          th.textContent = safeText(col.label);
+          headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody'); tbody.id = 'table-rows';
+        processRows(data.table.rows || [], data.table.columns, tbody);
+        appendTotals(data.totals, colCount, tbody);
+        table.appendChild(tbody);
+        wrapper.appendChild(table);
+        root.appendChild(wrapper);
+      }
+
+      /* ---- SHORT SPACER ---- */
+      const spacer = document.createElement('div'); spacer.className = 'it-short-spacer';
+      root.appendChild(spacer);
+
+      /* ---- BODY FIELDS (non-displayAtTheTop) ---- */
+      const bodyFieldsList = (data.fields || []).filter(f => !f.displayAtTheTop && data.recipient);
+      if (bodyFieldsList.length) {
+        const bfEl = document.createElement('div'); bfEl.className = 'it-body-fields';
+        bodyFieldsList.forEach(f => {
+          const item = document.createElement('div'); item.className = 'it-body-field';
+          const lbl = document.createElement('strong'); lbl.className = 'it-body-field-label'; lbl.textContent = safeText(f.label) + ':';
+          const val = document.createElement('div'); val.className = 'it-body-field-value';
+          safeHtml(val, f.text);
+          item.appendChild(lbl); item.appendChild(val); bfEl.appendChild(item);
+        });
+        root.appendChild(bfEl);
+      }
+
+      /* ---- NOTES / TERMS ---- */
+      if (data.footers && data.footers.length) {
+        const notesBlock = document.createElement('div'); notesBlock.className = 'it-notes-block';
+        data.footers.forEach(f => {
+          const div = document.createElement('div'); div.className = 'it-footer-item';
+          safeHtml(div, f);
+          notesBlock.appendChild(div);
+        });
+        root.appendChild(notesBlock);
+      }
+
+      /* ---- STATUS STAMP ---- */
+      if (data.status && data.status.text) {
+        const statusWrap = document.createElement('div'); statusWrap.className = 'it-status-wrapper';
+        const stamp = document.createElement('div');
+        stamp.className = 'it-status-stamp tone-' + safeText(data.status.tone || 'neutral');
+        stamp.textContent = safeText(data.status.text);
+        statusWrap.appendChild(stamp); root.appendChild(statusWrap);
+      }
+
+      /* ---- FOOTER SHELL ---- */
+      if (footerShell) {
+        while (footerShell.firstChild) footerShell.removeChild(footerShell.firstChild);
+
+        const footerWrap = document.createElement('div');
+        footerWrap.className = 'it-footer-wrap';
+
+        /* Authority Seal */
+        if (THEME_FLAGS.ENABLE_AUTHORITY_FOOTER) {
+          const credit = document.createElement('div'); credit.className = 'it-credit-strip';
+          const svgWrap = document.createElement('span');
+          svgWrap.style.cssText = 'filter:drop-shadow(0 0 5px rgba(0,210,255,0.6));flex-shrink:0;';
+          svgWrap.innerHTML = AUTHORITY_SVG;
+          const creditText = document.createElement('span'); creditText.className = 'it-credit-text';
+          creditText.textContent = 'Architected by ';
+          const strong = document.createElement('strong'); strong.textContent = 'MD ABU HASAN';
+          const br = document.createElement('br');
+          const link = document.createElement('a'); link.href = 'https://inspiron.tech'; link.target = '_blank'; link.className = 'it-credit-link'; link.textContent = 'inspiron.tech';
+          
+          creditText.appendChild(strong); creditText.appendChild(br); creditText.appendChild(link);
+          credit.appendChild(svgWrap); credit.appendChild(creditText);
+          footerWrap.appendChild(credit);
+        }
+
+        /* Footer Right Text */
+        const footRight = document.createElement('div'); footRight.className = 'it-footer-right';
+        footRight.textContent = 'Precision · Authority · Control';
+        const brRight = document.createElement('br');
+        const themeTag = document.createElement('span'); themeTag.className = 'it-footer-theme-tag';
+        themeTag.textContent = 'Universal Bronze v1.1';
+
+        footRight.appendChild(brRight);
+        footRight.appendChild(themeTag);
+        footerWrap.appendChild(footRight);
+
+        footerShell.appendChild(footerWrap);
+      }
+
+      /* ---- DEBUG OVERLAY ---- */
+      if (document.body.classList.contains('debug-mode')) {
+        const overlay = document.createElement('div'); overlay.id = THEME_DOM.debug; overlay.className = 'it-debug-overlay';
+        [['— NEXUS DEBUG —'],['Theme: universal-bronze'],['Version: 1.1.0'],['Archetype: generic_invoice'],['Rows: ' + ((data.table && data.table.rows && data.table.rows.length) || 0)],['Schema: /api4/view-v1']].forEach(([line]) => {
+          const p = document.createElement('p'); p.textContent = line; overlay.appendChild(p);
+        });
+        document.body.appendChild(overlay);
+      }
+
+      sendResize();
+
+      if (typeof ResizeObserver !== 'undefined') {
+        const resizeObserver = new ResizeObserver(() => {
+          sendResize();
+        });
+        resizeObserver.observe(document.documentElement);
+      } else {
+        window.addEventListener('resize', sendResize);
+      }
+    }
+
+    /* ============================================================
+       FETCH & BOOTSTRAP — /api4/view-v1 architecture
+       ============================================================ */
+    fetch('/api4/view-v1' + window.location.search, {
+      headers: { 'Accept': 'application/json' },
+      credentials: 'same-origin'
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP_' + res.status);
+      return res.json();
+    })
+    .then(data => {
+      if (data.title) {
+        document.title = [safeText(data.title), safeText(data.reference), '—',
+          safeText(data.business && data.business.name || data.businessName || 'Document')
+        ].filter(Boolean).join(' ');
+      }
+      renderDocument(data);
+    })
+    .catch(err => {
+      renderFault(err && err.message || 'FETCH_ERROR');
+    });
+  </script>
+
+</body>
+</html>

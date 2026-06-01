@@ -1,0 +1,1091 @@
+<!--
+  ============================================================
+  INSPIRON TECH — MANAGER.IO THEME
+  ============================================================
+  Theme:        Midnight Executive
+  Version:      1.2.0
+  Schema:       /api4/view-v1
+  Archetype:    generic_invoice
+  Contract:     invoice-ready
+  License:      CC BY 4.0
+  Support:      hello@inspiron.tech
+  Repo:         github.com/INSPIRONTECH/INSPIRON-SUITE
+  ============================================================
+
+  IDEAS COMPOSED:
+  4+11+13+14+15+16+18+19+26+28+30+31+32+33+36+39
+  +46+50+51+57+61+66+70+73+76+77+78+79+87+89+92
+  +98+102+104+121+122+123+124+131+132
+
+  OFFICIAL CUSTOMIZATION API — SAFE TO EDIT:
+  ------------------------------------------------------------
+  ✅ Brand colors:   CSS variables in :root (--accent, --surface)
+  ✅ Logo:           Replace via Manager.io business logo setting
+  ✅ Feature flags:  THEME_FLAGS object (top of <script>)
+  ✅ Density:        ?density=compact|balanced|relaxed URL param
+
+  UNSUPPORTED — DO NOT MODIFY:
+  ------------------------------------------------------------
+  ❌ All .it-* CSS classes
+  ❌ THEME_DOM and THEME_FLAGS frozen objects
+  ❌ safe* helper functions
+  ❌ renderDocument() pipeline
+  ❌ fetch() and error handling block
+  ❌ <main id="document-root"> structure
+
+  Modifying unsupported areas voids INSPIRON TECH support.
+  For deeper customisation contact hello@inspiron.tech.
+
+  SECURITY — v1.1 HARDENING (per @eko review 2026-05-21):
+  ------------------------------------------------------------
+  ✅ No innerHTML with API data — DOM nodes + textContent only
+  ✅ No script re-execution from data.footers
+  ✅ Single <tr> in <thead> — no nested table rows
+  ✅ No external font CDN — @font-face with relative paths only
+  ✅ All URLs validated — http/https/mailto/tel whitelist only
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Midnight Executive — Dublin Waterfront SPV Ltd.</title>
+
+  <style>
+    /* ============================================================
+       FONT DECLARATION — Idea 121: self-hosted, never CDN
+       Place Neo Sans Pro .woff files at resources/fonts/
+       Theme falls back gracefully to system stack if absent.
+       ============================================================ */
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Light.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Light.woff') format('woff'); font-weight: 300; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Regular.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Medium.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Medium.woff') format('woff'); font-weight: 500; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Bold.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Bold.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('resources/fonts/NeoSansPro-Ultra.woff2') format('woff2'), url('resources/fonts/NeoSansPro-Ultra.woff') format('woff'); font-weight: 900; font-style: normal; font-display: swap; }
+
+    /* ============================================================
+       SAFE SETTINGS — edit colors, spacing here freely
+       ============================================================ */
+    :root {
+      --canvas:          #010409;
+      --surface:         #0D1117;
+      --surface-2:       #161B22;
+      --accent:          #FFD700;
+      --accent-soft:     rgba(255, 215, 0, 0.08);
+      --accent-glow:     rgba(255, 215, 0, 0.15);
+      --accent-border:   rgba(255, 215, 0, 0.30);
+      --cyan:            #00D2FF;
+      --text-main:       #E6EDF3;
+      --text-muted:      #8B949E;
+      --text-label:      #6E7681;
+      --border:          rgba(255,255,255,0.06);
+      --border-strong:   rgba(255,255,255,0.12);
+      --status-positive: #3FB950;
+      --status-negative: #F85149;
+      --font-stack:      'Neo Sans Pro', 'Segoe UI', -apple-system, system-ui, BlinkMacSystemFont, Arial, sans-serif;
+    }
+
+    /* ============================================================
+       DO NOT EDIT BELOW — CORE ENGINE CSS (.it-* classes)
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 13px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    /* Idea 39, 124 — same font in screen + print + PDF */
+    body {
+      font-family: var(--font-stack);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 1.5;
+      background: var(--canvas);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    /* Iframe height helper to prevent feedback loop */
+    body.in-iframe,
+    body.in-iframe #it-shell {
+      min-height: auto !important;
+    }
+
+    /* Idea 86 — Blueprint grid (screen only) */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(circle, rgba(0,210,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* Action bar — Idea 46, screen only */
+    #it-doc-actions {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--canvas);
+      border-bottom: 1px solid var(--border);
+    }
+    .it-action-btn {
+      font-family: var(--font-stack);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      background: var(--surface-2);
+      color: var(--text-muted);
+      border: 1px solid var(--border-strong);
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .it-action-btn:hover { color: var(--accent); border-color: var(--accent-border); }
+
+    /* A4 shell — Idea 51 */
+    #it-shell {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--surface);
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 0 60px rgba(0,0,0,0.6), 0 0 0 1px var(--border);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 auto;
+    }
+
+    /* Idea 57, 66 — content grows, footer anchors bottom */
+    .it-content { flex: 1 0 auto; }
+    
+    /* Chapter 10: Footer Shell Print & Flexbox Anchoring */
+    .it-footer-shell {
+      flex-shrink: 0;
+      margin-top: auto !important;         /* Complementary push to the absolute bottom */
+      page-break-inside: avoid !important; /* Legacy engine protection against fracturing */
+      break-inside: avoid !important;      /* Modern engine protection against fracturing */
+    }
+
+    /* DEMO STRIP — Idea 89 */
+    .it-demo-strip {
+      padding: 6px 28px;
+      text-align: center;
+      border-bottom: 1px dashed var(--accent-border);
+      background: var(--canvas);
+    }
+    .it-demo-strip-text {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* HEADER BAND — Idea 26, 30 */
+    .it-header-band {
+      background: var(--canvas);
+      padding: 18px 28px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .it-header-logo { flex: 0 0 auto; }
+    .it-header-logo img {
+      max-height: 65px;
+      max-width: 160px;
+      width: auto;
+      display: block;
+      /* Idea 79 — cyan drop-shadow on dark */
+      filter: drop-shadow(0 0 8px rgba(0,210,255,0.4));
+      object-fit: contain;
+    }
+    .it-header-logo-placeholder {
+      width: 65px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--accent-border);
+    }
+    .it-header-title-block { flex: 1 1 auto; text-align: center; min-width: 0; }
+    .it-header-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+    .it-header-subtitle {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .it-header-ref {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-main);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* Idea 78 — INSPIRON brand mark with golden dot */
+    .it-header-brand {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .it-header-brand-logo { display: flex; align-items: center; gap: 6px; }
+    .it-brand-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+    .it-brand-name span { color: var(--cyan); }
+    .it-brand-tagline {
+      font-size: 9px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .it-gold-stripe { height: 5px; background: var(--accent); width: 100%; flex-shrink: 0; }
+
+    /* META STRIP — Idea 28 */
+    .it-meta-strip {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 32px;
+    }
+    .it-meta-item { display: flex; flex-direction: column; gap: 2px; }
+    .it-meta-label { font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+    .it-meta-value { font-size: 13px; font-weight: 500; color: var(--text-main); }
+
+    /* PARTIES — Idea 27 */
+    .it-parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .it-party {
+      background: var(--surface-2);
+      padding: 18px 24px;
+      border-left: 3px solid var(--accent-border);
+    }
+    .it-party + .it-party { border-left-width: 3px; }
+    .it-party-role { font-size: 8px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+    .it-party-name { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; line-height: 1.3; }
+    .it-party-address { font-size: 11.5px; color: var(--text-muted); line-height: 1.6; }
+    .it-party-extra { font-size: 11px; color: var(--text-label); margin-top: 6px; }
+
+    /* DESCRIPTION */
+    .it-description-block {
+      margin: 20px 28px 0;
+      padding: 14px 16px;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-soft);
+    }
+    .it-description-label { font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+    .it-description-text { font-size: 12.5px; color: var(--text-main); line-height: 1.65; }
+
+    /* TABLE — Idea 55, 56 */
+    .it-table-wrapper { margin: 20px 0 0; overflow-x: auto; }
+    .it-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .it-table thead tr { background: var(--surface-2); border-bottom: 2px solid var(--accent-border); }
+    .it-table thead th {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); padding: 10px 16px; border-right: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .it-table thead th:last-child { border-right: none; }
+    .it-table tbody tr.it-row { border-bottom: 1px solid var(--border); }
+    .it-table tbody tr.it-row:nth-child(odd)  { background: var(--surface); }
+    .it-table tbody tr.it-row:nth-child(even) { background: var(--surface-2); }
+    .it-table tbody tr.it-row.it-last-row { border-bottom: 2px solid var(--border-strong); }
+
+    /* eko fix — subtotals retain vertical borders */
+    .it-table tbody tr.it-row-subtotal {
+      background: rgba(255,215,0,0.05);
+      border-top: 1px solid var(--accent-border);
+      border-bottom: 1px solid var(--accent-border);
+    }
+
+    .it-cell { padding: 9px 16px; color: var(--text-main); vertical-align: middle; border-right: 1px solid var(--border); }
+    .it-cell:last-child { border-right: none; }
+    .it-cell-emphasis { font-weight: 700; }
+    .it-cell-group-header { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); padding: 8px 16px; background: var(--canvas) !important; }
+    .it-cell-link { color: var(--cyan); text-decoration: none; }
+
+    /* Grand totals — Idea 102, no lateral borders */
+    .it-total td { border: none; padding: 8px 16px; }
+    .it-total-label { text-align: right; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .it-total-value { text-align: right; font-weight: 500; color: var(--text-main); }
+    .it-total-grand { background: var(--canvas); border-top: 2px solid var(--accent) !important; border-bottom: 2px solid var(--accent) !important; }
+    .it-total-grand .it-total-label { color: var(--accent); font-size: 11px; font-weight: 900; }
+    .it-total-grand .it-total-value { color: var(--accent); font-size: 15px; font-weight: 900; letter-spacing: 0.06em; }
+
+    /* TOTALS WRAPPER — right-aligned — Idea 102 */
+    .it-totals-wrapper { display: flex; justify-content: flex-end; }
+    .it-totals-table { width: 320px; max-width: 100%; border-collapse: collapse; font-size: 12.5px; border-top: 1px solid var(--accent-border); }
+
+    /* STATUS STAMP — Idea 87 */
+    .it-status-wrapper { display: flex; justify-content: center; padding: 22px 28px; page-break-inside: avoid; }
+    .it-status-stamp {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 8px 28px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+      border: 2px solid;
+    }
+    .tone-positive { color: var(--status-positive); border-color: var(--status-positive); background: rgba(63,185,80,0.06); }
+    .tone-negative { color: var(--status-negative); border-color: var(--status-negative); background: rgba(248,81,73,0.06); }
+    .tone-neutral  { color: var(--accent); border-color: var(--accent-border); background: var(--accent-soft); }
+
+    /* BODY FIELDS */
+    .it-body-fields { padding: 16px 28px; display: flex; flex-wrap: wrap; gap: 18px 36px; border-top: 1px solid var(--border); }
+    .it-body-field { display: flex; flex-direction: column; gap: 3px; }
+    .it-body-field-label { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+    .it-body-field-value { font-size: 13px; font-weight: 500; color: var(--text-main); }
+
+    /* FOOTERS NOTES */
+    .it-notes-block { padding: 16px 28px; border-top: 1px solid var(--border); }
+    .it-notes-label { font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+    .it-notes-text { font-size: 11px; color: var(--text-muted); line-height: 1.7; }
+    .it-footer-item + .it-footer-item { margin-top: 8px; }
+
+    /* SIGNATURE — Idea 88 */
+    .it-signature-block {
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      border-top: 1px solid var(--border);
+      page-break-inside: avoid;
+    }
+    .it-sig-box { display: flex; flex-direction: column; gap: 6px; }
+    .it-sig-line { height: 1px; background: var(--accent); margin-top: 36px; opacity: 0.6; }
+    .it-sig-label { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
+
+    /* SHORT INVOICE SPACER — Idea 64 */
+    .it-short-spacer { display: none; }
+    body.a4-short .it-short-spacer { display: block; min-height: 60mm; }
+
+    /* FOOTER BAND — Idea 61, never position: absolute/fixed */
+    .it-footer-band {
+      background: var(--canvas);
+      border-top: 1px solid var(--accent);
+      padding: 10px 28px;
+      text-align: center;
+    }
+    .it-footer-band-text { font-size: 11px; font-weight: 500; color: var(--text-main); letter-spacing: 0.06em; }
+    .it-footer-band-sub { font-size: 9.5px; color: var(--text-muted); margin-top: 2px; }
+
+    /* CREDIT STRIP — Idea 85 */
+    .it-credit-strip {
+      background: var(--canvas);
+      border-top: 1px solid var(--border);
+      padding: 8px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .it-credit-text { font-size: 10px; color: var(--text-muted); letter-spacing: 0.04em; }
+    .it-credit-text strong { color: var(--text-main); font-weight: 600; }
+    .it-credit-link { color: var(--cyan); text-decoration: none; }
+
+    /* FAULT BANNER — Idea 9 */
+    .it-fault-banner { padding: 3rem 2rem; text-align: center; border: 2px solid var(--status-negative); margin: 2rem; }
+    .it-fault-icon { font-size: 32px; color: var(--status-negative); margin-bottom: 12px; }
+    .it-fault-title { font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: var(--status-negative); margin-bottom: 8px; }
+    .it-fault-message { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+    .it-fault-code { font-size: 10px; font-family: monospace; color: var(--text-label); margin-bottom: 12px; }
+    .it-fault-hint { font-size: 10px; color: var(--text-label); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+
+    /* DEBUG OVERLAY — Idea 6 */
+    #it-debug-overlay {
+      position: fixed; top: 0; right: 0; background: rgba(0,0,0,0.92);
+      border-left: 3px solid var(--accent); padding: 12px 16px;
+      font-size: 10px; font-family: monospace; color: var(--accent);
+      z-index: 9999; line-height: 1.8; max-width: 260px;
+    }
+    #it-debug-overlay p { margin: 0; }
+
+    /* DENSITY MODES — Idea 5, 24 */
+    body.document-long .it-cell { padding: 5px 12px; font-size: 11.5px; }
+    body.document-long .it-table thead th { padding: 7px 12px; }
+
+    /* UTILITY */
+    .it-hidden { display: none !important; }
+
+    /* ============================================================
+       PRINT — Idea 33, 36, 50
+       ============================================================ */
+    @page { size: A4; margin: 10mm; }
+
+    @media print {
+      body::before { display: none !important; }
+      #it-doc-actions { display: none !important; }  /* Idea 50 */
+      .it-demo-strip { display: none !important; }
+
+      html, body { min-height: auto !important; height: auto !important; background: #fff !important; color: #000 !important; font-size: 11px !important; }
+      #it-shell { min-height: auto !important; height: auto !important; box-shadow: none !important; max-width: 100% !important; background: #fff !important; }
+      main { 
+        background: #fff !important; 
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: auto !important; /* Let container contract to prevent 2-page print overflow */
+        box-sizing: border-box !important;
+      }
+      .it-content {
+        flex: 1 0 auto !important;
+        min-height: auto !important; /* Remove millimetric constraints in print */
+      }
+      .it-footer-shell {
+        flex-shrink: 0 !important;
+      }
+      .it-short-spacer {
+        display: none !important; /* Hide screen spacer on print to prevent page overflow */
+      }
+
+      .it-header-band { background: #F8F9FA !important; border-bottom: 3px solid #C5A059 !important; }
+      .it-header-title { color: #0D1117 !important; }
+      .it-header-subtitle, .it-brand-tagline { color: #4B5563 !important; }
+      .it-header-ref { color: #0D1117 !important; }
+      .it-brand-name { color: #0D1117 !important; }
+      .it-brand-name span { color: #00D2FF !important; }
+      .it-header-logo img { filter: none !important; }
+
+      .it-meta-strip { background: #F3F4F6 !important; border-bottom: 1px solid #E5E7EB !important; }
+      .it-meta-label { color: #C5A059 !important; }
+      .it-meta-value { color: #0D1117 !important; }
+
+      .it-parties { border-bottom: 1px solid #E5E7EB !important; }
+      .it-party { background: #F8F9FA !important; border-left-color: #C5A059 !important; }
+      .it-party-role { color: #C5A059 !important; }
+      .it-party-name { color: #0D1117 !important; }
+      .it-party-address { color: #4B5563 !important; }
+      .it-party-extra { color: #4B5563 !important; }
+
+      .it-description-block { background: rgba(197, 160, 89, 0.05) !important; border-left-color: #C5A059 !important; }
+      .it-description-label { color: #C5A059 !important; }
+      .it-description-text { color: #0D1117 !important; }
+
+      .it-table tbody tr.it-row:nth-child(odd)  { background: #ffffff !important; }
+      .it-table tbody tr.it-row:nth-child(even) { background: #F8F9FA !important; }
+      .it-table thead tr { background: #0D1117 !important; }
+      .it-table thead th { color: #FFFFFF !important; border-right: 1px solid #161B22 !important; border-bottom: 2px solid #C5A059 !important; }
+      .it-cell { color: #1F2937 !important; border-right: 1px solid #E5E7EB !important; }
+      .it-cell-group-header { color: #C5A059 !important; background: #E5E7EB !important; }
+
+      .it-total td { color: #1F2937 !important; }
+      .it-total-grand { background: #0D1117 !important; border-top: 2px solid #C5A059 !important; border-bottom: 2px solid #C5A059 !important; }
+      .it-total-grand .it-total-label,
+      .it-total-grand .it-total-value { color: #FFFFFF !important; }
+      .it-total-grand .it-total-value { color: #C5A059 !important; font-weight: 900 !important; }
+
+      .tone-positive { color: #1a7f37 !important; border-color: #1a7f37 !important; background: rgba(26,127,55,0.08) !important; }
+      .tone-negative { color: #cf222e !important; border-color: #cf222e !important; background: rgba(207,34,46,0.08) !important; }
+      .tone-neutral  { color: #C5A059 !important; border-color: rgba(197,160,89,0.3) !important; background: rgba(197,160,89,0.08) !important; }
+
+      .it-body-field-label { color: #C5A059 !important; }
+      .it-body-field-value { color: #0D1117 !important; }
+      .it-notes-label { color: #C5A059 !important; }
+      .it-notes-text, .it-footer-item { color: #4B5563 !important; }
+      .it-sig-label { color: #C5A059 !important; }
+      .it-sig-line { background: #C5A059 !important; opacity: 1 !important; }
+
+      .it-footer-band { background: #F8F9FA !important; border-top: 1px solid #C5A059 !important; }
+      .it-footer-band-text { color: #0D1117 !important; }
+      .it-footer-band-sub { color: #4B5563 !important; }
+
+      .it-credit-strip { background: #F8F9FA !important; border-top: 1px solid #E5E7EB !important; }
+      .it-credit-text { color: #4B5563 !important; }
+      .it-credit-text strong { color: #0D1117 !important; }
+      .it-credit-link { color: #00D2FF !important; }
+
+      /* Idea 36 — force color fidelity */
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ACTION BAR — Idea 46, hidden in print via Idea 50 -->
+  <div id="it-doc-actions">
+    <button class="it-action-btn" onclick="window.print()">⎙ Print / Save PDF</button>
+    <button class="it-action-btn" onclick="(async()=>{try{await navigator.share({title:document.title,url:window.location.href});}catch{try{await navigator.clipboard.writeText(window.location.href);}catch(e){}}})()">⎘ Share</button>
+  </div>
+
+  <div id="it-shell">
+    <main>
+      <div class="it-content" id="document-root" data-theme-version="1.1.1" data-theme-id="midnight-executive">
+
+        <!-- Loading state — replaced by renderer -->
+        <div style="padding:3rem;text-align:center;color:var(--text-muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;">
+          Loading…
+        </div>
+
+      </div><!-- /.it-content -->
+
+      <footer class="it-footer-shell" id="it-footer-shell">
+        <!-- Rendered by JS -->
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    'use strict';
+
+    if (window.parent !== window) {
+      document.body.classList.add('in-iframe');
+    }
+
+    /* ============================================================
+       SAFE SETTINGS — edit these freely
+       ============================================================ */
+    const THEME_FLAGS = Object.freeze({
+      ENABLE_COMMISSION_LOGIC:     false,
+      ENABLE_MULTI_CURRENCY:       false,
+      ENABLE_QR_PANEL:             false,
+      ENABLE_DEBUG_OVERLAY:        false,
+      ENABLE_DEMO_WATERMARK:       false,
+      ENABLE_AUTHORITY_FOOTER:     true,
+      AUTO_DENSITY_LONG_THRESHOLD: 20
+    });
+
+    /* ============================================================
+       DO NOT EDIT BELOW — CORE ENGINE
+       Idea 13 — centralized DOM selectors
+       ============================================================ */
+    const THEME_DOM = Object.freeze({
+      root:   'document-root',
+      footer: 'it-footer-shell',
+      debug:  'it-debug-overlay'
+    });
+
+    /* ----------------------------------------------------------
+       SAFE HELPERS — Idea 4, eko security pattern
+       ---------------------------------------------------------- */
+    function safeText(v) { return (v === null || v === undefined) ? '' : String(v); }
+
+    function safeLinkUrl(u) {
+      if (!u || typeof u !== 'string') return null;
+      if (/^(https?:\/\/|mailto:|tel:)/i.test(u.trim())) return u.trim();
+      return null;
+    }
+
+    /* v1.1.1 fix (MAJOR visual audit): accept Manager.io relative logo paths
+       like /logo?Key=... while still rejecting javascript:, data:text/*, etc. */
+    function safeImageUrl(u) {
+      if (!u || typeof u !== 'string') return null;
+      const t = u.trim();
+      if (/^https?:\/\//i.test(t)) return t;
+      if (/^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/i.test(t)) return t;
+      // Relative paths — no scheme prefix is safe (browser resolves against current origin)
+      if (!/^[a-z0-9+.-]+:/i.test(t)) return t;
+      return null;
+    }
+
+    function safeCssAlign(v) {
+      return ({left:'left',center:'center',right:'right',start:'left',end:'right'})[v] || 'left';
+    }
+
+    function sendResize() {
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          type: "resize",
+          width: document.documentElement.scrollWidth + 1,
+          height: document.documentElement.scrollHeight + 1
+        }, "*");
+      }
+    }
+
+    /* Legacy helper — retained for backward compatibility.
+       New code should use safeHtml() which handles \n AND whitelisted tags. */
+    function appendTextWithBreaks(node, text) {
+      if (!text) return;
+      String(text).split('\n').forEach((line, i, arr) => {
+        node.appendChild(document.createTextNode(line));
+        if (i < arr.length - 1) node.appendChild(document.createElement('br'));
+      });
+    }
+
+    /* v1.1.1 fix (MAJOR visual audit): whitelisted inline HTML sanitizer.
+       Manager.io stores <b>, <i>, <u>, <br> in user fields (bank details,
+       descriptions, addresses). Plain textContent shows these as literal
+       text — which is what users saw on the live invoices.
+
+       This sanitizer:
+         - permits only formatting tags (b, i, u, strong, em, br, span, p, ul, ol, li, div)
+         - strips everything else (scripts, iframes, event handlers stay impossible)
+         - filters style attributes against expression/url/javascript/behavior
+         - never inserts the parsed temp tree into the live document —
+           it walks and clones only safe nodes into the live parent.
+
+       The temp.innerHTML on line 4 is on a DETACHED element. The browser
+       parses it but does not execute scripts in detached subtrees, and
+       we never attach it. eko's constraint (no innerHTML on live DOM
+       with API data) is preserved. */
+    function safeHtml(parentNode, rawText) {
+      if (rawText === null || rawText === undefined) return;
+      const textStr = String(rawText);
+      // Fast path — no HTML tags detected, fall back to plain text + breaks
+      if (!/<[a-z/][^>]*>/i.test(textStr)) {
+        textStr.split('\n').forEach((line, i, arr) => {
+          parentNode.appendChild(document.createTextNode(line));
+          if (i < arr.length - 1) parentNode.appendChild(document.createElement('br'));
+        });
+        return;
+      }
+      const temp = document.createElement('div');
+      temp.innerHTML = textStr;
+      const allowed = ['b','i','u','strong','em','br','span','p','ul','ol','li','div'];
+      const walk = (src, dst) => {
+        src.childNodes.forEach(child => {
+          if (child.nodeType === 3) {
+            dst.appendChild(document.createTextNode(child.textContent));
+          } else if (child.nodeType === 1) {
+            const tag = child.tagName.toLowerCase();
+            if (allowed.includes(tag)) {
+              const el = document.createElement(tag);
+              if (child.hasAttribute('style')) {
+                const style = child.getAttribute('style');
+                if (!/expression|url|javascript|behavior/i.test(style)) {
+                  el.setAttribute('style', style);
+                }
+              }
+              walk(child, el);
+              dst.appendChild(el);
+            } else {
+              // Strip the tag, keep its text children
+              walk(child, dst);
+            }
+          }
+          // Comment nodes (8) and others — silently ignored
+        });
+      };
+      walk(temp, parentNode);
+    }
+
+    /* ----------------------------------------------------------
+       TABLE BUILDERS
+       eko fix: one <tr> in <thead>, no nested rows
+       ---------------------------------------------------------- */
+    function buildCell(cell, col) {
+      const td = document.createElement('td');
+      td.className = 'it-cell';
+      if (col) {
+        td.style.textAlign = safeCssAlign(col.align);
+        if (col.nowrap || col.shrinkToFit) td.style.whiteSpace = 'nowrap';
+        if (col.shrinkToFit) td.style.width = '1%';
+        if (col.emphasis) td.classList.add('it-cell-emphasis');
+      }
+
+      // --- Percentage Normalization Engine ---
+      let cellText = cell.text;
+      if (col && col.label) {
+        const colLabelLower = String(col.label).toLowerCase();
+        const percentKeywords = ["rate", "percent", "percentage", "ratio", "com %", "commission", "unit price"];
+        
+        if (percentKeywords.some(keyword => colLabelLower.includes(keyword))) {
+          const trimmed = String(cellText).trim();
+          const num = parseFloat(trimmed);
+          
+          // Matches decimals like 0.0325, .04, 0.05 (fraction between 0 and 1)
+          if (!isNaN(num) && num > 0 && num < 1 && /^[0-9]*\.[0-9]+$/.test(trimmed)) {
+            cellText = (num * 100).toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '%';
+          }
+        }
+      }
+
+      if (cell.image && cell.image.url) {
+        const src = safeImageUrl(cell.image.url);
+        if (src) {
+          const img = document.createElement('img');
+          img.addEventListener('load', sendResize);
+          img.src = src; img.alt = ''; img.style.maxWidth = '100px';
+          td.appendChild(img);
+        }
+      } else if (cell.link && cell.link.url) {
+        const href = safeLinkUrl(cell.link.url);
+        if (href) {
+          const a = document.createElement('a');
+          a.href = href; a.target = '_top'; a.className = 'it-cell-link';
+          safeHtml(a, cellText);
+          td.appendChild(a);
+        } else {
+          safeHtml(td, cellText);
+        }
+      } else {
+        safeHtml(td, cellText);
+      }
+      return td;
+    }
+
+    function processRows(rows, columns, tbody) {
+      if (!rows || !tbody) return;
+      rows.forEach(r => {
+        if (!r.cells) return;
+        const tr = document.createElement('tr');
+        tr.className = r.isTotalRow ? 'it-row it-row-subtotal' : 'it-row';
+        if (r.cells.length === 1 && r.rows) {
+          const td = document.createElement('td');
+          td.colSpan = columns.length;
+          td.className = 'it-cell it-cell-group-header';
+          td.textContent = safeText(r.cells[0].text);
+          tr.appendChild(td); tbody.appendChild(tr);
+          processRows(r.rows, columns, tbody); return;
+        }
+        r.cells.forEach((cell, idx) => {
+          const td = buildCell(cell, columns[idx] || {});
+          if (r.isTotalRow) td.classList.add('it-cell-emphasis');
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+        if (r.rows) processRows(r.rows, columns, tbody);
+      });
+      const dataRows = tbody.querySelectorAll('tr.it-row:not(.it-row-subtotal)');
+      if (dataRows.length) dataRows[dataRows.length - 1].classList.add('it-last-row');
+    }
+
+    function appendTotals(totals, colCount, tbody) {
+      if (!totals || !totals.length) return;
+      totals.forEach(total => {
+        const tr = document.createElement('tr');
+        tr.className = (total.emphasis || total.key === 'Total') ? 'it-total it-total-grand' : 'it-total';
+        const lTd = document.createElement('td'); lTd.className = 'it-total-label'; lTd.colSpan = Math.max(colCount - 1, 1); lTd.textContent = safeText(total.label);
+        const vTd = document.createElement('td'); vTd.className = 'it-total-value'; vTd.textContent = safeText(total.text);
+        tr.appendChild(lTd); tr.appendChild(vTd); tbody.appendChild(tr);
+      });
+    }
+
+    /* ----------------------------------------------------------
+       DENSITY MODE — Idea 24
+       ---------------------------------------------------------- */
+    function applyDensityMode(data) {
+      const body = document.body;
+      const rowCount = data.table && data.table.rows ? data.table.rows.length : 0;
+      if (rowCount > THEME_FLAGS.AUTO_DENSITY_LONG_THRESHOLD) body.classList.add('document-long');
+      if (rowCount < 4) body.classList.add('a4-short');
+      const p = new URLSearchParams(window.location.search);
+      const d = p.get('density');
+      if (['relaxed','balanced','compact'].includes(d)) { body.classList.remove('density-relaxed','density-balanced','density-compact'); body.classList.add('density-' + d); }
+      if (p.get('debug') === '1') body.classList.add('debug-mode');
+    }
+
+    /* ----------------------------------------------------------
+       FAULT RENDERER — Idea 9, 19
+       ---------------------------------------------------------- */
+    function renderFault(code) {
+      const root = document.getElementById(THEME_DOM.root);
+      if (!root) return;
+      while (root.firstChild) root.removeChild(root.firstChild);
+      const inner = document.createElement('div'); inner.style.cssText = 'padding:3rem 2rem;text-align:center;';
+      [['it-fault-icon','⚠'],['it-fault-title','SYSTEM FAULT'],['it-fault-message','Failed to load document data from Manager.io.'],['it-fault-code','Code: ' + safeText(code || 'FETCH_ERROR')],['it-fault-hint','Check your Manager.io instance or theme assignment. Restore original file or contact hello@inspiron.tech.']].forEach(([cls,text]) => {
+        const el = document.createElement('div'); el.className = cls; el.textContent = text; inner.appendChild(el);
+      });
+      root.appendChild(inner);
+    }
+
+    /* ----------------------------------------------------------
+       STATIC SVG — NOT from API data, safe as innerHTML
+       Idea 78 — golden dot INSPIRON mark
+       ---------------------------------------------------------- */
+    const AUTHORITY_SVG = '<svg viewBox="0 0 358.846 350.3" width="22" height="22" fill="none" aria-hidden="true"><path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/><path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/><circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/></svg>';
+
+    /* ----------------------------------------------------------
+       MAIN RENDER — maps /api4/view-v1 schema
+       ---------------------------------------------------------- */
+    function renderDocument(data) {
+      const root = document.getElementById(THEME_DOM.root);
+      const footerShell = document.getElementById(THEME_DOM.footer);
+      if (!root) return;
+
+      applyDensityMode(data);
+
+      const colCount = (data.table && data.table.columns) ? data.table.columns.length : 2;
+
+      /* Clear loading state */
+      while (root.firstChild) root.removeChild(root.firstChild);
+
+      /* ---- DEMO STRIP ---- */
+      if (THEME_FLAGS.ENABLE_DEMO_WATERMARK) {
+        const strip = document.createElement('div'); strip.className = 'it-demo-strip';
+        const stripText = document.createElement('span'); stripText.className = 'it-demo-strip-text';
+        stripText.textContent = '⚠ DEMO TEMPLATE — NOT A VALID FINANCIAL INSTRUMENT ⚠';
+        strip.appendChild(stripText); root.appendChild(strip);
+      }
+
+      /* ---- HEADER BAND ---- */
+      const headerBand = document.createElement('header');
+      headerBand.className = 'it-header-band';
+
+      /* Logo — Idea 104 client first */
+      const logoWrap = document.createElement('div'); logoWrap.className = 'it-header-logo';
+      const logoSrc = safeImageUrl(data.business && data.business.logo);
+      if (logoSrc) {
+        const img = document.createElement('img');
+        img.addEventListener('load', sendResize);
+        img.src = logoSrc; img.alt = '';
+        logoWrap.appendChild(img);
+      } else {
+        const placeholder = document.createElement('div'); placeholder.className = 'it-header-logo-placeholder';
+        const bName = safeText(data.business && data.business.name || data.businessName || '');
+        if (bName) {
+          const span = document.createElement('span');
+          span.style.cssText = 'font-size:22px;font-weight:900;color:#FFD700;';
+          span.textContent = bName.charAt(0).toUpperCase();
+          placeholder.appendChild(span);
+        }
+        logoWrap.appendChild(placeholder);
+      }
+
+      /* Title block — Idea 30 */
+      const titleBlock = document.createElement('div'); titleBlock.className = 'it-header-title-block';
+      const titleEl = document.createElement('div'); titleEl.className = 'it-header-title';
+      titleEl.textContent = safeText(data.title || 'INVOICE').toUpperCase();
+      titleBlock.appendChild(titleEl);
+
+      (data.subtitles || []).forEach(s => {
+        const sub = document.createElement('div'); sub.className = 'it-header-subtitle';
+        sub.textContent = safeText(s); titleBlock.appendChild(sub);
+      });
+
+      if (data.reference) {
+        const refEl = document.createElement('div'); refEl.className = 'it-header-ref';
+        refEl.textContent = 'Ref: ' + safeText(data.reference);
+        titleBlock.appendChild(refEl);
+      }
+
+      headerBand.appendChild(logoWrap);
+      headerBand.appendChild(titleBlock);
+      root.appendChild(headerBand);
+
+      /* Gold stripe */
+      const stripe = document.createElement('div'); stripe.className = 'it-gold-stripe'; stripe.setAttribute('aria-hidden','true');
+      root.appendChild(stripe);
+
+      /* ---- META STRIP ---- */
+      const metaFields = [];
+      if (data.reference) metaFields.push({ label: 'Reference', text: data.reference });
+      (data.fields || []).forEach(f => { if (f.displayAtTheTop || !data.recipient) metaFields.push(f); });
+      (data.business && data.business.fields || []).forEach(f => metaFields.push(f));
+
+      if (metaFields.length) {
+        const metaStrip = document.createElement('div'); metaStrip.className = 'it-meta-strip';
+        metaFields.forEach(m => {
+          const item = document.createElement('div'); item.className = 'it-meta-item';
+          const lbl = document.createElement('div'); lbl.className = 'it-meta-label'; lbl.textContent = safeText(m.label);
+          const val = document.createElement('div'); val.className = 'it-meta-value';
+          safeHtml(val, m.text);
+          item.appendChild(lbl); item.appendChild(val); metaStrip.appendChild(item);
+        });
+        root.appendChild(metaStrip);
+      }
+
+      /* ---- PARTIES ---- */
+      if (data.recipient) {
+        const parties = document.createElement('div'); parties.className = 'it-parties';
+
+        const makeParty = (role, name, address, extra) => {
+          const div = document.createElement('div'); div.className = 'it-party';
+          const roleEl = document.createElement('div'); roleEl.className = 'it-party-role'; roleEl.textContent = role;
+          const nameEl = document.createElement('div'); nameEl.className = 'it-party-name';
+          safeHtml(nameEl, name);
+          const addrEl = document.createElement('div'); addrEl.className = 'it-party-address';
+          safeHtml(addrEl, address);
+          div.appendChild(roleEl); div.appendChild(nameEl); div.appendChild(addrEl);
+          if (extra) { const ex = document.createElement('div'); ex.className = 'it-party-extra'; safeHtml(ex, extra); div.appendChild(ex); }
+          return div;
+        };
+
+        const recExtra = [data.recipient.code ? 'Code: ' + data.recipient.code : null, data.recipient.email || null].filter(Boolean).join('\n');
+        parties.appendChild(makeParty('Prepared For', data.recipient.name, data.recipient.address, recExtra));
+        parties.appendChild(makeParty('Issued By', data.business && data.business.name || data.businessName || '', data.business && data.business.address || '', null));
+        root.appendChild(parties);
+      }
+
+      /* ---- DESCRIPTION ---- */
+      if (data.table && data.table.description) {
+        const descBlock = document.createElement('div'); descBlock.className = 'it-description-block';
+        const descLabel = document.createElement('div'); descLabel.className = 'it-description-label'; descLabel.textContent = 'Description';
+        const descText = document.createElement('div'); descText.className = 'it-description-text';
+        safeHtml(descText, data.table.description);
+        descBlock.appendChild(descLabel); descBlock.appendChild(descText);
+        root.appendChild(descBlock);
+      }
+
+      /* ---- TABLE ---- */
+      if (data.table && data.table.columns) {
+        const wrapper = document.createElement('div'); wrapper.className = 'it-table-wrapper';
+        const table = document.createElement('table'); table.className = 'it-table'; table.setAttribute('role','table');
+
+        /* thead — eko fix: single <tr> only */
+        const thead = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        data.table.columns.forEach(col => {
+          const th = document.createElement('th');
+          th.style.textAlign = safeCssAlign(col.align);
+          if (col.shrinkToFit) { th.style.width = '1%'; th.style.whiteSpace = 'nowrap'; }
+          th.textContent = safeText(col.label);
+          headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        processRows(data.table.rows || [], data.table.columns, tbody);
+        appendTotals(data.totals, colCount, tbody);
+        table.appendChild(tbody);
+        wrapper.appendChild(table);
+        root.appendChild(wrapper);
+      }
+
+      /* ---- SHORT SPACER ---- */
+      const spacer = document.createElement('div'); spacer.className = 'it-short-spacer';
+      root.appendChild(spacer);
+
+      /* ---- BODY FIELDS (non-displayAtTheTop) ---- */
+      const bodyFields = (data.fields || []).filter(f => !f.displayAtTheTop && data.recipient);
+      if (bodyFields.length) {
+        const bfEl = document.createElement('div'); bfEl.className = 'it-body-fields';
+        bodyFields.forEach(f => {
+          const item = document.createElement('div'); item.className = 'it-body-field';
+          const lbl = document.createElement('div'); lbl.className = 'it-body-field-label'; lbl.textContent = safeText(f.label);
+          const val = document.createElement('div'); val.className = 'it-body-field-value';
+          safeHtml(val, f.text);
+          item.appendChild(lbl); item.appendChild(val); bfEl.appendChild(item);
+        });
+        root.appendChild(bfEl);
+      }
+
+      /* ---- STATUS STAMP — Idea 87 ---- */
+      if (data.status && data.status.text) {
+        const statusWrap = document.createElement('div'); statusWrap.className = 'it-status-wrapper';
+        const stamp = document.createElement('div');
+        stamp.className = 'it-status-stamp tone-' + safeText(data.status.tone || 'neutral');
+        stamp.textContent = safeText(data.status.text);
+        statusWrap.appendChild(stamp); root.appendChild(statusWrap);
+      }
+
+      /* ---- FOOTERS — eko fix: NO script re-execution from data.footers.
+           Whitelisted formatting (b, i, br, etc) is preserved via safeHtml.
+           <script> tags in footers content are silently stripped. ---- */
+      if (data.footers && data.footers.length) {
+        const notesBlock = document.createElement('div'); notesBlock.className = 'it-notes-block';
+        const notesLabel = document.createElement('div'); notesLabel.className = 'it-notes-label'; notesLabel.textContent = 'Notes & Terms';
+        const notesText = document.createElement('div'); notesText.className = 'it-notes-text';
+        data.footers.forEach((f, i) => {
+          const div = document.createElement('div'); div.className = 'it-footer-item';
+          safeHtml(div, f);
+          notesText.appendChild(div);
+        });
+        notesBlock.appendChild(notesLabel); notesBlock.appendChild(notesText);
+        root.appendChild(notesBlock);
+      }
+
+      /* ---- FOOTER SHELL ---- */
+      if (footerShell) {
+        while (footerShell.firstChild) footerShell.removeChild(footerShell.firstChild);
+
+        /* Footer band — Idea 61, Idea 66 */
+        const band = document.createElement('div'); band.className = 'it-footer-band';
+        const bandText = document.createElement('div'); bandText.className = 'it-footer-band-text';
+        bandText.textContent = safeText(data.business && data.business.name || data.businessName || '');
+        band.appendChild(bandText);
+        const bandSub = document.createElement('div'); bandSub.className = 'it-footer-band-sub';
+        const bizFields = (data.business && data.business.fields || []).slice(0, 3).map(f => safeText(f.text)).filter(Boolean);
+        if (bizFields.length) bandSub.textContent = bizFields.join('  ·  ');
+        band.appendChild(bandSub);
+        footerShell.appendChild(band);
+
+        /* Credit strip — Idea 85 */
+        if (THEME_FLAGS.ENABLE_AUTHORITY_FOOTER) {
+          const credit = document.createElement('div'); credit.className = 'it-credit-strip';
+          const svgWrap = document.createElement('span');
+          svgWrap.style.cssText = 'filter:drop-shadow(0 0 5px rgba(0,210,255,0.6));flex-shrink:0;';
+          svgWrap.innerHTML = AUTHORITY_SVG;
+          const creditText = document.createElement('span'); creditText.className = 'it-credit-text';
+          creditText.textContent = 'Architected by ';
+          const strong = document.createElement('strong'); strong.textContent = 'MD ABU HASAN';
+          const sep = document.createTextNode(' · ');
+          const link = document.createElement('a'); link.href = 'https://inspiron.tech'; link.target = '_top'; link.className = 'it-credit-link'; link.textContent = 'inspiron.tech';
+          const sep2 = document.createTextNode(' · Official Manager.io Partner');
+          creditText.appendChild(strong); creditText.appendChild(sep); creditText.appendChild(link); creditText.appendChild(sep2);
+          credit.appendChild(svgWrap); credit.appendChild(creditText);
+          footerShell.appendChild(credit);
+        }
+      }
+
+      /* ---- DEBUG OVERLAY — Idea 6 ---- */
+      if (document.body.classList.contains('debug-mode')) {
+        const overlay = document.createElement('div'); overlay.id = THEME_DOM.debug; overlay.className = 'it-debug-overlay';
+        [['— NEXUS DEBUG —'],['Theme: midnight-executive'],['Version: 1.1.1'],['Archetype: generic_invoice'],['Rows: ' + ((data.table && data.table.rows && data.table.rows.length) || 0)],['Schema: /api4/view-v1']].forEach(([line]) => {
+          const p = document.createElement('p'); p.textContent = line; overlay.appendChild(p);
+        });
+        document.body.appendChild(overlay);
+      }
+
+      sendResize();
+
+      if (typeof ResizeObserver !== 'undefined') {
+        const resizeObserver = new ResizeObserver(() => {
+          sendResize();
+        });
+        resizeObserver.observe(document.documentElement);
+      } else {
+        window.addEventListener('resize', sendResize);
+      }
+    }
+
+    /* ============================================================
+       FETCH & BOOTSTRAP — /api4/view-v1 architecture
+       ============================================================ */
+    fetch('/api4/view-v1' + window.location.search, {
+      headers: { 'Accept': 'application/json' },
+      credentials: 'same-origin'
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP_' + res.status);
+      return res.json();
+    })
+    .then(data => {
+      if (data.title) {
+        document.title = [safeText(data.title), safeText(data.reference), '—',
+          safeText(data.business && data.business.name || data.businessName || 'Document')
+        ].filter(Boolean).join(' ');
+      }
+      renderDocument(data);
+    })
+    .catch(err => {
+      renderFault(err && err.message || 'FETCH_ERROR');
+    });
+  </script>
+
+</body>
+</html>

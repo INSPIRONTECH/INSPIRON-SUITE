@@ -1,6 +1,12 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
+  // Auth gate — shared secret header required
+  const AUTH_TOKEN = process.env.ASK_AUTH_TOKEN;
+  if (!AUTH_TOKEN || req.headers['x-ask-token'] !== AUTH_TOKEN) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
   const { question, system } = req.body;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {

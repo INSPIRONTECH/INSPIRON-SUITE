@@ -23,3 +23,8 @@ dist/
 
 # Backup files
 *.bak
+
+# AI Agent Context (internal scaffolding)
+CLAUDE.md
+.claude/
+OPUS-DECISION-BRIEF.md

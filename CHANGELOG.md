@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to COMMUNITY-TOOLS are documented here.
+All notable changes to INSPIRON-SUITE are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 

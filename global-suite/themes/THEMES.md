@@ -24,6 +24,7 @@
 |---|---|---|---|
 | **MIDNIGHT EXECUTIVE** | v1.1.1 | [Screen View](COMMUNITY-EDITION/previews/03-MIDNIGHT-EXECUTIVE/MIDNIGHT-EXECUTIVE_SCREEN-VIEW.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html) |
 | **RIYADH RTL** | v1.1.0 | [Screen View](COMMUNITY-EDITION/previews/04-RIYADH-RTL/RIYADH-RTL_SCREEN-VIEW.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html) |
+| **ATLAS STATEMENT** | v1.1.0 | [Screen View](COMMUNITY-EDITION/previews/05-ATLAS-STATEMENT/ATLAS-STATEMENT_SCREEN-VIEW.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT.html) |
 
 ### MIDNIGHT EXECUTIVE
 
@@ -40,6 +41,16 @@ Bilingual Arabic/English RTL invoice theme. Native right-to-left layout, ZATCA Q
 - **Best for:** Saudi Arabia, GCC businesses, Arabic-primary invoicing
 - **RTL:** Yes (native)
 - **Regulatory:** KSA ZATCA e-invoicing, 15% VAT
+
+### ATLAS STATEMENT
+
+Global neutral invoice theme. Deep navy-charcoal header band, warm gold accent on
+document type and grand total. Zero regional compliance markers — works for any
+industry, any currency, any country.
+
+- **Best for:** International businesses, consulting, multi-region invoicing, general authority documents
+- **RTL:** No
+- **Regulatory:** Universal (no region-specific compliance)
 
 ---
 
@@ -66,7 +77,6 @@ Clean corporate two-column layout. Professional blue palette, strong for B2B inv
 
 | Theme | Identity | Status |
 |---|---|---|
-| **ATLAS** | Global Neutral Authority | Planned |
 | **JADE CLINICAL** | Healthcare Precision | Planned |
 
 ---

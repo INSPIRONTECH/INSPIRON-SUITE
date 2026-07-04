@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atlas Statement v1.1 — INSPIRON Suite Theme</title>
+  <style>
+    /* ============================================================
+       ATLAS STATEMENT v1.1 — Global Neutral Authority
+       NEXUS Core Engine
+       ============================================================ */
+    :root {
+      --ink: #1a2332;
+      --ink-mid: #3d4f63;
+      --ink-soft: #6b7f96;
+      --paper: #ffffff;
+      --paper-warm: #f8f9fa;
+      --rule: #dde3ea;
+      --rule-strong: #b0bec8;
+      --accent: #c8a44a;
+      --accent-soft: #fdf8ec;
+      --font-stack: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, Arial, sans-serif;
+      --status-positive: #3FB950;
+      --status-negative: #F85149;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #e2e8f0;
+        --ink-mid: #a0aec0;
+        --ink-soft: #718096;
+        --paper: #0f1923;
+        --paper-warm: #162030;
+        --rule: #2d3f52;
+        --rule-strong: #3a5068;
+        --accent: #d4a94f;
+        --accent-soft: #1a2a14;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 13px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    
+    body {
+      font-family: var(--font-stack);
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 1.5;
+      background: #f0f2f5;
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    #it-shell {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 297mm;
+      width: 210mm;
+      max-width: 100%;
+      background: var(--paper);
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 auto;
+    }
+    .it-content { flex: 1 0 auto; }
+    .it-footer-shell {
+      flex-shrink: 0;
+      margin-top: auto !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    /* HEADER BAND */
+    .it-header-band {
+      background: var(--ink);
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--accent);
+    }
+    .it-header-logo { flex: 0 0 auto; }
+    .it-header-logo img {
+      max-height: 60px;
+      max-width: 200px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+    .it-header-logo-text {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .it-header-atlas {
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      opacity: 0.5;
+      text-transform: uppercase;
+    }
+
+    /* DOCUMENT IDENTITY BLOCK */
+    .it-identity-block {
+      background: var(--paper);
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .it-doc-title {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .it-meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .it-meta-pill {
+      padding: 0 20px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+    }
+    .it-meta-pill:first-child { padding-left: 0; }
+    .it-meta-pill:last-child { border-right: none; }
+    .it-meta-label {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 2px;
+    }
+    .it-meta-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* PARTY BLOCK */
+    .it-parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--rule);
+      gap: 32px;
+    }
+    .it-party-col { display: flex; flex-direction: column; }
+    .it-party-header {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+    .it-party-name { font-weight: 700; color: var(--ink); font-size: 13px; margin-bottom: 4px; }
+    .it-party-address { color: var(--ink); line-height: 1.5; }
+    .it-party-extra { color: var(--ink); line-height: 1.5; margin-top: 4px; }
+
+    /* DESCRIPTION */
+    .it-description-block {
+      padding: 12px 32px;
+      background: var(--paper-warm);
+      border-left: 3px solid var(--ink-mid);
+      font-size: 12px;
+      font-style: italic;
+      color: var(--ink-mid);
+    }
+
+    /* LINE ITEMS TABLE */
+    .it-table-wrapper { width: 100%; overflow-x: auto; margin-top: 16px; }
+    .it-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .it-table thead tr { background: var(--ink); }
+    .it-table thead th {
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 12px 16px;
+    }
+    .it-table tbody tr.it-row:nth-child(odd) { background: var(--paper); }
+    .it-table tbody tr.it-row:nth-child(even) { background: var(--paper-warm); }
+    .it-table tbody tr.it-last-row { border-bottom: 2px solid var(--rule-strong); }
+    .it-table tbody tr.it-row-subtotal { background: var(--paper); border-top: 1px solid var(--rule); }
+
+    .it-cell { padding: 10px 16px; color: var(--ink); border-right: 1px solid var(--rule); vertical-align: middle; }
+    .it-cell:last-child { border-right: none; }
+    .it-cell-group-header { font-size: 9px; font-weight: 700; text-transform: uppercase; background: var(--paper-warm) !important; color: var(--ink-mid); padding: 8px 16px; border-bottom: 1px solid var(--rule); }
+
+    /* TOTALS */
+    .it-total td { padding: 8px 16px; border: none; }
+    .it-total-label { text-align: right; font-size: 12px; color: var(--ink-soft); }
+    .it-total-value { text-align: right; font-weight: 700; color: var(--ink); }
+
+    .it-total-grand {
+      background: var(--accent-soft) !important;
+      border-top: 2px solid var(--accent) !important;
+      border-bottom: 2px solid var(--accent) !important;
+    }
+    .it-total-grand .it-total-label { color: var(--ink-soft); }
+    .it-total-grand .it-total-value {
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    /* CUSTOM FIELDS */
+    .it-body-fields { padding: 16px 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .it-body-field { display: flex; flex-direction: column; }
+    .it-body-field-label { font-size: 8px; font-weight: 700; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 2px; }
+    .it-body-field-value { font-size: 12px; color: var(--ink); }
+
+    /* FOOTERS */
+    .it-notes-block { padding: 12px 32px; border-top: 1px solid var(--rule); }
+    .it-notes-text { font-size: 11px; color: var(--ink-soft); line-height: 1.5; }
+    .it-footer-item + .it-footer-item { margin-top: 8px; }
+
+    /* STATUS STAMP */
+    .it-status-wrapper { display: flex; justify-content: center; padding: 24px 32px; }
+    .it-status-stamp {
+      font-size: 14px; font-weight: 800; text-transform: uppercase;
+      padding: 8px 20px; border: 2px solid; display: inline-block;
+    }
+    .tone-positive { color: var(--status-positive); border-color: var(--status-positive); }
+    .tone-negative { color: var(--status-negative); border-color: var(--status-negative); }
+    .tone-neutral  { color: var(--ink-soft); border-color: var(--ink-soft); }
+
+    /* AUTHORITY FOOTER */
+    .it-credit-strip {
+      background: var(--paper);
+      border-top: 1px solid var(--rule);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .it-credit-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .it-credit-logo {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--ink);
+      letter-spacing: 0.1em;
+    }
+    .it-credit-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .it-credit-right {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* SYSTEM FAULT */
+    .it-fault-banner { padding: 3rem 2rem; text-align: center; border: 2px solid var(--status-negative); margin: 2rem; background: var(--paper); }
+    .it-fault-title { font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: var(--status-negative); margin-bottom: 8px; }
+    .it-fault-message { font-size: 12px; color: var(--ink-soft); margin-bottom: 6px; }
+    .it-fault-code { font-size: 10px; font-family: monospace; color: var(--ink-soft); margin-bottom: 12px; }
+    .it-fault-hint { font-size: 10px; color: var(--ink-soft); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+
+    /* PRINT SETTINGS */
+    @page { size: A4; margin: 0; }
+    @media print {
+      body { background: transparent !important; display: block !important; }
+      #it-shell { box-shadow: none !important; width: 100% !important; max-width: none !important; min-height: auto !important; background: var(--paper) !important; }
+      main { min-height: auto !important; display: flex !important; flex-direction: column !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="it-shell">
+    <main>
+      <div class="it-content" id="document-root" data-theme-version="1.1.0" data-theme-id="atlas-statement">
+        <!-- Loading state -->
+        <div style="padding:3rem;text-align:center;color:var(--ink-soft);font-size:11px;letter-spacing:2px;text-transform:uppercase;">
+          Loading…
+        </div>
+      </div>
+      <footer class="it-footer-shell" id="it-footer-shell">
+        <!-- Footer rendered by JS -->
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    'use strict';
+
+    const THEME_DOM = Object.freeze({
+      root: 'document-root',
+      footer: 'it-footer-shell'
+    });
+
+    /* SAFE HELPERS (NEXUS Engine) */
+    function safeText(v) { return (v === null || v === undefined) ? '' : String(v); }
+    
+    function safeImageUrl(u) {
+      if (!u || typeof u !== 'string') return null;
+      const t = u.trim();
+      if (/^https?:\/\//i.test(t)) return t;
+      if (/^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/i.test(t)) return t;
+      if (!/^[a-z0-9+.-]+:/i.test(t)) return t;
+      return null;
+    }
+    
+    function safeLinkUrl(u) {
+      if (!u || typeof u !== 'string') return null;
+      if (/^(https?:\/\/|mailto:|tel:)/i.test(u.trim())) return u.trim();
+      return null;
+    }
+    
+    function safeCssAlign(v) {
+      return ({left:'left',center:'center',right:'right',start:'left',end:'right'})[v] || 'left';
+    }
+    
+    function array(val) {
+      return Array.isArray(val) ? val : (val ? [val] : []);
+    }
+    
+    function div(className) {
+      const el = document.createElement('div');
+      if (className) el.className = className;
+      return el;
+    }
+
+    function appendTextWithBreaks(node, text) {
+      if (!text) return;
+      String(text).split('\n').forEach((line, i, arr) => {
+        node.appendChild(document.createTextNode(line));
+        if (i < arr.length - 1) node.appendChild(document.createElement('br'));
+      });
+    }
+
+    function safeHtml(parentNode, rawText) {
+      if (rawText === null || rawText === undefined) return;
+      const textStr = String(rawText);
+      if (!/<[a-z/][^>]*>/i.test(textStr)) {
+        textStr.split('\n').forEach((line, i, arr) => {
+          parentNode.appendChild(document.createTextNode(line));
+          if (i < arr.length - 1) parentNode.appendChild(document.createElement('br'));
+        });
+        return;
+      }
+      const temp = document.createElement('div');
+      temp.innerHTML = textStr;
+      const allowed = ['b','i','u','strong','em','br','span','p','ul','ol','li','div'];
+      const walk = (src, dst) => {
+        src.childNodes.forEach(child => {
+          if (child.nodeType === 3) {
+            dst.appendChild(document.createTextNode(child.textContent));
+          } else if (child.nodeType === 1) {
+            const tag = child.tagName.toLowerCase();
+            if (allowed.includes(tag)) {
+              const el = document.createElement(tag);
+              if (child.hasAttribute('style')) {
+                const style = child.getAttribute('style');
+                if (!/expression|url|javascript|behavior/i.test(style)) {
+                  el.setAttribute('style', style);
+                }
+              }
+              walk(child, el);
+              dst.appendChild(el);
+            } else {
+              walk(child, dst);
+            }
+          }
+        });
+      };
+      walk(temp, parentNode);
+    }
+
+    /* TABLE BUILDERS */
+    function buildCell(cell, col) {
+      const td = document.createElement('td');
+      td.className = 'it-cell';
+      if (col) {
+        td.style.textAlign = safeCssAlign(col.align);
+        if (col.nowrap || col.shrinkToFit) td.style.whiteSpace = 'nowrap';
+        if (col.shrinkToFit) td.style.width = '1%';
+        if (col.emphasis) td.classList.add('it-cell-emphasis');
+      }
+
+      let cellText = cell.text;
+      if (col && col.label) {
+        const colLabelLower = String(col.label).toLowerCase();
+        const percentKeywords = ["rate", "percent", "percentage", "ratio", "com %", "commission", "unit price"];
+        if (percentKeywords.some(keyword => colLabelLower.includes(keyword))) {
+          const trimmed = String(cellText).trim();
+          const num = parseFloat(trimmed);
+          if (!isNaN(num) && num > 0 && num < 1 && /^[0-9]*\.[0-9]+$/.test(trimmed)) {
+            cellText = (num * 100).toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '%';
+          }
+        }
+      }
+
+      if (cell.image && cell.image.url) {
+        const src = safeImageUrl(cell.image.url);
+        if (src) {
+          const img = document.createElement('img');
+          img.src = src; img.alt = ''; img.style.maxWidth = '100px';
+          td.appendChild(img);
+        }
+      } else if (cell.link && cell.link.url) {
+        const href = safeLinkUrl(cell.link.url);
+        if (href) {
+          const a = document.createElement('a');
+          a.href = href; a.target = '_top'; a.className = 'it-cell-link';
+          safeHtml(a, cellText);
+          td.appendChild(a);
+        } else {
+          safeHtml(td, cellText);
+        }
+      } else {
+        safeHtml(td, cellText);
+      }
+      return td;
+    }
+
+    function processRows(rows, columns, tbody) {
+      if (!rows || !tbody) return;
+      rows.forEach(r => {
+        if (!r.cells) return;
+        const tr = document.createElement('tr');
+        tr.className = r.isTotalRow ? 'it-row it-row-subtotal' : 'it-row';
+        if (r.cells.length === 1 && r.rows) {
+          const td = document.createElement('td');
+          td.colSpan = columns.length;
+          td.className = 'it-cell it-cell-group-header';
+          td.textContent = safeText(r.cells[0].text);
+          tr.appendChild(td); tbody.appendChild(tr);
+          processRows(r.rows, columns, tbody); return;
+        }
+        r.cells.forEach((cell, idx) => {
+          const td = buildCell(cell, columns[idx] || {});
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+        if (r.rows) processRows(r.rows, columns, tbody);
+      });
+      const dataRows = tbody.querySelectorAll('tr.it-row:not(.it-row-subtotal)');
+      if (dataRows.length) dataRows[dataRows.length - 1].classList.add('it-last-row');
+    }
+
+    function appendTotals(totals, colCount, tbody) {
+      if (!totals || !totals.length) return;
+      totals.forEach(total => {
+        const tr = document.createElement('tr');
+        tr.className = (total.emphasis || total.key === 'Total') ? 'it-total it-total-grand' : 'it-total';
+        const lTd = document.createElement('td'); lTd.className = 'it-total-label'; lTd.colSpan = Math.max(colCount - 1, 1); lTd.textContent = safeText(total.label);
+        const vTd = document.createElement('td'); vTd.className = 'it-total-value'; vTd.textContent = safeText(total.text);
+        tr.appendChild(lTd); tr.appendChild(vTd); tbody.appendChild(tr);
+      });
+    }
+
+    /* FAULT RENDERER */
+    function showError(code) {
+      const root = document.getElementById(THEME_DOM.root);
+      if (!root) return;
+      while (root.firstChild) root.removeChild(root.firstChild);
+      const inner = div('it-fault-banner');
+      [['it-fault-title','SYSTEM FAULT'],['it-fault-message','Failed to load document data from Manager.io.'],['it-fault-code','Code: ' + safeText(code || 'FETCH_ERROR')],['it-fault-hint','Check your Manager.io instance or theme assignment. Restore original file or contact hello@inspiron.tech.']].forEach(([cls,text]) => {
+        const el = div(cls); el.textContent = text; inner.appendChild(el);
+      });
+      root.appendChild(inner);
+    }
+
+    /* MAIN RENDER */
+    function renderDocument(data) {
+      const root = document.getElementById(THEME_DOM.root);
+      const footerShell = document.getElementById(THEME_DOM.footer);
+      if (!root) return;
+      
+      const colCount = (data.table && data.table.columns) ? data.table.columns.length : 2;
+      while (root.firstChild) root.removeChild(root.firstChild);
+
+      /* HEADER BAND */
+      const headerBand = document.createElement('header');
+      headerBand.className = 'it-header-band';
+      
+      const logoWrap = div('it-header-logo');
+      const logoSrc = safeImageUrl(data.business && data.business.logo);
+      if (logoSrc) {
+        const img = document.createElement('img');
+        img.src = logoSrc; img.alt = '';
+        logoWrap.appendChild(img);
+      } else {
+        const bName = safeText(data.business && data.business.name || data.businessName || '');
+        if (bName) {
+          const span = div('it-header-logo-text');
+          span.textContent = bName;
+          logoWrap.appendChild(span);
+        }
+      }
+
+      const atlasMark = div('it-header-atlas');
+      atlasMark.textContent = 'ATLAS';
+      
+      headerBand.appendChild(logoWrap);
+      headerBand.appendChild(atlasMark);
+      root.appendChild(headerBand);
+
+      /* DOCUMENT IDENTITY BLOCK */
+      const identityBlock = div('it-identity-block');
+      const titleEl = div('it-doc-title');
+      titleEl.textContent = safeText(data.title || 'INVOICE').toUpperCase();
+      identityBlock.appendChild(titleEl);
+
+      const metaFields = [];
+      if (data.reference) metaFields.push({ label: 'Reference No', text: data.reference });
+      (data.fields || []).forEach(f => { if (f.displayAtTheTop || !data.recipient) metaFields.push(f); });
+      (data.business && data.business.fields || []).forEach(f => metaFields.push(f));
+
+      if (metaFields.length) {
+        const metaPills = div('it-meta-pills');
+        metaFields.forEach(m => {
+          const pill = div('it-meta-pill');
+          const lbl = div('it-meta-label'); lbl.textContent = safeText(m.label);
+          const val = div('it-meta-value'); safeHtml(val, m.text);
+          pill.appendChild(lbl); pill.appendChild(val);
+          metaPills.appendChild(pill);
+        });
+        identityBlock.appendChild(metaPills);
+      }
+      root.appendChild(identityBlock);
+
+      /* PARTIES */
+      if (data.recipient) {
+        const parties = div('it-parties');
+        
+        const makeParty = (role, name, address, extra) => {
+          const col = div('it-party-col');
+          const roleEl = div('it-party-header'); roleEl.textContent = role;
+          const nameEl = div('it-party-name'); safeHtml(nameEl, name);
+          const addrEl = div('it-party-address'); safeHtml(addrEl, address);
+          col.appendChild(roleEl); col.appendChild(nameEl); col.appendChild(addrEl);
+          if (extra) {
+            const ex = div('it-party-extra'); safeHtml(ex, extra);
+            col.appendChild(ex);
+          }
+          return col;
+        };
+
+        const recExtra = [data.recipient.code ? 'Code: ' + data.recipient.code : null, data.recipient.email || null].filter(Boolean).join('\n');
+        parties.appendChild(makeParty('FROM', data.business && data.business.name || data.businessName || '', data.business && data.business.address || '', null));
+        parties.appendChild(makeParty('TO', data.recipient.name, data.recipient.address, recExtra));
+        root.appendChild(parties);
+      }
+
+      /* DESCRIPTION */
+      if (data.table && data.table.description) {
+        const descBlock = div('it-description-block');
+        safeHtml(descBlock, data.table.description);
+        root.appendChild(descBlock);
+      }
+
+      /* TABLE */
+      if (data.table && data.table.columns) {
+        const wrapper = div('it-table-wrapper');
+        const table = document.createElement('table'); table.className = 'it-table'; table.setAttribute('role','table');
+        
+        const thead = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        data.table.columns.forEach(col => {
+          const th = document.createElement('th');
+          th.style.textAlign = safeCssAlign(col.align);
+          if (col.shrinkToFit) { th.style.width = '1%'; th.style.whiteSpace = 'nowrap'; }
+          th.textContent = safeText(col.label);
+          headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        processRows(data.table.rows || [], data.table.columns, tbody);
+        appendTotals(data.totals, colCount, tbody);
+        table.appendChild(tbody);
+        wrapper.appendChild(table);
+        root.appendChild(wrapper);
+      }
+
+      /* BODY FIELDS */
+      const bodyFields = (data.fields || []).filter(f => !f.displayAtTheTop && data.recipient);
+      if (bodyFields.length) {
+        const bfEl = div('it-body-fields');
+        bodyFields.forEach(f => {
+          const item = div('it-body-field');
+          const lbl = div('it-body-field-label'); lbl.textContent = safeText(f.label);
+          const val = div('it-body-field-value'); safeHtml(val, f.text);
+          item.appendChild(lbl); item.appendChild(val);
+          bfEl.appendChild(item);
+        });
+        root.appendChild(bfEl);
+      }
+
+      /* STATUS STAMP */
+      if (data.status && data.status.text) {
+        const statusWrap = div('it-status-wrapper');
+        const stamp = document.createElement('div');
+        stamp.className = 'it-status-stamp tone-' + safeText(data.status.tone || 'neutral');
+        stamp.textContent = safeText(data.status.text);
+        statusWrap.appendChild(stamp); root.appendChild(statusWrap);
+      }
+
+      /* FOOTERS */
+      if (data.footers && data.footers.length) {
+        const notesBlock = div('it-notes-block');
+        const notesText = div('it-notes-text');
+        data.footers.forEach(f => {
+          const divItem = div('it-footer-item');
+          safeHtml(divItem, f);
+          notesText.appendChild(divItem);
+        });
+        notesBlock.appendChild(notesText);
+        root.appendChild(notesBlock);
+      }
+
+      /* AUTHORITY FOOTER */
+      if (footerShell) {
+        while (footerShell.firstChild) footerShell.removeChild(footerShell.firstChild);
+        const credit = div('it-credit-strip');
+        
+        const left = div('it-credit-left');
+        const logo = div('it-credit-logo'); logo.textContent = 'INSPIRON TECH';
+        const link = document.createElement('a');
+        link.href = 'https://suite.inspiron.tech';
+        link.target = '_top';
+        link.className = 'it-credit-link';
+        link.textContent = 'suite.inspiron.tech';
+        left.appendChild(logo); left.appendChild(link);
+        
+        const right = div('it-credit-right');
+        right.textContent = 'NEXUS CORE ENGINE · ATLAS STATEMENT v1.1';
+        
+        credit.appendChild(left);
+        credit.appendChild(right);
+        footerShell.appendChild(credit);
+      }
+    }
+
+    /* FETCH & BOOTSTRAP */
+    fetch('/api4/view-v1' + window.location.search, {
+      headers: { 'Accept': 'application/json' },
+      credentials: 'same-origin'
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP_' + res.status);
+      return res.json();
+    })
+    .then(data => {
+      if (data.title) {
+        document.title = [safeText(data.title), safeText(data.reference), '—',
+          safeText(data.business && data.business.name || data.businessName || 'Document')
+        ].filter(Boolean).join(' ');
+      }
+      renderDocument(data);
+    })
+    .catch(err => {
+      showError(err && err.message || 'FETCH_ERROR');
+    });
+  </script>
+</body>
+</html>

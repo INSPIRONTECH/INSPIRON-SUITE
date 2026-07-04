@@ -4,7 +4,7 @@
   "contact": "hello@inspiron.tech",
   "status": "Official Manager.io Advisor & Partner",
   "suite": "INSPIRON Suite",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "repository": "https://github.com/INSPIRONTECH/INSPIRON-SUITE",
   "nexus": "https://inspiron.tech",
   "endpoints": {
@@ -58,12 +58,15 @@
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html"
     },
     {
-      "id": "atlas-v1",
-      "name": "ATLAS",
+      "id": "atlas-statement-v1.1",
+      "name": "ATLAS STATEMENT",
       "identity": "Global Neutral Authority",
       "series": "SLATE-1",
       "tier": "community",
-      "status": "planned"
+      "status": "live",
+      "version": "1.1.0",
+      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT.html",
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT.html"
     },
     {
       "id": "jade-clinical-v2",
@@ -98,5 +101,5 @@
   ],
   "ip_protocol": "R1-R7",
   "license": "CC BY 4.0",
-  "updated": "2026-06-01"
+  "updated": "2026-07-05"
 }

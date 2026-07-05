@@ -850,7 +850,8 @@
       recRole.className = 'it-party-role';
 
       if (data.recipient) {
-        recRole.textContent = 'Prepared For';
+        const isStatement = (data.title && data.title.toLowerCase().indexOf('statement') !== -1);
+        recRole.textContent = isStatement ? 'Statement For' : 'Prepared For';
         recAddress.appendChild(recRole);
 
         const recName = document.createElement('strong');
@@ -890,8 +891,26 @@
 
       /* Metadata fields */
       const metaFields = [];
-      if (data.reference) metaFields.push({ label: 'Reference', text: data.reference });
-      (data.fields || []).forEach(f => { if (f.displayAtTheTop || !data.recipient) metaFields.push(f); });
+      
+      if (data.fromDate && data.toDate) {
+        metaFields.push({ label: 'Statement Period', text: data.fromDate + ' – ' + data.toDate });
+      } else if (data.date || data.issuedDate) {
+        metaFields.push({ label: 'Date', text: data.date || data.issuedDate });
+      }
+
+      if (data.accountName || data.account) {
+        metaFields.push({ label: 'Account', text: data.accountName || data.account });
+      }
+      
+      if (data.reference || data.number) {
+        metaFields.push({ label: 'Reference No', text: data.reference || data.number });
+      }
+      
+      if (data.balanceForward) {
+        metaFields.push({ label: 'Balance Forward', text: data.balanceForward });
+      }
+      
+      (data.fields || []).forEach(f => { if (f.displayAtTheTop || (!data.recipient && !data.customer)) metaFields.push(f); });
       (data.business && data.business.fields || []).forEach(f => metaFields.push(f));
 
       const fieldsDl = document.createElement('dl');
@@ -913,7 +932,8 @@
         bizAddress.className = 'it-party-business';
         const bizRole = document.createElement('span');
         bizRole.className = 'it-party-role';
-        bizRole.textContent = 'Issued By';
+        const isStatement = (data.title && data.title.toLowerCase().indexOf('statement') !== -1);
+        bizRole.textContent = isStatement ? 'Issued By' : 'Issued By';
         bizAddress.appendChild(bizRole);
 
         const bizName = document.createElement('strong');

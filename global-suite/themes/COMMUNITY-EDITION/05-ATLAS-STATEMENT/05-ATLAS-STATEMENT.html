@@ -400,7 +400,8 @@
 <body>
 
   <div id="it-doc-actions">
-    <button class="it-action-btn" onclick="window.print()">Print / PDF</button>
+    <button class="it-action-btn" onclick="window.print()">⎙ Print / Save PDF</button>
+    <button class="it-action-btn" onclick="(async()=>{try{await navigator.share({title:document.title,url:window.location.href});}catch{try{await navigator.clipboard.writeText(window.location.href);}catch(e){}}})()">⎘ Share</button>
   </div>
 
   <div id="it-shell">
@@ -472,6 +473,7 @@
       const t = u.trim();
       if (/^https?:\/\//i.test(t)) return t;
       if (/^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/i.test(t)) return t;
+      if (!/^[a-z0-9+.-]+:/i.test(t)) return t;
       return null;
     }
 

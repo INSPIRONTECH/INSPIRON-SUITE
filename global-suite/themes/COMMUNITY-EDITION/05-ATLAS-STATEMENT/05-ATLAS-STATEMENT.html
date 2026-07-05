@@ -14,36 +14,13 @@
        ============================================================ */
 
     /* ---- SELF-HOSTED FONTS (Idea 121 — no CDN) ---- */
-    @font-face {
-      font-family: 'Inter';
-      src: url('/themes/fonts/inter/Inter-Regular.woff2') format('woff2');
-      font-weight: 400; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Inter';
-      src: url('/themes/fonts/inter/Inter-Medium.woff2') format('woff2');
-      font-weight: 500; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Inter';
-      src: url('/themes/fonts/inter/Inter-SemiBold.woff2') format('woff2');
-      font-weight: 600; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Inter';
-      src: url('/themes/fonts/inter/Inter-Bold.woff2') format('woff2');
-      font-weight: 700; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Inter';
-      src: url('/themes/fonts/inter/Inter-ExtraBold.woff2') format('woff2');
-      font-weight: 800; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Inter';
-      src: url('/themes/fonts/inter/Inter-Black.woff2') format('woff2');
-      font-weight: 900; font-style: normal; font-display: swap;
-    }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-Light.woff2') format('woff2'), url('resources/fonts/Inter-Light.woff') format('woff'); font-weight: 300; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-Regular.woff2') format('woff2'), url('resources/fonts/Inter-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-Medium.woff2') format('woff2'), url('resources/fonts/Inter-Medium.woff') format('woff'); font-weight: 500; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-SemiBold.woff2') format('woff2'), url('resources/fonts/Inter-SemiBold.woff') format('woff'); font-weight: 600; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-Bold.woff2') format('woff2'), url('resources/fonts/Inter-Bold.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-ExtraBold.woff2') format('woff2'), url('resources/fonts/Inter-ExtraBold.woff') format('woff'); font-weight: 800; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Inter'; src: url('resources/fonts/Inter-Black.woff2') format('woff2'), url('resources/fonts/Inter-Black.woff') format('woff'); font-weight: 900; font-style: normal; font-display: swap; }
 
     :root {
       --ink: #1a2332;
@@ -55,7 +32,7 @@
       --rule-strong: #b0bec8;
       --accent: #c8a44a;
       --accent-soft: #fdf8ec;
-      --font-stack: 'Inter', 'Segoe UI', ui-sans-serif, system-ui, -apple-system, Arial, sans-serif;
+      --font-stack: 'Inter', 'Nirmala UI', 'Segoe UI', ui-sans-serif, system-ui, -apple-system, Arial, sans-serif;
       --status-positive: #3FB950;
       --status-negative: #F85149;
     }
@@ -265,8 +242,8 @@
     .it-subtotal-cell { font-weight: 600; color: var(--ink-mid); }
 
     /* TOTALS */
-    .it-total td { padding: 8px 16px; border: none; }
-    .it-total-label { text-align: right; font-size: 12px; color: var(--ink-soft); }
+    .it-total td { padding: 8px 16px; border: none; border-bottom: 1px solid var(--rule); }
+    .it-total-label { text-align: right; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-soft); }
     .it-total-value { text-align: right; font-weight: 700; color: var(--ink); }
 
     .it-total-grand {

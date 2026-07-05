@@ -7,8 +7,44 @@
   <style>
     /* ============================================================
        ATLAS STATEMENT v1.1 — Global Neutral Authority
-       NEXUS Core Engine
+       NEXUS Core Engine · Kernel-Compliant Build
+       Author:   MD ABU HASAN · INSPIRON TECH
+       Schema:   /api4/view-v1
+       Repo:     github.com/INSPIRONTECH/INSPIRON-SUITE
        ============================================================ */
+
+    /* ---- SELF-HOSTED FONTS (Idea 121 — no CDN) ---- */
+    @font-face {
+      font-family: 'Inter';
+      src: url('/themes/fonts/inter/Inter-Regular.woff2') format('woff2');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('/themes/fonts/inter/Inter-Medium.woff2') format('woff2');
+      font-weight: 500; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('/themes/fonts/inter/Inter-SemiBold.woff2') format('woff2');
+      font-weight: 600; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('/themes/fonts/inter/Inter-Bold.woff2') format('woff2');
+      font-weight: 700; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('/themes/fonts/inter/Inter-ExtraBold.woff2') format('woff2');
+      font-weight: 800; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('/themes/fonts/inter/Inter-Black.woff2') format('woff2');
+      font-weight: 900; font-style: normal; font-display: swap;
+    }
+
     :root {
       --ink: #1a2332;
       --ink-mid: #3d4f63;
@@ -19,7 +55,7 @@
       --rule-strong: #b0bec8;
       --accent: #c8a44a;
       --accent-soft: #fdf8ec;
-      --font-stack: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, Arial, sans-serif;
+      --font-stack: 'Inter', 'Segoe UI', ui-sans-serif, system-ui, -apple-system, Arial, sans-serif;
       --status-positive: #3FB950;
       --status-negative: #F85149;
     }
@@ -40,7 +76,7 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 13px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    
+
     body {
       font-family: var(--font-stack);
       font-weight: 400;
@@ -77,6 +113,30 @@
       page-break-inside: avoid !important;
       break-inside: avoid !important;
     }
+
+    /* DOC ACTIONS — Idea 50 */
+    #it-doc-actions {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+    }
+    .it-action-btn {
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      padding: 7px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-stack);
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+    .it-action-btn:hover { background: var(--accent); color: var(--ink); }
 
     /* HEADER BAND */
     .it-header-band {
@@ -200,7 +260,9 @@
 
     .it-cell { padding: 10px 16px; color: var(--ink); border-right: 1px solid var(--rule); vertical-align: middle; }
     .it-cell:last-child { border-right: none; }
+    .it-cell-emphasis { font-weight: 700; }
     .it-cell-group-header { font-size: 9px; font-weight: 700; text-transform: uppercase; background: var(--paper-warm) !important; color: var(--ink-mid); padding: 8px 16px; border-bottom: 1px solid var(--rule); }
+    .it-subtotal-cell { font-weight: 600; color: var(--ink-mid); }
 
     /* TOTALS */
     .it-total td { padding: 8px 16px; border: none; }
@@ -225,8 +287,9 @@
     .it-body-field-label { font-size: 8px; font-weight: 700; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 2px; }
     .it-body-field-value { font-size: 12px; color: var(--ink); }
 
-    /* FOOTERS */
+    /* FOOTERS / NOTES */
     .it-notes-block { padding: 12px 32px; border-top: 1px solid var(--rule); }
+    .it-notes-label { font-size: 8px; font-weight: 700; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; letter-spacing: 0.08em; }
     .it-notes-text { font-size: 11px; color: var(--ink-soft); line-height: 1.5; }
     .it-footer-item + .it-footer-item { margin-top: 8px; }
 
@@ -239,6 +302,18 @@
     .tone-positive { color: var(--status-positive); border-color: var(--status-positive); }
     .tone-negative { color: var(--status-negative); border-color: var(--status-negative); }
     .tone-neutral  { color: var(--ink-soft); border-color: var(--ink-soft); }
+
+    /* DEMO WATERMARK — Idea 44 */
+    .it-demo-strip {
+      background: var(--accent);
+      color: var(--ink);
+      text-align: center;
+      padding: 4px 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
 
     /* AUTHORITY FOOTER */
     .it-credit-strip {
@@ -256,26 +331,81 @@
 
     /* SYSTEM FAULT */
     .it-fault-banner { padding: 3rem 2rem; text-align: center; border: 2px solid var(--status-negative); margin: 2rem; background: var(--paper); }
+    .it-fault-icon { font-size: 32px; color: var(--status-negative); margin-bottom: 12px; }
     .it-fault-title { font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: var(--status-negative); margin-bottom: 8px; }
     .it-fault-message { font-size: 12px; color: var(--ink-soft); margin-bottom: 6px; }
     .it-fault-code { font-size: 10px; font-family: monospace; color: var(--ink-soft); margin-bottom: 12px; }
     .it-fault-hint { font-size: 10px; color: var(--ink-soft); max-width: 400px; margin: 0 auto; line-height: 1.6; }
 
-    /* PRINT SETTINGS */
-    @page { size: A4; margin: 0; }
+    /* SHORT SPACER — Idea 64 */
+    .it-short-spacer { display: none; }
+    body.a4-short .it-short-spacer { display: block; min-height: 60mm; }
+
+    /* DENSITY MODES — Idea 5, 24 */
+    body.document-long .it-cell { padding: 5px 12px; font-size: 11px; }
+    body.document-long .it-table thead th { padding: 7px 12px; }
+
+    /* IFRAME MODE */
+    body.in-iframe,
+    body.in-iframe #it-shell { min-height: auto !important; }
+
+    /* DEBUG OVERLAY — Idea 6 */
+    #it-debug-overlay {
+      position: fixed; top: 0; right: 0; background: rgba(0,0,0,0.92);
+      border-left: 3px solid var(--accent); padding: 12px 16px;
+      font-size: 10px; font-family: monospace; color: var(--accent);
+      z-index: 9999; line-height: 1.8; max-width: 260px;
+    }
+    #it-debug-overlay p { margin: 0; }
+
+    /* PRINT — Idea 33, 36, 50 */
+    @page { size: A4; margin: 10mm; }
     @media print {
-      body { background: transparent !important; display: block !important; }
-      #it-shell { box-shadow: none !important; width: 100% !important; max-width: none !important; min-height: auto !important; background: var(--paper) !important; }
-      main { min-height: auto !important; display: flex !important; flex-direction: column !important; }
+      body::before { display: none !important; }
+      #it-doc-actions { display: none !important; }
+      .it-demo-strip { display: none !important; }
+      #it-debug-overlay { display: none !important; }
+      .it-short-spacer { display: none !important; }
+      html, body { min-height: auto !important; height: auto !important; background: #fff !important; color: #000 !important; font-size: 11px !important; }
+      #it-shell { min-height: auto !important; height: auto !important; box-shadow: none !important; max-width: 100% !important; background: #fff !important; }
+      main { background: #fff !important; display: flex !important; flex-direction: column !important; min-height: auto !important; box-sizing: border-box !important; }
+      .it-content { flex: 1 0 auto !important; min-height: auto !important; }
+      .it-footer-shell { flex-shrink: 0 !important; }
+      .it-header-band { background: var(--ink) !important; border-bottom: 2px solid var(--accent) !important; }
+      .it-header-logo-text { color: #fff !important; }
+      .it-header-atlas { color: #fff !important; }
+      .it-doc-title { color: #1a2332 !important; }
+      .it-meta-label { color: #6b7f96 !important; }
+      .it-meta-value { color: #1a2332 !important; }
+      .it-party-header { color: #6b7f96 !important; border-color: #c8a44a !important; }
+      .it-party-name { color: #1a2332 !important; }
+      .it-party-address, .it-party-extra { color: #1a2332 !important; }
+      .it-table thead tr { background: #1a2332 !important; }
+      .it-table thead th { color: #fff !important; }
+      .it-table tbody tr.it-row:nth-child(odd) { background: #fff !important; }
+      .it-table tbody tr.it-row:nth-child(even) { background: #f8f9fa !important; }
+      .it-cell { color: #1a2332 !important; }
+      .it-total-label { color: #6b7f96 !important; }
+      .it-total-value { color: #1a2332 !important; }
+      .it-total-grand { background: #fdf8ec !important; border-color: #c8a44a !important; }
+      .it-total-grand .it-total-value { color: #c8a44a !important; }
+      .it-notes-text { color: #6b7f96 !important; }
+      .it-credit-strip { background: #fff !important; border-top: 1px solid #dde3ea !important; }
+      .it-credit-text { color: #6b7f96 !important; }
+      .it-credit-text strong { color: #1a2332 !important; }
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
   </style>
 </head>
 <body>
 
+  <div id="it-doc-actions">
+    <button class="it-action-btn" onclick="window.print()">Print / PDF</button>
+  </div>
+
   <div id="it-shell">
     <main>
-      <div class="it-content" id="document-root" data-theme-version="1.1.0" data-theme-id="atlas-statement">
+      <div class="it-content" id="document-root" data-theme-version="1.1.1" data-theme-expected-version="1.1.1" data-theme-id="atlas-statement">
         <!-- Loading state -->
         <div style="padding:3rem;text-align:center;color:var(--ink-soft);font-size:11px;letter-spacing:2px;text-transform:uppercase;">
           Loading…
@@ -290,63 +420,86 @@
   <script>
     'use strict';
 
-    const THEME_DOM = Object.freeze({
-      root: 'document-root',
-      footer: 'it-footer-shell'
-    });
+    /* ============================================================
+       NEXUS SAFE-RENDERING KERNEL — ATLAS STATEMENT v1.1.1
+       Kernel-Compliant · Full Engine Parity
+       ============================================================ */
 
     const THEME_FLAGS = Object.freeze({
-      ENABLE_AUTHORITY_FOOTER: true
+      ENABLE_COMMISSION_LOGIC:     false,
+      ENABLE_MULTI_CURRENCY:       false,
+      ENABLE_QR_PANEL:             false,
+      ENABLE_DEBUG_OVERLAY:        false,
+      ENABLE_DEMO_WATERMARK:       true,
+      ENABLE_AMOUNT_IN_WORDS:      false,
+      ENABLE_AUTHORITY_FOOTER:     true,
+      AUTO_DENSITY_LONG_THRESHOLD: 20
     });
 
-    /* SAFE HELPERS (NEXUS Engine) */
-    function safeText(v) { return (v === null || v === undefined) ? '' : String(v); }
-    
-    function safeImageUrl(u) {
-      if (!u || typeof u !== 'string') return null;
-      const t = u.trim();
-      if (/^https?:\/\//i.test(t)) return t;
-      if (/^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/i.test(t)) return t;
-      if (!/^[a-z0-9+.-]+:/i.test(t)) return t;
-      return null;
+    const THEME_DOM = Object.freeze({
+      root:            'document-root',
+      actions:         'it-doc-actions',
+      footer:          'it-footer-shell',
+      faultEl:         'it-fault',
+      demoStrip:       'it-demo-strip',
+      debugOverlay:    'it-debug-overlay'
+    });
+
+    /* ---- SAFE HELPERS ---- */
+    function safeText(v) {
+      if (v === null || v === undefined) return '';
+      return String(v);
     }
-    
+
+    function safeUrl(u) {
+      if (!u || typeof u !== 'string') return '#';
+      if (/^(https?:\/\/|mailto:|tel:)/i.test(u.trim())) return u.trim();
+      return '#';
+    }
+
     function safeLinkUrl(u) {
       if (!u || typeof u !== 'string') return null;
       if (/^(https?:\/\/|mailto:|tel:)/i.test(u.trim())) return u.trim();
       return null;
     }
-    
+
+    function safeImageUrl(u) {
+      if (!u || typeof u !== 'string') return null;
+      const t = u.trim();
+      if (/^https?:\/\//i.test(t)) return t;
+      if (/^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/i.test(t)) return t;
+      return null;
+    }
+
     function safeCssAlign(v) {
-      return ({left:'left',center:'center',right:'right',start:'left',end:'right'})[v] || 'left';
+      const map = { left: 'left', center: 'center', right: 'right', start: 'left', end: 'right' };
+      return map[v] || 'left';
     }
-    
-    function array(val) {
-      return Array.isArray(val) ? val : (val ? [val] : []);
-    }
-    
-    function div(className) {
-      const el = document.createElement('div');
-      if (className) el.className = className;
-      return el;
+
+    function safeDimension(v) {
+      if (!v || typeof v !== 'string') return null;
+      if (/expression|url\(|javascript|"/i.test(v)) return null;
+      if (/^\d+(\.\d+)?(px|%|em|rem|vw|vh|mm|cm|pt)$/.test(v.trim())) return v.trim();
+      return null;
     }
 
     function appendTextWithBreaks(node, text) {
       if (!text) return;
-      String(text).split('\n').forEach((line, i, arr) => {
+      const lines = String(text).split('\n');
+      lines.forEach((line, i) => {
         node.appendChild(document.createTextNode(line));
-        if (i < arr.length - 1) node.appendChild(document.createElement('br'));
+        if (i < lines.length - 1) node.appendChild(document.createElement('br'));
       });
     }
 
+    /* safeHtml — Atlas extension: sanitised inline markup (b, i, u, strong, em etc.)
+       Safe because: temp div is never appended to DOM; only whitelisted tags are walked;
+       style attributes are checked against a dangerous-pattern blocklist. */
     function safeHtml(parentNode, rawText) {
       if (rawText === null || rawText === undefined) return;
       const textStr = String(rawText);
       if (!/<[a-z/][^>]*>/i.test(textStr)) {
-        textStr.split('\n').forEach((line, i, arr) => {
-          parentNode.appendChild(document.createTextNode(line));
-          if (i < arr.length - 1) parentNode.appendChild(document.createElement('br'));
-        });
+        appendTextWithBreaks(parentNode, textStr);
         return;
       }
       const temp = document.createElement('div');
@@ -377,7 +530,53 @@
       walk(temp, parentNode);
     }
 
-    /* TABLE BUILDERS */
+    /* Atlas utility: shorthand div factory */
+    function div(className) {
+      const el = document.createElement('div');
+      if (className) el.className = className;
+      return el;
+    }
+
+    /* ---- DENSITY MODE — Idea 5, 24 ---- */
+    function applyDensityMode(data) {
+      const body = document.body;
+      const rowCount = (data.table && data.table.rows) ? data.table.rows.length : 0;
+      if (rowCount > THEME_FLAGS.AUTO_DENSITY_LONG_THRESHOLD) body.classList.add('document-long');
+      if (rowCount < 4) body.classList.add('a4-short');
+      const params = new URLSearchParams(window.location.search);
+      const requested = params.get('density');
+      if (['relaxed', 'balanced', 'compact'].includes(requested)) {
+        body.classList.remove('density-relaxed', 'density-balanced', 'density-compact');
+        body.classList.add('density-' + requested);
+      }
+      if (params.get('debug') === '1') body.classList.add('debug-mode');
+    }
+
+    /* ---- FAULT UX — Idea 9 ---- */
+    function renderFault(code) {
+      const root = document.getElementById(THEME_DOM.root);
+      if (!root) return;
+      while (root.firstChild) root.removeChild(root.firstChild);
+      const inner = document.createElement('div');
+      inner.style.cssText = 'padding: 3rem 2rem; text-align: center;';
+      [
+        ['it-fault-icon',    '⚠'],
+        ['it-fault-title',   'SYSTEM FAULT'],
+        ['it-fault-message', 'Failed to load document data from Manager.io.'],
+        ['it-fault-code',    'Code: ' + safeText(code || 'FETCH_ERROR')],
+        ['it-fault-hint',
+          'Check your Manager.io instance, network connection, or theme assignment. ' +
+          'Restore the original theme file or contact hello@inspiron.tech.']
+      ].forEach(([cls, text]) => {
+        const el = document.createElement('div');
+        el.className = cls;
+        el.textContent = text;
+        inner.appendChild(el);
+      });
+      root.appendChild(inner);
+    }
+
+    /* ---- TABLE BUILDERS ---- */
     function buildCell(cell, col) {
       const td = document.createElement('td');
       td.className = 'it-cell';
@@ -391,7 +590,7 @@
       let cellText = cell.text;
       if (col && col.label) {
         const colLabelLower = String(col.label).toLowerCase();
-        const percentKeywords = ["rate", "percent", "percentage", "ratio", "com %", "commission", "unit price"];
+        const percentKeywords = ['rate', 'percent', 'percentage', 'ratio', 'com %', 'commission', 'unit price'];
         if (percentKeywords.some(keyword => colLabelLower.includes(keyword))) {
           const trimmed = String(cellText).trim();
           const num = parseFloat(trimmed);
@@ -440,6 +639,7 @@
         }
         r.cells.forEach((cell, idx) => {
           const td = buildCell(cell, columns[idx] || {});
+          if (r.isTotalRow) td.classList.add('it-subtotal-cell');
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
@@ -454,37 +654,72 @@
       totals.forEach(total => {
         const tr = document.createElement('tr');
         tr.className = (total.emphasis || total.key === 'Total') ? 'it-total it-total-grand' : 'it-total';
-        const lTd = document.createElement('td'); lTd.className = 'it-total-label'; lTd.colSpan = Math.max(colCount - 1, 1); lTd.textContent = safeText(total.label);
-        const vTd = document.createElement('td'); vTd.className = 'it-total-value'; vTd.textContent = safeText(total.text);
-        tr.appendChild(lTd); tr.appendChild(vTd); tbody.appendChild(tr);
+        const labelTd = document.createElement('td');
+        labelTd.colSpan = Math.max(colCount - 1, 1);
+        labelTd.className = 'it-total-label';
+        labelTd.textContent = safeText(total.label);
+        const valueTd = document.createElement('td');
+        valueTd.className = 'it-total-value';
+        valueTd.textContent = safeText(total.text);
+        tr.appendChild(labelTd); tr.appendChild(valueTd); tbody.appendChild(tr);
       });
     }
 
-    /* FAULT RENDERER */
-    function showError(code) {
-      const root = document.getElementById(THEME_DOM.root);
-      if (!root) return;
-      while (root.firstChild) root.removeChild(root.firstChild);
-      const inner = div('it-fault-banner');
-      [['it-fault-title','SYSTEM FAULT'],['it-fault-message','Failed to load document data from Manager.io.'],['it-fault-code','Code: ' + safeText(code || 'FETCH_ERROR')],['it-fault-hint','Check your Manager.io instance or theme assignment. Restore original file or contact hello@inspiron.tech.']].forEach(([cls,text]) => {
-        const el = div(cls); el.textContent = text; inner.appendChild(el);
+    /* ---- STATIC AUTHORITY SVG — Idea 78 (golden dot) ---- */
+    const AUTHORITY_SVG = '<svg viewBox="0 0 358.846 350.3" width="22" height="22" fill="none" aria-hidden="true"><path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/><path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/><circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/></svg>';
+
+    /* ---- DEBUG OVERLAY — Idea 6 ---- */
+    function renderDebugOverlay(meta) {
+      if (!document.body.classList.contains('debug-mode')) return;
+      const existing = document.getElementById(THEME_DOM.debugOverlay);
+      if (existing) existing.parentNode.removeChild(existing);
+      const overlay = document.createElement('div');
+      overlay.id = THEME_DOM.debugOverlay;
+      overlay.className = 'it-debug-overlay';
+      [
+        '— NEXUS DEBUG —',
+        'Theme:     ' + safeText(meta.themeId || '—'),
+        'Version:   ' + safeText(meta.themeVersion || '—'),
+        'Archetype: ' + safeText(meta.archetype || '—'),
+        'Rows:      ' + safeText(meta.rowCount || 0),
+        'Density:   ' + (document.body.classList.contains('document-long') ? 'compact' : 'standard'),
+        'Schema:    /api4/view-v1'
+      ].forEach(line => {
+        const p = document.createElement('p'); p.textContent = line; overlay.appendChild(p);
       });
-      root.appendChild(inner);
+      document.body.appendChild(overlay);
     }
 
-    /* MAIN RENDER */
+    /* ---- IFRAME RESIZE — postMessage to Manager.io parent ---- */
+    function sendResize() {
+      const h = document.documentElement.scrollHeight;
+      const w = document.documentElement.scrollWidth;
+      try { window.parent.postMessage({ type: 'resize', height: h, width: w }, '*'); } catch(e) {}
+    }
+
+    /* ---- MAIN RENDER ---- */
     function renderDocument(data) {
+      applyDensityMode(data);
+
       const root = document.getElementById(THEME_DOM.root);
       const footerShell = document.getElementById(THEME_DOM.footer);
       if (!root) return;
-      
+
       const colCount = (data.table && data.table.columns) ? data.table.columns.length : 2;
+      const isStatement = (data.title && data.title.toLowerCase().indexOf('statement') !== -1);
       while (root.firstChild) root.removeChild(root.firstChild);
+
+      /* DEMO WATERMARK */
+      if (THEME_FLAGS.ENABLE_DEMO_WATERMARK) {
+        const strip = div(THEME_DOM.demoStrip);
+        strip.className = 'it-demo-strip';
+        strip.textContent = 'DEMO — For presentation only. Not a final document.';
+        root.appendChild(strip);
+      }
 
       /* HEADER BAND */
       const headerBand = document.createElement('header');
       headerBand.className = 'it-header-band';
-      
       const logoWrap = div('it-header-logo');
       const logoSrc = safeImageUrl(data.business && data.business.logo);
       if (logoSrc) {
@@ -499,10 +734,8 @@
           logoWrap.appendChild(span);
         }
       }
-
       const atlasMark = div('it-header-atlas');
       atlasMark.textContent = 'ATLAS';
-      
       headerBand.appendChild(logoWrap);
       headerBand.appendChild(atlasMark);
       root.appendChild(headerBand);
@@ -514,26 +747,23 @@
       identityBlock.appendChild(titleEl);
 
       const metaFields = [];
-      
       if (data.fromDate && data.toDate) {
-        metaFields.push({ label: 'Statement Period', text: data.fromDate + ' – ' + data.toDate });
+        metaFields.push({ label: 'Statement Period', text: data.fromDate + ' \u2013 ' + data.toDate });
       } else if (data.date || data.issuedDate) {
         metaFields.push({ label: 'Date', text: data.date || data.issuedDate });
       }
-
       if (data.accountName || data.account) {
         metaFields.push({ label: 'Account', text: data.accountName || data.account });
       }
-      
       if (data.reference || data.number) {
         metaFields.push({ label: 'Reference No', text: data.reference || data.number });
       }
-      
       if (data.balanceForward) {
         metaFields.push({ label: 'Balance Forward', text: data.balanceForward });
       }
-      
-      (data.fields || []).forEach(f => { if (f.displayAtTheTop || (!data.recipient && !data.customer)) metaFields.push(f); });
+      (data.fields || []).forEach(f => {
+        if (f.displayAtTheTop || (!data.recipient && !data.customer)) metaFields.push(f);
+      });
       (data.business && data.business.fields || []).forEach(f => metaFields.push(f));
 
       if (metaFields.length) {
@@ -553,25 +783,21 @@
       const recipient = data.recipient || data.customer || data.contact;
       if (recipient) {
         const parties = div('it-parties');
-        
         const makeParty = (role, name, address, extra) => {
           const col = div('it-party-col');
           const roleEl = div('it-party-header'); roleEl.textContent = role;
           const nameEl = div('it-party-name'); safeHtml(nameEl, name);
           const addrEl = div('it-party-address'); safeHtml(addrEl, address);
           col.appendChild(roleEl); col.appendChild(nameEl); col.appendChild(addrEl);
-          if (extra) {
-            const ex = div('it-party-extra'); safeHtml(ex, extra);
-            col.appendChild(ex);
-          }
+          if (extra) { const ex = div('it-party-extra'); safeHtml(ex, extra); col.appendChild(ex); }
           return col;
         };
-
-        const isStatement = (data.title && data.title.toLowerCase().indexOf('statement') !== -1);
         const fromLabel = isStatement ? 'ISSUED BY' : 'FROM';
-        const toLabel = isStatement ? 'STATEMENT FOR' : 'TO';
-
-        const recExtra = [recipient.code ? 'Code: ' + recipient.code : null, recipient.email || null].filter(Boolean).join('\n');
+        const toLabel   = isStatement ? 'STATEMENT FOR' : 'TO';
+        const recExtra = [
+          recipient.code  ? 'Code: ' + recipient.code : null,
+          recipient.email ? 'Email: ' + recipient.email : null
+        ].filter(Boolean).join('\n');
         parties.appendChild(makeParty(fromLabel, data.business && data.business.name || data.businessName || '', data.business && data.business.address || '', null));
         parties.appendChild(makeParty(toLabel, recipient.name, recipient.address, recExtra));
         root.appendChild(parties);
@@ -587,10 +813,11 @@
       /* TABLE */
       if (data.table && data.table.columns) {
         const wrapper = div('it-table-wrapper');
-        const table = document.createElement('table'); table.className = 'it-table'; table.setAttribute('role','table');
-        
+        const table = document.createElement('table');
+        table.className = 'it-table'; table.setAttribute('role', 'table');
         const thead = document.createElement('thead');
         const headRow = document.createElement('tr');
+        headRow.id = 'table-headers';
         data.table.columns.forEach(col => {
           const th = document.createElement('th');
           th.style.textAlign = safeCssAlign(col.align);
@@ -600,8 +827,8 @@
         });
         thead.appendChild(headRow);
         table.appendChild(thead);
-
         const tbody = document.createElement('tbody');
+        tbody.id = 'table-rows';
         processRows(data.table.rows || [], data.table.columns, tbody);
         appendTotals(data.totals, colCount, tbody);
         table.appendChild(tbody);
@@ -632,42 +859,65 @@
         statusWrap.appendChild(stamp); root.appendChild(statusWrap);
       }
 
-      /* FOOTERS */
+      /* FOOTERS / NOTES */
       if (data.footers && data.footers.length) {
         const notesBlock = div('it-notes-block');
+        const notesLabel = div('it-notes-label'); notesLabel.textContent = 'Notes & Terms';
         const notesText = div('it-notes-text');
         data.footers.forEach(f => {
           const divItem = div('it-footer-item');
           safeHtml(divItem, f);
           notesText.appendChild(divItem);
         });
-        notesBlock.appendChild(notesText);
+        notesBlock.appendChild(notesLabel); notesBlock.appendChild(notesText);
         root.appendChild(notesBlock);
       }
+
+      /* SHORT SPACER */
+      const spacer = div('it-short-spacer');
+      root.appendChild(spacer);
 
       /* AUTHORITY FOOTER */
       if (footerShell) {
         while (footerShell.firstChild) footerShell.removeChild(footerShell.firstChild);
-        
         if (THEME_FLAGS.ENABLE_AUTHORITY_FOOTER) {
           const credit = document.createElement('div'); credit.className = 'it-credit-strip';
           const svgWrap = document.createElement('span');
           svgWrap.style.cssText = 'filter:drop-shadow(0 0 5px rgba(0,210,255,0.6));flex-shrink:0;';
-          svgWrap.innerHTML = '<svg viewBox="0 0 358.846 350.3" width="22" height="22" fill="none" aria-hidden="true"><path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/><path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/><circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/></svg>';
+          svgWrap.innerHTML = AUTHORITY_SVG;
           const creditText = document.createElement('span'); creditText.className = 'it-credit-text';
           creditText.textContent = 'Architected by ';
           const strong = document.createElement('strong'); strong.textContent = 'MD ABU HASAN';
-          const sep = document.createTextNode(' · ');
+          const sep = document.createTextNode(' \u00b7 ');
           const link = document.createElement('a'); link.href = 'https://inspiron.tech'; link.target = '_top'; link.className = 'it-credit-link'; link.textContent = 'inspiron.tech';
-          const sep2 = document.createTextNode(' · Official Manager.io Partner');
+          const sep2 = document.createTextNode(' \u00b7 Official Manager.io Partner');
           creditText.appendChild(strong); creditText.appendChild(sep); creditText.appendChild(link); creditText.appendChild(sep2);
           credit.appendChild(svgWrap); credit.appendChild(creditText);
           footerShell.appendChild(credit);
         }
       }
+
+      /* DEBUG OVERLAY */
+      renderDebugOverlay({
+        themeId:      'atlas-statement',
+        themeVersion: '1.1.1',
+        archetype:    isStatement ? 'statement' : 'generic_invoice',
+        rowCount:     (data.table && data.table.rows && data.table.rows.length) || 0
+      });
+
+      sendResize();
+
+      if (typeof ResizeObserver !== 'undefined') {
+        const ro = new ResizeObserver(() => sendResize());
+        ro.observe(document.documentElement);
+      } else {
+        window.addEventListener('resize', sendResize);
+      }
     }
 
-    /* FETCH & BOOTSTRAP */
+    /* ============================================================
+       FETCH & BOOTSTRAP — /api4/view-v1 architecture
+       ============================================================ */
     fetch('/api4/view-v1' + window.location.search, {
       headers: { 'Accept': 'application/json' },
       credentials: 'same-origin'
@@ -678,14 +928,19 @@
     })
     .then(data => {
       if (data.title) {
-        document.title = [safeText(data.title), safeText(data.reference), '—',
+        const parts = [
+          safeText(data.title),
+          safeText(data.reference),
+          '\u2014',
           safeText(data.business && data.business.name || data.businessName || 'Document')
-        ].filter(Boolean).join(' ');
+        ].filter(p => p && p !== '\u2014');
+        parts.splice(2, 0, '\u2014');
+        document.title = parts.join(' ');
       }
       renderDocument(data);
     })
     .catch(err => {
-      showError(err && err.message || 'FETCH_ERROR');
+      renderFault(err && err.message || 'FETCH_ERROR');
     });
   </script>
 </body>

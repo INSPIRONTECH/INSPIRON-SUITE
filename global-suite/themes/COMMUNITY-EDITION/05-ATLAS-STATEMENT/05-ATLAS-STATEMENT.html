@@ -420,6 +420,10 @@
   <script>
     'use strict';
 
+    if (window.parent !== window) {
+      document.body.classList.add('in-iframe');
+    }
+
     /* ============================================================
        NEXUS SAFE-RENDERING KERNEL — ATLAS STATEMENT v1.1.1
        Kernel-Compliant · Full Engine Parity
@@ -692,9 +696,13 @@
 
     /* ---- IFRAME RESIZE — postMessage to Manager.io parent ---- */
     function sendResize() {
-      const h = document.documentElement.scrollHeight;
-      const w = document.documentElement.scrollWidth;
-      try { window.parent.postMessage({ type: 'resize', height: h, width: w }, '*'); } catch(e) {}
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          type: "resize",
+          width: document.documentElement.scrollWidth + 1,
+          height: document.documentElement.scrollHeight + 1
+        }, "*");
+      }
     }
 
     /* ---- MAIN RENDER ---- */

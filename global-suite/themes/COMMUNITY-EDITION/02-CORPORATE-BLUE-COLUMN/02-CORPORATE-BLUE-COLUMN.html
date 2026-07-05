@@ -838,8 +838,7 @@
       partyLabel.className = 'it-party-label';
 
       if (data.recipient) {
-        const isStatement = (data.title && data.title.toLowerCase().indexOf('statement') !== -1);
-        partyLabel.textContent = isStatement ? 'Statement For' : 'Bill To';
+        partyLabel.textContent = 'Bill To';
         leftCol.appendChild(partyLabel);
 
         const pName = document.createElement('div'); pName.className = 'it-party-name';
@@ -914,29 +913,9 @@
 
       /* ---- METADATA STRIP ---- */
       const metaFields = [];
-      
-      if (data.fromDate && data.toDate) {
-        metaFields.push({ label: 'Statement Period', text: data.fromDate + ' – ' + data.toDate });
-      } else if (data.date || data.issuedDate) {
-        metaFields.push({ label: 'Date', text: data.date || data.issuedDate });
-      }
-
-      if (data.accountName || data.account) {
-        metaFields.push({ label: 'Account', text: data.accountName || data.account });
-      }
-      
-      if (data.reference || data.number) {
-        metaFields.push({ label: 'Reference No', text: data.reference || data.number });
-      }
-      
-      if (data.balanceForward) {
-        metaFields.push({ label: 'Balance Forward', text: data.balanceForward });
-      }
-      
-      (data.fields || []).forEach(f => { if (f.displayAtTheTop || (!data.recipient && !data.customer)) metaFields.push(f); });
-      
-      const isStatement = (data.title && data.title.toLowerCase().indexOf('statement') !== -1);
-      metaFields.push({ label: isStatement ? 'Issued By' : 'Issued By', text: data.business && data.business.name || data.businessName || '' });
+      if (data.reference) metaFields.push({ label: 'Reference', text: data.reference });
+      (data.fields || []).forEach(f => { if (f.displayAtTheTop || !data.recipient) metaFields.push(f); });
+      metaFields.push({ label: 'Issued By', text: data.business && data.business.name || data.businessName || '' });
 
       if (metaFields.length) {
         const metaStrip = document.createElement('div');

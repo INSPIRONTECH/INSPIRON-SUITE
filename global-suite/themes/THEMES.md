@@ -24,7 +24,8 @@
 |---|---|---|---|
 | **MIDNIGHT EXECUTIVE** | v1.1.1 | [Screen View](COMMUNITY-EDITION/previews/03-MIDNIGHT-EXECUTIVE/MIDNIGHT-EXECUTIVE_SCREEN-VIEW.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html) |
 | **RIYADH RTL** | v1.1.0 | [Screen View](COMMUNITY-EDITION/previews/04-RIYADH-RTL/RIYADH-RTL_SCREEN-VIEW.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html) |
-| **ATLAS STATEMENT** | v1.1.0 | [Screen View](COMMUNITY-EDITION/previews/05-ATLAS-STATEMENT/ATLAS-STATEMENT_SCREEN-VIEW.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT.html) |
+| **ATLAS STATEMENT** (Dark) | v1.0 | [Portrait Preview](COMMUNITY-EDITION/previews/05-ATLAS-STATEMENT/ATLAS-STATEMENT_SUPPLIER-STATEMENT-TRANSACTIONS_DARK_PORTRAIT_1.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-DARK.html) |
+| **ATLAS STATEMENT** (Light) | v1.0 | [Portrait Preview](COMMUNITY-EDITION/previews/05-ATLAS-STATEMENT/ATLAS-STATEMENT_CUSTOMER-STATEMENT-TRANSACTIONS_LIGHT_PORTRAIT_1.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-LIGHT.html) |
 
 ### MIDNIGHT EXECUTIVE
 
@@ -44,13 +45,13 @@ Bilingual Arabic/English RTL invoice theme. Native right-to-left layout, ZATCA Q
 
 ### ATLAS STATEMENT
 
-Global neutral invoice theme. Deep navy-charcoal header band, warm gold accent on
-document type and grand total. Zero regional compliance markers — works for any
-industry, any currency, any country.
+Purpose-built account statement theme. Covers all Manager.io statement archetypes: Customer Statement (Transactions), Customer Statement (Unpaid Invoices), Supplier Statement (Transactions), Supplier Statement (Unpaid Invoices), Receipts & Payments Summary, and Customer Summary (multi-currency grid). Features a built-in Portrait ⇔ Landscape orientation toggle and automatic Amount in Words rendering.
 
-- **Best for:** International businesses, consulting, multi-region invoicing, general authority documents
+- **Best for:** Account statements, client balance summaries, multi-currency operations (PKR, BDT, AED, USD)
+- **Variants:** Dark (screen/portal delivery) · Light (print/PDF)
 - **RTL:** No
 - **Regulatory:** Universal (no region-specific compliance)
+- **Orientation:** Portrait ⇔ Landscape toggle built-in
 
 ---
 

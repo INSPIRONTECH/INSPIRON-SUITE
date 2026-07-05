@@ -30,6 +30,8 @@ Full catalog with preview images: [**THEMES.md →**](./global-suite/themes/THEM
 | :--- | :--- | :--- | :--- |
 | **MIDNIGHT EXECUTIVE** | `Executive` | Premium dark invoice — EU/IE VAT-ready | [Raw Install](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html) |
 | **RIYADH RTL** | `Bilingual RTL` | Arabic/English RTL — ZATCA e-invoicing | [Raw Install](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html) |
+| **ATLAS STATEMENT** (Dark) | `Statement` | Account statements — Portrait/Landscape, multi-currency | [Raw Install](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-DARK.html) |
+| **ATLAS STATEMENT** (Light) | `Statement` | Account statements — print-ready, PDF delivery | [Raw Install](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-LIGHT.html) |
 
 **Hardened Originals** — maintained, security-hardened, not series members
 
@@ -48,7 +50,7 @@ A "Validation Bridge" that audits your document context via `postMessage` before
 - **Redline Detection:** Flags missing due dates, missing references, and zero-balance errors.
 - **Mushak 6.3 Compliance:** Detects and enforces mandatory Buyer BIN on Bangladesh formats.
 - **Logic-Aware:** Automatically detects Credit Notes and Pro-forma documents to adjust validation severity.
-- **Install Link:** `https://suite.inspiron.tech/utilities/checklist-v1.html`
+- **Source:** [GitHub Repository](https://github.com/INSPIRONTECH/INSPIRON-SUITE/tree/main/global-suite/utilities)
 
 ---
 

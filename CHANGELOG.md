@@ -4,6 +4,21 @@ All notable changes to INSPIRON-SUITE are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.2.0] — 2026-07-06
+
+### Added — ATLAS STATEMENT v1.0
+
+- **Atlas Statement V1.0 — DARK** (`05-ATLAS-STATEMENT-V1.0-DARK.html`): Purpose-built account statement theme. Deep navy-black canvas with electric cyan and vivid gold accents. NEXUS Core Engine on `/api4/view-v1`.
+- **Atlas Statement V1.0 — LIGHT** (`05-ATLAS-STATEMENT-V1.0-LIGHT.html`): Clean slate-white print-ready variant. Identical feature set to the Dark variant.
+- All Manager.io statement archetypes supported: Customer Statement (Transactions), Customer Statement (Unpaid Invoices), Supplier Statement (Transactions), Supplier Statement (Unpaid Invoices), Receipts & Payments Summary, Customer Summary.
+- Portrait ↔ Landscape orientation toggle built into the theme UI (print-safe).
+- Amount in Words: automatic English numeral rendering for closing balance.
+- Multi-currency tested: PKR (Indian comma grouping), BDT, AED, USD.
+- Zero `innerHTML` security model throughout — all dynamic values via `textContent` / DOM node creation.
+- Self-hosted Neo Sans Pro font stack (5 weights, woff2+woff) — no Google CDN dependency.
+- 13 preview images added to `global-suite/themes/COMMUNITY-EDITION/previews/05-ATLAS-STATEMENT/`.
+- Removed generic `05-ATLAS-STATEMENT.html` base file.
+
 ## [1.1.0] — 2026-06-01
 
 ### Added — GLOBAL-THEME-SUITE v1.1.0

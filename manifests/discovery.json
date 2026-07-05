@@ -7,13 +7,6 @@
   "version": "1.2.0",
   "repository": "https://github.com/INSPIRONTECH/INSPIRON-SUITE",
   "nexus": "https://inspiron.tech",
-  "endpoints": {
-    "global_themes": "https://suite.inspiron.tech/global-suite/themes/",
-    "global_utilities": "https://suite.inspiron.tech/utilities/",
-    "checklist": "https://suite.inspiron.tech/utilities/checklist-v1.html",
-    "tax_suite": "https://tools.inspiron.tech/",
-    "bd_compliance": "https://tools.inspiron.tech/"
-  },
   "theme_registry": [
     {
       "id": "midnight-executive-v1.1",
@@ -23,7 +16,6 @@
       "tier": "community",
       "status": "live",
       "version": "1.1.1",
-      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html",
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html"
     },
     {
@@ -34,8 +26,45 @@
       "tier": "community",
       "status": "live",
       "version": "1.1.0",
-      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html",
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html"
+    },
+    {
+      "id": "atlas-statement-v1.0-dark",
+      "name": "ATLAS STATEMENT",
+      "variant": "dark",
+      "identity": "Statement — Command Dark",
+      "series": "SLATE-1",
+      "tier": "community",
+      "status": "live",
+      "version": "1.0",
+      "archetypes": [
+        "customer-statement-transactions",
+        "customer-statement-unpaid-invoices",
+        "supplier-statement-transactions",
+        "supplier-statement-unpaid-invoices",
+        "receipts-payments-summary",
+        "customer-summary"
+      ],
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-DARK.html"
+    },
+    {
+      "id": "atlas-statement-v1.0-light",
+      "name": "ATLAS STATEMENT",
+      "variant": "light",
+      "identity": "Statement — Print Light",
+      "series": "SLATE-1",
+      "tier": "community",
+      "status": "live",
+      "version": "1.0",
+      "archetypes": [
+        "customer-statement-transactions",
+        "customer-statement-unpaid-invoices",
+        "supplier-statement-transactions",
+        "supplier-statement-unpaid-invoices",
+        "receipts-payments-summary",
+        "customer-summary"
+      ],
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-LIGHT.html"
     },
     {
       "id": "universal-bronze-v1.1",
@@ -44,7 +73,6 @@
       "tier": "community",
       "status": "legacy",
       "version": "1.1.0",
-      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html",
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html"
     },
     {
@@ -54,19 +82,7 @@
       "tier": "community",
       "status": "legacy",
       "version": "1.1.0",
-      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html",
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html"
-    },
-    {
-      "id": "atlas-statement-v1.1",
-      "name": "ATLAS STATEMENT",
-      "identity": "Global Neutral Authority",
-      "series": "SLATE-1",
-      "tier": "community",
-      "status": "live",
-      "version": "1.1.0",
-      "url": "https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT.html",
-      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT.html"
     },
     {
       "id": "jade-clinical-v2",
@@ -75,13 +91,6 @@
       "series": "SLATE-1",
       "tier": "community",
       "status": "planned"
-    }
-  ],
-  "utilities": [
-    {
-      "id": "inspiron-pre-send-checklist",
-      "name": "Invoice Pre-Send Checklist",
-      "url": "https://suite.inspiron.tech/utilities/checklist-v1.html"
     }
   ],
   "utility_registry": [
@@ -93,7 +102,7 @@
       "version": "1.1.0",
       "compliance": ["global", "bd-mushak-6.3"],
       "checks": ["billing-address", "reference-no", "mushak-6.3-bin", "total-balance", "issue-date"],
-      "url": "https://suite.inspiron.tech/utilities/checklist-v1.html"
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/utilities/checklist-v1.html"
     }
   ],
   "tax_registry": [
@@ -101,5 +110,5 @@
   ],
   "ip_protocol": "R1-R7",
   "license": "CC BY 4.0",
-  "updated": "2026-07-05"
+  "updated": "2026-07-06"
 }

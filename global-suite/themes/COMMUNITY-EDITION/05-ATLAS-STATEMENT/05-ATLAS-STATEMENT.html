@@ -531,8 +531,26 @@
       identityBlock.appendChild(titleEl);
 
       const metaFields = [];
-      if (data.reference) metaFields.push({ label: 'Reference No', text: data.reference });
-      (data.fields || []).forEach(f => { if (f.displayAtTheTop || !data.recipient) metaFields.push(f); });
+      
+      if (data.fromDate && data.toDate) {
+        metaFields.push({ label: 'Statement Period', text: data.fromDate + ' – ' + data.toDate });
+      } else if (data.date || data.issuedDate) {
+        metaFields.push({ label: 'Date', text: data.date || data.issuedDate });
+      }
+
+      if (data.accountName || data.account) {
+        metaFields.push({ label: 'Account', text: data.accountName || data.account });
+      }
+      
+      if (data.reference || data.number) {
+        metaFields.push({ label: 'Reference No', text: data.reference || data.number });
+      }
+      
+      if (data.balanceForward) {
+        metaFields.push({ label: 'Balance Forward', text: data.balanceForward });
+      }
+      
+      (data.fields || []).forEach(f => { if (f.displayAtTheTop || (!data.recipient && !data.customer)) metaFields.push(f); });
       (data.business && data.business.fields || []).forEach(f => metaFields.push(f));
 
       if (metaFields.length) {
@@ -549,7 +567,8 @@
       root.appendChild(identityBlock);
 
       /* PARTIES */
-      if (data.recipient) {
+      const recipient = data.recipient || data.customer || data.contact;
+      if (recipient) {
         const parties = div('it-parties');
         
         const makeParty = (role, name, address, extra) => {
@@ -565,9 +584,13 @@
           return col;
         };
 
-        const recExtra = [data.recipient.code ? 'Code: ' + data.recipient.code : null, data.recipient.email || null].filter(Boolean).join('\n');
-        parties.appendChild(makeParty('FROM', data.business && data.business.name || data.businessName || '', data.business && data.business.address || '', null));
-        parties.appendChild(makeParty('TO', data.recipient.name, data.recipient.address, recExtra));
+        const isStatement = (data.title && data.title.toLowerCase().indexOf('statement') !== -1);
+        const fromLabel = isStatement ? 'ISSUED BY' : 'FROM';
+        const toLabel = isStatement ? 'STATEMENT FOR' : 'TO';
+
+        const recExtra = [recipient.code ? 'Code: ' + recipient.code : null, recipient.email || null].filter(Boolean).join('\n');
+        parties.appendChild(makeParty(fromLabel, data.business && data.business.name || data.businessName || '', data.business && data.business.address || '', null));
+        parties.appendChild(makeParty(toLabel, recipient.name, recipient.address, recExtra));
         root.appendChild(parties);
       }
 

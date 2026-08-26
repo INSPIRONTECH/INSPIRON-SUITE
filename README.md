@@ -54,6 +54,18 @@ A "Validation Bridge" that audits your document context via `postMessage` before
 
 ---
 
+### 🏗️ INSPIRON Products
+
+Standalone products built on Manager.io, deployed independently by INSPIRON TECH.
+
+| Product | Purpose | Live |
+| :--- | :--- | :--- |
+| **[eGP Operator Lab](https://egp.inspiron.tech)** | 13-module e-GP operations training platform for construction & engineering firms | [egp.inspiron.tech](https://egp.inspiron.tech) |
+| **[BD VAT Extension](https://inspiron.software)** | Mushak 6.3, 6.4, 9.1 — Bangladesh NBR compliance for Manager.io | [inspiron.software](https://inspiron.software) |
+| **Client Toolkit** | Unified portal: attendance, payroll, commission, tax calc + executive dashboards | `toolkit.inspiron.tech` *(coming soon)* |
+
+---
+
 ### 🇧🇩 Regional Specialized Layer: Bangladesh SME Suite
 For businesses operating under NBR jurisdiction, we provide a specialized compliance layer architected for the local regulatory environment.
 

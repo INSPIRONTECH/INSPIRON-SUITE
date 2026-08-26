@@ -14,3 +14,31 @@
 
 All contributions are reviewed by the INSPIRON TECH architecture team before merge.
 Contact: hello@inspiron.tech
+
+---
+
+## Promotion Pipeline
+
+INSPIRON-SUITE receives content from `CyberHasan/INSPIRON-ERP-OPS` (private workbench) via a promote-gate. The following rules govern what can enter this repo:
+
+### What can be promoted here
+- Themes that passed the 5-check promote-gate (verified/ or public-ready/ stage)
+- Generic utility scripts with CC-BY-4.0 license headers
+- Cross-links to standalone INSPIRON products (README only — not source code)
+
+### What can NEVER enter this repo
+
+| Category | Examples |
+|---|---|
+| Client-specific content | Client names, UUIDs, contract references |
+| Proprietary themes | Leather-Source, production client themes |
+| Product source code | Client Toolkit, VAT Extension internals |
+| Private strategy | ecosystem-2.0/, service agreements |
+| Sensitive data | Bank account numbers, financial records |
+
+### Promote-gate checks (all 5 must pass)
+1. No overlap with Manager.io vendor source
+2. Theme/script has `LICENSE: CC-BY-4.0` header
+3. No client names or UUIDs found
+4. No BAUS account numbers (333-4686, 580-5271, 580-5489)
+5. No `PROPRIETARY` marker

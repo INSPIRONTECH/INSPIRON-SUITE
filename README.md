@@ -83,7 +83,7 @@ Architected & Developed by **MD ABU HASAN** *Founder & Chief Architect, INSPIRON
 <div align="center">
 
 [![Website](https://img.shields.io/badge/inspiron.tech-00D2FF?style=for-the-badge&logo=vercel&logoColor=white)](https://inspiron.tech)
-[![Upwork](https://img.shields.io/badge/Hire%20on%20Upwork-6FDA44?style=for-the-badge&logo=upwork&logoColor=white)](https://www.upwork.com/freelancers/cyberhasan)
+[![Upwork](https://img.shields.io/badge/Hire%20on%20Upwork-6FDA44?style=for-the-badge&logo=upwork&logoColor=white)](https://www.upwork.com/freelancers/~011085e2a7cde3f437)
 [![WhatsApp](https://img.shields.io/badge/Connect%20on%20WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/8801719300849)
 
 </div>

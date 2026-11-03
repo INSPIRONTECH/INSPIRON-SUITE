@@ -36,7 +36,7 @@
   Modifying unsupported areas voids INSPIRON TECH support.
   For deeper customisation contact hello@inspiron.tech.
 
-  SECURITY — v1.1 HARDENING (per @eko review 2026-05-21):
+  SECURITY — v1.1 HARDENING (strict DOM isolation review 2026-05-21):
   ------------------------------------------------------------
   ✅ No innerHTML with API data — DOM nodes + textContent only
   ✅ No script re-execution from data.footers
@@ -577,7 +577,7 @@
     });
 
     /* ----------------------------------------------------------
-       SAFE HELPERS — Idea 4, eko security pattern
+       SAFE HELPERS — Idea 4, strict DOM security pattern
        ---------------------------------------------------------- */
     function safeText(v) { return (v === null || v === undefined) ? '' : String(v); }
 

@@ -36,7 +36,7 @@
   Modifying unsupported areas voids INSPIRON TECH support.
   For deeper customisation contact hello@inspiron.tech.
 
-  SECURITY — v1.1 HARDENING (per @eko review 2026-05-21):
+  SECURITY — v1.1 HARDENING (strict DOM isolation review 2026-05-21):
   ------------------------------------------------------------
   ✅ No innerHTML with API data — DOM nodes + textContent only
   ✅ No script re-execution from data.footers
@@ -328,7 +328,7 @@
     .it-table tbody tr.it-row:nth-child(even) { background: var(--surface-2); }
     .it-table tbody tr.it-row.it-last-row { border-bottom: 2px solid var(--border-strong); }
 
-    /* eko fix — subtotals retain vertical borders */
+    /* security fix — subtotals retain vertical borders */
     .it-table tbody tr.it-row-subtotal {
       background: rgba(255,215,0,0.05);
       border-top: 1px solid var(--accent-border);
@@ -601,7 +601,7 @@
     });
 
     /* ----------------------------------------------------------
-       SAFE HELPERS — Idea 4, eko security pattern
+       SAFE HELPERS — Idea 4, strict DOM security pattern
        ---------------------------------------------------------- */
     function safeText(v) { return (v === null || v === undefined) ? '' : String(v); }
 
@@ -661,7 +661,7 @@
 
        The temp.innerHTML on line 4 is on a DETACHED element. The browser
        parses it but does not execute scripts in detached subtrees, and
-       we never attach it. eko's constraint (no innerHTML on live DOM
+       we never attach it. security constraint (no innerHTML on live DOM
        with API data) is preserved. */
     function safeHtml(parentNode, rawText) {
       if (rawText === null || rawText === undefined) return;
@@ -706,7 +706,7 @@
 
     /* ----------------------------------------------------------
        TABLE BUILDERS
-       eko fix: one <tr> in <thead>, no nested rows
+       thead fix: one <tr> in <thead>, no nested rows
        ---------------------------------------------------------- */
     function buildCell(cell, col) {
       const td = document.createElement('td');
@@ -957,7 +957,7 @@
         const wrapper = document.createElement('div'); wrapper.className = 'it-table-wrapper';
         const table = document.createElement('table'); table.className = 'it-table'; table.setAttribute('role','table');
 
-        /* thead — eko fix: single <tr> only */
+        /* thead — security fix: single <tr> only */
         const thead = document.createElement('thead');
         const headRow = document.createElement('tr');
         data.table.columns.forEach(col => {
@@ -1005,7 +1005,7 @@
         statusWrap.appendChild(stamp); root.appendChild(statusWrap);
       }
 
-      /* ---- FOOTERS — eko fix: NO script re-execution from data.footers.
+      /* ---- FOOTERS — security fix: no script re-execution from data.footers.
            Whitelisted formatting (b, i, br, etc) is preserved via safeHtml.
            <script> tags in footers content are silently stripped. ---- */
       if (data.footers && data.footers.length) {
@@ -1047,7 +1047,7 @@
           const strong = document.createElement('strong'); strong.textContent = 'MD ABU HASAN';
           const sep = document.createTextNode(' · ');
           const link = document.createElement('a'); link.href = 'https://inspiron.tech'; link.target = '_top'; link.className = 'it-credit-link'; link.textContent = 'inspiron.tech';
-          const sep2 = document.createTextNode(' · Official Manager.io Partner');
+          const sep2 = document.createTextNode(' · Manager.io Advisor & ERP Architect');
           creditText.appendChild(strong); creditText.appendChild(sep); creditText.appendChild(link); creditText.appendChild(sep2);
           credit.appendChild(svgWrap); credit.appendChild(creditText);
           footerShell.appendChild(credit);

@@ -1,6 +1,6 @@
 # INSPIRON Suite — Theme Catalog
 
-**Provider:** INSPIRON TECH · Official Manager.io Advisor & Partner  
+**Provider:** INSPIRON TECH · Manager.io Advisor & ERP Architect  
 **Contact:** hello@inspiron.tech · [inspiron.tech](https://inspiron.tech)
 
 > Professionally engineered HTML invoice themes for [Manager.io](https://www.manager.io). Each theme installs in under 60 seconds — no coding required.
@@ -84,10 +84,10 @@ Clean corporate two-column layout. Professional blue palette, strong for B2B inv
 
 ## Security
 
-All v1.1 themes were hardened following community security review by [@eko](https://forum.manager.io/u/eko). Review the [commit history](https://github.com/INSPIRONTECH/INSPIRON-SUITE/commits/main) for the full change log.
+All v1.1 themes were hardened following community security feedback and strict DOM isolation reviews. Review the [commit history](https://github.com/INSPIRONTECH/INSPIRON-SUITE/commits/main) for the full change log.
 
 Pre-v1.1 files are archived in [`legacy/`](legacy/) for reference — not recommended for new installs.
 
 ---
 
-*INSPIRON Suite is maintained by [INSPIRON TECH](https://inspiron.tech) — Bangladesh's only listed Manager.io Advisor.*
+*INSPIRON Suite is maintained by [INSPIRON TECH](https://inspiron.tech) — Manager.io Advisor & ERP Architect.*

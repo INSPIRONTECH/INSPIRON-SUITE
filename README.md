@@ -2,7 +2,7 @@
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:010409,50:0d1117,100:00D2FF&height=240&section=header&text=INSPIRON%20SUITE&fontSize=52&fontColor=FFFFFF&fontAlignY=35&desc=Global%20Business%20Architecture%20for%20Manager.io&descSize=18&descAlignY=55&animation=fadeIn" width="100%">
 
-[![Manager.io Advisor](https://img.shields.io/badge/Manager.io-Official%20Advisor%20%26%20Partner-FFD700?style=for-the-badge&logoColor=white)](https://manager.io/advisors)
+[![Manager.io Advisor](https://img.shields.io/badge/Manager.io-Advisor%20%26%20ERP%20Architect-00D2FF?style=for-the-badge&logoColor=white)](https://www.manager.io/advisors/profile?username=7478b418-50b1-70e2-549b-3a506372d7c0)
 [![AI: Claude-Powered](https://img.shields.io/badge/AI%20Intelligence-Claude--Enhanced-cc785c?style=for-the-badge&logoColor=white)](https://anthropic.com)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-00D2FF?style=for-the-badge)](https://creativecommons.org/licenses/by/4.0/)
 [![Ecosystem: Stable](https://img.shields.io/badge/Ecosystem-v2026%20Production-30D158?style=for-the-badge)](https://inspiron.tech)
@@ -73,7 +73,7 @@ All tools in this repository follow the **INSPIRON Logic Boundary**. We ship the
 
 ### 🔒 Security
 
-All v1.1 themes were hardened following community security review by [@eko](https://forum.manager.io/u/eko). See the [commit history](https://github.com/INSPIRONTECH/INSPIRON-SUITE/commits/main) for the full change log. Pre-v1.1 files are archived in [`legacy/`](./global-suite/themes/legacy/) and are not actively maintained.
+All v1.1 themes were hardened following community security feedback and strict DOM isolation reviews. See the [commit history](https://github.com/INSPIRONTECH/INSPIRON-SUITE/commits/main) for the full change log. Pre-v1.1 files are archived in [`legacy/`](./global-suite/themes/legacy/) and are not actively maintained.
 
 ---
 

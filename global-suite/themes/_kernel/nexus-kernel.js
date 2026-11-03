@@ -22,8 +22,8 @@
  * theme HTML for the safe-to-edit surface.
  * ============================================================
  *
- * SECURITY AUDIT — eko (2026-05-21):
- * All four issues identified by @eko in the Manager.io forum
+ * SECURITY HARDENING — v1.1 (2026-05-21):
+ * All four DOM security and print isolation issues identified in the Manager.io forum
  * security review are structurally resolved in this kernel:
  *   1. XSS via innerHTML         → textContent + DOM nodes only
  *   2. Script re-execution       → renderFooters() text-only
@@ -81,7 +81,7 @@ const THEME_DOM = Object.freeze({
 
 /* ----------------------------------------------------------
    1. SAFE TEXT & URL HELPERS
-   Doctrine: Ch 2 §1.4 · Idea 4 · eko security pattern
+   Doctrine: Ch 2 §1.4 · Idea 4 · strict DOM security pattern
    ---------------------------------------------------------- */
 
 /**
@@ -281,7 +281,7 @@ function renderFault(code) {
 /* ----------------------------------------------------------
    5. TABLE BUILDERS
    Doctrine: Ch 2 §1.7 · Idea 17 (recursive row builder)
-   eko fix: no nested <tr> in thead
+   thead fix: no nested <tr> in thead
    ---------------------------------------------------------- */
 
 /**
@@ -422,7 +422,7 @@ function appendTotals(totals, colCount, tbody) {
 /* ----------------------------------------------------------
    6. FOOTER RENDERER
    Doctrine: Ch 2 §2.17 · Idea 57
-   eko fix: NO script re-execution from data.footers
+   security fix: NO script re-execution from data.footers
    ---------------------------------------------------------- */
 
 /**

@@ -48,7 +48,7 @@
   Modifying unsupported areas voids INSPIRON TECH support.
   For deeper customisation contact hello@inspiron.tech.
 
-  SECURITY — v1.1 HARDENING (per @eko review 2026-05-21):
+  SECURITY — v1.1 HARDENING (strict DOM isolation review 2026-05-21):
   ------------------------------------------------------------
   ✅ No innerHTML with API data — DOM nodes + textContent only
   ✅ No script re-execution from data.footers
@@ -781,7 +781,7 @@
     });
 
     /* ----------------------------------------------------------
-       SAFE HELPERS — Idea 4, eko security pattern
+       SAFE HELPERS — Idea 4, strict DOM security pattern
        ---------------------------------------------------------- */
     function safeText(v) { return (v === null || v === undefined) ? '' : String(v); }
 
@@ -861,7 +861,7 @@
 
     /* ----------------------------------------------------------
        TABLE BUILDERS
-       eko fix: one <tr> in <thead>, no nested rows
+       thead fix: one <tr> in <thead>, no nested rows
        ---------------------------------------------------------- */
     function buildCell(cell, col) {
       const td = document.createElement('td');
@@ -1292,7 +1292,7 @@
         const wrapper = document.createElement('div'); wrapper.className = 'it-table-wrapper';
         const table = document.createElement('table'); table.className = 'it-table'; table.setAttribute('role','table');
 
-        /* thead — eko fix: single <tr>, bilingual header cells */
+        /* thead — security fix: single <tr>, bilingual header cells */
         const thead = document.createElement('thead');
         const headRow = document.createElement('tr');
         data.table.columns.forEach(col => {
@@ -1409,7 +1409,7 @@
       }
 
       /* ---- FOOTERS / NOTES ----
-         eko fix: no script re-execution from data.footers.
+         security fix: no script re-execution from data.footers.
          Whitelisted formatting (b, i, br, etc) preserved via safeHtml.
          <script> tags in footer content silently stripped. */
       if (data.footers && data.footers.length) {
@@ -1462,7 +1462,7 @@
           const link = document.createElement('a');
           link.href = 'https://inspiron.tech'; link.target = '_top'; link.className = 'it-credit-link';
           link.textContent = 'inspiron.tech';
-          const sep2 = document.createTextNode(' \u00b7 Official Manager.io Partner');
+          const sep2 = document.createTextNode(' \u00b7 Manager.io Advisor & ERP Architect');
           creditText.appendChild(strong); creditText.appendChild(sep);
           creditText.appendChild(link); creditText.appendChild(sep2);
           credit.appendChild(svgWrap); credit.appendChild(creditText);

@@ -22,8 +22,8 @@
  * theme HTML for the safe-to-edit surface.
  * ============================================================
  *
- * SECURITY AUDIT — eko (2026-05-21):
- * All four issues identified by @eko in the Manager.io forum
+ * SECURITY HARDENING — v1.1 (2026-05-21):
+ * All four DOM security and print isolation issues identified in the Manager.io forum
  * security review are structurally resolved in this kernel:
  *   1. XSS via innerHTML         → textContent + DOM nodes only
  *   2. Script re-execution       → renderFooters() text-only

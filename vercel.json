@@ -3,6 +3,8 @@
   "rewrites": [
     { "source": "/executive-dashboard", "destination": "/executive-dashboard/index.html" },
     { "source": "/dashboard",           "destination": "/executive-dashboard/index.html" },
+    { "source": "/bd-compliance",       "destination": "/tax-suite/bd-compliance/index.html" },
+    { "source": "/tax-suite",           "destination": "/tax-suite/bd-compliance/index.html" },
     { "source": "/checklist",           "destination": "/global-suite/utilities/checklist-v1.html" },
     { "source": "/invoice-checklist",   "destination": "/global-suite/utilities/checklist-v1.html" }
   ],

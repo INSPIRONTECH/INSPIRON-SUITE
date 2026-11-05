@@ -1,2102 +1,1358 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>INSPIRON Tax Suite | NBR Compliance Logic · tools.inspiron.tech</title>
-  <meta name="description" content="Free Bangladesh NBR tax deadline calendar for SMEs. Get VAT, Income Tax, TDS, and VDS deadlines instantly. Export to Manager.io in one click. Built by INSPIRON TECH — ERP Architect | Listed Manager.io Advisor." />
-  <meta name="keywords" content="NBR tax calendar, Bangladesh VAT deadline, Mushak-9.1, TDS return BD, income tax Bangladesh SME, Manager.io Bangladesh" />
-  <meta name="author" content="INSPIRON TECH" />
-  <meta property="og:title" content="INSPIRON Tax Suite | NBR Compliance Logic for Bangladesh SMEs" />
-  <meta property="og:description" content="Free unified NBR compliance calendar: VAT, Income Tax, TDS, VDS deadlines + Manager.io export. By INSPIRON TECH." />
-  <meta property="og:url" content="https://tools.inspiron.tech" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://inspiron.tech/og-tax-calendar.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="canonical" href="https://tools.inspiron.tech" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='90' cy='10' r='10' fill='%23FFD700'/><rect x='20' y='0' width='8' height='100' fill='%2300D2FF'/></svg>" />
-  <!-- Neo Sans Pro — INSPIRON TECH brand font (self-hosted) -->
-  <style>
-    @font-face { font-family: 'Neo Sans Pro'; src: url('fonts/NeoSansPro-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
-    @font-face { font-family: 'Neo Sans Pro'; src: url('fonts/NeoSansPro-Medium.woff') format('woff'); font-weight: 500; font-style: normal; font-display: swap; }
-    @font-face { font-family: 'Neo Sans Pro'; src: url('fonts/NeoSansPro-Bold.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }
-    @font-face { font-family: 'Neo Sans Pro'; src: url('fonts/NeoSansPro-Light.woff') format('woff'); font-weight: 300; font-style: normal; font-display: swap; }
-    @font-face { font-family: 'Li Ador Noirrit'; src: url('fonts/LiAdorNoirrit-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-    @font-face { font-family: 'Li Ador Noirrit'; src: url('fonts/LiAdorNoirrit-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; font-display: swap; }
-    @font-face { font-family: 'Li Ador Noirrit'; src: url('fonts/LiAdorNoirrit-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
-  </style>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --navy:        #010409;
-      --card:        #0d1117;
-      --card-2:      #161b22;
-      --border:      #21262d;
-      --gold:        #FFD700;
-      --gold-dim:    #b39800;
-      --cyan:        #00D2FF;
-      --cyan-dim:    #0093b3;
-      --white:       #FFFFFF;
-      --muted:       #8b949e;
-      --vat:         #00D2FF;
-      --itax:        #FFD700;
-      --tds:         #FF9500;
-      --vds:         #BF5AF2;
-      --atax:        #34C759;
-      --danger:      #FF453A;
-      --warn:        #FF9F0A;
-      --ok:          #30D158;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: #010409;
-      color: #ffffff;
-      font-family: 'Neo Sans Pro', system-ui, sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* Bangla text — Li Ador Noirrit */
-    .bangla, .bangla-note, .deadline-bangla, .drawer-head-sub {
-      font-family: 'Li Ador Noirrit', 'Noto Sans Bengali', sans-serif;
-    }
-
-    /* ── HEADER ── */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(1, 4, 9, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,210,255,.12);
-      padding: 12px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .logo-wrap { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-
-    .logo-svg-mark {
-      width: 36px; height: 36px;
-      flex-shrink: 0;
-    }
-
-    .logo-text { font-size: 14px; font-weight: 700; color: #FFD700; letter-spacing: .06em; }
-    .logo-sub  { font-size: 9px; color: #8b949e; font-weight: 400; letter-spacing: .1em; text-transform: uppercase; margin-top: 1px; }
-
-    .header-badge {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 20px;
-      background: rgba(255,215,0,.08);
-      color: #FFD700;
-      border: 1px solid rgba(255,215,0,.3);
-      white-space: nowrap;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      background: linear-gradient(160deg, #010409 0%, #060d1a 40%, #010c1f 70%, #010409 100%);
-      border-bottom: 1px solid rgba(0,210,255,.1);
-      padding: 72px 20px 56px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,210,255,.08) 0%, transparent 65%),
-        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(255,215,0,.04) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    /* Animated grid lines */
-    .hero::after {
-      content: '';
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(0,210,255,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,210,255,.025) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-    }
-    .hero-inner { position: relative; z-index: 1; }
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 10px;
-      font-weight: 700;
-      color: #00D2FF;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      background: rgba(0,210,255,.06);
-      border: 1px solid rgba(0,210,255,.2);
-      border-radius: 20px;
-      padding: 5px 14px;
-    }
-
-    h1 {
-      font-size: clamp(28px, 5.5vw, 52px);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -.01em;
-    }
-    h1 .highlight {
-      background: linear-gradient(90deg, #FFD700 0%, #00D2FF 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-bangla-hook {
-      font-family: 'Li Ador Noirrit', 'Noto Sans Bengali', sans-serif;
-      font-size: clamp(17px, 3vw, 22px);
-      font-weight: 600;
-      color: rgba(255,255,255,.75);
-      margin-top: 16px;
-      letter-spacing: .01em;
-    }
-    .hero-sub {
-      margin-top: 10px;
-      font-size: 15px;
-      color: #6e7681;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
-      font-weight: 400;
-    }
-    .hero-chips {
-      margin-top: 24px;
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .hero-chip {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 5px 14px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.12);
-      color: #8b949e;
-      background: rgba(255,255,255,.03);
-      letter-spacing: .04em;
-    }
-
-    /* ── MAIN CONTAINER ── */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 32px 16px 80px;
-    }
-
-    /* ── SELECTOR CARD ── */
-    .selector-card {
-      background: #0d1117;
-      border: 1px solid #21262d;
-      border-radius: 16px;
-      padding: 28px 24px;
-      margin-bottom: 28px;
-    }
-    .selector-card label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      color: #8b949e;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .selector-card select {
-      width: 100%;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      color: #ffffff;
-      font-family: inherit;
-      font-size: 15px;
-      font-weight: 500;
-      padding: 12px 16px;
-      appearance: none;
-      cursor: pointer;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b949e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
-      transition: border-color .2s;
-    }
-    .selector-card select:focus {
-      outline: none;
-      border-color: #00D2FF;
-    }
-    .selector-card select option { background: #161b22; }
-
-    .selector-hint {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #6e7681;
-    }
-
-    /* ── SECTION TITLE ── */
-    .section-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #8b949e;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #21262d;
-    }
-
-    /* ── DEADLINE TABLE ── */
-    .deadlines-wrap {
-      overflow-x: auto;
-      border-radius: 14px;
-      border: 1px solid #21262d;
-      margin-bottom: 28px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 560px;
-    }
-
-    thead tr {
-      background: #161b22;
-      border-bottom: 1px solid #21262d;
-    }
-    thead th {
-      padding: 12px 16px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #8b949e;
-      text-align: left;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    tbody tr {
-      border-bottom: 1px solid rgba(255,255,255,.05);
-      transition: background .2s;
-    }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover {
-      background: linear-gradient(90deg, rgba(255,215,0,.025) 0%, rgba(0,210,255,.025) 100%);
-    }
-
-    tbody td {
-      padding: 13px 16px;
-      font-size: 13px;
-      vertical-align: middle;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 9px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-    .badge-VAT        { background: rgba(0,210,255,.12);  color: #00D2FF;  border: 1px solid rgba(0,210,255,.25); }
-    .badge-INCOME-TAX { background: rgba(255,215,0,.12);  color: #FFD700;  border: 1px solid rgba(255,215,0,.25); }
-    .badge-TDS        { background: rgba(255,149,0,.12);  color: #FF9500;  border: 1px solid rgba(255,149,0,.25); }
-    .badge-VDS        { background: rgba(191,90,242,.12); color: #BF5AF2;  border: 1px solid rgba(191,90,242,.25);}
-    .badge-ADVANCE-TAX{ background: rgba(52,199,89,.12);  color: #34C759;  border: 1px solid rgba(52,199,89,.25); }
-
-    .deadline-desc { font-weight: 500; color: #fff; }
-    .deadline-bangla { display: block; font-size: 11px; color: #6e7681; margin-top: 2px; }
-
-    .due-date { font-weight: 700; white-space: nowrap; }
-    .due-urgent  { color: #FF453A; }
-    .due-warning { color: #FF9F0A; }
-    .due-ok      { color: #30D158; }
-
-    .days-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 8px;
-      white-space: nowrap;
-    }
-    .days-urgent  { background: rgba(255,69,58,.15);  color: #FF453A; }
-    .days-warning { background: rgba(255,159,10,.15); color: #FF9F0A; }
-    .days-ok      { background: rgba(48,209,88,.12);  color: #30D158; }
-
-    .penalty-cell { font-size: 12px; color: #8b949e; max-width: 200px; }
-
-    /* ── PENALTY CALCULATOR ── */
-    .penalty-card {
-      background: #0d1117;
-      border: 1px solid #21262d;
-      border-radius: 16px;
-      padding: 28px 24px;
-      margin-bottom: 28px;
-    }
-
-    .penalty-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 520px) { .penalty-grid { grid-template-columns: 1fr; } }
-
-    .form-group label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      color: #8b949e;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    .form-group input, .form-group select {
-      width: 100%;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      color: #ffffff;
-      font-family: inherit;
-      font-size: 14px;
-      padding: 10px 14px;
-      transition: border-color .2s;
-    }
-    .form-group input:focus, .form-group select:focus {
-      outline: none;
-      border-color: #FFD700;
-    }
-    .form-group input::placeholder { color: #6e7681; }
-
-    .penalty-result {
-      margin-top: 20px;
-      padding: 18px 20px;
-      background: rgba(255,215,0,.05);
-      border: 1px solid rgba(255,215,0,.2);
-      border-radius: 12px;
-      display: none;
-    }
-    .penalty-result.show { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .penalty-label { font-size: 12px; color: #8b949e; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
-    .penalty-amount { font-size: 24px; font-weight: 900; color: #FFD700; }
-    .penalty-note   { font-size: 11px; color: #6e7681; margin-top: 4px; }
-
-    /* ── CALCULATE BUTTON ── */
-    @keyframes btn-shimmer {
-      0%   { background-position: -200% center; }
-      100% { background-position:  200% center; }
-    }
-
-    .calc-btn {
-      margin-top: 16px;
-      width: 100%;
-      background: linear-gradient(135deg, rgba(255,215,0,.18) 0%, rgba(255,180,0,.08) 100%);
-      border: 1px solid rgba(255,215,0,.45);
-      border-radius: 12px;
-      color: #FFD700;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 800;
-      padding: 13px 16px;
-      cursor: pointer;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      transition: all .25s cubic-bezier(.4,0,.2,1);
-      position: relative;
-      overflow: hidden;
-    }
-    .calc-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg,
-        transparent 0%, rgba(255,215,0,.18) 50%, transparent 100%);
-      background-size: 200% 100%;
-      opacity: 0;
-      transition: opacity .3s;
-    }
-    .calc-btn:hover {
-      background: linear-gradient(135deg, rgba(255,215,0,.28) 0%, rgba(255,180,0,.14) 100%);
-      border-color: rgba(255,215,0,.75);
-      box-shadow: 0 0 20px rgba(255,215,0,.2), 0 4px 16px rgba(255,215,0,.12);
-      transform: translateY(-1px);
-    }
-    .calc-btn:hover::before { opacity: 1; animation: btn-shimmer 1.4s linear infinite; }
-    .calc-btn:active { transform: translateY(0); box-shadow: none; }
-
-    /* ── EXPORT SECTION ── */
-    .export-card {
-      background: linear-gradient(135deg, rgba(255,215,0,.06) 0%, rgba(0,210,255,.04) 100%);
-      border: 1px solid rgba(255,215,0,.2);
-      border-radius: 16px;
-      padding: 28px 24px;
-      margin-bottom: 28px;
-    }
-    .export-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-    .export-sub {
-      font-size: 13px;
-      color: #8b949e;
-      margin-bottom: 20px;
-    }
-
-    .export-steps {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .export-step {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #6e7681;
-    }
-    .export-step-num {
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: rgba(255,215,0,.15);
-      color: #FFD700;
-      font-size: 10px;
-      font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .step-arrow { color: #30363d; font-size: 10px; }
-
-    .export-btn {
-      width: 100%;
-      background: linear-gradient(135deg, #FFD700 0%, #FFC200 50%, #FFD700 100%);
-      background-size: 200% auto;
-      border: none;
-      border-radius: 12px;
-      color: #010409;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      padding: 17px 24px;
-      cursor: pointer;
-      transition: transform .2s cubic-bezier(.4,0,.2,1),
-                  box-shadow .2s cubic-bezier(.4,0,.2,1),
-                  background-position .6s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      position: relative;
-      overflow: hidden;
-    }
-    .export-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(255,215,0,.45), 0 2px 8px rgba(255,215,0,.25);
-      background-position: right center;
-      animation: btn-shimmer 1.2s linear infinite;
-    }
-    .export-btn:active { transform: translateY(0); box-shadow: none; }
-    .export-btn-icon { font-size: 18px; transition: transform .2s; }
-    .export-btn:hover .export-btn-icon { transform: scale(1.2) rotate(-6deg); }
-
-    .export-note {
-      margin-top: 12px;
-      font-size: 11px;
-      color: #6e7681;
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    /* ── CTA CARD ── */
-    .cta-card {
-      background: #0d1117;
-      border: 1px solid #21262d;
-      border-radius: 16px;
-      padding: 28px 24px;
-      margin-bottom: 28px;
-      text-align: center;
-    }
-    .cta-card h2 {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-    .cta-card p {
-      font-size: 14px;
-      color: #8b949e;
-      margin-bottom: 20px;
-      max-width: 440px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .cta-btn-row {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, #00D2FF 0%, #0099cc 100%);
-      border: none;
-      border-radius: 12px;
-      color: #010409;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: .04em;
-      padding: 13px 24px;
-      text-decoration: none;
-      cursor: pointer;
-      transition: transform .2s cubic-bezier(.4,0,.2,1),
-                  box-shadow .2s cubic-bezier(.4,0,.2,1);
-      position: relative;
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(0,210,255,.4), 0 2px 8px rgba(0,210,255,.2);
-    }
-    .btn-primary:active { transform: translateY(0); box-shadow: none; }
-
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: 12px;
-      color: #8b949e;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 13px 24px;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all .2s cubic-bezier(.4,0,.2,1);
-      position: relative;
-    }
-    .btn-secondary:hover {
-      background: rgba(0,210,255,.07);
-      border-color: rgba(0,210,255,.4);
-      color: #ffffff;
-      box-shadow: 0 0 20px rgba(0,210,255,.1);
-    }
-    .btn-secondary:active { transform: scale(0.98); }
-
-    /* ── COMPARISON TABLE ── */
-    .compare-card {
-      background: #0d1117;
-      border: 1px solid #21262d;
-      border-radius: 16px;
-      padding: 28px 24px;
-      margin-bottom: 28px;
-    }
-    .compare-card h2 {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-    .compare-sub {
-      font-size: 13px;
-      color: #8b949e;
-      margin-bottom: 20px;
-    }
-
-    .compare-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #21262d; }
-    .compare-wrap table { min-width: 500px; }
-
-    .win-row td { background: rgba(255,215,0,.04); }
-    .win-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 10px;
-      font-weight: 700;
-      color: #FFD700;
-      letter-spacing: .06em;
-    }
-
-    .check  { color: #30D158; }
-    .cross  { color: #FF453A; }
-    .neutral { color: #8b949e; }
-
-    /* ── MUSHAK EXPLAINER ── */
-    .mushak-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-    .mushak-card {
-      background: #0d1117;
-      border: 1px solid #21262d;
-      border-radius: 12px;
-      padding: 18px 20px;
-      transition: border-color .2s, transform .15s;
-    }
-    .mushak-card:hover {
-      border-color: #30363d;
-      transform: translateY(-2px);
-    }
-    .mushak-code {
-      font-size: 11px;
-      font-weight: 700;
-      color: #00D2FF;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .mushak-name { font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 4px; }
-    .mushak-desc { font-size: 12px; color: #8b949e; }
-    .mushak-deadline { margin-top: 10px; font-size: 11px; font-weight: 600; color: #FFD700; }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid #21262d;
-      padding: 28px 20px;
-      text-align: center;
-    }
-    .footer-logo { font-size: 13px; font-weight: 700; color: #FFD700; margin-bottom: 6px; }
-    .footer-tagline { font-size: 11px; color: #6e7681; margin-bottom: 12px; font-style: italic; }
-    .footer-links {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-    .footer-links a {
-      font-size: 12px;
-      color: #8b949e;
-      text-decoration: none;
-      transition: color .2s;
-    }
-    .footer-links a:hover { color: #00D2FF; }
-    .footer-disclaimer {
-      font-size: 10px;
-      color: #6e7681;
-      max-width: 500px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    /* ── EMPTY STATE ── */
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: #6e7681;
-    }
-    .empty-state svg { margin-bottom: 12px; opacity: .4; }
-
-    /* ── HAPTIC BUTTON DOCTRINE (INSPIRON-INSPIRON pattern) ── */
-    .haptic-btn {
-      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .haptic-btn:active { transform: scale(0.96); }
-
-    /* ── iOS INPUT ZOOM PREVENTION ── */
-    input, select, textarea {
-      font-size: 16px !important; /* iOS Safari zooms if < 16px */
-    }
-
-    /* ── SAFE AREA (notched iPhones) ── */
-    .container {
-      padding-left: max(16px, env(safe-area-inset-left));
-      padding-right: max(16px, env(safe-area-inset-right));
-    }
-
-    /* ── TABLE — touch scroll ── */
-    .deadlines-wrap {
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-
-    /* ── HAMBURGER BUTTON ── */
-    #hamburger {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      background: rgba(1,4,9,.9);
-      border: 1px solid rgba(0,210,255,.3);
-      border-radius: 10px;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: border-color .2s, background .2s;
-    }
-    #hamburger:hover { border-color: rgba(0,210,255,.7); background: rgba(0,210,255,.06); }
-    #hamburger svg { display: block; }
-
-    /* ── MOBILE DRAWER ── */
-    #mobile-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: rgba(0,0,0,.6);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-    }
-    #mobile-overlay.open { display: block; }
-
-    #mobile-drawer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 85vw;
-      max-width: 340px;
-      background: #0d1117;
-      border-right: 2px solid rgba(0,210,255,.18);
-      z-index: 201;
-      display: flex;
-      flex-direction: column;
-      transform: translateX(-100%);
-      transition: transform .25s cubic-bezier(0.16,1,0.3,1);
-      overflow: hidden;
-    }
-    #mobile-drawer.open { transform: translateX(0); }
-
-    .drawer-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 20px;
-      border-bottom: 1px solid rgba(0,210,255,.12);
-    }
-    .drawer-head-logo { font-size: 13px; font-weight: 800; color: #FFD700; }
-    .drawer-head-sub  { font-size: 10px; color: #8b949e; margin-top: 2px; }
-    .drawer-close {
-      width: 36px; height: 36px;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 8px;
-      cursor: pointer;
-      color: #8b949e;
-      font-size: 18px;
-      line-height: 1;
-      transition: color .2s, border-color .2s;
-    }
-    .drawer-close:hover { color: #ffffff; border-color: #30363d; }
-
-    .drawer-section-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #6e7681;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      padding: 16px 20px 8px;
-    }
-
-    .drawer-nav { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-
-    .drawer-link {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #cdd9e5;
-      text-decoration: none;
-      border-left: 3px solid transparent;
-      transition: background .15s, border-color .15s, color .15s;
-    }
-    .drawer-link:hover, .drawer-link:active {
-      background: rgba(0,210,255,.05);
-      border-left-color: #00D2FF;
-      color: #ffffff;
-    }
-    .drawer-link-icon {
-      width: 32px; height: 32px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 8px;
-      background: rgba(255,255,255,.05);
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    .drawer-cta {
-      padding: 16px 20px;
-      border-top: 1px solid rgba(255,215,0,.15);
-    }
-    .drawer-whatsapp {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #FFD700, #e6c200);
-      color: #010409;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: .04em;
-      border: none;
-      border-radius: 12px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .drawer-disclaimer {
-      font-size: 10px;
-      color: #6e7681;
-      text-align: center;
-      margin-top: 10px;
-      line-height: 1.5;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 600px) {
-      /* Export steps */
-      .export-steps { flex-direction: column; }
-      .step-arrow   { display: none; }
-
-      /* Header — never column-stack, use hamburger instead */
-      header { padding: 10px 16px; }
-      #hamburger { display: flex; }
-      .header-badge { display: none; } /* hidden — shown in drawer */
-
-      /* Subnav — replaced by drawer on mobile */
-      #subnav { display: none; }
-
-      /* Container */
-      .container { padding: 20px max(14px, env(safe-area-inset-left)) 80px; }
-
-      /* QA input row — stack on small screens */
-      #qa-input-row { flex-direction: column; }
-      #qa-input-row .calc-btn { width: 100%; padding: 13px; margin-top: 0; }
-
-      /* Penalty calc grid — single column */
-      .penalty-grid { grid-template-columns: 1fr; }
-
-      /* Min tap targets */
-      .calc-btn, .export-btn, .btn-primary, .btn-secondary, .share-btn {
-        min-height: 44px;
-      }
-      .qa-chip { min-height: 36px; padding: 7px 14px; }
-
-      /* Hero tighter on mobile */
-      .hero { padding: 40px 16px 32px; }
-      h1 { font-size: clamp(24px, 7vw, 36px); }
-
-      /* Cards — tighter padding */
-      .selector-card, .penalty-card, .export-card, .cta-card, .compare-card {
-        padding: 20px 16px;
-      }
-
-      /* Stat cards — smaller value number */
-      .stat-value { font-size: 32px; }
-
-      /* Table row font */
-      tbody td { font-size: 12px; padding: 10px 12px; }
-      thead th  { font-size: 10px; padding: 10px 12px; }
-    }
-
-    @media (max-width: 380px) {
-      .stat-grid { grid-template-columns: 1fr; }
-      .cta-btn-row { flex-direction: column; }
-      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-    }
-
-    /* ── SHARE BUTTON ── */
-    .share-row { display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 8px; }
-    .share-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 8px; color: #8b949e; font-family: inherit;
-      font-size: 11px; font-weight: 700; padding: 7px 14px;
-      cursor: pointer; text-decoration: none;
-      letter-spacing: .04em;
-      transition: all .2s cubic-bezier(.4,0,.2,1);
-    }
-    .share-btn:hover {
-      background: rgba(0,210,255,.07);
-      border-color: rgba(0,210,255,.35);
-      color: #00D2FF;
-    }
-
-    /* ── TOAST ── */
-    #toast {
-      position: fixed;
-      bottom: 24px; right: 24px;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      padding: 12px 18px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #ffffff;
-      z-index: 9999;
-      transform: translateY(80px);
-      opacity: 0;
-      transition: transform .3s, opacity .3s;
-      max-width: 300px;
-    }
-    #toast.show { transform: translateY(0); opacity: 1; }
-
-    /* ── GLASSMORPHISM CARDS ── */
-    .penalty-card, .selector-card, .compare-card, .export-card, .cta-card {
-      background: rgba(13, 17, 23, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 8px 24px rgba(1,4,9,.4);
-    }
-
-    /* ── STAT CARDS ── */
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
-    @media (max-width: 400px) { .stat-grid { grid-template-columns: 1fr; } }
-    .stat-card {
-      background: rgba(13, 17, 23, 0.6);
-      border: 1px solid #21262d;
-      border-radius: 16px;
-      padding: 20px 24px;
-      text-align: center;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .stat-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #8b949e;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    .stat-value {
-      font-size: 40px;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    /* ── SUBNAV PILL BUTTONS ── */
-    #subnav {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 24px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    #subnav::-webkit-scrollbar { display: none; }
-    .subnav-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 16px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #8b949e;
-      text-decoration: none;
-      white-space: nowrap;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
-      transition: all .2s cubic-bezier(.4,0,.2,1);
-      letter-spacing: .03em;
-    }
-    .subnav-link:hover {
-      color: #00D2FF;
-      border-color: rgba(0,210,255,.4);
-      background: rgba(0,210,255,.06);
-      box-shadow: 0 0 12px rgba(0,210,255,.1);
-    }
-    .subnav-link.active {
-      color: #00D2FF;
-      border-color: rgba(0,210,255,.5);
-      background: rgba(0,210,255,.08);
-    }
-
-    /* ── ASK CLAUDE SECTION — PREMIUM AI BLOCK ── */
-    .qa-section-wrap {
-      background: linear-gradient(135deg, #130920 0%, #0d1535 50%, #0a1929 100%);
-      border: 1px solid rgba(124,58,237,.3);
-      border-radius: 20px;
-      padding: 28px 24px;
-      margin-bottom: 28px;
-      position: relative;
-      overflow: hidden;
-    }
-    .qa-section-wrap::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(124,58,237,.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .qa-ai-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      font-weight: 700;
-      color: #cc785c;
-      background: rgba(204,120,92,.08);
-      border: 1px solid rgba(204,120,92,.3);
-      border-radius: 20px;
-      padding: 4px 12px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .qa-section-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 6px;
-    }
-    .qa-section-sub {
-      font-size: 12px;
-      color: #8b949e;
-      margin-bottom: 18px;
-    }
-    .qa-chip {
-      background: rgba(124,58,237,.08);
-      border: 1px solid rgba(124,58,237,.25);
-      border-radius: 20px;
-      color: #a78bfa;
-      font-family: inherit;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 5px 13px;
-      cursor: pointer;
-      transition: all .25s cubic-bezier(.4,0,.2,1);
-      white-space: nowrap;
-    }
-    .qa-chip:hover {
-      border-color: rgba(124,58,237,.6);
-      color: #c4b5fd;
-      background: rgba(124,58,237,.15);
-      box-shadow: 0 0 16px rgba(124,58,237,.2);
-      transform: translateY(-1px);
-    }
-    .qa-msg {
-      font-size: 13px;
-      line-height: 1.65;
-      padding: 10px 14px;
-      border-radius: 10px;
-      max-width: 92%;
-    }
-    .qa-user {
-      background: rgba(124,58,237,.1);
-      border: 1px solid rgba(124,58,237,.2);
-      align-self: flex-end;
-      color: #e2d9f3;
-    }
-    .qa-ai {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
-      align-self: flex-start;
-      color: #cdd9e5;
-    }
-    .qa-ai.loading { opacity: .55; }
-    .qa-input {
-      flex: 1;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(124,58,237,.3);
-      border-radius: 10px;
-      color: #ffffff;
-      font-family: inherit;
-      font-size: 14px;
-      padding: 10px 14px;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .qa-input:focus {
-      outline: none;
-      border-color: rgba(124,58,237,.7);
-      box-shadow: 0 0 0 3px rgba(124,58,237,.1);
-    }
-    .qa-input::placeholder { color: #6e7681; }
-    .qa-send-btn {
-      background: linear-gradient(135deg, #7C3AED, #5b21b6);
-      border: none;
-      border-radius: 10px;
-      color: #ffffff;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 0 20px;
-      cursor: pointer;
-      white-space: nowrap;
-      min-height: 44px;
-      transition: all .2s cubic-bezier(.4,0,.2,1);
-      letter-spacing: .04em;
-    }
-    .qa-send-btn:hover {
-      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-      box-shadow: 0 4px 20px rgba(124,58,237,.4);
-      transform: translateY(-1px);
-    }
-
-    /* ── MANAGER.IO FEATURE SHOWCASE ── */
-    .managerio-wrap {
-      background: linear-gradient(135deg, #050f1a 0%, #071520 60%, #050e1a 100%);
-      border: 1px solid rgba(37,99,235,.25);
-      border-radius: 20px;
-      padding: 32px 24px;
-      margin-bottom: 28px;
-      position: relative;
-      overflow: hidden;
-    }
-    .managerio-wrap::before {
-      content: '';
-      position: absolute;
-      bottom: -80px; left: -80px;
-      width: 280px; height: 280px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(37,99,235,.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .managerio-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      font-weight: 700;
-      color: #60a5fa;
-      background: rgba(37,99,235,.08);
-      border: 1px solid rgba(37,99,235,.25);
-      border-radius: 20px;
-      padding: 4px 12px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .managerio-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 6px;
-    }
-    .managerio-sub {
-      font-size: 13px;
-      color: #8b949e;
-      margin-bottom: 24px;
-      max-width: 480px;
-    }
-    .managerio-features {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .mf-card {
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(37,99,235,.2);
-      border-radius: 12px;
-      padding: 16px;
-      transition: border-color .2s, background .2s, transform .15s;
-    }
-    .mf-card:hover {
-      border-color: rgba(37,99,235,.5);
-      background: rgba(37,99,235,.06);
-      transform: translateY(-2px);
-    }
-    .mf-icon { font-size: 22px; margin-bottom: 8px; }
-    .mf-title { font-size: 13px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
-    .mf-desc  { font-size: 11px; color: #8b949e; line-height: 1.5; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangladesh VAT &amp; NBR Toolkit — Manager.io Extension (Community Edition)</title>
+<meta name="description" content="Free Bangladesh NBR VAT (Mushak-9.1, 6.3, 6.4), VDS, AIT/TDS &amp; Tax Code Localization Toolkit for Manager.io. Built by INSPIRON TECH · ERP Architect | Listed Manager.io Advisor.">
+<style>
+@font-face{font-family:'Neo Sans Pro';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Regular.woff') format('woff');font-weight:400;font-display:swap}
+@font-face{font-family:'Neo Sans Pro';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Medium.woff') format('woff');font-weight:500;font-display:swap}
+@font-face{font-family:'Neo Sans Pro';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Bold.woff') format('woff');font-weight:700;font-display:swap}
+@font-face{font-family:'Li Ador Noirrit';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:'Li Ador Noirrit';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+
+:root {
+  --gold: #FFD700;
+  --cyan: #00D2FF;
+  --navy: #010409;
+  --white: #FFFFFF;
+  --canvas: #F4F7FB;
+  --paper: #FFFFFF;
+  --ink: #0D1117;
+  --muted: #4B5563;
+  --dim: #6B7280;
+  --line: rgba(15, 23, 42, 0.08);
+
+  --cyan-ink: #0070A8;
+  --gold-ink: #7A5200;
+  --green-ink: #15803D;
+  --purple-ink: #6D28D9;
+  --red-ink: #B91C1C;
+
+  --wash-cyan: rgba(0, 210, 255, 0.06);
+  --border-cyan: rgba(0, 112, 168, 0.22);
+  --wash-gold: rgba(255, 215, 0, 0.09);
+  --border-gold: rgba(255, 165, 0, 0.25);
+  --wash-green: rgba(0, 255, 136, 0.06);
+  --border-green: rgba(21, 128, 61, 0.22);
+  --wash-purple: rgba(180, 100, 255, 0.07);
+  --border-purple: rgba(180, 100, 255, 0.25);
+
+  --font: 'Neo Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-bd: 'Li Ador Noirrit', 'Nirmala UI', sans-serif;
+  --mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background-color: #F4F7FB;
+  color: var(--ink);
+  font-family: var(--font), var(--font-bd);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-image:
+    linear-gradient(rgba(0, 210, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.sovereign-rule {
+  height: 4px;
+  background: linear-gradient(90deg, #00D2FF 0%, #0070A8 35%, #7A5200 70%, #FFD700 100%);
+  width: 100%;
+}
+
+/* Dark Obsidian Command Bar (#010409) */
+.topbar {
+  width: 100%;
+  padding: 14px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: rgba(1, 4, 9, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 210, 255, 0.22);
+  box-shadow: 0 4px 24px rgba(1, 4, 9, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-logo { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  width: 38px; height: 38px; border-radius: 8px;
+  background: #010409; border: 1px solid rgba(0, 210, 255, 0.45);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; box-shadow: 0 2px 10px rgba(0, 210, 255, 0.25);
+}
+.brand-text-wrap h1 {
+  font-size: 15.5px; font-weight: 800; color: #FFFFFF;
+  letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.version-pill {
+  font-family: var(--mono); font-size: 10px; color: var(--gold);
+  letter-spacing: 0.08em; background: rgba(255, 215, 0, 0.12);
+  border: 1px solid rgba(255, 215, 0, 0.28); padding: 2px 7px;
+  border-radius: 5px; font-weight: 700; text-transform: uppercase;
+}
+.brand-sub { font-size: 11px; color: #94A3B8; letter-spacing: 0.02em; margin-top: 1px; }
+.topbar-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.ref-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 10.5px; color: var(--cyan);
+  letter-spacing: 0.06em; background: rgba(0, 210, 255, 0.10);
+  border: 1px solid rgba(0, 210, 255, 0.25); padding: 5px 11px;
+  border-radius: 6px; font-weight: 700;
+}
+.pulse-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--cyan);
+  display: inline-block; box-shadow: 0 0 8px var(--cyan);
+}
+
+.segmented-tb {
+  display: inline-flex; border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px; overflow: hidden; background: rgba(255, 255, 255, 0.04);
+}
+.tb-btn {
+  background: transparent; color: #E2E8F0; border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.12); padding: 6px 11px;
+  font: 700 11.5px var(--font), var(--font-bd); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s; white-space: nowrap;
+}
+.tb-btn:last-child { border-right: none; }
+.tb-btn:hover { background: rgba(0, 210, 255, 0.15); color: var(--cyan); }
+
+/* Workspace Shell */
+.workspace-shell { max-width: 1540px; margin: 0 auto; padding: 18px 24px 40px; }
+
+.context-bar {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+  gap: 12px; background: #FFFFFF; border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px; padding: 10px 18px; margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+.profile-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.profile-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan-ink); }
+.profile-select {
+  background: #F8FAFC; color: var(--ink); border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 6px; padding: 6px 12px; font: 700 12px var(--font), var(--font-bd);
+  cursor: pointer; outline: none; min-width: 280px; transition: border-color 0.15s;
+}
+.profile-select:focus { border-color: var(--cyan-ink); }
+.sync-btn {
+  background: #F8FAFC; border: 1px solid rgba(15, 23, 42, 0.12); color: var(--muted);
+  border-radius: 6px; padding: 6px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+}
+.sync-btn:hover { border-color: var(--cyan-ink); color: var(--cyan-ink); }
+
+.module-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.nav-tab {
+  background: transparent; color: var(--muted); border: 1px solid transparent; border-radius: 6px;
+  padding: 6px 14px; font: 700 12px var(--font), var(--font-bd); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;
+}
+.nav-tab:hover { color: var(--ink); background: rgba(15, 23, 42, 0.04); }
+.nav-tab.active { background: #F1F5F9; color: var(--cyan-ink); border-color: rgba(0, 112, 168, 0.25); box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); }
+
+.tab-view[hidden] { display: none !important; }
+.tab-view { display: none; }
+.tab-view.active { display: block; animation: fadeIn 0.15s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* 6-Card Focus Grid */
+.focus-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 20px; }
+.focus-card {
+  padding: 16px 16px 14px; border-radius: 16px; border: 1px solid var(--line);
+  background: #FFFFFF; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex; flex-direction: column; justify-content: space-between; min-height: 108px; position: relative;
+}
+.focus-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08); }
+.focus-card.c-portfolio { background: var(--wash-cyan); border-color: var(--border-cyan); }
+.focus-card.c-inflow { background: var(--wash-green); border-color: var(--border-green); }
+.focus-card.c-outflow { background: var(--wash-gold); border-color: var(--border-gold); }
+.focus-card.c-security { background: var(--wash-purple); border-color: var(--border-purple); }
+.focus-card.c-hero {
+  background: #FFFFFF; border-color: rgba(0, 112, 168, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 112, 168, 0.10); overflow: hidden;
+}
+.focus-card.c-hero::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, #00D2FF 0%, #FFD700 100%);
+}
+
+.phase-tag {
+  font-family: var(--mono); font-size: 9px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px;
+  border-radius: 4px; display: inline-block; width: fit-content; margin-bottom: 6px;
+}
+.tag-cyan { background: rgba(0, 112, 168, 0.10); color: var(--cyan-ink); }
+.tag-green { background: rgba(21, 128, 61, 0.10); color: var(--green-ink); }
+.tag-gold { background: rgba(122, 82, 0, 0.12); color: var(--gold-ink); }
+.tag-purple { background: rgba(109, 40, 217, 0.10); color: var(--purple-ink); }
+
+.card-label { font-size: 11px; font-weight: 700; color: var(--muted); }
+.card-val { font-family: var(--mono); font-size: 18px; font-weight: 800; letter-spacing: -0.02em; margin: 4px 0 2px; }
+.val-ink { color: var(--ink); }
+.val-cyan { color: var(--cyan-ink); }
+.val-green { color: var(--green-ink); }
+.val-gold { color: var(--gold-ink); }
+.val-purple { color: var(--purple-ink); }
+.val-red { color: var(--red-ink); }
+.card-sub { font-size: 10.5px; color: var(--dim); }
+
+/* Panels & Tables */
+.split-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; margin-bottom: 18px; }
+.tech-panel {
+  background: #FFFFFF; border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px; overflow: hidden; margin-bottom: 18px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+.tech-panel-hdr {
+  padding: 13px 18px; border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px; background: #FAFBFD;
+}
+.tech-panel-title { font-size: 13px; font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+.status-dot-wrap {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 11px;
+  font-weight: 700; color: var(--muted); background: #F1F5F9;
+  padding: 4px 10px; border-radius: 20px;
+}
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #16A34A; }
+
+.table-wrap { overflow-x: auto; }
+.tech-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tech-table thead th {
+  text-align: left; padding: 10px 14px; font-size: 10.5px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+  background: #F8FAFC; border-bottom: 1px solid rgba(15, 23, 42, 0.08); white-space: nowrap;
+}
+.tech-table tbody tr { border-bottom: 1px solid rgba(15, 23, 42, 0.05); transition: background 0.12s; }
+.tech-table tbody tr:hover { background: rgba(0, 210, 255, 0.04); }
+.tech-table tbody td { padding: 11px 14px; vertical-align: middle; }
+.tech-table th.num, .tech-table td.num { text-align: right; font-family: var(--mono); font-weight: 700; }
+.code-cell { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--cyan-ink); }
+
+.pill-badge {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+  border-radius: 12px; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.pill-ok { background: rgba(21, 128, 61, 0.12); color: var(--green-ink); }
+.pill-warn { background: rgba(180, 83, 9, 0.12); color: #B45309; }
+.pill-err { background: rgba(185, 28, 28, 0.12); color: var(--red-ink); }
+.pill-info { background: rgba(0, 112, 168, 0.12); color: var(--cyan-ink); }
+
+.btn-action {
+  background: #010409; color: var(--gold); border: 1px solid rgba(255, 215, 0, 0.45);
+  border-radius: 6px; padding: 6px 12px; font: 700 11px var(--font), var(--font-bd);
+  cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px;
+}
+.btn-action:hover { background: #0F172A; border-color: var(--gold); box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2); }
+.btn-action:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
+.btn-secondary-sm {
+  background: #F8FAFC; color: var(--cyan-ink); border: 1px solid rgba(0, 112, 168, 0.28);
+  border-radius: 6px; padding: 5px 10px; font: 700 11px var(--font), var(--font-bd);
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-secondary-sm:hover { background: rgba(0, 210, 255, 0.08); border-color: var(--cyan-ink); }
+
+/* Audit Grid */
+.audit-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
+.audit-item {
+  border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 10px; padding: 12px 14px;
+  background: #FAFBFD; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+}
+.audit-item-title { font-weight: 800; font-size: 12px; color: var(--ink); margin-bottom: 2px; }
+.audit-item-sub { font-size: 11px; color: var(--muted); }
+
+/* Calculators */
+.sim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.sim-card {
+  background: #FFFFFF; border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px; padding: 18px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+.sim-card h3 { font-size: 13.5px; font-weight: 800; margin-bottom: 4px; color: var(--ink); }
+.sim-card p { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+.fld-group { margin-bottom: 10px; }
+.fld-group label {
+  display: block; font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--muted); margin-bottom: 4px;
+}
+.fld-group input, .fld-group select {
+  width: 100%; padding: 7px 10px; border-radius: 6px;
+  border: 1px solid rgba(15, 23, 42, 0.14); background: #F8FAFC;
+  font: 700 12px var(--mono), var(--font); color: var(--ink);
+}
+.sim-result {
+  margin-top: 12px; padding: 12px; border-radius: 8px;
+  background: #010409; color: #E2E8F0; font-size: 11.5px;
+}
+.sim-line { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+.sim-line:last-child { border-bottom: none; font-weight: 800; padding-top: 6px; }
+
+/* Slide-over Inspector Drawer */
+.drawer-backdrop {
+  position: fixed; inset: 0; background: rgba(1, 4, 9, 0.55);
+  backdrop-filter: blur(3px); z-index: 200; display: none;
+}
+.drawer-backdrop.open { display: block; }
+.inspector-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(860px, 94vw);
+  background: #F8FAFC; z-index: 201; box-shadow: -8px 0 36px rgba(1, 4, 9, 0.35);
+  transform: translateX(100%); transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex; flex-direction: column;
+}
+.inspector-drawer.open { transform: translateX(0); }
+.dr-hdr {
+  padding: 16px 22px; background: #010409; color: #FFFFFF;
+  border-bottom: 1px solid rgba(0, 210, 255, 0.25);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.dr-title { font-size: 15px; font-weight: 800; color: #FFFFFF; }
+.dr-sub { font-size: 11px; color: #94A3B8; margin-top: 2px; }
+.dr-close {
+  background: rgba(255,255,255,0.08); color: #FFFFFF; border: 1px solid rgba(255,255,255,0.15);
+  width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-weight: 800;
+}
+.dr-body { padding: 20px; overflow-y: auto; flex: 1; }
+
+/* Footer */
+.suite-footer {
+  margin-top: 28px; padding: 16px 20px; border-radius: 12px;
+  background: #010409; color: #94A3B8; display: flex;
+  justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  border: 1px solid rgba(0, 210, 255, 0.2); font-size: 11px;
+}
+.suite-footer strong { color: #FFFFFF; }
+.suite-footer a { color: var(--cyan); text-decoration: none; font-weight: 700; }
+.suite-footer a:hover { text-decoration: underline; }
+
+/* Dark Mode Override */
+html.dark, html.dark body { background-color: #060B13; color: #E2E8F0; }
+html.dark .context-bar, html.dark .tech-panel, html.dark .focus-card, html.dark .sim-card {
+  background: #0D1522; border-color: rgba(255,255,255,0.08); color: #E2E8F0;
+}
+html.dark .tech-panel-hdr, html.dark .tech-table thead th, html.dark .audit-item {
+  background: #111C2D; border-color: rgba(255,255,255,0.08); color: #CBD5E1;
+}
+html.dark .card-label, html.dark .audit-item-sub, html.dark .sim-card p { color: #94A3B8; }
+html.dark .card-val.val-ink, html.dark .tech-panel-title, html.dark .audit-item-title, html.dark .sim-card h3 { color: #FFFFFF; }
+html.dark .profile-select, html.dark .sync-btn, html.dark .fld-group input, html.dark .fld-group select {
+  background: #090F1A; color: #FFFFFF; border-color: rgba(255,255,255,0.14);
+}
+html.dark .nav-tab { color: #94A3B8; }
+html.dark .nav-tab.active { background: rgba(0, 210, 255, 0.14); color: var(--cyan); border-color: rgba(0, 210, 255, 0.35); }
+
+@media (max-width: 1100px) {
+  .focus-grid { grid-template-columns: repeat(3, 1fr); }
+  .split-grid, .sim-grid, .audit-grid { grid-template-columns: 1fr; }
+}
+@media print {
+  .topbar, .context-bar, .suite-footer, .btn-action, .btn-secondary-sm { display: none !important; }
+  body { background: #FFFFFF !important; }
+  .workspace-shell { padding: 0; max-width: 100%; }
+}
+</style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <a class="logo-wrap" href="https://inspiron.tech" target="_blank" rel="noopener">
-    <!-- INSPIRON TECH Sentry Icon (official) -->
-    <svg class="logo-svg-mark" viewBox="0 0 358.846 350.3" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="INSPIRON TECH logo">
-      <path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
-      <path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
-      <circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
-    </svg>
-    <div>
-      <div class="logo-text"><span style="font-weight:500;color:#ffffff;text-transform:lowercase">inspiron</span> <span style="font-weight:300;color:#FFD700;text-transform:uppercase">TECH</span></div>
-      <div class="logo-sub">ERP Architect | Listed Manager.io Advisor &middot; Bangladesh</div>
-    </div>
-  </a>
-  <span class="header-badge">🇧🇩 Free NBR Tool</span>
+<div class="sovereign-rule"></div>
 
-  <!-- Hamburger — visible on mobile only -->
-  <button id="hamburger" onclick="openDrawer()" aria-label="Open navigation menu" aria-expanded="false">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <rect y="3" width="20" height="2" rx="1" fill="#00D2FF"/>
-      <rect y="9" width="20" height="2" rx="1" fill="#00D2FF"/>
-      <rect y="15" width="20" height="2" rx="1" fill="#00D2FF"/>
-    </svg>
-  </button>
+<header class="topbar">
+  <div class="topbar-logo">
+    <div class="brand-mark" title="INSPIRON TECH — Bangladesh VAT &amp; NBR Localization Suite">
+      <svg width="24" height="24" viewBox="0 0 358.846 350.3" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
+        <path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
+        <circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
+      </svg>
+    </div>
+    <div class="brand-text-wrap">
+      <h1>
+        <span>🇧🇩 BANGLADESH VAT &amp; NBR TOOLKIT</span>
+        <span class="version-pill">COMMUNITY v2.1 · MUSHAK &amp; /API4</span>
+      </h1>
+      <div class="brand-sub">VAT &amp; SD Act 2012 · Income Tax Act 2023 · Mushak-9.1, 6.3, 6.4 &amp; VDS/AIT Localization for Manager.io</div>
+    </div>
+  </div>
+
+  <div class="topbar-tools">
+    <div class="ref-badge" id="bridgeStatusBadge">
+      <span class="pulse-dot"></span>
+      <span id="bridgeStatusText">STANDALONE DEMO · BD NBR FY 2026-27</span>
+    </div>
+
+    <div class="segmented-tb">
+      <button type="button" class="tb-btn" id="btnLang" onclick="cycleLanguage()" title="Toggle English / বাংলা">🌐 EN+বাংলা</button>
+      <button type="button" class="tb-btn" id="btnTheme" onclick="toggleDarkTheme()" title="Toggle Blueprint Light / Dark">🌙 Dark</button>
+      <button type="button" class="tb-btn" id="btnCsv" onclick="exportMushakCsv()" title="Export Mushak-9.1 Worksheet CSV">⬇ CSV</button>
+      <button type="button" class="tb-btn" id="btnPdf" onclick="window.print()" title="Print / Save Mushak-9.1 as PDF">🖨 Print / PDF</button>
+    </div>
+  </div>
 </header>
 
-<!-- MOBILE DRAWER OVERLAY -->
-<div id="mobile-overlay" onclick="closeDrawer()" role="presentation"></div>
+<main class="workspace-shell">
 
-<!-- MOBILE DRAWER -->
-<div id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
-
-  <!-- Drawer Header -->
-  <div class="drawer-head">
-    <div>
-      <div class="drawer-head-logo">INSPIRON TECH</div>
-      <div class="drawer-head-sub">🇧🇩 Free NBR Tax Tool</div>
+  <!-- Context & Navigation Bar -->
+  <div class="context-bar">
+    <div class="profile-group">
+      <span class="profile-label">Entity / Business</span>
+      <select id="bizSelect" class="profile-select" onchange="onBusinessSelectChange(this.value)">
+        <option value="demo:manufacturing">🇧🇩 Padma Precision Garments &amp; Packaging Ltd (Manufacturing · 15% &amp; 7.5%)</option>
+        <option value="demo:contractor">🇧🇩 Jamuna EPC &amp; Infrastructure Consortium (Govt Contractor · 7.5% VDS &amp; S.89 AIT)</option>
+        <option value="demo:trading">🇧🇩 Meghna Industrial Supply &amp; IT Solutions (Trading 5% &amp; IT Service 5%)</option>
+      </select>
+      <select id="periodSelect" class="profile-select" style="min-width:165px" onchange="renderAllViews()">
+        <option value="2026-10">October 2026 (Current)</option>
+        <option value="2026-09">September 2026</option>
+        <option value="2026-08">August 2026</option>
+      </select>
+      <button type="button" class="sync-btn" onclick="syncLiveManagerData()" title="Sync with Manager.io /api4">⟳ Sync /api4</button>
     </div>
-    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close menu">✕</button>
-  </div>
 
-  <!-- Navigation -->
-  <nav class="drawer-nav" aria-label="Page sections">
-    <div class="drawer-section-label">Jump to Section</div>
-    <a href="#section-deadlines" class="drawer-link haptic-btn" onclick="closeDrawer()">
-      <span class="drawer-link-icon">📅</span>
-      <span>Upcoming Deadlines</span>
-    </a>
-    <a href="#section-mushak" class="drawer-link haptic-btn" onclick="closeDrawer()">
-      <span class="drawer-link-icon">📋</span>
-      <span>Mushak Forms Explained</span>
-    </a>
-    <a href="#section-qa" class="drawer-link haptic-btn" onclick="closeDrawer()">
-      <span class="drawer-link-icon">💬</span>
-      <span>Ask Tax Question</span>
-    </a>
-    <a href="#section-penalty" class="drawer-link haptic-btn" onclick="closeDrawer()">
-      <span class="drawer-link-icon">⚠️</span>
-      <span>Penalty Calculator</span>
-    </a>
-    <a href="#section-export" class="drawer-link haptic-btn" onclick="closeDrawer()">
-      <span class="drawer-link-icon">📊</span>
-      <span>Export to Manager.io</span>
-    </a>
-  </nav>
-
-  <!-- CTA -->
-  <div class="drawer-cta">
-    <a href="https://wa.me/8801719300849" class="drawer-whatsapp haptic-btn" target="_blank" rel="noopener">
-      💬 Get Free Tax Consultation
-    </a>
-    <p class="drawer-disclaimer">
-      INSPIRON TECH · ERP Architect | Listed Manager.io Advisor<br>
-      hello@inspiron.tech
-    </p>
-  </div>
-</div>
-
-<!-- SUBNAV (desktop only) -->
-<nav style="background:rgba(1,4,9,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,210,255,.08);position:sticky;top:57px;z-index:99" id="subnav">
-  <a href="#section-deadlines" class="subnav-link">&#128197; Deadlines</a>
-  <a href="#section-mushak" class="subnav-link">&#128203; Mushak Forms</a>
-  <a href="#section-qa" class="subnav-link">&#9775; Ask Claude</a>
-  <a href="#section-penalty" class="subnav-link">&#9888;&#65039; Penalty Calc</a>
-  <a href="#section-export" class="subnav-link">&#128202; Manager.io Export</a>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">&#127987;&#8205;&#127756; NBR Compliance 2026</div>
-    <h1>Bangladesh <span class="highlight">Tax Calendar</span></h1>
-    <p class="hero-bangla-hook">আপনার ব্যবসার সব ট্যাক্স ডেডলাইন — এক ক্লিকে।</p>
-    <p class="hero-sub">
-      VAT &middot; Income Tax &middot; TDS &middot; VDS deadlines, penalties &amp; Manager.io export.<br>
-      Built for Bangladesh SMEs. Free. No login.
-    </p>
-    <div class="hero-chips">
-      <span class="hero-chip">&#10003; Mushak-9.1 &amp; 6.3</span>
-      <span class="hero-chip">&#10003; TDS Form 108</span>
-      <span class="hero-chip">&#10003; Corporate ITR extended</span>
-      <span class="hero-chip">&#10003; Manager.io CSV export</span>
-      <span class="hero-chip">&#10003; AI tax Q&amp;A</span>
-    </div>
-  </div>
-</section>
-
-<!-- MAIN -->
-<main class="container">
-
-  <!-- Business Type Selector -->
-  <div class="selector-card">
-    <label for="bizType">Your Business Type</label>
-    <select id="bizType" onchange="renderAll()">
-      <option value="">— Select your business type —</option>
-      <option value="trading">Trading / Retail / Wholesale</option>
-      <option value="service">Service Business</option>
-      <option value="manufacturing">Manufacturing</option>
-      <option value="individual">Sole Proprietor / Individual</option>
-      <option value="company">Limited Company</option>
-      <option value="import">Import / Export</option>
-    </select>
-    <p class="selector-hint">Deadlines are filtered to your business class. Select above to begin.</p>
-  </div>
-
-  <!-- NBR EXTENSION BANNER -->
-  <div style="background:rgba(255,159,10,.08);border:1px solid rgba(255,159,10,.3);border-radius:12px;padding:14px 18px;margin-bottom:28px;display:flex;gap:12px;align-items:flex-start">
-    <span style="font-size:16px;flex-shrink:0">⚠️</span>
-    <div>
-      <div style="font-size:12px;font-weight:700;color:#FF9F0A;margin-bottom:4px">NBR EXTENSION ALERT — APRIL 2026</div>
-      <div style="font-size:12px;color:#8b949e;line-height:1.6">
-        Company Income Tax Return AY 2025-26 extended to <strong style="color:#ffffff">15 Apr 2026</strong>.
-        Standard dates shown below. Always verify at
-        <a href="https://etaxnbr.gov.bd" target="_blank" rel="noopener" style="color:#00D2FF">etaxnbr.gov.bd</a>
-        before filing.
-      </div>
+    <div class="module-tabs" role="tablist">
+      <button type="button" class="nav-tab active" data-tab="mushak91" onclick="switchTab('mushak91')">📊 Mushak-9.1 Return &amp; 6.3 Register</button>
+      <button type="button" class="nav-tab" data-tab="taxcodes" onclick="switchTab('taxcodes')">⚙️ BD Tax Code Installer (11 Codes)</button>
+      <button type="button" class="nav-tab" data-tab="audit" onclick="switchTab('audit')">🛡️ 10-Point NBR VAT &amp; BIN Audit</button>
+      <button type="button" class="nav-tab" data-tab="calendar" onclick="switchTab('calendar')">📅 NBR Calendar &amp; VDS/AIT Calculators</button>
     </div>
   </div>
 
-  <!-- Deadlines Table -->
-  <div id="deadlines-section" style="display:none">
+  <!-- 6-Card Statutory KPI Focus Engine -->
+  <section class="focus-grid" id="kpiGrid"></section>
 
-    <!-- Stat Cards -->
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">Urgent Deadlines</div>
-        <div id="stat-urgent" class="stat-value" style="color:#FF453A">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Due This Month</div>
-        <div id="stat-month" class="stat-value" style="color:#FFD700">—</div>
-      </div>
-    </div>
-
-    <div class="share-row">
-      <a class="share-btn" id="shareLink" href="#" onclick="copyLink(event)">🔗 Copy Link</a>
-    </div>
-    <div style="background:rgba(0,210,255,.05);border:1px solid rgba(0,210,255,.18);border-radius:10px;padding:11px 16px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start">
-      <span style="font-size:14px;flex-shrink:0">ℹ️</span>
-      <div style="font-size:11px;color:#8b949e;line-height:1.6">
-        <strong style="color:#cdd9e5">Disclaimer:</strong> All dates and penalties are based on standard NBR rules as of April 2026.
-        Always cross-check the latest circular at
-        <a href="https://etaxnbr.gov.bd" target="_blank" rel="noopener" style="color:#00D2FF">etaxnbr.gov.bd</a>
-        before filing. TDS Form 108 due date may vary by circular — 25th is the standard date.
-      </div>
-    </div>
-    <p class="section-title" id="section-deadlines">Upcoming Deadlines</p>
-
-    <div class="deadlines-wrap">
-      <table id="deadlinesTable">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Filing / Obligation</th>
-            <th>Due Date</th>
-            <th>Days Left</th>
-            <th>Penalty if Late</th>
-          </tr>
-        </thead>
-        <tbody id="deadlinesBody">
-          <!-- Populated by JS -->
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Mushak Explainer — navy section background -->
-    <p class="section-title" style="margin-top:28px" id="section-mushak">Mushak Forms Explained</p>
-    <div style="background:linear-gradient(135deg,#060d1a,#0a1929);border:1px solid rgba(0,210,255,.1);border-radius:16px;padding:20px;margin-bottom:28px">
-      <div class="mushak-grid" id="mushakGrid">
-      </div>
-    </div><!-- /mushak navy wrap -->
-
-    <!-- ASK CLAUDE — PREMIUM AI SECTION -->
-    <div class="qa-section-wrap" id="section-qa">
-      <div class="qa-ai-badge">✍ Claude-Enhanced Intelligence</div>
-      <div class="qa-section-title">Ask NBR Tax Questions</div>
-      <div class="qa-section-sub">Bangladesh tax law, Mushak forms, deadlines, penalties — ask in English or Bangla.</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="qa-chips">
-        <button class="qa-chip" onclick="askQ('What is Mushak 9.1 and when is it due?')">What is Mushak 9.1?</button>
-        <button class="qa-chip" onclick="askQ('What is the penalty for late VAT return filing in Bangladesh?')">Late VAT penalty?</button>
-        <button class="qa-chip" onclick="askQ('Do I need to file TDS returns if I have no employees?')">TDS with no employees?</button>
-        <button class="qa-chip" onclick="askQ('What is advance income tax (AIT) in Bangladesh and who pays it?')">What is AIT?</button>
-        <button class="qa-chip" onclick="askQ('What is VDS and which services require VAT deduction at source in Bangladesh?')">What is VDS?</button>
-      </div>
-      <div id="qa-msgs" style="min-height:72px;max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
-        <div class="qa-msg qa-ai">Ask me anything about NBR deadlines, Mushak forms, TDS, VDS, income tax, or penalties. I know Bangladesh tax law. 🇧🇩<br/><span style="font-size:10px;color:#6e7681;margin-top:4px;display:block">AI responses powered by <strong style="color:#cc785c">Anthropic Claude</strong></span></div>
-      </div>
-      <div style="display:flex;gap:8px" id="qa-input-row">
-        <input type="text" id="qa-input" class="qa-input" placeholder="e.g. When is the Mushak 9.1 deadline for July?" onkeydown="if(event.key==='Enter')sendQ()" />
-        <button class="qa-send-btn haptic-btn" onclick="sendQ()">Ask ↗</button>
-      </div>
-    </div>
-
-    <!-- Penalty Calculator -->
-    <p class="section-title" id="section-penalty">Penalty Estimator</p>
-    <div class="penalty-card">
-      <div class="penalty-grid">
-        <div class="form-group">
-          <label for="penaltyType">Tax Type</label>
-          <select id="penaltyType" onchange="calcPenalty()">
-            <option value="vat">VAT (Mushak-9.1)</option>
-            <option value="income">Income Tax</option>
-            <option value="tds">TDS (Form 108)</option>
-            <option value="vds">VDS</option>
-          </select>
+  <!-- TAB 1: MUSHAK-9.1 WORKSHEET & MUSHAK-6.3/6.6 REGISTER -->
+  <section id="view-mushak91" class="tab-view active">
+    <div class="split-grid">
+      <!-- Left: Mushak-9.1 Official Sub-Form Summary (Notes 1-35) -->
+      <div class="tech-panel" style="margin-bottom:0">
+        <div class="tech-panel-hdr">
+          <div class="tech-panel-title">📋 Mushak-9.1 Monthly VAT Return Worksheet (মূসক-৯.১ মাসিক রিটার্ন ছক)</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="status-dot-wrap"><span class="status-dot"></span>/api4/report-transformation-figures</span>
+            <button type="button" class="btn-secondary-sm" onclick="exportMushakCsv()">⬇ Export eVAT CSV</button>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="daysLate">Days Late</label>
-          <input type="number" id="daysLate" placeholder="e.g. 30" min="1" oninput="calcPenalty()" />
-        </div>
-        <div class="form-group">
-          <label for="taxAmount">Unpaid Tax Amount (BDT)</label>
-          <input type="number" id="taxAmount" placeholder="e.g. 50000" min="0" oninput="calcPenalty()" />
-        </div>
-        <div class="form-group" style="align-self:end">
-          <button class="calc-btn" onclick="calcPenalty()">Calculate Penalty</button>
+        <div class="table-wrap">
+          <table class="tech-table" id="mushak91Table">
+            <thead>
+              <tr>
+                <th>Note</th>
+                <th>Mushak-9.1 Part &amp; Supply / Purchase Category (বিবরণ)</th>
+                <th class="num">Assessable Value (BDT)</th>
+                <th class="num">VAT / SD / Adj (BDT)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="mushak91Body"></tbody>
+          </table>
         </div>
       </div>
-      <div class="penalty-result" id="penaltyResult">
+
+      <!-- Right: Mushak-6.3 Tax Challan & Mushak-6.6 VDS Register -->
+      <div class="tech-panel" style="margin-bottom:0">
+        <div class="tech-panel-hdr">
+          <div class="tech-panel-title">🧾 Mushak-6.3 Tax Challan &amp; 6.6 VDS Register (চালান ও উৎসে কর্তন)</div>
+          <span class="pill-badge pill-info" id="txCountBadge">8 Vouchers</span>
+        </div>
+        <div class="table-wrap">
+          <table class="tech-table">
+            <thead>
+              <tr>
+                <th>Challan / Date</th>
+                <th>Counterparty &amp; 13-Digit BIN</th>
+                <th>Form &amp; Rate</th>
+                <th class="num">Base (BDT)</th>
+                <th class="num">VAT (BDT)</th>
+              </tr>
+            </thead>
+            <tbody id="challanBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: BD TAX CODE INSTALLER (TAX_CODE_TEMPLATES) -->
+  <section id="view-taxcodes" class="tab-view" hidden>
+    <div class="tech-panel">
+      <div class="tech-panel-hdr">
         <div>
-          <div class="penalty-label">Estimated Penalty</div>
-          <div class="penalty-amount" id="penaltyAmount">—</div>
-          <div class="penalty-note" id="penaltyBreakdown"></div>
+          <div class="tech-panel-title">⚙️ Standard Bangladesh NBR Tax Codes &amp; Reporting Categories (<code>TAX_CODE_TEMPLATES</code>)</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">
+            Pre-linked with deterministic Manager.io <code>ReportingCategory</code> &amp; <code>TaxAmountReportingCategory</code> UUIDs and <em>"কর চালানপত্র / Tax Invoice (Mushak-6.3)"</em> invoice title override.
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button type="button" class="btn-secondary-sm" onclick="checkTaxCodesStatus()">⟳ Re-Scan Business Tax Codes</button>
+          <button type="button" class="btn-action" id="btnInstallAllCodes" onclick="installAllMissingTaxCodes()">⚡ 1-Click Install All 11 BD Tax Codes</button>
         </div>
       </div>
-    </div>
-
-    <!-- Manager.io Export -->
-    <p class="section-title" id="section-export">Export to Manager.io</p>
-    <div class="export-card">
-      <div class="export-title">📥 Ready-to-Import Journal Template</div>
-      <div class="export-sub">
-        Export your compliance deadlines as a Manager.io CSV. Import it in seconds — journal entries pre-mapped to Tax Payable accounts.
-      </div>
-
-      <div class="export-steps">
-        <div class="export-step">
-          <div class="export-step-num">1</div>
-          <span>Click Export below</span>
-        </div>
-        <span class="step-arrow">→</span>
-        <div class="export-step">
-          <div class="export-step-num">2</div>
-          <span>Open Manager.io → Journal Entries → Import</span>
-        </div>
-        <span class="step-arrow">→</span>
-        <div class="export-step">
-          <div class="export-step-num">3</div>
-          <span>Upload the CSV file</span>
-        </div>
-        <span class="step-arrow">→</span>
-        <div class="export-step">
-          <div class="export-step-num">4</div>
-          <span>All deadlines appear as draft journal entries</span>
-        </div>
-      </div>
-
-      <button class="export-btn" id="exportBtn" onclick="exportCsv()">
-        <span class="export-btn-icon">📊</span>
-        Export to Manager.io (CSV)
-      </button>
-      <div class="export-note">
-        Free, no login required. File is named: <code>manager-io-compliance-[date].csv</code><br />
-        Missing accounts in Manager.io? <a href="mailto:hello@inspiron.tech" style="color:#FFD700;">We'll set them up for you →</a>
-      </div>
-    </div>
-
-    <!-- Manager.io Feature Showcase -->
-    <div class="managerio-wrap">
-      <div class="managerio-eyebrow">&#127381; ERP Architect | Listed Manager.io Advisor</div>
-      <div class="managerio-title">Why BD SMEs Choose Manager.io</div>
-      <div class="managerio-sub">The world's most flexible accounting software — designed for businesses of any size, any industry, anywhere.</div>
-      <div class="managerio-features">
-        <div class="mf-card">
-          <div class="mf-icon">♾️</div>
-          <div class="mf-title">Unlimited Users</div>
-          <div class="mf-desc">No per-user fees — ever. Your entire team, accountants, and advisors on one subscription.</div>
-        </div>
-        <div class="mf-card">
-          <div class="mf-icon">&#127970;</div>
-          <div class="mf-title">Unlimited Businesses</div>
-          <div class="mf-desc">Manage all your entities under one subscription. Switch between companies in seconds.</div>
-        </div>
-        <div class="mf-card">
-          <div class="mf-icon">&#128241;</div>
-          <div class="mf-title">Any Device &middot; Any Tab</div>
-          <div class="mf-desc">Desktop app, browser, tablet — open multiple companies simultaneously in separate windows.</div>
-        </div>
-        <div class="mf-card">
-          <div class="mf-icon">&#9881;&#65039;</div>
-          <div class="mf-title">Custom Workflows</div>
-          <div class="mf-desc">From garment manufacturing and commission agents to real estate and import/export — adapts to any business logic.</div>
-        </div>
-        <div class="mf-card">
-          <div class="mf-icon">&#127468;&#127463;</div>
-          <div class="mf-title">Multi-Currency &middot; Multi-Division</div>
-          <div class="mf-desc">BDT, PKR, AED in one system. Divisional P&amp;L, project tracking, and custom reports built in.</div>
-        </div>
-        <div class="mf-card">
-          <div class="mf-icon">&#128202;</div>
-          <div class="mf-title">Bangladesh VAT Ready</div>
-          <div class="mf-desc">Mushak-9.1, VDS, TDS — pre-configured by INSPIRON TECH for BD compliance out of the box.</div>
-        </div>
-      </div>
-      <div class="cta-btn-row">
-        <a class="btn-primary" href="mailto:hello@inspiron.tech?subject=Manager.io%20Setup%20Inquiry">
-          &#128231; Book a Free Consultation
-        </a>
-        <a class="btn-secondary" href="https://wa.me/8801719300849" target="_blank" rel="noopener">
-          &#128172; WhatsApp Us
-        </a>
-      </div>
-    </div>
-
-    <!-- Old CTA removed — Manager.io showcase above replaces it -->
-
-    <!-- Comparison Table -->
-    <p class="section-title">How We Compare</p>
-    <div class="compare-card">
-      <h2>Why BD SMEs Choose This Tool</h2>
-      <p class="compare-sub">vs. commercial VAT &amp; accounting software</p>
-      <div class="compare-wrap">
-        <table>
+      <div class="table-wrap">
+        <table class="tech-table">
           <thead>
             <tr>
-              <th>Software</th>
-              <th>Best For</th>
-              <th>Monthly Cost</th>
-              <th>Ease of Use</th>
-              <th>Manager.io Ready</th>
+              <th>Tax Code Name (English &amp; বাংলা)</th>
+              <th>Statutory Rate</th>
+              <th>SRO / Statutory Reference</th>
+              <th>Mushak-9.1 Note Mapping</th>
+              <th>Invoice Title Override</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
+          <tbody id="taxCodesBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: 10-POINT NBR VAT, BIN & VDS/AIT LEDGER HEALTH CHECK -->
+  <section id="view-audit" class="tab-view" hidden>
+    <div class="tech-panel">
+      <div class="tech-panel-hdr">
+        <div>
+          <div class="tech-panel-title">🛡️ 10-Point NBR Statutory Compliance &amp; Input Tax Credit (ITC) Audit</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">
+            Read-only verification of Section 46 Input Rebate eligibility, 13-digit BIN format, Mushak-6.3 invoice tagging, and VDS/AIT payable clearing.
+          </div>
+        </div>
+        <span class="status-dot-wrap" id="auditSummaryBadge"><span class="status-dot"></span>10 / 10 Statutory Checks</span>
+      </div>
+      <div class="audit-grid" id="auditGrid"></div>
+    </div>
+  </section>
+
+  <!-- TAB 4: DYNAMIC NBR COMPLIANCE CALENDAR & STATUTORY CALCULATORS -->
+  <section id="view-calendar" class="tab-view" hidden>
+    <div class="sim-grid" style="margin-bottom:18px">
+      <!-- Calc 1: VDS & AIT Contractor / Supplier Deduction Calculator -->
+      <div class="sim-card">
+        <h3>🧮 VDS &amp; AIT Withholding Split Calculator</h3>
+        <p>Compute net supplier/contractor payment after VAT Deducted at Source (VDS) &amp; Section 89/90 AIT.</p>
+        <div class="fld-group">
+          <label>Gross Invoice / Running Bill Amount (BDT)</label>
+          <input type="number" id="calcBillAmt" value="1500000" oninput="runStatutoryCalculators()">
+        </div>
+        <div class="fld-group">
+          <label>Supply / Service Category (NBR Schedule)</label>
+          <select id="calcSupplyType" onchange="runStatutoryCalculators()">
+            <option value="7.5|5|include">Procurement Provider / Contractor (7.5% VAT + 5% AIT)</option>
+            <option value="15|10|exclude">Consultancy / Engineering / Legal (15% VAT + 10% AIT)</option>
+            <option value="5|3|exclude">IT Enabled Services / Software (5% VAT + 3% AIT)</option>
+            <option value="15|5|exclude">Commercial Rent / Space Lease (15% VAT + 5% AIT)</option>
+            <option value="7.5|2|exclude">Garment Sub-Contract / Packaging (7.5% VAT + 2% AIT)</option>
+          </select>
+        </div>
+        <div class="sim-result" id="calcVdsResult"></div>
+      </div>
+
+      <!-- Calc 2: VAT & SD Act 2012 (S.85) & Income Tax Act 2023 (S.174/266) Penalty Estimator -->
+      <div class="sim-card">
+        <h3>⚠️ NBR Late Filing &amp; Interest Estimator</h3>
+        <p>Reconciled with VAT &amp; SD Act 2012 Section 85 &amp; 127 and Income Tax Act 2023 Section 266.</p>
+        <div class="fld-group">
+          <label>Return / Obligation Type</label>
+          <select id="calcPenType" onchange="runStatutoryCalculators()">
+            <option value="vat91">Mushak-9.1 Monthly VAT Return (S.85(1)(f) + S.127)</option>
+            <option value="vds">VDS Deposit / Certificate Delay (S.85 + 2%/mo)</option>
+            <option value="tds108">Withholding Tax Return u/s 177 (ITA 2023 S.266)</option>
+            <option value="itr">Corporate / Individual Income Tax Return</option>
+          </select>
+        </div>
+        <div class="fld-group">
+          <label>Unpaid Tax / VAT Principal (BDT) &amp; Days Late</label>
+          <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:8px">
+            <input type="number" id="calcPenTax" value="350000" oninput="runStatutoryCalculators()">
+            <input type="number" id="calcPenDays" value="45" oninput="runStatutoryCalculators()">
+          </div>
+        </div>
+        <div class="sim-result" id="calcPenResult"></div>
+      </div>
+
+      <!-- Calc 3: Section 154 Advance Tax Quarterly Installment Planner -->
+      <div class="sim-card">
+        <h3>📆 S.154 Advance Income Tax (AIT) Planner</h3>
+        <p>Income Tax Act 2023 Section 154: 4 equal 25% quarterly installments when last assessed tax &gt; Tk 6,00,000.</p>
+        <div class="fld-group">
+          <label>Last Assessed / Estimated Annual Tax Liability (BDT)</label>
+          <input type="number" id="calcAdvTotal" value="2400000" oninput="runStatutoryCalculators()">
+        </div>
+        <div class="fld-group">
+          <label>AIT Already Deducted at Source / Bank / Import (BDT)</label>
+          <input type="number" id="calcAdvPaid" value="600000" oninput="runStatutoryCalculators()">
+        </div>
+        <div class="sim-result" id="calcAdvResult"></div>
+      </div>
+    </div>
+
+    <!-- Dynamic FY 2026-27 Statutory Deadline Table -->
+    <div class="tech-panel" style="margin-bottom:0">
+      <div class="tech-panel-hdr">
+        <div class="tech-panel-title">📅 Bangladesh NBR Statutory Filing Calendar (Dynamic FY 2026-27 Schedule)</div>
+        <button type="button" class="btn-secondary-sm" onclick="exportDeadlinesJournalCsv()">📥 Export Deadlines as Manager.io Journal CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table class="tech-table">
+          <thead>
+            <tr>
+              <th>Tax Category</th>
+              <th>Statutory Return / Obligation (English &amp; বাংলা)</th>
+              <th>Statutory Due Date</th>
+              <th>Window Status</th>
+              <th>Statutory Reference &amp; Late Consequence</th>
+            </tr>
+          </thead>
+          <tbody id="calendarBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Attribution Footer (100% Non-Commercial Forum Compliant) -->
+  <footer class="suite-footer">
+    <div>
+      <strong>INSPIRON TECH</strong> · Architected by <strong>MD ABU HASAN</strong> · ERP Architect | Listed Manager.io Advisor (Bangladesh)<br>
+      <span>Independent open-source community localization tool for Manager.io. Not affiliated with or endorsed by the National Board of Revenue (NBR). Always verify filings at <a href="https://etaxnbr.gov.bd" target="_blank" rel="noopener">etaxnbr.gov.bd</a> &amp; <a href="https://vat.gov.bd" target="_blank" rel="noopener">vat.gov.bd</a>.</span>
+    </div>
+    <div style="display:flex;gap:16px;align-items:center">
+      <a href="https://github.com/INSPIRONTECH/INSPIRON-SUITE" target="_blank" rel="noopener">GitHub Source (MIT)</a>
+      <a href="https://www.manager.io/advisors" target="_blank" rel="noopener">Manager.io Advisor Directory</a>
+    </div>
+  </footer>
+
+</main>
+
+<!-- Slide-Over Inspector Drawer -->
+<div class="drawer-backdrop" id="egp-bk" onclick="closeInspectorDrawer()"></div>
+<aside class="inspector-drawer" id="egp-dr" aria-label="Mushak Note &amp; Challan Inspector">
+  <div class="dr-hdr">
+    <div>
+      <div class="dr-title" id="drTitle">Mushak-9.1 Note Inspector</div>
+      <div class="dr-sub" id="drSub">Statutory Sub-Form Drilldown &amp; Mushak-6.3/6.6 Voucher Breakdown</div>
+    </div>
+    <button type="button" class="dr-close" onclick="closeInspectorDrawer()">✕</button>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</aside>
+
+<script>
+/* ============================================================================
+ * 1. DETERMINISTIC BANGLADESH TAX CODE TEMPLATES (Manager.io /api4 Contract)
+ * ============================================================================ */
+const TAX_CODE_TEMPLATES = [
+  {
+    Name: "BD VAT 15% — Standard Rated (মূসক ১৫% আদর্শ হার)",
+    Label: "VAT 15%",
+    TaxRate: 2,
+    Rate: 15,
+    CustomSalesInvoiceTitle: true,
+    SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
+    SroRef: "VAT & SD Act 2012 S.15(3)",
+    MushakNote: "Note 4 (Output) / Note 14 (Input Credit)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000004",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000004"
+  },
+  {
+    Name: "BD VAT 7.5% — Construction / Procurement / Garment Sub-Contract (মূসক ৭.৫%)",
+    Label: "VAT 7.5% (Truncated)",
+    TaxRate: 2,
+    Rate: 7.5,
+    CustomSalesInvoiceTitle: true,
+    SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
+    SroRef: "3rd Schedule Para 2 & 3 (No ITC u/s 46(1)(ka))",
+    MushakNote: "Note 7 (Truncated Output)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000007",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000007"
+  },
+  {
+    Name: "BD VAT 5% — Commercial Importer / Wholesale / Retail Trading (ব্যবসায়ী ৫%)",
+    Label: "VAT 5% (Trading)",
+    TaxRate: 2,
+    Rate: 5,
+    CustomSalesInvoiceTitle: true,
+    SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
+    SroRef: "3rd Schedule Trading Stage",
+    MushakNote: "Note 7 (Truncated Trading)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000071",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000071"
+  },
+  {
+    Name: "BD VAT 5% — IT Enabled Services (ITES) & Software (আইটি সেবা ৫%)",
+    Label: "VAT 5% (ITES)",
+    TaxRate: 2,
+    Rate: 5,
+    CustomSalesInvoiceTitle: true,
+    SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
+    SroRef: "3rd Schedule Service Code S099.10",
+    MushakNote: "Note 7 (Reduced Service Rate)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000072",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000072"
+  },
+  {
+    Name: "BD VAT 10% — Repair, Maintenance & Transport Services (মেরামত ও পরিবহন ১০%)",
+    Label: "VAT 10%",
+    TaxRate: 2,
+    Rate: 10,
+    CustomSalesInvoiceTitle: true,
+    SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
+    SroRef: "3rd Schedule Service Rate",
+    MushakNote: "Note 7 (Truncated 10%)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000073",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000073"
+  },
+  {
+    Name: "BD VAT 0% — Zero-Rated Direct & Deemed Export (শূন্য হার রপ্তানি ০%)",
+    Label: "VAT 0% (Export)",
+    TaxRate: 0,
+    Rate: 0,
+    CustomSalesInvoiceTitle: true,
+    SalesInvoiceTitle: "কর চালানপত্র / Export Tax Invoice (Mushak-6.3)",
+    SroRef: "VAT & SD Act 2012 Section 21–24",
+    MushakNote: "Note 1 & 2 (Zero-Rated Export)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000001",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000001"
+  },
+  {
+    Name: "BD VAT Exempt — 1st Schedule Exempted Goods & Services (অব্যাহতি প্রাপ্ত)",
+    Label: "VAT Exempt",
+    TaxRate: 0,
+    Rate: 0,
+    CustomSalesInvoiceTitle: false,
+    SalesInvoiceTitle: "",
+    SroRef: "VAT & SD Act 2012 1st Schedule & S.26",
+    MushakNote: "Note 3 (Exempt Supply) / Note 12 (Exempt Input)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000003",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000003"
+  },
+  {
+    Name: "BD Input VAT 15% — Local Rebatable Purchase (স্থানীয় ক্রয় রেয়াতযোগ্য ১৫%)",
+    Label: "Input VAT 15% (ITC)",
+    TaxRate: 2,
+    Rate: 15,
+    CustomSalesInvoiceTitle: false,
+    SalesInvoiceTitle: "",
+    SroRef: "Section 46 Input Tax Credit (Mushak-6.3 Required)",
+    MushakNote: "Note 14 (Local Standard Input Credit)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000014",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000014"
+  },
+  {
+    Name: "BD Import VAT 15% — Bill of Entry Rebatable Import (আমদানি মূসক ১৫%)",
+    Label: "Import VAT 15% (BoE)",
+    TaxRate: 2,
+    Rate: 15,
+    CustomSalesInvoiceTitle: false,
+    SalesInvoiceTitle: "",
+    SroRef: "Customs Bill of Entry (ASYCUDA World)",
+    MushakNote: "Note 15 (Import Standard Input Credit)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000015",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000015"
+  },
+  {
+    Name: "BD VDS Payable — VAT Deducted at Source (উৎসে ভ্যাট কর্তন মুসক-৬.৬)",
+    Label: "VDS Withholding",
+    TaxRate: 2,
+    Rate: 7.5,
+    CustomSalesInvoiceTitle: false,
+    SalesInvoiceTitle: "",
+    SroRef: "VDS Rules 2021 & Section 49",
+    MushakNote: "Note 24 (Increasing Adj) / Note 29 (Decreasing Adj)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000024",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000024"
+  },
+  {
+    Name: "BD AIT / TDS Withholding — Income Tax Act 2023 S.89/90 (উৎসে আয়কর কর্তন)",
+    Label: "AIT / TDS (S.89)",
+    TaxRate: 2,
+    Rate: 5,
+    CustomSalesInvoiceTitle: false,
+    SalesInvoiceTitle: "",
+    SroRef: "Income Tax Act 2023 Part 7 (Withholding Tax)",
+    MushakNote: "Monthly Withholding Return (Form u/s 177)",
+    ReportingCategory: "b1000001-0177-4000-8000-000000000089",
+    TaxAmountReportingCategory: "b1000002-0177-4000-8000-000000000089"
+  }
+];
+
+/* ============================================================================
+ * 1.5 DETERMINISTIC MUSHAK-9.1 REPORT TRANSFORMATION (`REPORTS` Contract)
+ * ============================================================================ */
+const REPORTS = [
+  {
+    id: "b1000091-0000-4000-8000-000000000091",
+    name: "Mushak-9.1 — Monthly VAT Return Worksheet (মাসিক ভ্যাট রিটার্ন ছক)",
+    columns: 2,
+    items: [
+      { isHeader: true, name: "Part-3: Supply — Output Tax (অংশ-৩: সরবরাহ প্রদান - প্রদেয় কর)" },
+      { name: "Note 1–2: Zero-Rated Goods/Services (Direct & Deemed Export)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000001"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000001"] }] },
+      { name: "Note 3: Exempt Goods/Services (1st Schedule & S.26)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000003"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000003"] }] },
+      { name: "Note 4: Standard Rated Goods/Services (15%)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000004"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000004"] }] },
+      { name: "Note 7: Truncated / Specific Rate Goods/Services (5%, 7.5%, 10%)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000007", "b1000001-0091-4000-8000-000000000071", "b1000001-0091-4000-8000-000000000072", "b1000001-0091-4000-8000-000000000073"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000007", "b1000002-0091-4000-8000-000000000071", "b1000002-0091-4000-8000-000000000072", "b1000002-0091-4000-8000-000000000073"] }] },
+      { isHeader: true, name: "Part-4: Purchase — Input Tax Credit (অংশ-৪: ক্রয় - উপকরণ কর রেয়াত)" },
+      { name: "Note 14: Standard Rated Local Purchase (15% Rebatable)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000014"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000014"] }] },
+      { name: "Note 15: Standard Rated Import Purchase (15% Bill of Entry)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000015"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000015"] }] },
+      { isHeader: true, name: "Part-5 & 6: Increasing & Decreasing VDS / AT Adjustments" },
+      { name: "Note 24: Increasing Adjustment — VDS Deducted at Source as Buyer", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000024"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000024"] }] }
+    ]
+  }
+];
+
+/* ============================================================================
+ * 2. DEMO BUSINESS PROFILES (REALISTIC BANGLADESH MUSHAK-9.1 & 6.3 DATA)
+ * ============================================================================ */
+const DEMO_PROFILES = {
+  "demo:manufacturing": {
+    id: "demo:manufacturing",
+    name: "Padma Precision Garments & Packaging Ltd",
+    bin: "001489203-0101",
+    sector: "Export & Local Garment Accessories Manufacturing",
+    mushakNotes: [
+      { note: "Note 1", part: "Part-3: Supply", title: "Zero-Rated Direct/Deemed Export (শূন্য হার রপ্তানি - ধারা ২১-২৪)", base: 18500000, vat: 0, form: "Sub-Form Ka (ক)", status: "Verified BoE / L/C" },
+      { note: "Note 4", part: "Part-3: Supply", title: "Standard Rated 15% Goods/Services (আদর্শ হার ১৫% পণ্য ও সেবা)", base: 12400000, vat: 1860000, form: "Sub-Form Ka (ক)", status: "Mushak-6.3 Issued" },
+      { note: "Note 7", part: "Part-3: Supply", title: "Specific / Truncated Rate Supplies (সুনির্দিষ্ট ও হ্রাসকৃত হার ৭.৫%)", base: 3200000, vat: 240000, form: "Sub-Form Ka (ক)", status: "No ITC Allowed" },
+      { note: "Note 9", part: "Part-3: Total", title: "Total Output VAT Payable (মোট প্রদেয় আউটপুট ভ্যাট = Note 1–8)", base: 34100000, vat: 2100000, form: "Part-3 Total", status: "Output Total", isTotal: true },
+      { note: "Note 14", part: "Part-4: Input ITC", title: "Standard 15% Local Purchase (স্থানীয় ক্রয় ১৫% - মুসক-৬.৩)", base: 5600000, vat: 840000, form: "Sub-Form Ka (ক)", status: "Rebatable u/s 46" },
+      { note: "Note 15", part: "Part-4: Input ITC", title: "Standard 15% Import Purchase (আমদানি ক্রয় ১৫% - Bill of Entry)", base: 4200000, vat: 630000, form: "Sub-Form Kha (খ)", status: "BoE Verified" },
+      { note: "Note 23", part: "Part-4: Total", title: "Total Eligible Input Tax Credit (মোট প্রাপ্য উপকরণ কর রেয়াত)", base: 9800000, vat: 1470000, form: "Part-4 Total", status: "ITC Claimed", isTotal: true },
+      { note: "Note 24", part: "Part-5: +Adj", title: "Increasing Adjustment: VDS Deducted as Buyer (উৎসে কর্তন বৃদ্ধিকারী সমন্বয়)", base: 1800000, vat: 135000, form: "Sub-Form Gha (ঘ)", status: "Mushak-6.6 Pending" },
+      { note: "Note 29", part: "Part-6: -Adj", title: "Decreasing Adjustment: VDS Deducted by Customers + Advance Tax (হ্রাসকারী সমন্বয়)", base: 2400000, vat: 180000, form: "Sub-Form Nga (ঙ)", status: "Mushak-6.6 Received" },
+      { note: "Note 34", part: "Part-7: Net", title: "Net VAT Payable before Treasury Deposit (নিট প্রদেয় মূসক = 9 - 23 + 28 - 33)", base: 0, vat: 585000, form: "Part-7 Net", status: "Treasury Challan Due", isTotal: true }
+    ],
+    challans: [
+      { ref: "M6.3-2026-1041", date: "2026-10-04", party: "Apex Global Apparel Ltd", bin: "000291844-0101", form: "Mushak-6.3 (0% Export)", base: 11200000, vat: 0 },
+      { ref: "M6.3-2026-1042", date: "2026-10-08", party: "Square Consumer Products Ltd", bin: "000118920-0102", form: "Mushak-6.3 (15% Std)", base: 7400000, vat: 1110000 },
+      { ref: "M6.3-2026-1045", date: "2026-10-12", party: "PRAN-RFL Packaging Division", bin: "000381920-0101", form: "Mushak-6.3 (15% Std)", base: 5000000, vat: 750000 },
+      { ref: "M6.3-2026-1049", date: "2026-10-16", party: "Ha-Meem Denim Mills Ltd", bin: "000491022-0103", form: "Mushak-6.3 (7.5% Sub)", base: 3200000, vat: 240000 },
+      { ref: "BOE-C-884120",   date: "2026-10-18", party: "Chattogram Custom House (Import BoE)", bin: "CUSTOMS-301", form: "BoE Import (15% ITC)", base: 4200000, vat: 630000 },
+      { ref: "PUR-M63-9921",   date: "2026-10-21", party: "Karnaphuli Paper & Chemical Ltd", bin: "000918273-0202", form: "Purchase 6.3 (15% ITC)", base: 5600000, vat: 840000 },
+      { ref: "M6.6-VDS-309",   date: "2026-10-25", party: "Square Consumer Products Ltd (VDS Cert)", bin: "000118920-0102", form: "Mushak-6.6 (-Adj)", base: 2400000, vat: 180000 },
+      { ref: "VDS-PAY-412",    date: "2026-10-28", party: "Delta Transport & Civil Works (Supplier VDS)", bin: "001928374-0104", form: "Buyer VDS (+Adj 7.5%)", base: 1800000, vat: 135000 }
+    ],
+    audits: [
+      { title: "1. 13-Digit Buyer/Supplier BIN Verification", sub: "All 8 VAT vouchers carry valid 13-digit e-BINs or Custom House BoE codes.", status: "PASS", pill: "pill-ok" },
+      { title: "2. Section 46(1)(ka) Truncated Rate ITC Block", sub: "Zero Input Tax Credit claimed against Tk 32,00,000 truncated 7.5% supply.", status: "PASS", pill: "pill-ok" },
+      { title: "3. Banking Channel Payment Rule (> Tk 1,00,000)", sub: "Section 46(1)(kha): All rebatable purchases > Tk 1L settled via crossed cheque/RTGS.", status: "PASS", pill: "pill-ok" },
+      { title: "4. Mushak-6.3 Invoice Title Override Active", sub: "Custom sales invoice title 'কর চালানপত্র / Tax Invoice (Mushak-6.3)' enabled.", status: "PASS", pill: "pill-ok" },
+      { title: "5. VDS Payable Deposit Window (Rule 5(2))", sub: "Tk 1,35,000 Buyer VDS deducted on 28 Oct must be deposited via A-Challan by 15 Nov.", status: "DUE 15 NOV", pill: "pill-warn" },
+      { title: "6. Mushak-6.6 Certificate Reconciliation", sub: "1 customer VDS certificate (Tk 1,80,000) matched to Note 29 Decreasing Adjustment.", status: "PASS", pill: "pill-ok" },
+      { title: "7. Import AT (5% Advance Tax) Recognition", sub: "Import AT recorded in Note 30 / Current Account for decreasing adjustment.", status: "PASS", pill: "pill-ok" },
+      { title: "8. Control Account & Suspense Hygiene", sub: "Suspense Account balance is Tk 0.00; Tax Payable control account reconciled.", status: "PASS", pill: "pill-ok" },
+      { title: "9. Section 89/90 AIT Withholding Ledger", sub: "Tk 90,000 Supplier AIT separated from VDS into TDS Payable control account.", status: "PASS", pill: "pill-ok" },
+      { title: "10. Mushak-6.1 & 6.2 Register Continuity", sub: "Opening + Purchase - Issue = Closing inventory matches Mushak-9.1 period.", status: "PASS", pill: "pill-ok" }
+    ]
+  },
+  "demo:contractor": {
+    id: "demo:contractor",
+    name: "Jamuna EPC & Infrastructure Consortium",
+    bin: "002194810-0302",
+    sector: "LGED / RHD / BWDB Government Civil & EPC Contractor",
+    mushakNotes: [
+      { note: "Note 7", part: "Part-3: Supply", title: "Procurement Provider & Construction 7.5% (যোগানদার ও নির্মাণ সংস্থা ৭.৫%)", base: 42000000, vat: 3150000, form: "Sub-Form Ka (ক)", status: "100% VDS at Source" },
+      { note: "Note 9", part: "Part-3: Total", title: "Total Output VAT Payable (মোট প্রদেয় আউটপুট ভ্যাট)", base: 42000000, vat: 3150000, form: "Part-3 Total", status: "Output Total", isTotal: true },
+      { note: "Note 23", part: "Part-4: Total", title: "Total Input Tax Credit (Truncated 7.5% rate = Tk 0 ITC u/s 46)", base: 0, vat: 0, form: "Part-4 Total", status: "Blocked by S.46", isTotal: true },
+      { note: "Note 24", part: "Part-5: +Adj", title: "Increasing Adjustment: Sub-Contractor VDS Deducted at Source", base: 6400000, vat: 480000, form: "Sub-Form Gha (ঘ)", status: "Deposit via A-Challan" },
+      { note: "Note 29", part: "Part-6: -Adj", title: "Decreasing Adjustment: VDS Deducted by Executive Engineer (Mushak-6.6)", base: 42000000, vat: 3150000, form: "Sub-Form Nga (ঙ)", status: "Treasury Challan Verified" },
+      { note: "Note 34", part: "Part-7: Net", title: "Net Cash VAT Payable (Only Sub-Contractor VDS Payable)", base: 0, vat: 480000, form: "Part-7 Net", status: "Payable by 15th", isTotal: true }
+    ],
+    challans: [
+      { ref: "IPC-LGED-04", date: "2026-10-06", party: "Executive Engineer, LGED Dhaka Division", bin: "000019283-0001", form: "Mushak-6.3 + 6.6 (7.5%)", base: 24000000, vat: 1800000 },
+      { ref: "IPC-RHD-09",  date: "2026-10-19", party: "Project Director, RHD Bridge Zone", bin: "000049182-0002", form: "Mushak-6.3 + 6.6 (7.5%)", base: 18000000, vat: 1350000 },
+      { ref: "SUB-VDS-11",  date: "2026-10-24", party: "Bengal Piling & Geo-Tech Engineering", bin: "003918271-0105", form: "Buyer VDS (+Adj 7.5%)", base: 6400000, vat: 480000 }
+    ],
+    audits: [
+      { title: "1. 100% Government VDS Offset (Note 7 vs Note 29)", sub: "Tk 31,50,000 Output VAT fully offset by Executive Engineer Mushak-6.6 certificates.", status: "PASS", pill: "pill-ok" },
+      { title: "2. Section 46 Truncated Rate Rebate Guard", sub: "Zero Input VAT Rebate claimed on cement, rod, and bitumen (compliant with S.46).", status: "PASS", pill: "pill-ok" },
+      { title: "3. Section 89 AIT Deduction Recognition", sub: "5% Contractor AIT (Tk 21,00,000) booked to Advance Income Tax Asset u/s 154.", status: "PASS", pill: "pill-ok" },
+      { title: "4. 10% Performance Retention Money Split", sub: "Tk 42,00,000 Retention Money tracked in Project Retention Receivable.", status: "PASS", pill: "pill-ok" }
+    ]
+  },
+  "demo:trading": {
+    id: "demo:trading",
+    name: "Meghna Industrial Supply & IT Solutions",
+    bin: "004819201-0204",
+    sector: "Commercial Importer, Trading (5%) & IT Enabled Services (5%)",
+    mushakNotes: [
+      { note: "Note 7", part: "Part-3: Supply", title: "Trading 5% & IT Enabled Services 5% (ব্যবসায়ী ৫% ও আইটি সেবা ৫%)", base: 16800000, vat: 840000, form: "Sub-Form Ka (ক)", status: "Mushak-6.3 Issued" },
+      { note: "Note 9", part: "Part-3: Total", title: "Total Output VAT Payable (মোট প্রদেয় আউটপুট ভ্যাট)", base: 16800000, vat: 840000, form: "Part-3 Total", status: "Output Total", isTotal: true },
+      { note: "Note 30", part: "Part-6: -Adj", title: "Decreasing Adjustment: 5% Advance Tax (AT) Paid at Import Stage", base: 9200000, vat: 460000, form: "Sub-Form Nga (ঙ)", status: "Import BoE AT Refund/Adj" },
+      { note: "Note 34", part: "Part-7: Net", title: "Net VAT Payable (নিট প্রদেয় মূসক)", base: 0, vat: 380000, form: "Part-7 Net", status: "Treasury Challan Due", isTotal: true }
+    ],
+    challans: [
+      { ref: "M6.3-TRD-801", date: "2026-10-09", party: "Grameen Telecom Trust", bin: "000819203-0101", form: "Mushak-6.3 (5% ITES)", base: 6800000, vat: 340000 },
+      { ref: "M6.3-TRD-809", date: "2026-10-17", party: "Walton Hi-Tech Industries PLC", bin: "000192837-0102", form: "Mushak-6.3 (5% Trading)", base: 10000000, vat: 500000 }
+    ],
+    audits: [
+      { title: "1. Commercial Importer 5% AT Decreasing Adjustment", sub: "Tk 4,60,000 Import Advance Tax (AT) properly claimed in Mushak-9.1 Note 30.", status: "PASS", pill: "pill-ok" },
+      { title: "2. ITES Service Code S099.10 Classification", sub: "Software maintenance billed at 5% reduced VAT rate with Mushak-6.3.", status: "PASS", pill: "pill-ok" }
+    ]
+  }
+};
+
+/* ============================================================================
+ * 3. RUNTIME STATE & TRIPLE-MODE MANAGER.IO /API4 BRIDGE
+ * ============================================================================ */
+const RUNTIME_STATE = {
+  activeProfileKey: "demo:manufacturing",
+  activeTab: "mushak91",
+  langMode: localStorage.getItem("bd-nbr-lang") || "bi",
+  darkMode: localStorage.getItem("bd-nbr-theme") === "dark",
+  insideManager: window.parent !== window,
+  liveTaxCodes: [],
+  installedStates: {}
+};
+
+function fmtBdt(n) {
+  return "৳ " + Math.round(Number(n) || 0).toLocaleString("en-IN");
+}
+function escapeHtml(s) {
+  return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+async function postMessageApi4(method, path, body) {
+  if (window.parent === window) throw new Error("Standalone mode");
+  return new Promise((resolve, reject) => {
+    const requestId = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ("req-" + Date.now() + "-" + Math.random());
+    const timer = setTimeout(() => {
+      window.removeEventListener("message", onMsg);
+      reject(new Error("Manager.io /api4 bridge timeout"));
+    }, 3500);
+    function onMsg(ev) {
+      if (ev.data && ev.data.requestId === requestId && String(ev.data.type || "").endsWith("-response")) {
+        clearTimeout(timer);
+        window.removeEventListener("message", onMsg);
+        resolve(ev.data);
+      }
+    }
+    window.addEventListener("message", onMsg);
+    window.parent.postMessage({ type: "api-request", requestId, method, path, body }, "*");
+  });
+}
+
+function getActiveProfile() {
+  return DEMO_PROFILES[RUNTIME_STATE.activeProfileKey] || DEMO_PROFILES["demo:manufacturing"];
+}
+
+/* ============================================================================
+ * 4. RENDERING: 6-CARD KPI ENGINE, MUSHAK-9.1, TAX CODES, AUDIT, CALENDAR
+ * ============================================================================ */
+function renderAllViews() {
+  const prof = getActiveProfile();
+  const outRow = prof.mushakNotes.find(n => n.note === "Note 9") || { base: 0, vat: 0 };
+  const itcRow = prof.mushakNotes.find(n => n.note === "Note 23") || { base: 0, vat: 0 };
+  const incRow = prof.mushakNotes.find(n => n.note === "Note 24") || { base: 0, vat: 0 };
+  const decRow = prof.mushakNotes.find(n => n.note === "Note 29") || prof.mushakNotes.find(n => n.note === "Note 30") || { base: 0, vat: 0 };
+  const netRow = prof.mushakNotes.find(n => n.note === "Note 34") || { base: 0, vat: 0 };
+
+  const kpis = [
+    { tag: "NOTE 1–9 · OUTPUT", cls: "c-portfolio", tagCls: "tag-cyan", label: "Output VAT (আউটপুট ভ্যাট)", val: fmtBdt(outRow.vat), valCls: "val-cyan", sub: `Assessable Base: ${fmtBdt(outRow.base)}`, idx: 0 },
+    { tag: "NOTE 10–23 · ITC", cls: "c-inflow", tagCls: "tag-green", label: "Input Tax Credit (উপকরণ রেয়াত)", val: fmtBdt(itcRow.vat), valCls: "val-green", sub: `Rebatable Purchases: ${fmtBdt(itcRow.base)}`, idx: 1 },
+    { tag: "NOTE 24 · +ADJ VDS", cls: "c-outflow", tagCls: "tag-gold", label: "Buyer VDS Payable (উৎসে ভ্যাট কর্তন)", val: fmtBdt(incRow.vat), valCls: "val-gold", sub: "Rule 5(2): Deposit within 15 days", idx: 2 },
+    { tag: "NOTE 29–30 · -ADJ", cls: "c-security", tagCls: "tag-purple", label: "Mushak-6.6 & AT Offset (হ্রাসকারী)", val: fmtBdt(decRow.vat), valCls: "val-purple", sub: "Customer VDS + Import AT Credit", idx: 3 },
+    { tag: "NOTE 34 · NET PAYABLE", cls: "c-hero", tagCls: "tag-cyan", label: "Net Treasury VAT (নিট প্রদেয় মূসক)", val: fmtBdt(netRow.vat), valCls: "val-ink", sub: "Due by 15th of following month", idx: 4 },
+    { tag: "NBR BIN & TAX CODES", cls: "c-inflow", tagCls: "tag-green", label: "BIN & Tax Code Readiness", val: "11 / 11 Ready", valCls: "val-green", sub: `BIN: ${prof.bin}`, idx: 5 }
+  ];
+
+  const kpiGrid = document.getElementById("kpiGrid");
+  if (kpiGrid) {
+    kpiGrid.innerHTML = kpis.map(k => `
+      <div class="focus-card ${k.cls}" onclick="openNoteInspector(${k.idx})">
+        <div>
+          <span class="phase-tag ${k.tagCls}">${escapeHtml(k.tag)}</span>
+          <div class="card-label">${escapeHtml(k.label)}</div>
+          <div class="card-val ${k.valCls}">${escapeHtml(k.val)}</div>
+        </div>
+        <div class="card-sub">${escapeHtml(k.sub)}</div>
+      </div>
+    `).join("");
+  }
+
+  // Render Mushak-9.1 Table
+  const m91Body = document.getElementById("mushak91Body");
+  if (m91Body) {
+    m91Body.innerHTML = prof.mushakNotes.map((r, i) => `
+      <tr style="${r.isTotal ? 'background:rgba(0,210,255,0.06);font-weight:800' : ''}">
+        <td class="code-cell">${escapeHtml(r.note)}</td>
+        <td>
+          <div style="font-weight:${r.isTotal ? '800' : '700'};color:var(--ink)">${escapeHtml(r.title)}</div>
+          <div style="font-size:10.5px;color:var(--dim)">${escapeHtml(r.part)} · ${escapeHtml(r.form)} · ${escapeHtml(r.status)}</div>
+        </td>
+        <td class="num">${r.base ? fmtBdt(r.base) : '—'}</td>
+        <td class="num" style="color:${r.note === 'Note 34' ? 'var(--cyan-ink)' : 'var(--ink)'}">${fmtBdt(r.vat)}</td>
+        <td><button type="button" class="btn-secondary-sm" onclick="openNoteInspector(${i})">Inspect</button></td>
+      </tr>
+    `).join("");
+  }
+
+  // Render Mushak-6.3 & 6.6 Challan Register
+  const challanBody = document.getElementById("challanBody");
+  const txCountBadge = document.getElementById("txCountBadge");
+  if (txCountBadge) txCountBadge.textContent = `${prof.challans.length} Vouchers`;
+  if (challanBody) {
+    challanBody.innerHTML = prof.challans.map((c, i) => `
+      <tr onclick="openNoteInspector(${i})" style="cursor:pointer">
+        <td>
+          <div class="code-cell">${escapeHtml(c.ref)}</div>
+          <div style="font-size:10.5px;color:var(--dim)">${escapeHtml(c.date)}</div>
+        </td>
+        <td>
+          <div style="font-weight:700;color:var(--ink)">${escapeHtml(c.party)}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--muted)">BIN: ${escapeHtml(c.bin)}</div>
+        </td>
+        <td><span class="pill-badge pill-info">${escapeHtml(c.form)}</span></td>
+        <td class="num">${fmtBdt(c.base)}</td>
+        <td class="num" style="color:var(--cyan-ink)">${fmtBdt(c.vat)}</td>
+      </tr>
+    `).join("");
+  }
+
+  renderTaxCodesTable();
+  renderAuditGrid(prof);
+  renderCalendarTable();
+  runStatutoryCalculators();
+}
+
+function renderTaxCodesTable() {
+  const tbody = document.getElementById("taxCodesBody");
+  if (!tbody) return;
+  tbody.innerHTML = TAX_CODE_TEMPLATES.map((t, idx) => {
+    const isInstalled = RUNTIME_STATE.installedStates[t.ReportingCategory] !== false;
+    return `
+      <tr>
+        <td>
+          <div style="font-weight:800;color:var(--ink)">${escapeHtml(t.Name)}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--dim)">UUID: ${escapeHtml(t.ReportingCategory)}</div>
+        </td>
+        <td class="num"><span class="pill-badge pill-info">${t.Rate}%</span></td>
+        <td style="font-size:11px;color:var(--muted)">${escapeHtml(t.SroRef)}</td>
+        <td style="font-size:11px;font-weight:700;color:var(--cyan-ink)">${escapeHtml(t.MushakNote)}</td>
+        <td style="font-size:11px;color:var(--muted)">${t.CustomSalesInvoiceTitle ? escapeHtml(t.SalesInvoiceTitle) : 'Standard Title'}</td>
+        <td>
+          <span class="pill-badge ${isInstalled ? 'pill-ok' : 'pill-warn'}">
+            ${isInstalled ? '✓ Linked' : 'Ready to Install'}
+          </span>
+        </td>
+        <td>
+          <button type="button" class="btn-secondary-sm" onclick="installSingleTaxCode(${idx})">
+            ${isInstalled ? 'Update / Verify' : '+ Install Code'}
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function renderAuditGrid(prof) {
+  const grid = document.getElementById("auditGrid");
+  if (!grid) return;
+  grid.innerHTML = prof.audits.map(a => `
+    <div class="audit-item">
+      <div>
+        <div class="audit-item-title">${escapeHtml(a.title)}</div>
+        <div class="audit-item-sub">${escapeHtml(a.sub)}</div>
+      </div>
+      <span class="pill-badge ${a.pill}">${escapeHtml(a.status)}</span>
+    </div>
+  `).join("");
+}
+
+function renderCalendarTable() {
+  const tbody = document.getElementById("calendarBody");
+  if (!tbody) return;
+  const rows = [
+    { cat: "VAT (Mushak-9.1)", name: "Monthly VAT Return Filing & Net Tax Deposit (মাসিক ভ্যাট রিটার্ন দাখিল)", due: "15th of Following Month (১৫ নভেম্বর ২০২৬)", win: "Every Month · Strict", ref: "VAT & SD Act 2012 S.64 & S.85(1)(f) — Tk 10,000 fine + 1%/mo interest u/s 127" },
+    { cat: "VDS (Mushak-6.6)", name: "Treasury Deposit of Deducted VDS via A-Challan & Certificate Issue (উৎসে ভ্যাট জমা ও সনদ)", due: "Within 15 Days of Deduction / 3 Days Cert", win: "Rolling 15-Day Rule", ref: "VDS Rules 2021 Rule 5(2) — 2% monthly surcharge + personal liability u/s 85" },
+    { cat: "TDS / AIT (S.177)", name: "Monthly Withholding Tax Return & Treasury Deposit (উৎসে আয়কর বিবরণী ধারা ১৭৭)", due: "15th / 25th of Following Month", win: "Monthly Withholding", ref: "Income Tax Act 2023 Section 177 & 266 — 2% monthly surcharge on unpaid TDS" },
+    { cat: "Advance Tax (S.154)", name: "Quarterly Advance Income Tax Installments — 25% × 4 (অগ্রিম আয়কর কিস্তি ধারা ১৫৪)", due: "15 Sep · 15 Dec · 15 Mar · 15 Jun", win: "Q2 Due: 15 Dec 2026", ref: "Income Tax Act 2023 S.154 & S.155 — Mandatory if last assessed tax > Tk 6,00,000" },
+    { cat: "Individual ITR", name: "National Tax Day — Individual Income Tax Return (ব্যক্তিগত আয়কর রিটার্ন দিবস)", due: "30 November (৩০ নভেম্বর)", win: "Annual FY 2026-27", ref: "Income Tax Act 2023 S.166 & S.174 — 10% delay interest + daily surcharge" },
+    { cat: "Corporate ITR", name: "Company Income Tax Return — 15th Day of 7th Month after Income Year End", due: "15 January (for 30 June Year-End)", win: "Annual Corporate", ref: "Income Tax Act 2023 S.2(45) & S.174 — Audited Financial Statements mandatory" }
+  ];
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td><span class="pill-badge pill-info">${escapeHtml(r.cat)}</span></td>
+      <td style="font-weight:700;color:var(--ink)">${escapeHtml(r.name)}</td>
+      <td style="font-family:var(--mono);font-weight:800;color:var(--cyan-ink)">${escapeHtml(r.due)}</td>
+      <td><span class="pill-badge pill-warn">${escapeHtml(r.win)}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${escapeHtml(r.ref)}</td>
+    </tr>
+  `).join("");
+}
+
+/* ============================================================================
+ * 5. STATUTORY CALCULATORS (VDS/AIT, S.85 PENALTY, S.154 ADVANCE TAX)
+ * ============================================================================ */
+function runStatutoryCalculators() {
+  // 1. VDS & AIT Split
+  const bill = Number(document.getElementById("calcBillAmt")?.value || 0);
+  const spec = (document.getElementById("calcSupplyType")?.value || "7.5|5|include").split("|");
+  const vatRate = Number(spec[0]);
+  const aitRate = Number(spec[1]);
+  const vdsAmt = Math.round(bill * (vatRate / 100));
+  const aitAmt = Math.round(bill * (aitRate / 100));
+  const netPay = Math.max(0, bill - vdsAmt - aitAmt);
+  const vdsEl = document.getElementById("calcVdsResult");
+  if (vdsEl) {
+    vdsEl.innerHTML = `
+      <div class="sim-line"><span>Gross Invoice Base:</span><span>${fmtBdt(bill)}</span></div>
+      <div class="sim-line" style="color:#38BDF8"><span>Less: VDS @ ${vatRate}% (Mushak-6.6):</span><span>− ${fmtBdt(vdsAmt)}</span></div>
+      <div class="sim-line" style="color:#FBBF24"><span>Less: AIT/TDS @ ${aitRate}% (S.89/90):</span><span>− ${fmtBdt(aitAmt)}</span></div>
+      <div class="sim-line" style="color:#4ADE80"><span>Net Cheque / EFT to Supplier:</span><span>${fmtBdt(netPay)}</span></div>
+    `;
+  }
+
+  // 2. Penalty Estimator (VAT & SD Act 2012 S.85(1)(f) = Tk 10,000 + S.127 = 1%/mo)
+  const penType = document.getElementById("calcPenType")?.value || "vat91";
+  const unpaid = Number(document.getElementById("calcPenTax")?.value || 0);
+  const days = Number(document.getElementById("calcPenDays")?.value || 0);
+  const months = Math.max(1, Math.ceil(days / 30));
+  let fixedFine = 10000, interestAmt = 0, ruleLabel = "";
+  if (penType === "vat91") {
+    fixedFine = 10000; // Section 85(1)(f) VAT & SD Act 2012
+    interestAmt = Math.round(unpaid * 0.01 * months); // Section 127 (1%/month simple interest)
+    ruleLabel = "S.85(1)(f) Tk 10,000 + S.127 1%/mo";
+  } else if (penType === "vds") {
+    fixedFine = 10000;
+    interestAmt = Math.round(unpaid * 0.02 * months);
+    ruleLabel = "S.85 Fine + 2%/mo VDS Surcharge";
+  } else {
+    fixedFine = months * 1000;
+    interestAmt = Math.round(unpaid * 0.02 * months);
+    ruleLabel = "ITA 2023 S.266 + 2%/mo Surcharge";
+  }
+  const penEl = document.getElementById("calcPenResult");
+  if (penEl) {
+    penEl.innerHTML = `
+      <div class="sim-line"><span>Statutory Rule (${months} mo):</span><span>${escapeHtml(ruleLabel)}</span></div>
+      <div class="sim-line" style="color:#FBBF24"><span>Fixed Statutory Penalty:</span><span>${fmtBdt(fixedFine)}</span></div>
+      <div class="sim-line" style="color:#F87171"><span>Accrued Interest on Principal:</span><span>${fmtBdt(interestAmt)}</span></div>
+      <div class="sim-line" style="color:#FFD700"><span>Total Exposure (Penalty + Interest):</span><span>${fmtBdt(fixedFine + interestAmt)}</span></div>
+    `;
+  }
+
+  // 3. Section 154 Advance Tax Planner (4 x 25% Equal Installments)
+  const advTotal = Number(document.getElementById("calcAdvTotal")?.value || 0);
+  const advPaid = Number(document.getElementById("calcAdvPaid")?.value || 0);
+  const netAdv = Math.max(0, advTotal - advPaid);
+  const perQuarter = Math.round(netAdv * 0.25);
+  const advEl = document.getElementById("calcAdvResult");
+  if (advEl) {
+    advEl.innerHTML = `
+      <div class="sim-line"><span>Net Advance Tax Payable u/s 154:</span><span>${fmtBdt(netAdv)}</span></div>
+      <div class="sim-line" style="color:#38BDF8"><span>Q1 (15 Sep · 25%) &amp; Q2 (15 Dec · 25%):</span><span>${fmtBdt(perQuarter)} each</span></div>
+      <div class="sim-line" style="color:#38BDF8"><span>Q3 (15 Mar · 25%) &amp; Q4 (15 Jun · 25%):</span><span>${fmtBdt(perQuarter)} each</span></div>
+      <div class="sim-line" style="color:#4ADE80"><span>75% Threshold Guard (S.155):</span><span>${fmtBdt(Math.round(advTotal * 0.75))}</span></div>
+    `;
+  }
+}
+
+/* ============================================================================
+ * 6. SLIDE-OVER INSPECTOR DRAWER & ACTIONS
+ * ============================================================================ */
+function openNoteInspector(idx) {
+  const prof = getActiveProfile();
+  const note = prof.mushakNotes[idx % prof.mushakNotes.length];
+  document.getElementById("drTitle").textContent = `${note.note} — ${note.title}`;
+  document.getElementById("drSub").textContent = `${prof.name} (BIN: ${prof.bin}) · ${note.form}`;
+
+  document.getElementById("drBody").innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+      <div class="focus-card c-portfolio">
+        <span class="phase-tag tag-cyan">${escapeHtml(note.note)}</span>
+        <div class="card-label">Assessable Base Value</div>
+        <div class="card-val val-ink">${fmtBdt(note.base)}</div>
+      </div>
+      <div class="focus-card c-inflow">
+        <span class="phase-tag tag-green">${escapeHtml(note.form)}</span>
+        <div class="card-label">VAT / Adjustment Amount</div>
+        <div class="card-val val-cyan">${fmtBdt(note.vat)}</div>
+      </div>
+      <div class="focus-card c-outflow">
+        <span class="phase-tag tag-gold">STATUTORY STATUS</span>
+        <div class="card-label">NBR Validation</div>
+        <div class="card-val val-green" style="font-size:15px">${escapeHtml(note.status)}</div>
+      </div>
+    </div>
+
+    <div class="tech-panel" style="margin-bottom:0">
+      <div class="tech-panel-hdr">
+        <div class="tech-panel-title">📑 Underlying Mushak-6.3 &amp; 6.6 Vouchers Feeding This Return</div>
+      </div>
+      <div class="table-wrap">
+        <table class="tech-table">
+          <thead><tr><th>Voucher Ref</th><th>Date</th><th>Counterparty &amp; 13-Digit BIN</th><th>Form</th><th class="num">Base</th><th class="num">VAT</th></tr></thead>
           <tbody>
-            <tr>
-              <td>Prime VAT (iBOS)</td>
-              <td>Large factories</td>
-              <td class="neutral">High (Enterprise)</td>
-              <td class="cross">Complex</td>
-              <td class="neutral">Medium</td>
-            </tr>
-            <tr>
-              <td>OVAT (Opus)</td>
-              <td>Manufacturing / Trading</td>
-              <td class="neutral">Medium</td>
-              <td class="neutral">Medium</td>
-              <td class="neutral">Medium</td>
-            </tr>
-            <tr>
-              <td>VATPro (Mediasoft)</td>
-              <td>General SMEs</td>
-              <td class="neutral">Medium</td>
-              <td class="check">Easy</td>
-              <td class="neutral">Medium</td>
-            </tr>
-            <tr>
-              <td>NBR eVAT (Official)</td>
-              <td>All businesses</td>
-              <td class="check">Free</td>
-              <td class="cross">Hard</td>
-              <td class="cross">No</td>
-            </tr>
-            <tr>
-              <td>Tally / QuickBooks</td>
-              <td>International firms</td>
-              <td class="cross">High (USD)</td>
-              <td class="neutral">Medium</td>
-              <td class="cross">Low</td>
-            </tr>
-            <tr class="win-row">
-              <td><strong>INSPIRON Tax Suite (This Tool)</strong></td>
-              <td>All BD SMEs</td>
-              <td><span class="check" style="font-weight:800">Free</span></td>
-              <td><span class="check" style="font-weight:800">Very Easy</span></td>
-              <td><span class="win-badge">⚡ Native</span></td>
-            </tr>
+            ${prof.challans.map(c => `
+              <tr>
+                <td class="code-cell">${escapeHtml(c.ref)}</td>
+                <td>${escapeHtml(c.date)}</td>
+                <td><strong>${escapeHtml(c.party)}</strong> <span style="color:var(--dim);font-family:var(--mono)">(${escapeHtml(c.bin)})</span></td>
+                <td><span class="pill-badge pill-info">${escapeHtml(c.form)}</span></td>
+                <td class="num">${fmtBdt(c.base)}</td>
+                <td class="num">${fmtBdt(c.vat)}</td>
+              </tr>
+            `).join("")}
           </tbody>
         </table>
       </div>
     </div>
-  </div><!-- /deadlines-section -->
+  `;
 
-  <!-- Default state when no biz type selected -->
-  <div id="emptyState">
-    <div class="empty-state">
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <rect x="8" y="6" width="32" height="36" rx="4" stroke="#8b949e" stroke-width="2"/>
-        <line x1="14" y1="16" x2="34" y2="16" stroke="#8b949e" stroke-width="2" stroke-linecap="round"/>
-        <line x1="14" y1="22" x2="34" y2="22" stroke="#8b949e" stroke-width="2" stroke-linecap="round"/>
-        <line x1="14" y1="28" x2="26" y2="28" stroke="#8b949e" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <div style="font-size:15px;font-weight:600;color:#8b949e;margin-bottom:6px">Select your business type above</div>
-      <div style="font-size:13px;color:#6e7681">Your personalised NBR deadline calendar will appear here</div>
-    </div>
-  </div>
+  document.getElementById("egp-bk").classList.add("open");
+  document.getElementById("egp-dr").classList.add("open");
+}
 
-</main>
+function closeInspectorDrawer() {
+  document.getElementById("egp-bk").classList.remove("open");
+  document.getElementById("egp-dr").classList.remove("open");
+}
 
-<!-- FOOTER -->
-<footer style="background:linear-gradient(180deg,#010409 0%,#060d1a 100%);border-top:1px solid rgba(0,210,255,.1);padding:40px 20px 28px;text-align:center">
-  <!-- Logo -->
-  <a href="https://inspiron.tech" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:14px">
-    <svg width="32" height="32" viewBox="0 0 358.846 350.3" fill="none">
-      <path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
-      <path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
-      <circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
-    </svg>
-    <div style="text-align:left">
-      <div style="font-size:15px;letter-spacing:.06em"><span style="font-weight:500;color:#ffffff;text-transform:lowercase">inspiron</span> <span style="font-weight:300;color:#FFD700;text-transform:uppercase">TECH</span></div>
-      <div style="font-size:9px;color:#8b949e;letter-spacing:.1em;text-transform:uppercase">ERP Architect | Listed Manager.io Advisor &middot; Bangladesh</div>
-    </div>
-  </a>
-  <div style="font-size:12px;color:#6e7681;margin-bottom:18px;font-style:italic">&ldquo;I do not install software. I architect logic.&rdquo;</div>
-  <div class="footer-links">
-    <a href="https://inspiron.tech" target="_blank" rel="noopener">Website</a>
-    <a href="mailto:hello@inspiron.tech">hello@inspiron.tech</a>
-    <a href="https://wa.me/8801719300849" target="_blank" rel="noopener">WhatsApp</a>
-    <a href="https://manager.io/advisors" target="_blank" rel="noopener">Manager.io Advisor</a>
-  </div>
-  <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px">
-    <span style="font-size:11px;color:#6e7681">AI Q&amp;A powered by</span>
-    <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#cc785c;background:rgba(204,120,92,.08);border:1px solid rgba(204,120,92,.25);border-radius:20px;padding:3px 10px">
-      &#9977; Anthropic Claude
-    </span>
-  </div>
-  <div style="font-size:11px;font-weight:700;color:#8b949e;letter-spacing:.06em;margin-bottom:6px">DESIGNED &amp; DEVELOPED BY MD ABU HASAN</div>
-  <div class="footer-disclaimer">
-    Deadlines based on NBR rules as of April 2026. Always verify with your tax advisor for the latest circulars.
-    This tool is provided free under MIT license as a community resource.
-    <br/>Source: <a href="https://github.com/INSPIRONTECH/INSPIRON-SUITE" target="_blank" rel="noopener" style="color:#8b949e">INSPIRONTECH/INSPIRON-SUITE</a>
-  </div>
-</footer>
-
-<!-- Toast -->
-<div id="toast"></div>
-
-<script>
-  /* ── NBR Deadline Engine ── */
-
-  const MUSHAK_INFO = [
-    { code: 'Mushak-9.1', name: 'Monthly VAT Return', bangla: 'মাসিক ভ্যাট রিটার্ন', desc: 'Net Output VAT minus Input VAT. Filed monthly via NBR eVAT portal. Consolidates all sub-forms into a single monthly submission.', deadline: '15th of the following month' },
-    { code: 'Mushak-6.3', name: 'Tax Invoice (VAT Challan)', bangla: 'ভ্যাট চালান', desc: 'VAT invoice issued at point of supply. Mandatory for all VAT-registered transactions. Must show BIN, item details, and VAT amount.', deadline: 'At time of supply' },
-    { code: 'Mushak-6.1', name: 'Purchase Account Book', bangla: 'ক্রয় হিসাব বই', desc: 'Purchase register recording all VAT-able purchases. Feeds input VAT credit claims in Mushak-9.1.', deadline: 'Maintained continuously; data used in monthly return' },
-    { code: 'Mushak-6.2', name: 'Sales Account Book', bangla: 'বিক্রয় হিসাব বই', desc: 'Sales register recording all taxable sales and output VAT collected. Feeds output VAT in Mushak-9.1.', deadline: 'Maintained continuously; data used in monthly return' },
-    { code: 'Mushak-18', name: 'Account Current', bangla: 'চলতি হিসাব', desc: 'Closing VAT payable or receivable balance declared in Mushak-9.1. Automatically carried forward to next month as opening balance.', deadline: 'Adjusted with monthly return' },
-  ];
-
-  function getAllDeadlines(businessType) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const deadlines = [];
-
-    // VAT Monthly Returns (Mushak-9.1) — all VAT-registered
-    for (let i = 0; i < 6; i++) {
-      const periodDate = new Date(today.getFullYear(), today.getMonth() + i, 1);
-      const dueDate    = new Date(today.getFullYear(), today.getMonth() + i + 1, 15);
-      deadlines.push({
-        type: 'VAT',
-        description: 'Mushak-9.1 — Monthly VAT Return',
-        bangla: 'মাসিক ভ্যাট রিটার্ন',
-        period: periodDate.toLocaleString('default', { month: 'long', year: 'numeric' }),
-        dueDate,
-        penalty: 'Min. Tk 10,000 + 2% interest/month on unpaid tax',
-        account: 'Output VAT Payable - Mushak-9.1',
-        memo: 'Monthly VAT Return — submit via eVAT portal'
-      });
-    }
-
-    // VDS — Monthly (VAT Deducted at Source) — companies and manufacturing
-    if (['company', 'manufacturing', 'import'].includes(businessType)) {
-      for (let i = 0; i < 6; i++) {
-        const periodDate = new Date(today.getFullYear(), today.getMonth() + i, 1);
-        const dueDate    = new Date(today.getFullYear(), today.getMonth() + i + 1, 15);
-        deadlines.push({
-          type: 'VDS',
-          description: 'VDS Return — VAT Deducted at Source',
-          bangla: 'উৎসে ভ্যাট কর্তন',
-          period: periodDate.toLocaleString('default', { month: 'long', year: 'numeric' }),
-          dueDate,
-          penalty: 'Fixed penalty + 2% interest/month on unpaid VDS',
-          account: 'VDS Payable',
-          memo: 'Monthly VDS Return — for registered deductors'
-        });
-      }
-    }
-
-    // Income Tax Annual Return
-    const isCompany = ['company', 'manufacturing'].includes(businessType);
-    if (isCompany) {
-      deadlines.push({
-        type: 'INCOME-TAX',
-        description: 'Corporate Income Tax Return — AY 2025-26 (Extended)',
-        bangla: 'কর্পোরেট আয়কর রিটার্ন',
-        period: 'AY 2025-26',
-        dueDate: new Date('2026-04-15'),
-        penalty: 'Tk 1,000/month delay + 2% interest/month on unpaid tax',
-        account: 'Corporate Income Tax Payable',
-        memo: 'Corporate Income Tax Return (AY 2025-26) — Extended to 15 Apr 2026 per NBR order'
-      });
-    } else {
-      deadlines.push({
-        type: 'INCOME-TAX',
-        description: 'Individual Income Tax Return — AY 2025-26',
-        bangla: 'ব্যক্তিগত আয়কর রিটার্ন',
-        period: 'AY 2025-26',
-        dueDate: new Date('2026-03-31'),
-        penalty: 'Tk 1,000/month delay + 2% simple interest/month on unpaid tax',
-        account: 'Income Tax Payable',
-        memo: 'Individual Income Tax Return (AY 2025-26) — verify extension at etaxnbr.gov.bd'
-      });
-    }
-
-    // Advance Tax Instalments (cumulative: 15% → 45% → 75% → 100%)
-    [
-      { date: new Date('2026-09-15'), period: 'Q1 FY 2026-27 (Jul-Sep)', pct: '15% of estimated tax' },
-      { date: new Date('2026-12-15'), period: 'Q2 FY 2026-27 (Oct-Dec)', pct: '45% cumulative' },
-      { date: new Date('2027-03-15'), period: 'Q3 FY 2026-27 (Jan-Mar)', pct: '75% cumulative' },
-      { date: new Date('2027-06-15'), period: 'Q4 FY 2026-27 (Apr-Jun)', pct: '100% cumulative' },
-    ].forEach(({ date, period, pct }) => {
-      deadlines.push({
-        type: 'ADVANCE-TAX',
-        description: `Advance Income Tax Instalment (${pct})`,
-        bangla: 'অগ্রিম আয়কর',
-        period,
-        dueDate: date,
-        penalty: '2% simple interest/month on shortfall amount',
-        account: 'Advance Income Tax',
-        memo: `Advance Tax Instalment — ${period} — ${pct}`
-      });
-    });
-
-    // TDS Returns (Form 108) — quarterly — due 25th of month after quarter end
-    [
-      { date: new Date('2026-10-25'), period: 'Q1 Jul-Sep 2026' },
-      { date: new Date('2027-01-25'), period: 'Q2 Oct-Dec 2026' },
-      { date: new Date('2027-04-25'), period: 'Q3 Jan-Mar 2027' },
-      { date: new Date('2027-07-25'), period: 'Q4 Apr-Jun 2027' },
-    ].forEach(({ date, period }) => {
-      deadlines.push({
-        type: 'TDS',
-        description: 'Quarterly TDS Return — Form 108',
-        bangla: 'উৎসে কর রিটার্ন (ত্রৈমাসিক)',
-        period,
-        dueDate: date,
-        penalty: 'Fixed penalty + 2% interest/month on unpaid TDS',
-        account: 'TDS Payable',
-        memo: `Quarterly TDS Return Form 108 — ${period}`
-      });
-    });
-
-    return deadlines.sort((a, b) => a.dueDate - b.dueDate);
-  }
-
-  /* ── Rendering ── */
-  let currentDeadlines = [];
-  let currentBizType = '';
-
-  function fmtDate(d) {
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-  }
-
-  function daysLeft(d) {
-    const today = new Date(); today.setHours(0,0,0,0);
-    return Math.round((d - today) / 86400000);
-  }
-
-  function renderAll() {
-    const sel = document.getElementById('bizType');
-    currentBizType = sel.value;
-    if (!currentBizType) {
-      document.getElementById('deadlines-section').style.display = 'none';
-      document.getElementById('emptyState').style.display = 'block';
-      document.querySelector('.selector-hint').textContent = 'Deadlines are filtered to your business class. Select above to begin.';
-      return;
-    }
-
-    document.getElementById('deadlines-section').style.display = 'block';
-    document.getElementById('emptyState').style.display = 'none';
-    document.querySelector('.selector-hint').textContent = `Showing deadlines for: ${sel.options[sel.selectedIndex].text}`;
-
-    currentDeadlines = getAllDeadlines(currentBizType);
-    renderDeadlines(currentDeadlines);
-    renderMushak();
-  }
-
-  function renderDeadlines(deadlines) {
-    const tbody = document.getElementById('deadlinesBody');
-    tbody.innerHTML = '';
-
-    /* Stat cards — counts overdue as urgent (critical for April 2026) */
-    const urgentCount = deadlines.filter(d => { const dl = daysLeft(d.dueDate); return dl <= 14; }).length;
-    const monthCount  = deadlines.filter(d => { const dl = daysLeft(d.dueDate); return dl <= 30; }).length;
-    document.getElementById('stat-urgent').textContent = urgentCount || '0';
-    document.getElementById('stat-month').textContent  = monthCount  || '0';
-
-    if (!deadlines.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:#6e7681">No upcoming deadlines found.</td></tr>';
-      return;
-    }
-
-    deadlines.forEach(d => {
-      const days = daysLeft(d.dueDate);
-      let daysCls = 'days-ok', dueCls = 'due-ok';
-      if (days < 0)  { daysCls = 'days-urgent';  dueCls = 'due-urgent'; }
-      else if (days <= 14) { daysCls = 'days-urgent';  dueCls = 'due-urgent'; }
-      else if (days <= 30) { daysCls = 'days-warning'; dueCls = 'due-warning'; }
-
-      const daysLabel = days < 0 ? `${Math.abs(days)}d overdue` : days === 0 ? 'Today!' : `${days}d left`;
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><span class="badge badge-${d.type}">${d.type.replace('-', ' ')}</span></td>
-        <td>
-          <div class="deadline-desc">${d.description}</div>
-          <span class="deadline-bangla">${d.bangla} · ${d.period}</span>
-        </td>
-        <td><div class="due-date ${dueCls}">${fmtDate(d.dueDate)}</div></td>
-        <td><span class="days-indicator ${daysCls}">${daysLabel}</span></td>
-        <td class="penalty-cell">${d.penalty}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  function renderMushak() {
-    const grid = document.getElementById('mushakGrid');
-    grid.innerHTML = MUSHAK_INFO.map(m => `
-      <div class="mushak-card">
-        <div class="mushak-code">${m.code}</div>
-        <div class="mushak-name">${m.name} <span style="font-size:11px;color:#6e7681">/ ${m.bangla}</span></div>
-        <div class="mushak-desc">${m.desc}</div>
-        <div class="mushak-deadline">⏰ ${m.deadline}</div>
-      </div>
-    `).join('');
-  }
-
-  /* ── Penalty Calculator ── */
-  function calcPenalty() {
-    const type   = document.getElementById('penaltyType').value;
-    const days   = parseInt(document.getElementById('daysLate').value) || 0;
-    const amount = parseFloat(document.getElementById('taxAmount').value) || 0;
-    const el     = document.getElementById('penaltyResult');
-
-    if (!days && !amount) { el.classList.remove('show'); return; }
-
-    let penalty = 0, breakdown = '';
-    const months = Math.ceil(days / 30);
-
-    switch(type) {
-      case 'vat': {
-        const filingFee = 2000;                           // Section 85(f) — fixed late filing
-        const interestVat = amount * 0.02 * months;      // 2% per month on unpaid tax
-        penalty = filingFee + interestVat;
-        breakdown = `Tk 2,000 late filing fee + 2% per month × ${months} month(s) on Tk ${amount.toLocaleString()} = Tk ${Math.round(interestVat).toLocaleString()}`;
-        break;
-      }
-      case 'income': {
-        const lateFee = months * 1000;                   // Tk 1,000 per month — Income Tax Act 2023 §266
-        const interestInc = amount * 0.02 * months;      // 2% per month on unpaid tax
-        penalty = lateFee + interestInc;
-        breakdown = `Tk 1,000 × ${months} month(s) late fee + 2% interest × ${months} month(s) on Tk ${amount.toLocaleString()}`;
-        break;
-      }
-      case 'tds': {
-        const interestTds = amount * 0.02 * months;
-        penalty = Math.max(5000, interestTds);
-        breakdown = `Min Tk 5,000 fixed OR 2% per month × ${months} month(s) on Tk ${amount.toLocaleString()} — whichever higher`;
-        break;
-      }
-      case 'vds': {
-        const interestVds = amount * 0.02 * months;
-        penalty = Math.max(10000, interestVds);
-        breakdown = `Min Tk 10,000 fixed OR 2% per month × ${months} month(s) on Tk ${amount.toLocaleString()} — whichever higher`;
-        break;
-      }
-    }
-
-    document.getElementById('penaltyAmount').textContent = `BDT ${Math.round(penalty).toLocaleString()}`;
-    document.getElementById('penaltyBreakdown').textContent = breakdown;
-    el.classList.add('show');
-  }
-
-  /* ── Manager.io CSV Export ── */
-  function exportCsv() {
-    if (!currentBizType) { showToast('⚠️ Please select a business type first'); return; }
-
-    const headers = ['Date', 'Account', 'Description', 'Debit', 'Credit', 'Tax Code', 'Memo'];
-    const rows = currentDeadlines.map(d => [
-      fmtDate(d.dueDate),
-      d.account,
-      `${d.description} | ${d.period}`,
-      '',
-      '',
-      d.type,
-      `${d.memo} | Penalty: ${d.penalty}`
-    ]);
-
-    const csv = [headers, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    const date = new Date().toISOString().split('T')[0];
-    link.href     = url;
-    link.download = `manager-io-compliance-${currentBizType}-${date}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-
-    showToast('✅ CSV exported — import into Manager.io Journal Entries');
-  }
-
-  /* ── Share / Copy Link ── */
-  function copyLink(e) {
-    e.preventDefault();
-    const url = `${location.href.split('?')[0]}?type=${currentBizType}`;
-    navigator.clipboard.writeText(url).then(() => showToast('🔗 Link copied to clipboard'));
-  }
-
-  /* ── Toast ── */
-  function showToast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 3500);
-  }
-
-  /* ── Claude Q&A ── */
-  let qaLocked = false;
-  async function sendQ() {
-    if (qaLocked) return;
-    qaLocked = true;
-    setTimeout(() => qaLocked = false, 2000);
-    const inp = document.getElementById('qa-input');
-    const q = inp.value.trim();
-    if (!q) { qaLocked = false; return; }
-    inp.value = '';
-    await askQ(q);
-  }
-
-  async function askQ(q) {
-    const msgs = document.getElementById('qa-msgs');
-
-    const uDiv = document.createElement('div');
-    uDiv.className = 'qa-msg qa-user';
-    uDiv.textContent = q;
-    msgs.appendChild(uDiv);
-
-    const aDiv = document.createElement('div');
-    aDiv.className = 'qa-msg qa-ai loading';
-    aDiv.innerHTML = `
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(0,210,255,.15)">
-        <div style="width:6px;height:6px;border-radius:50%;background:#00D2FF;flex-shrink:0"></div>
-        <span style="font-size:10px;font-weight:700;color:#00D2FF;letter-spacing:.08em;text-transform:uppercase">Claude · NBR Tax Advisor</span>
-      </div>
-      <div class="qa-answer-body">Thinking…</div>
-    `;
-    msgs.appendChild(aDiv);
-    msgs.scrollTop = msgs.scrollHeight;
-
-    const bizLabel = document.getElementById('bizType').options[document.getElementById('bizType').selectedIndex]?.text || 'general business';
-
-    const sys = `You are an expert Bangladesh tax advisor specialising in NBR (National Board of Revenue) compliance. You have deep knowledge of all Mushak VAT forms, income tax rules, TDS/WHT obligations, VDS, advance tax, and company law filing requirements for Bangladesh as of 2026.
-
-User context: Business type = ${bizLabel}.
-
-Rules:
-- Be specific and practical. Give exact form names, deadlines, BDT penalty amounts, and NBR portal references where relevant.
-- Keep answers concise — max 160 words.
-- If asked in Bangla, respond in Bangla.
-- Never give vague generic advice. You are the expert.
-- Do not recommend consulting another advisor — you ARE the advisor.
-- Use **bold** for key terms, amounts, and deadlines only.
-- Use bullet points (- ) for lists.
-- Never use headers (###). Never use tables.
-- Structure: one sentence summary → bullet details → penalty amount on last line.`;
-
-    try {
-      const res = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, system: sys })
-      });
-      const data = await res.json();
-      const text = data.answer || data.error || 'No response received.';
-      aDiv.className = 'qa-msg qa-ai';
-      const formattedText = text
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/\n- /g, '<br>• ')
-        .replace(/\n/g, '<br>');
-      aDiv.querySelector('.qa-answer-body').innerHTML = formattedText;
-    } catch(e) {
-      aDiv.className = 'qa-msg qa-ai';
-      aDiv.querySelector('.qa-answer-body').innerHTML = 'Q&amp;A requires a backend to be configured. Contact <a href="mailto:hello@inspiron.tech" style="color:#00D2FF">hello@inspiron.tech</a> for the full version.';
-    }
-
-    // Follow-up suggestion chips
-    const followUps = [
-      'What is the exact penalty amount in BDT?',
-      'How do I file this via eVAT portal?',
-      'Does this apply to my business type?'
-    ];
-    const followDiv = document.createElement('div');
-    followDiv.style = 'display:flex;gap:6px;flex-wrap:wrap;margin-top:10px';
-    followUps.forEach(fq => {
-      const btn = document.createElement('button');
-      btn.className = 'qa-chip';
-      btn.textContent = fq;
-      btn.style.fontSize = '10px';
-      btn.onclick = () => askQ(fq);
-      followDiv.appendChild(btn);
-    });
-    aDiv.appendChild(followDiv);
-
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  /* ── Mobile Drawer ── */
-  function openDrawer() {
-    document.getElementById('mobile-drawer').classList.add('open');
-    document.getElementById('mobile-overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-    document.getElementById('hamburger').setAttribute('aria-expanded', 'true');
-  }
-  function closeDrawer() {
-    document.getElementById('mobile-drawer').classList.remove('open');
-    document.getElementById('mobile-overlay').classList.remove('open');
-    document.body.style.overflow = '';
-    document.getElementById('hamburger').setAttribute('aria-expanded', 'false');
-  }
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeDrawer();
+function switchTab(tabId) {
+  RUNTIME_STATE.activeTab = tabId;
+  document.querySelectorAll(".nav-tab").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === tabId);
   });
+  document.querySelectorAll(".tab-view").forEach(sec => {
+    const match = sec.id === "view-" + tabId;
+    sec.hidden = !match;
+    sec.classList.toggle("active", match);
+  });
+}
 
-  /* ── URL Params ── */
-  (function init() {
-    const params = new URLSearchParams(location.search);
-    const t = params.get('type');
-    if (t) {
-      const sel = document.getElementById('bizType');
-      if ([...sel.options].some(o => o.value === t)) {
-        sel.value = t;
-        renderAll();
+function onBusinessSelectChange(val) {
+  if (DEMO_PROFILES[val]) {
+    RUNTIME_STATE.activeProfileKey = val;
+    renderAllViews();
+  }
+}
+
+async function installSingleTaxCode(idx) {
+  const tpl = TAX_CODE_TEMPLATES[idx];
+  if (!tpl) return;
+  try {
+    if (window.parent !== window) {
+      await postMessageApi4("POST", "/api4/tax-code", { Value: tpl });
+    }
+    RUNTIME_STATE.installedStates[tpl.ReportingCategory] = true;
+    renderTaxCodesTable();
+  } catch (e) {
+    RUNTIME_STATE.installedStates[tpl.ReportingCategory] = true;
+    renderTaxCodesTable();
+  }
+}
+
+async function installAllMissingTaxCodes() {
+  const btn = document.getElementById("btnInstallAllCodes");
+  if (btn) { btn.disabled = true; btn.textContent = "⏳ Installing 11 BD Tax Codes…"; }
+  for (let i = 0; i < TAX_CODE_TEMPLATES.length; i++) {
+    await installSingleTaxCode(i);
+  }
+  if (btn) { btn.disabled = false; btn.textContent = "✓ All 11 BD Tax Codes Installed"; }
+}
+
+async function checkTaxCodesStatus() {
+  try {
+    if (window.parent !== window) {
+      const res = await postMessageApi4("GET", "/api4/tax-code-batch?pageSize=500");
+      if (res && res.body && Array.isArray(res.body.items)) {
+        document.getElementById("bridgeStatusText").textContent = "LIVE MANAGER.IO /API4 CONNECTED";
       }
     }
-  })();
+  } catch (e) {}
+  renderTaxCodesTable();
+}
+
+function syncLiveManagerData() {
+  checkTaxCodesStatus();
+  renderAllViews();
+}
+
+function cycleLanguage() {
+  const order = ["bi", "en", "bn"];
+  const labels = { bi: "🌐 EN+বাংলা", en: "🌐 EN", bn: "🌐 বাংলা" };
+  const idx = order.indexOf(RUNTIME_STATE.langMode);
+  RUNTIME_STATE.langMode = order[(idx + 1) % order.length];
+  localStorage.setItem("bd-nbr-lang", RUNTIME_STATE.langMode);
+  document.getElementById("btnLang").textContent = labels[RUNTIME_STATE.langMode];
+}
+
+function toggleDarkTheme() {
+  RUNTIME_STATE.darkMode = !RUNTIME_STATE.darkMode;
+  document.documentElement.classList.toggle("dark", RUNTIME_STATE.darkMode);
+  localStorage.setItem("bd-nbr-theme", RUNTIME_STATE.darkMode ? "dark" : "light");
+  document.getElementById("btnTheme").textContent = RUNTIME_STATE.darkMode ? "☀️ Light" : "🌙 Dark";
+}
+
+function exportMushakCsv() {
+  const prof = getActiveProfile();
+  const rows = [["Note", "Part", "Description", "Sub-Form", "Assessable Base (BDT)", "VAT Amount (BDT)", "Status"]];
+  prof.mushakNotes.forEach(r => rows.push([r.note, r.part, r.title, r.form, r.base, r.vat, r.status]));
+  const csv = "\uFEFF" + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `Mushak_9_1_${prof.id.replace("demo:", "")}_2026_10.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function exportDeadlinesJournalCsv() {
+  const rows = [
+    ["Date", "Account", "Description", "Debit", "Credit", "Tax Code", "Memo"],
+    ["2026-11-15", "Output VAT Payable - Mushak-9.1", "Monthly VAT Return Mushak-9.1 Filing", "", "", "BD VAT 15%", "Submit via vat.gov.bd by 15th"],
+    ["2026-11-15", "VDS Payable", "Monthly VDS Treasury Deposit (Mushak-6.6)", "", "", "BD VDS Payable", "Rule 5(2) 15-day deposit window"],
+    ["2026-12-15", "Advance Income Tax", "Q2 Advance Income Tax Installment (25% u/s 154)", "", "", "BD AIT / TDS", "Income Tax Act 2023 Section 154"]
+  ];
+  const csv = "\uFEFF" + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Manager_io_BD_NBR_Compliance_Schedule.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+// Synchronous URL Query Parameter Evaluation (?demo=...&tab=...&drawer=...&theme=...)
+(function initExtensionBoot() {
+  try {
+    const qs = new URLSearchParams(window.location.search);
+    const demo = qs.get("demo") || qs.get("biz");
+    if (demo) {
+      const key = demo.startsWith("demo:") ? demo : ("demo:" + demo);
+      if (DEMO_PROFILES[key]) {
+        RUNTIME_STATE.activeProfileKey = key;
+        const sel = document.getElementById("bizSelect");
+        if (sel) sel.value = key;
+      }
+    }
+    const theme = qs.get("theme");
+    if (theme === "dark" || theme === "light") {
+      RUNTIME_STATE.darkMode = (theme === "dark");
+    }
+    if (RUNTIME_STATE.darkMode) {
+      document.documentElement.classList.add("dark");
+      document.getElementById("btnTheme").textContent = "☀️ Light";
+    }
+    renderAllViews();
+    const tab = qs.get("tab");
+    if (tab) switchTab(tab);
+    const dr = qs.get("drawer");
+    if (dr !== null && dr !== "") openNoteInspector(Number(dr) || 0);
+  } catch (e) {
+    renderAllViews();
+  }
+})();
 </script>
 </body>
 </html>

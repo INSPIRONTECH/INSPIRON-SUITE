@@ -1,0 +1,96 @@
+<!doctype html>
+<!--
+  INSPIRON TECH · MUSHAK-6.3 TAX INVOICE (VAT-6.3) · COMMUNITY EDITION V1.1.0 · STATELESS
+  National Board of Revenue statutory tax-invoice layout, per Rule 40(1)(c) & (f) of VAT & SD Rules 2016.
+  Data source: /api4/view-v1 only. No secondary APIs, credentials, or writes.
+  Mandatory NBR fields kept intact; fields never present in Manager.io's
+  view-v1 payload are shown as blank labeled cells — never fabricated.
+  Architected by MD ABU HASAN · ERP Architect | Listed Manager.io Advisor
+-->
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mushak-6.3 Tax Invoice (কর চালানপত্র)</title>
+<style>
+:root{--m63-ink:#0D1117;--m63-accent:#0070A8;--m63-accent-soft:#F0F7FC;--m63-paper:#FFF;--m63-canvas:#F3F5F7;--m63-line:#9AA6B2;--m63-line-soft:#D8E0E7;--m63-muted:#4B5563;--font:Arial,Helvetica,sans-serif;--bangla:'Li Ador Noirrit','Noto Sans Bengali',Arial,sans-serif}
+*{box-sizing:border-box}html{background:var(--m63-canvas);-webkit-print-color-adjust:exact;print-color-adjust:exact}body{margin:0;padding:22px 14px;background:var(--m63-canvas);font-family:var(--font);font-size:12px;line-height:1.4;color:var(--m63-ink)}
+#m63-document{max-width:900px;margin:auto;background:var(--m63-paper);border:1.5px solid var(--m63-ink);box-shadow:0 14px 40px rgba(13,17,23,.12)}
+.m63-statute{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid var(--m63-line);background:var(--m63-accent-soft)}
+.m63-statute-bn{font-family:var(--bangla);font-size:11px;color:var(--m63-muted)}
+.m63-statute-form{text-align:right}
+.m63-statute-form .bn{font-family:var(--bangla);font-size:16px;font-weight:800;color:var(--m63-ink)}
+.m63-statute-form .en{font-size:9px;letter-spacing:1px;color:var(--m63-muted);text-transform:uppercase}
+.m63-shell{padding:18px 22px 20px}
+.m63-title{margin:0 0 14px;text-align:center;font-size:19px;font-weight:800;letter-spacing:.5px;color:var(--m63-ink);text-transform:uppercase}
+.m63-title small{display:block;margin-top:3px;font-family:var(--bangla);font-size:12px;font-weight:600;color:var(--m63-muted);text-transform:none}
+.m63-supplier{border:1px solid var(--m63-line);border-radius:0;margin-bottom:0;overflow:hidden}
+.m63-row{display:grid;grid-template-columns:180px 1fr;border-bottom:1px solid var(--m63-line-soft)}
+.m63-row:last-child{border-bottom:0}
+.m63-row .k{padding:6px 10px;background:#f7f8f9;font-size:10px;font-weight:700;color:var(--m63-muted);border-right:1px solid var(--m63-line-soft)}
+.m63-row .k .bn{display:block;font-family:var(--bangla);font-size:10px;font-weight:600;color:var(--m63-muted)}
+.m63-row .v{padding:6px 10px;font-size:12px;font-weight:700;color:var(--m63-ink);word-break:break-word}
+.m63-twocol{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--m63-line);border-top:0}
+.m63-twocol .m63-col{border-right:1px solid var(--m63-line)}
+.m63-twocol .m63-col:last-child{border-right:0}
+.m63-twocol .m63-row{grid-template-columns:120px 1fr}
+.m63-table-wrap{margin-top:0;overflow-x:auto;border:1px solid var(--m63-line);border-top:0}
+.m63-table{width:100%;border-collapse:collapse;font-size:10.5px}
+.m63-table thead th{padding:7px 6px;border:1px solid var(--m63-line);background:var(--m63-ink);color:#fff;font-size:9px;font-weight:800;text-align:center;vertical-align:middle;text-transform:uppercase}
+.m63-table thead th small{display:block;font-family:var(--bangla);font-weight:600;font-size:8.5px;color:#e6ecf3;text-transform:none;margin-top:2px}
+.m63-table tbody td{padding:6px 6px;border:1px solid var(--m63-line-soft);vertical-align:top}
+.m63-table tbody tr:nth-child(even){background:#fafbfc}
+.m63-num{text-align:right;white-space:nowrap}
+.m63-center{text-align:center}
+.m63-empty-row td{height:22px}
+.m63-totals{border:1px solid var(--m63-line);border-top:0}
+.m63-total-row{display:grid;grid-template-columns:1fr 180px;border-bottom:1px solid var(--m63-line-soft)}
+.m63-total-row:last-child{border-bottom:0}
+.m63-total-row .l{padding:6px 10px;font-size:10px;font-weight:700;color:var(--m63-muted);text-align:right;text-transform:uppercase}
+.m63-total-row .l .bn{display:block;font-family:var(--bangla);font-weight:600;font-size:10px;color:var(--m63-muted)}
+.m63-total-row.grand{background:var(--m63-accent-soft)}
+.m63-total-row.grand .l{color:var(--m63-ink);font-size:11px}
+.m63-total-row .v{padding:6px 10px;text-align:right;font-weight:800;font-size:12px;color:var(--m63-ink)}
+.m63-signblock{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:26px;border-top:1px solid var(--m63-line)}
+.m63-signcol{padding:22px 4px 8px;text-align:center}
+.m63-signcol .line{border-top:1px solid var(--m63-ink);margin-bottom:6px}
+.m63-signcol .role{font-size:9px;font-weight:800;letter-spacing:.8px;color:var(--m63-muted);text-transform:uppercase}
+.m63-signcol .role .bn{display:block;font-family:var(--bangla);font-weight:600;font-size:9px}
+.m63-note{margin-top:14px;padding:8px 12px;border-left:3px solid var(--m63-accent);background:var(--m63-accent-soft);font-size:9.5px;color:var(--m63-ink);line-height:1.5}
+.m63-footer{display:flex;justify-content:space-between;gap:14px;margin-top:18px;padding-top:10px;border-top:1px solid var(--m63-line-soft);color:var(--m63-muted);font-size:8.5px}
+.m63-footer-right{font-weight:800;letter-spacing:.5px;color:var(--m63-ink);text-transform:uppercase;text-align:right}
+.m63-fault{margin:24px;padding:14px;border:1px solid #efbbb5;border-radius:6px;background:#fff1f0;color:#B42318;font-size:12px}
+.m63-loading{padding:50px 20px;color:var(--m63-muted);font-size:11px;font-weight:800;letter-spacing:1px;text-align:center;text-transform:uppercase}
+@media(max-width:650px){.m63-twocol,.m63-signblock{grid-template-columns:1fr}.m63-shell{padding:16px}}
+@page{size:A4;margin:9mm}
+@media print{html,body{background:#fff}body{padding:0}#m63-document{max-width:none;box-shadow:none}.m63-table thead{display:table-header-group}.m63-table tr{break-inside:avoid;page-break-inside:avoid}.m63-table thead th,.m63-statute{background:var(--m63-ink)!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.m63-statute{background:var(--m63-accent-soft)!important;color:var(--m63-ink)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div id="m63-document"><main id="m63-root" class="m63-shell"><div class="m63-loading">Preparing Mushak-6.3 Tax Invoice…</div></main></div>
+<script>
+'use strict';
+const text=v=>v===null||v===undefined?'':String(v);
+const make=(tag,cls,value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=text(value);return n};
+const cleanNumber=v=>text(v).trimEnd().replace(/(\d)\.0+$/,'$1');
+const parseNum=v=>Number(text(v).replace(/[^0-9.-]+/g,''))||0;
+function findField(fields,pattern){return (fields||[]).find(f=>f&&pattern.test(text(f.label)))}
+function fieldValue(fields,pattern){const f=findField(fields,pattern);return f?text(f.text||f.value):''}
+function labeledRow(container,labelEn,labelBn,value){const row=make('div','m63-row');const k=make('div','k');k.appendChild(document.createTextNode(labelEn));if(labelBn){const bn=make('span','bn',labelBn);k.appendChild(bn)}row.appendChild(k);row.appendChild(make('div','v',value||''));container.appendChild(row)}
+function renderStatuteBand(root){const band=make('div','m63-statute');band.append(make('div','m63-statute-bn','গণপ্রজাতন্ত্রী বাংলাদেশ সরকার · জাতীয় রাজস্ব বোর্ড [ বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও (চ) দ্রষ্টব্য ]'));const form=make('div','m63-statute-form');form.append(make('div','bn','মূসক-৬.৩'),make('div','en','Mushak-6.3 · Tax Invoice'));band.appendChild(form);root.appendChild(band)}
+function renderTitle(root){const title=make('h1','m63-title');title.appendChild(document.createTextNode('Tax Invoice'));title.appendChild(make('small',null,'কর চালানপত্র'));root.appendChild(title)}
+function renderSupplierBlock(root,data){const fields=data.fields||[];const box=make('div','m63-supplier');labeledRow(box,'Name of Registered Person','নিবন্ধিত ব্যক্তির নাম',(data.business&&data.business.name)||data.businessName||'');const bFields=(data.business&&data.business.fields)||[];const regBin=(data.business&&data.business.identifier)||fieldValue(bFields,/bin/i)||fieldValue(fields,/supplier.*bin|business.*bin|our.*bin/i);labeledRow(box,'BIN of Registered Person','নিবন্ধিত ব্যক্তির বিআইএন',regBin);labeledRow(box,'Challan Issuing Address','চালানপত্র ইস্যুর ঠিকানা',(data.business&&data.business.address)||'');root.appendChild(box)}
+function renderBuyerBlock(root,data){const fields=data.fields||[];const wrap=make('div','m63-twocol');const left=make('div','m63-col'),right=make('div','m63-col');labeledRow(left,'Name of Purchaser','ক্রেতার নাম',data.recipient&&data.recipient.name);labeledRow(left,'BIN of Purchaser','ক্রেতার বিআইএন',fieldValue(fields,/buyer.*bin|purchaser.*bin|customer.*bin|^bin$/i));labeledRow(left,'Destination of Supply','সরবরাহের গন্তব্যস্থল',(data.recipient&&data.recipient.address)||fieldValue(fields,/destination/i));labeledRow(left,'Vehicle Type & No.','যানবাহনের প্রকৃতি ও নম্বর',fieldValue(fields,/vehicle|truck|lorry|transport/i));labeledRow(right,'Invoice No.','চালানপত্র নম্বর',data.reference);const date=findField(fields,/date/i);labeledRow(right,'Date of Issue','ইস্যুর তারিখ',date?text(date.text||date.value):'');labeledRow(right,'Time of Issue','ইস্যুর সময়',fieldValue(fields,/time/i));wrap.append(left,right);root.appendChild(wrap)}
+function buildInvoiceTable(rows,columns){const wrap=make('div','m63-table-wrap'),table=make('table','m63-table'),thead=document.createElement('thead'),hr=document.createElement('tr');const headers=[['SL','ক্রমিক'],['Description','পণ্য বা সেবার বর্ণনা'],['Unit','সরবরাহের একক'],['Qty','পরিমাণ'],['Unit Value','একক মূল্য (টাকায়)'],['Total Value','মোট মূল্য (টাকায়)'],['Suppl. Duty %','সম্পূরক শুল্কের হার'],['Suppl. Duty Amt','সম্পূরক শুল্কের পরিমাণ'],['VAT Rate','মূল্য সংযোজন করের হার/সুনির্দিষ্ট কর'],['VAT Amount','মূল্য সংযোজন কর/সুনির্দিষ্ট করের পরিমাণ'],['Total incl. Tax','সকল প্রকার শুল্ক ও করসহ মূল্য']];headers.forEach(([en,bn])=>{const th=make('th');th.appendChild(document.createTextNode(en));if(bn)th.appendChild(make('small',null,bn));hr.appendChild(th)});thead.appendChild(hr);table.appendChild(thead);const tbody=document.createElement('tbody');const idx=(pattern)=>(columns||[]).findIndex(c=>pattern.test(text(c.label)));const descIndex=idx(/description|item/i);const qtyIndex=idx(/^qty$|^quantity$|^pcs$/i);const unitIndex=idx(/^unit$/i);const priceIndex=idx(/unit price|rate/i);const amtIndex=idx(/^amount$|taxable/i);const taxRateIndex=idx(/tax rate|vat rate|^tax$/i);const taxAmtIndex=idx(/tax amount|vat amount/i);const totalIndex=idx(/^total$/i);(rows||[]).forEach((row,i)=>{if(!row||!row.cells)return;const tr=document.createElement('tr');const cell=idx2=>idx2>=0&&row.cells[idx2]?text(row.cells[idx2].text):'';const baseStr=amtIndex>=0?cleanNumber(cell(amtIndex)):cleanNumber(cell(priceIndex));const taxStr=taxAmtIndex>=0?cleanNumber(cell(taxAmtIndex)):'';const totalStr=totalIndex>=0?cleanNumber(cell(totalIndex)):'';let rateStr=taxRateIndex>=0?cell(taxRateIndex):'';if(!rateStr&&taxStr&&baseStr){const bNum=parseNum(baseStr),tNum=parseNum(taxStr);if(bNum>0&&tNum>=0){const pct=Math.round((tNum/bNum)*1000)/10;rateStr=pct+'%'}}const cells=[String(i+1),cell(descIndex),cell(unitIndex),cell(qtyIndex),cleanNumber(cell(priceIndex)),baseStr,'','',rateStr,taxStr==='0'?'0.00':taxStr,totalStr||baseStr];cells.forEach((value,ci)=>{const td=make('td',null,value);if(ci===0||ci===2||ci===3||ci===8)td.className='m63-center';if(ci>=4&&ci!==8)td.className='m63-num';tr.appendChild(td)});tbody.appendChild(tr)});for(let pad=(rows||[]).length;pad<3;pad++){const tr=make('tr','m63-empty-row');for(let c=0;c<11;c++)tr.appendChild(document.createElement('td'));tbody.appendChild(tr)}table.appendChild(tbody);wrap.appendChild(table);return wrap}
+function renderTotals(root,data){const totals=data.totals||(data.table&&data.table.totals)||[];const box=make('div','m63-totals');const addRow=(labelEn,labelBn,value,grand)=>{const row=make('div','m63-total-row'+(grand?' grand':''));const l=make('div','l');l.appendChild(document.createTextNode(labelEn));if(labelBn)l.appendChild(make('span','bn',labelBn));row.appendChild(l);row.appendChild(make('div','v',value||'—'));box.appendChild(row)};const gross=totals.find(t=>text(t.key)==='Total'?false:/sub.?total/i.test(text(t.label)))||totals.find(t=>!(t.class==='taxAmount')&&text(t.key)!=='Total')||totals[0];const vat=totals.find(t=>t.class==='taxAmount');const grand=totals.find(t=>text(t.key)==='Total')||totals[totals.length-1];addRow('Value (excl. VAT)','সর্বমোট মূল্য (ভ্যাট ব্যতীত)',gross?cleanNumber(gross.text||gross.value):'');addRow('VAT Amount','সর্বমোট মূল্য সংযোজন কর',vat?cleanNumber(vat.text||vat.value):'');addRow('Total incl. all Duty & Tax','সকল প্রকার শুল্ক ও করসহ সর্বমোট মূল্য',grand?cleanNumber(grand.text||grand.value):'',true);root.appendChild(box)}
+function renderSignatures(root){const block=make('div','m63-signblock');const cols=[['Prepared / Verified By','প্রস্তুতকারক ও যাচাইকারীর স্বাক্ষর'],['Officer-in-Charge (Name, Designation, Signature & Seal)','প্রতিষ্ঠানের দায়িত্বপ্রাপ্ত ব্যক্তির নাম, পদবি, স্বাক্ষর ও সীল']];cols.forEach(([en,bn])=>{const col=make('div','m63-signcol');col.appendChild(make('div','line'));const role=make('div','role');role.appendChild(document.createTextNode(en));role.appendChild(make('span','bn',bn));col.appendChild(role);block.appendChild(col)});root.appendChild(block)}
+function renderNote(root){const note=make('div','m63-note');note.appendChild(document.createTextNode('Statutory Note: Issued in Form Mushak-6.3 pursuant to Section 51 of the VAT & SD Act, 2012 and Rule 40(1)(c) & (f) of the VAT & SD Rules, 2016. For VDS supplies, this single Mushak-6.3 serves as the combined tax invoice and withholding certificate reference where applicable.'));root.appendChild(note)}
+function renderFooter(root){const footer=make('div','m63-footer');footer.appendChild(make('span',null,'INSPIRON TECH · Architected by MD ABU HASAN · ERP Architect | Listed Manager.io Advisor'));footer.appendChild(make('span','m63-footer-right','Mushak-6.3 Tax Invoice (কর চালানপত্র)'));root.appendChild(footer)}
+function renderFault(code){const root=document.getElementById('m63-root');root.replaceChildren(make('div','m63-fault','Unable to load this tax invoice. '+text(code)))}
+function renderDocument(data){const root=document.getElementById('m63-root');root.replaceChildren();renderStatuteBand(root);renderTitle(root);renderSupplierBlock(root,data);renderBuyerBlock(root,data);const table=data.table||{};root.appendChild(buildInvoiceTable(table.rows||[],table.columns||[]));renderTotals(root,data);renderSignatures(root);renderNote(root);renderFooter(root);requestAnimationFrame(sendResize)}
+let lastHeight=0;function sendResize(){const height=document.documentElement.scrollHeight+1;if(height===lastHeight)return;lastHeight=height;if(window.parent&&window.parent!==window)window.parent.postMessage({type:'resize',height},'*')}
+fetch('/api4/view-v1'+window.location.search,{headers:{Accept:'application/json'},credentials:'same-origin'}).then(response=>{if(!response.ok)throw new Error('HTTP_'+response.status);return response.json()}).then(data=>{document.title=['Mushak-6.3 Tax Invoice',data.reference].filter(Boolean).join(' · ');renderDocument(data)}).catch(error=>renderFault(error&&error.message||'FETCH_ERROR'));
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(sendResize).observe(document.documentElement);else window.addEventListener('resize',sendResize);
+</script>
+</body>
+</html>

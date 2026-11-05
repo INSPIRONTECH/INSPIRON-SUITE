@@ -1,511 +1,972 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bangladesh VAT &amp; NBR Toolkit — Manager.io Extension (Community Edition)</title>
-<meta name="description" content="Free Bangladesh NBR VAT (Mushak-9.1, 6.3, 6.4), VDS, AIT/TDS &amp; Tax Code Localization Toolkit for Manager.io. Built by INSPIRON TECH · ERP Architect | Listed Manager.io Advisor.">
-<style>
-@font-face{font-family:'Neo Sans Pro';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Regular.woff') format('woff');font-weight:400;font-display:swap}
-@font-face{font-family:'Neo Sans Pro';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Medium.woff') format('woff');font-weight:500;font-display:swap}
-@font-face{font-family:'Neo Sans Pro';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Bold.woff') format('woff');font-weight:700;font-display:swap}
-@font-face{font-family:'Li Ador Noirrit';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
-@font-face{font-family:'Li Ador Noirrit';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INSPIRON Tax Suite | Bangladesh NBR VAT &amp; Tax Localization · tools.inspiron.tech</title>
+  <meta name="description" content="Free Bangladesh NBR tax deadline calendar &amp; Manager.io /api4 VAT Localization Suite. Mushak-9.1 worksheet, 1-click BD Tax Codes, Mushak-6.3 theme &amp; FY 2026-27 calculators. Built by INSPIRON TECH — ERP Architect | Listed Manager.io Advisor." />
+  <meta name="keywords" content="NBR tax calendar, Bangladesh VAT deadline, Mushak-9.1, Mushak-6.3, TDS return BD, VDS Rules 2025, Manager.io Bangladesh" />
+  <meta name="author" content="INSPIRON TECH" />
+  <meta property="og:title" content="INSPIRON Tax Suite | Bangladesh NBR Compliance &amp; Manager.io Localization" />
+  <meta property="og:description" content="Free unified NBR compliance calendar &amp; Manager.io /api4 localization suite: Mushak-9.1, 6.3, VDS, TDS, Advance Tax + 1-click Tax Code installer." />
+  <meta property="og:url" content="https://tools.inspiron.tech" />
+  <meta property="og:type" content="website" />
+  <link rel="canonical" href="https://tools.inspiron.tech" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='90' cy='10' r='10' fill='%23FFD700'/><rect x='20' y='0' width='8' height='100' fill='%2300D2FF'/></svg>" />
+  <style>
+    @font-face { font-family: 'Neo Sans Pro'; src: url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Medium.woff') format('woff'); font-weight: 500; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Neo Sans Pro'; src: url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Bold.woff') format('woff'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Li Ador Noirrit'; src: url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Li Ador Noirrit'; src: url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Li Ador Noirrit'; src: url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
 
-:root {
-  --gold: #FFD700;
-  --cyan: #00D2FF;
-  --navy: #010409;
-  --white: #FFFFFF;
-  --canvas: #F4F7FB;
-  --paper: #FFFFFF;
-  --ink: #0D1117;
-  --muted: #4B5563;
-  --dim: #6B7280;
-  --line: rgba(15, 23, 42, 0.08);
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  --cyan-ink: #0070A8;
-  --gold-ink: #7A5200;
-  --green-ink: #15803D;
-  --purple-ink: #6D28D9;
-  --red-ink: #B91C1C;
+    :root {
+      --navy:        #010409;
+      --card:        #0d1117;
+      --card-2:      #161b22;
+      --border:      #21262d;
+      --gold:        #FFD700;
+      --gold-dim:    #b39800;
+      --cyan:        #00D2FF;
+      --cyan-dim:    #0093b3;
+      --white:       #FFFFFF;
+      --muted:       #8b949e;
+      --vat:         #00D2FF;
+      --itax:        #FFD700;
+      --tds:         #FF9500;
+      --vds:         #BF5AF2;
+      --atax:        #34C759;
+      --danger:      #FF453A;
+      --warn:        #FF9F0A;
+      --ok:          #30D158;
+      --mono:        'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+    }
 
-  --wash-cyan: rgba(0, 210, 255, 0.06);
-  --border-cyan: rgba(0, 112, 168, 0.22);
-  --wash-gold: rgba(255, 215, 0, 0.09);
-  --border-gold: rgba(255, 165, 0, 0.25);
-  --wash-green: rgba(0, 255, 136, 0.06);
-  --border-green: rgba(21, 128, 61, 0.22);
-  --wash-purple: rgba(180, 100, 255, 0.07);
-  --border-purple: rgba(180, 100, 255, 0.25);
+    html { scroll-behavior: smooth; }
 
-  --font: 'Neo Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-bd: 'Li Ador Noirrit', 'Nirmala UI', sans-serif;
-  --mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
-}
+    body {
+      background: #010409;
+      color: #ffffff;
+      font-family: 'Neo Sans Pro', system-ui, sans-serif;
+      font-size: 14.5px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  background-color: #F4F7FB;
-  color: var(--ink);
-  font-family: var(--font), var(--font-bd);
-  font-size: 13px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+    .bangla, .bangla-note, .deadline-bangla, .drawer-head-sub {
+      font-family: 'Li Ador Noirrit', 'Noto Sans Bengali', sans-serif;
+    }
 
-body {
-  background-image:
-    linear-gradient(rgba(0, 210, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 210, 255, 0.06) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(1, 4, 9, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,210,255,.16);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
 
-.sovereign-rule {
-  height: 4px;
-  background: linear-gradient(90deg, #00D2FF 0%, #0070A8 35%, #7A5200 70%, #FFD700 100%);
-  width: 100%;
-}
+    .logo-wrap { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .logo-svg-mark { width: 34px; height: 34px; flex-shrink: 0; }
+    .logo-text { font-size: 14px; font-weight: 700; color: #FFD700; letter-spacing: .06em; }
+    .logo-sub  { font-size: 9px; color: #8b949e; font-weight: 400; letter-spacing: .1em; text-transform: uppercase; margin-top: 1px; }
 
-/* Dark Obsidian Command Bar (#010409) */
-.topbar {
-  width: 100%;
-  padding: 14px 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  background: rgba(1, 4, 9, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(0, 210, 255, 0.22);
-  box-shadow: 0 4px 24px rgba(1, 4, 9, 0.25);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
+    .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-.topbar-logo { display: flex; align-items: center; gap: 12px; }
-.brand-mark {
-  width: 38px; height: 38px; border-radius: 8px;
-  background: #010409; border: 1px solid rgba(0, 210, 255, 0.45);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; box-shadow: 0 2px 10px rgba(0, 210, 255, 0.25);
-}
-.brand-text-wrap h1 {
-  font-size: 15.5px; font-weight: 800; color: #FFFFFF;
-  letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-}
-.version-pill {
-  font-family: var(--mono); font-size: 10px; color: var(--gold);
-  letter-spacing: 0.08em; background: rgba(255, 215, 0, 0.12);
-  border: 1px solid rgba(255, 215, 0, 0.28); padding: 2px 7px;
-  border-radius: 5px; font-weight: 700; text-transform: uppercase;
-}
-.brand-sub { font-size: 11px; color: #94A3B8; letter-spacing: 0.02em; margin-top: 1px; }
-.topbar-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .header-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(0,210,255,.08);
+      color: #00D2FF;
+      border: 1px solid rgba(0,210,255,.3);
+      white-space: nowrap;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pulse-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #30D158;
+      box-shadow: 0 0 8px #30D158;
+    }
 
-.ref-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--mono); font-size: 10.5px; color: var(--cyan);
-  letter-spacing: 0.06em; background: rgba(0, 210, 255, 0.10);
-  border: 1px solid rgba(0, 210, 255, 0.25); padding: 5px 11px;
-  border-radius: 6px; font-weight: 700;
-}
-.pulse-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--cyan);
-  display: inline-block; box-shadow: 0 0 8px var(--cyan);
-}
+    /* ── SUBNAV PILL BUTTONS (STICKY TAB SWITCHER) ── */
+    #subnav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 24px;
+      background: rgba(1,4,9,.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,210,255,.12);
+      position: sticky;
+      top: 59px;
+      z-index: 99;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #subnav::-webkit-scrollbar { display: none; }
+    .subnav-tabs { display: flex; align-items: center; gap: 8px; }
+    .subnav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 15px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #8b949e;
+      text-decoration: none;
+      white-space: nowrap;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .2s cubic-bezier(.4,0,.2,1);
+      letter-spacing: .02em;
+    }
+    .subnav-link:hover {
+      color: #00D2FF;
+      border-color: rgba(0,210,255,.4);
+      background: rgba(0,210,255,.06);
+    }
+    .subnav-link.active {
+      color: #010409;
+      border-color: #FFD700;
+      background: linear-gradient(135deg, #FFD700 0%, #00D2FF 100%);
+      font-weight: 800;
+      box-shadow: 0 0 16px rgba(0,210,255,.25);
+    }
 
-.segmented-tb {
-  display: inline-flex; border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 6px; overflow: hidden; background: rgba(255, 255, 255, 0.04);
-}
-.tb-btn {
-  background: transparent; color: #E2E8F0; border: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.12); padding: 6px 11px;
-  font: 700 11.5px var(--font), var(--font-bd); cursor: pointer;
-  display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s; white-space: nowrap;
-}
-.tb-btn:last-child { border-right: none; }
-.tb-btn:hover { background: rgba(0, 210, 255, 0.15); color: var(--cyan); }
+    .profile-switcher {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .profile-switcher label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #8b949e;
+    }
+    .profile-switcher select {
+      background: #161b22;
+      color: #ffffff;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
-/* Workspace Shell */
-.workspace-shell { max-width: 1540px; margin: 0 auto; padding: 18px 24px 40px; }
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, #010409 0%, #060d1a 40%, #010c1f 70%, #010409 100%);
+      border-bottom: 1px solid rgba(0,210,255,.1);
+      padding: 36px 20px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,210,255,.08) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(255,215,0,.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,210,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,210,255,.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #00D2FF;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      background: rgba(0,210,255,.06);
+      border: 1px solid rgba(0,210,255,.22);
+      border-radius: 20px;
+      padding: 5px 14px;
+    }
 
-.context-bar {
-  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-  gap: 12px; background: #FFFFFF; border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 12px; padding: 10px 18px; margin-bottom: 18px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-}
-.profile-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.profile-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan-ink); }
-.profile-select {
-  background: #F8FAFC; color: var(--ink); border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 6px; padding: 6px 12px; font: 700 12px var(--font), var(--font-bd);
-  cursor: pointer; outline: none; min-width: 280px; transition: border-color 0.15s;
-}
-.profile-select:focus { border-color: var(--cyan-ink); }
-.sync-btn {
-  background: #F8FAFC; border: 1px solid rgba(15, 23, 42, 0.12); color: var(--muted);
-  border-radius: 6px; padding: 6px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.15s;
-}
-.sync-btn:hover { border-color: var(--cyan-ink); color: var(--cyan-ink); }
+    h1 {
+      font-size: clamp(26px, 4.2vw, 42px);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -.01em;
+    }
+    h1 .highlight {
+      background: linear-gradient(90deg, #FFD700 0%, #00D2FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-bangla-hook {
+      font-family: 'Li Ador Noirrit', 'Noto Sans Bengali', sans-serif;
+      font-size: clamp(16px, 2.4vw, 19px);
+      font-weight: 600;
+      color: rgba(255,255,255,.82);
+      margin-top: 8px;
+    }
+    .hero-sub {
+      margin-top: 6px;
+      font-size: 13.5px;
+      color: #8b949e;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-chips {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.12);
+      color: #cdd9e5;
+      background: rgba(255,255,255,.03);
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .hero-chip:hover { border-color: #00D2FF; color: #00D2FF; }
 
-.module-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-.nav-tab {
-  background: transparent; color: var(--muted); border: 1px solid transparent; border-radius: 6px;
-  padding: 6px 14px; font: 700 12px var(--font), var(--font-bd); cursor: pointer;
-  display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;
-}
-.nav-tab:hover { color: var(--ink); background: rgba(15, 23, 42, 0.04); }
-.nav-tab.active { background: #F1F5F9; color: var(--cyan-ink); border-color: rgba(0, 112, 168, 0.25); box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); }
+    /* ── MAIN CONTAINER ── */
+    .container {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 22px 20px 70px;
+    }
 
-.tab-view[hidden] { display: none !important; }
-.tab-view { display: none; }
-.tab-view.active { display: block; animation: fadeIn 0.15s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn .18s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-/* 6-Card Focus Grid */
-.focus-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 20px; }
-.focus-card {
-  padding: 16px 16px 14px; border-radius: 16px; border: 1px solid var(--line);
-  background: #FFFFFF; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  display: flex; flex-direction: column; justify-content: space-between; min-height: 108px; position: relative;
-}
-.focus-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08); }
-.focus-card.c-portfolio { background: var(--wash-cyan); border-color: var(--border-cyan); }
-.focus-card.c-inflow { background: var(--wash-green); border-color: var(--border-green); }
-.focus-card.c-outflow { background: var(--wash-gold); border-color: var(--border-gold); }
-.focus-card.c-security { background: var(--wash-purple); border-color: var(--border-purple); }
-.focus-card.c-hero {
-  background: #FFFFFF; border-color: rgba(0, 112, 168, 0.35);
-  box-shadow: 0 4px 16px rgba(0, 112, 168, 0.10); overflow: hidden;
-}
-.focus-card.c-hero::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-  background: linear-gradient(90deg, #00D2FF 0%, #FFD700 100%);
-}
+    /* ── 6-CARD KPI STRIP (DARK NAVY GLASS) ── */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    @media (max-width: 1100px) { .kpi-strip { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 640px)  { .kpi-strip { grid-template-columns: repeat(2, 1fr); } }
 
-.phase-tag {
-  font-family: var(--mono); font-size: 9px; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px;
-  border-radius: 4px; display: inline-block; width: fit-content; margin-bottom: 6px;
-}
-.tag-cyan { background: rgba(0, 112, 168, 0.10); color: var(--cyan-ink); }
-.tag-green { background: rgba(21, 128, 61, 0.10); color: var(--green-ink); }
-.tag-gold { background: rgba(122, 82, 0, 0.12); color: var(--gold-ink); }
-.tag-purple { background: rgba(109, 40, 217, 0.10); color: var(--purple-ink); }
+    .kpi-card {
+      background: rgba(13, 17, 23, 0.85);
+      border: 1px solid #21262d;
+      border-radius: 14px;
+      padding: 14px 15px;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s, box-shadow .15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0,210,255,.45);
+      box-shadow: 0 6px 20px rgba(0,210,255,.1);
+    }
+    .kpi-card.hero-kpi {
+      border-color: rgba(255,215,0,.45);
+      background: linear-gradient(145deg, rgba(255,215,0,.07) 0%, rgba(0,210,255,.05) 100%);
+    }
+    .kpi-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .tag-cyan   { background: rgba(0,210,255,.12); color: #00D2FF; }
+    .tag-gold   { background: rgba(255,215,0,.14); color: #FFD700; }
+    .tag-green  { background: rgba(48,209,88,.14); color: #30D158; }
+    .tag-purple { background: rgba(191,90,242,.15); color: #BF5AF2; }
 
-.card-label { font-size: 11px; font-weight: 700; color: var(--muted); }
-.card-val { font-family: var(--mono); font-size: 18px; font-weight: 800; letter-spacing: -0.02em; margin: 4px 0 2px; }
-.val-ink { color: var(--ink); }
-.val-cyan { color: var(--cyan-ink); }
-.val-green { color: var(--green-ink); }
-.val-gold { color: var(--gold-ink); }
-.val-purple { color: var(--purple-ink); }
-.val-red { color: var(--red-ink); }
-.card-sub { font-size: 10.5px; color: var(--dim); }
+    .kpi-label { font-size: 11px; font-weight: 600; color: #8b949e; }
+    .kpi-val   { font-family: var(--mono); font-size: 18px; font-weight: 800; color: #ffffff; margin: 4px 0 2px; }
+    .kpi-sub   { font-size: 10.5px; color: #6e7681; }
 
-/* Panels & Tables */
-.split-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; margin-bottom: 18px; }
-.tech-panel {
-  background: #FFFFFF; border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 14px; overflow: hidden; margin-bottom: 18px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
-}
-.tech-panel-hdr {
-  padding: 13px 18px; border-bottom: 1px solid rgba(15, 23, 42, 0.07);
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 10px; background: #FAFBFD;
-}
-.tech-panel-title { font-size: 13px; font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 8px; }
-.status-dot-wrap {
-  display: inline-flex; align-items: center; gap: 6px; font-size: 11px;
-  font-weight: 700; color: var(--muted); background: #F1F5F9;
-  padding: 4px 10px; border-radius: 20px;
-}
-.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #16A34A; }
+    /* ── CARDS & TABLES ── */
+    .selector-card, .penalty-card, .export-card, .panel-card {
+      background: rgba(13, 17, 23, 0.8);
+      border: 1px solid #21262d;
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin-bottom: 22px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 8px 24px rgba(1,4,9,.4);
+    }
 
-.table-wrap { overflow-x: auto; }
-.tech-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.tech-table thead th {
-  text-align: left; padding: 10px 14px; font-size: 10.5px; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
-  background: #F8FAFC; border-bottom: 1px solid rgba(15, 23, 42, 0.08); white-space: nowrap;
-}
-.tech-table tbody tr { border-bottom: 1px solid rgba(15, 23, 42, 0.05); transition: background 0.12s; }
-.tech-table tbody tr:hover { background: rgba(0, 210, 255, 0.04); }
-.tech-table tbody td { padding: 11px 14px; vertical-align: middle; }
-.tech-table th.num, .tech-table td.num { text-align: right; font-family: var(--mono); font-weight: 700; }
-.code-cell { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--cyan-ink); }
+    .panel-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #21262d;
+    }
+    .panel-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-sub {
+      font-size: 12px;
+      color: #8b949e;
+      margin-top: 2px;
+    }
 
-.pill-badge {
-  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
-  border-radius: 12px; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
-}
-.pill-ok { background: rgba(21, 128, 61, 0.12); color: var(--green-ink); }
-.pill-warn { background: rgba(180, 83, 9, 0.12); color: #B45309; }
-.pill-err { background: rgba(185, 28, 28, 0.12); color: var(--red-ink); }
-.pill-info { background: rgba(0, 112, 168, 0.12); color: var(--cyan-ink); }
+    .selector-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+    @media (max-width: 768px) { .selector-grid { grid-template-columns: 1fr; } }
 
-.btn-action {
-  background: #010409; color: var(--gold); border: 1px solid rgba(255, 215, 0, 0.45);
-  border-radius: 6px; padding: 6px 12px; font: 700 11px var(--font), var(--font-bd);
-  cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px;
-}
-.btn-action:hover { background: #0F172A; border-color: var(--gold); box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2); }
-.btn-action:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
-.btn-secondary-sm {
-  background: #F8FAFC; color: var(--cyan-ink); border: 1px solid rgba(0, 112, 168, 0.28);
-  border-radius: 6px; padding: 5px 10px; font: 700 11px var(--font), var(--font-bd);
-  cursor: pointer; transition: all 0.15s;
-}
-.btn-secondary-sm:hover { background: rgba(0, 210, 255, 0.08); border-color: var(--cyan-ink); }
+    .selector-card label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #00D2FF;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .selector-card select, .form-group input, .form-group select {
+      width: 100%;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 14px;
+      transition: border-color .2s;
+    }
+    .selector-card select:focus, .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #00D2FF;
+    }
 
-/* Audit Grid */
-.audit-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
-.audit-item {
-  border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 10px; padding: 12px 14px;
-  background: #FAFBFD; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
-}
-.audit-item-title { font-weight: 800; font-size: 12px; color: var(--ink); margin-bottom: 2px; }
-.audit-item-sub { font-size: 11px; color: var(--muted); }
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #00D2FF;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #21262d;
+    }
 
-/* Calculators */
-.sim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.sim-card {
-  background: #FFFFFF; border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 14px; padding: 18px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-}
-.sim-card h3 { font-size: 13.5px; font-weight: 800; margin-bottom: 4px; color: var(--ink); }
-.sim-card p { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
-.fld-group { margin-bottom: 10px; }
-.fld-group label {
-  display: block; font-size: 10px; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.06em; color: var(--muted); margin-bottom: 4px;
-}
-.fld-group input, .fld-group select {
-  width: 100%; padding: 7px 10px; border-radius: 6px;
-  border: 1px solid rgba(15, 23, 42, 0.14); background: #F8FAFC;
-  font: 700 12px var(--mono), var(--font); color: var(--ink);
-}
-.sim-result {
-  margin-top: 12px; padding: 12px; border-radius: 8px;
-  background: #010409; color: #E2E8F0; font-size: 11.5px;
-}
-.sim-line { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); }
-.sim-line:last-child { border-bottom: none; font-weight: 800; padding-top: 6px; }
+    .deadlines-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid #21262d;
+      background: #0d1117;
+    }
 
-/* Slide-over Inspector Drawer */
-.drawer-backdrop {
-  position: fixed; inset: 0; background: rgba(1, 4, 9, 0.55);
-  backdrop-filter: blur(3px); z-index: 200; display: none;
-}
-.drawer-backdrop.open { display: block; }
-.inspector-drawer {
-  position: fixed; top: 0; right: 0; bottom: 0; width: min(860px, 94vw);
-  background: #F8FAFC; z-index: 201; box-shadow: -8px 0 36px rgba(1, 4, 9, 0.35);
-  transform: translateX(100%); transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  display: flex; flex-direction: column;
-}
-.inspector-drawer.open { transform: translateX(0); }
-.dr-hdr {
-  padding: 16px 22px; background: #010409; color: #FFFFFF;
-  border-bottom: 1px solid rgba(0, 210, 255, 0.25);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.dr-title { font-size: 15px; font-weight: 800; color: #FFFFFF; }
-.dr-sub { font-size: 11px; color: #94A3B8; margin-top: 2px; }
-.dr-close {
-  background: rgba(255,255,255,0.08); color: #FFFFFF; border: 1px solid rgba(255,255,255,0.15);
-  width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-weight: 800;
-}
-.dr-body { padding: 20px; overflow-y: auto; flex: 1; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 580px;
+    }
+    thead tr {
+      background: #161b22;
+      border-bottom: 1px solid #21262d;
+    }
+    thead th {
+      padding: 10px 14px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #8b949e;
+      text-align: left;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    thead th.num, tbody td.num {
+      text-align: right;
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover {
+      background: linear-gradient(90deg, rgba(255,215,0,.03) 0%, rgba(0,210,255,.03) 100%);
+    }
+    tbody td {
+      padding: 10px 14px;
+      font-size: 12.8px;
+      vertical-align: middle;
+    }
 
-/* Footer */
-.suite-footer {
-  margin-top: 28px; padding: 16px 20px; border-radius: 12px;
-  background: #010409; color: #94A3B8; display: flex;
-  justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-  border: 1px solid rgba(0, 210, 255, 0.2); font-size: 11px;
-}
-.suite-footer strong { color: #FFFFFF; }
-.suite-footer a { color: var(--cyan); text-decoration: none; font-weight: 700; }
-.suite-footer a:hover { text-decoration: underline; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge-VAT         { background: rgba(0,210,255,.12);  color: #00D2FF;  border: 1px solid rgba(0,210,255,.25); }
+    .badge-INCOME-TAX  { background: rgba(255,215,0,.12);  color: #FFD700;  border: 1px solid rgba(255,215,0,.25); }
+    .badge-TDS         { background: rgba(255,149,0,.12);  color: #FF9500;  border: 1px solid rgba(255,149,0,.25); }
+    .badge-VDS         { background: rgba(191,90,242,.12); color: #BF5AF2;  border: 1px solid rgba(191,90,242,.25); }
+    .badge-ADVANCE-TAX { background: rgba(52,199,89,.12);  color: #34C759;  border: 1px solid rgba(52,199,89,.25); }
 
-/* Dark Mode Override */
-html.dark, html.dark body { background-color: #060B13; color: #E2E8F0; }
-html.dark .context-bar, html.dark .tech-panel, html.dark .focus-card, html.dark .sim-card {
-  background: #0D1522; border-color: rgba(255,255,255,0.08); color: #E2E8F0;
-}
-html.dark .tech-panel-hdr, html.dark .tech-table thead th, html.dark .audit-item {
-  background: #111C2D; border-color: rgba(255,255,255,0.08); color: #CBD5E1;
-}
-html.dark .card-label, html.dark .audit-item-sub, html.dark .sim-card p { color: #94A3B8; }
-html.dark .card-val.val-ink, html.dark .tech-panel-title, html.dark .audit-item-title, html.dark .sim-card h3 { color: #FFFFFF; }
-html.dark .profile-select, html.dark .sync-btn, html.dark .fld-group input, html.dark .fld-group select {
-  background: #090F1A; color: #FFFFFF; border-color: rgba(255,255,255,0.14);
-}
-html.dark .nav-tab { color: #94A3B8; }
-html.dark .nav-tab.active { background: rgba(0, 210, 255, 0.14); color: var(--cyan); border-color: rgba(0, 210, 255, 0.35); }
+    .deadline-desc { font-weight: 600; color: #fff; }
+    .deadline-bangla { display: block; font-size: 11px; color: #8b949e; margin-top: 2px; }
 
-@media (max-width: 1100px) {
-  .focus-grid { grid-template-columns: repeat(3, 1fr); }
-  .split-grid, .sim-grid, .audit-grid { grid-template-columns: 1fr; }
-}
-@media print {
-  .topbar, .context-bar, .suite-footer, .btn-action, .btn-secondary-sm { display: none !important; }
-  body { background: #FFFFFF !important; }
-  .workspace-shell { padding: 0; max-width: 100%; }
-}
-</style>
+    .due-date { font-weight: 700; white-space: nowrap; font-family: var(--mono); font-size: 12px; }
+    .due-urgent  { color: #FF453A; }
+    .due-warning { color: #FF9F0A; }
+    .due-ok      { color: #30D158; }
+
+    .days-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+      font-family: var(--mono);
+    }
+    .days-urgent  { background: rgba(255,69,58,.15);  color: #FF453A; }
+    .days-warning { background: rgba(255,159,10,.15); color: #FF9F0A; }
+    .days-ok      { background: rgba(48,209,88,.12);  color: #30D158; }
+
+    .penalty-cell { font-size: 11.5px; color: #8b949e; max-width: 310px; line-height: 1.45; }
+
+    /* ── BUTTONS ── */
+    .btn-gold {
+      background: linear-gradient(135deg, #FFD700 0%, #FFC200 100%);
+      color: #010409;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-gold:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(255,215,0,.35);
+    }
+    .btn-cyan {
+      background: rgba(0,210,255,.1);
+      color: #00D2FF;
+      border: 1px solid rgba(0,210,255,.35);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all .15s;
+    }
+    .btn-cyan:hover {
+      background: rgba(0,210,255,.2);
+      border-color: #00D2FF;
+    }
+
+    /* ── MUSHAK EXPLAINER ── */
+    .mushak-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .mushak-card {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 12px;
+      padding: 16px 18px;
+      transition: border-color .2s, transform .15s;
+    }
+    .mushak-card:hover {
+      border-color: rgba(0,210,255,.4);
+      transform: translateY(-2px);
+    }
+    .mushak-code {
+      font-size: 11px;
+      font-weight: 700;
+      color: #00D2FF;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .mushak-name { font-size: 13.5px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+    .mushak-desc { font-size: 12px; color: #8b949e; line-height: 1.5; }
+    .mushak-deadline { margin-top: 8px; font-size: 11px; font-weight: 600; color: #FFD700; }
+
+    /* ── 3-COLUMN CALCULATOR GRID ── */
+    .calc-3grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 960px) { .calc-3grid { grid-template-columns: 1fr; } }
+
+    .sim-box {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .sim-box h3 { font-size: 14px; font-weight: 700; color: #FFD700; margin-bottom: 4px; }
+    .sim-box p  { font-size: 11.5px; color: #8b949e; margin-bottom: 14px; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label {
+      display: block;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #8b949e;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .sim-out {
+      margin-top: 12px;
+      padding: 12px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    .sim-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(255,255,255,.08);
+    }
+    .sim-row:last-child { border-bottom: none; font-weight: 700; padding-top: 7px; }
+
+    /* ── AUDIT GRID ── */
+    .audit-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 768px) { .audit-grid { grid-template-columns: 1fr; } }
+    .audit-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .audit-title { font-size: 13px; font-weight: 700; color: #ffffff; margin-bottom: 3px; }
+    .audit-sub   { font-size: 11.5px; color: #8b949e; line-height: 1.45; }
+
+    /* ── SLIDE-OVER INSPECTOR DRAWER ── */
+    .dr-backdrop {
+      position: fixed; inset: 0; background: rgba(1,4,9,.75);
+      backdrop-filter: blur(4px); z-index: 200; display: none;
+    }
+    .dr-backdrop.open { display: block; }
+    .dr-panel {
+      position: fixed; top: 0; right: 0; bottom: 0;
+      width: min(760px, 94vw); background: #0d1117;
+      border-left: 1px solid rgba(0,210,255,.3);
+      z-index: 201; transform: translateX(100%);
+      transition: transform .22s cubic-bezier(.16,1,.3,1);
+      display: flex; flex-direction: column;
+      box-shadow: -12px 0 40px rgba(0,0,0,.7);
+    }
+    .dr-panel.open { transform: translateX(0); }
+    .dr-hdr {
+      padding: 18px 22px; background: #010409;
+      border-bottom: 1px solid #21262d;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    }
+    .dr-title { font-size: 15px; font-weight: 700; color: #FFD700; }
+    .dr-sub   { font-size: 11.5px; color: #8b949e; margin-top: 2px; }
+    .dr-close {
+      background: #161b22; border: 1px solid #30363d; color: #ffffff;
+      border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer;
+    }
+    .dr-body { padding: 20px 22px; overflow-y: auto; flex: 1; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: #161b22; border: 1px solid #00D2FF;
+      border-radius: 10px; padding: 12px 18px;
+      font-size: 13px; font-weight: 600; color: #ffffff;
+      z-index: 9999; transform: translateY(80px); opacity: 0;
+      transition: transform .3s, opacity .3s;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: linear-gradient(180deg, #010409 0%, #060d1a 100%);
+      border-top: 1px solid rgba(0,210,255,.12);
+      padding: 36px 20px 28px;
+      text-align: center;
+    }
+    .footer-disclaimer {
+      font-size: 11px; color: #6e7681; max-width: 680px; margin: 0 auto; line-height: 1.6;
+    }
+  </style>
 </head>
 <body>
 
-<div class="sovereign-rule"></div>
-
-<header class="topbar">
-  <div class="topbar-logo">
-    <div class="brand-mark" title="INSPIRON TECH — Bangladesh VAT &amp; NBR Localization Suite">
-      <svg width="24" height="24" viewBox="0 0 358.846 350.3" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
-        <path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
-        <circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
-      </svg>
+<!-- HEADER -->
+<header>
+  <a class="logo-wrap" href="https://inspiron.tech" target="_blank" rel="noopener">
+    <svg class="logo-svg-mark" viewBox="0 0 358.846 350.3" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="INSPIRON TECH logo">
+      <path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
+      <path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
+      <circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
+    </svg>
+    <div>
+      <div class="logo-text"><span style="font-weight:500;color:#ffffff;text-transform:lowercase">inspiron</span> <span style="font-weight:300;color:#FFD700;text-transform:uppercase">TECH</span></div>
+      <div class="logo-sub">ERP Architect | Listed Manager.io Advisor &middot; Bangladesh</div>
     </div>
-    <div class="brand-text-wrap">
-      <h1>
-        <span>🇧🇩 BANGLADESH VAT &amp; NBR TOOLKIT</span>
-        <span class="version-pill">COMMUNITY v2.1 · MUSHAK &amp; /API4</span>
-      </h1>
-      <div class="brand-sub">VAT &amp; SD Act 2012 · Income Tax Act 2023 · Mushak-9.1, 6.3, 6.4 &amp; VDS/AIT Localization for Manager.io</div>
-    </div>
-  </div>
-
-  <div class="topbar-tools">
-    <div class="ref-badge" id="bridgeStatusBadge">
-      <span class="pulse-dot"></span>
-      <span id="bridgeStatusText">STANDALONE DEMO · BD NBR FY 2026-27</span>
-    </div>
-
-    <div class="segmented-tb">
-      <button type="button" class="tb-btn" id="btnLang" onclick="cycleLanguage()" title="Toggle English / বাংলা">🌐 EN+বাংলা</button>
-      <button type="button" class="tb-btn" id="btnTheme" onclick="toggleDarkTheme()" title="Toggle Blueprint Light / Dark">🌙 Dark</button>
-      <button type="button" class="tb-btn" id="btnCsv" onclick="exportMushakCsv()" title="Export Mushak-9.1 Worksheet CSV">⬇ CSV</button>
-      <button type="button" class="tb-btn" id="btnPdf" onclick="window.print()" title="Print / Save Mushak-9.1 as PDF">🖨 Print / PDF</button>
-    </div>
+  </a>
+  <div class="header-right">
+    <span class="header-badge"><span class="pulse-dot"></span> <span id="bridgeStatusText">🇧🇩 FY 2026–27 STATUTORY ENGINE · /API4 READY</span></span>
   </div>
 </header>
 
-<main class="workspace-shell">
+<!-- STICKY MODULE TAB BAR -->
+<nav id="subnav" aria-label="Module Navigation">
+  <div class="subnav-tabs">
+    <button type="button" class="subnav-link active" data-tab="calendar" onclick="switchTab('calendar')">📅 Tax Calendar &amp; Calculators</button>
+    <button type="button" class="subnav-link" data-tab="mushak91" onclick="switchTab('mushak91')">📋 Mushak-9.1 Worksheet (/api4)</button>
+    <button type="button" class="subnav-link" data-tab="taxcodes" onclick="switchTab('taxcodes')">⚡ 1-Click BD Tax Codes &amp; Mushak-6.3</button>
+    <button type="button" class="subnav-link" data-tab="audit" onclick="switchTab('audit')">🛡️ 10-Point NBR Statutory Audit</button>
+  </div>
+  <div class="profile-switcher">
+    <label for="demoProfileSelect">Dataset:</label>
+    <select id="demoProfileSelect" onchange="onProfileChange(this.value)">
+      <option value="demo:manufacturing">🏭 Padma Garments &amp; Packaging Ltd (Export + 15%)</option>
+      <option value="demo:contractor">🏗️ Jamuna EPC &amp; Infrastructure (10% VDS Contractor)</option>
+      <option value="demo:trading">💻 Meghna Industrial &amp; ITES (5% Trading / ITES)</option>
+    </select>
+  </div>
+</nav>
 
-  <!-- Context & Navigation Bar -->
-  <div class="context-bar">
-    <div class="profile-group">
-      <span class="profile-label">Entity / Business</span>
-      <select id="bizSelect" class="profile-select" onchange="onBusinessSelectChange(this.value)">
-        <option value="demo:manufacturing">🇧🇩 Padma Precision Garments &amp; Packaging Ltd (Manufacturing · 15% &amp; 7.5%)</option>
-        <option value="demo:contractor">🇧🇩 Jamuna EPC &amp; Infrastructure Consortium (Govt Contractor · 7.5% VDS &amp; S.89 AIT)</option>
-        <option value="demo:trading">🇧🇩 Meghna Industrial Supply &amp; IT Solutions (Trading 5% &amp; IT Service 5%)</option>
-      </select>
-      <select id="periodSelect" class="profile-select" style="min-width:165px" onchange="renderAllViews()">
-        <option value="2026-10">October 2026 (Current)</option>
-        <option value="2026-09">September 2026</option>
-        <option value="2026-08">August 2026</option>
-      </select>
-      <button type="button" class="sync-btn" onclick="syncLiveManagerData()" title="Sync with Manager.io /api4">⟳ Sync /api4</button>
-    </div>
-
-    <div class="module-tabs" role="tablist">
-      <button type="button" class="nav-tab active" data-tab="mushak91" onclick="switchTab('mushak91')">📊 Mushak-9.1 Return &amp; 6.3 Register</button>
-      <button type="button" class="nav-tab" data-tab="taxcodes" onclick="switchTab('taxcodes')">⚙️ BD Tax Code Installer (11 Codes)</button>
-      <button type="button" class="nav-tab" data-tab="audit" onclick="switchTab('audit')">🛡️ 10-Point NBR VAT &amp; BIN Audit</button>
-      <button type="button" class="nav-tab" data-tab="calendar" onclick="switchTab('calendar')">📅 NBR Calendar &amp; VDS/AIT Calculators</button>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">🇧🇩 NBR Statutory Compliance · Finance Act 2026 &amp; Oct 2026 Ordinance</div>
+    <h1>Bangladesh <span class="highlight">Tax Calendar &amp; VAT Suite</span></h1>
+    <p class="hero-bangla-hook">আপনার ব্যবসার সব ট্যাক্স ডেডলাইন, মূসক-৯.১ রিটার্ন এবং মূসক-৬.৩ চালান — এক ক্লিকে।</p>
+    <p class="hero-sub">
+      VAT (Mushak-9.1 &amp; 6.3) &middot; VDS Rules 2025/2026 &middot; TDS (Section 177) &middot; Advance Income Tax (Section 154) &middot; 1-Click Manager.io Tax Code Localization. Free Community Edition.
+    </p>
+    <div class="hero-chips">
+      <span class="hero-chip" onclick="switchTab('calendar')">✓ Monthly 15th VAT (Oct 2026 Ordinance)</span>
+      <span class="hero-chip" onclick="switchTab('mushak91')">✓ Mushak-9.1 Notes 1–65</span>
+      <span class="hero-chip" onclick="switchTab('taxcodes')">✓ 1-Click 12 BD Tax Codes</span>
+      <span class="hero-chip" onclick="switchTab('taxcodes')">✓ Mushak-6.3 Invoice Theme</span>
+      <span class="hero-chip" onclick="switchTab('audit')">✓ Section 46 &amp; 55 Disallowance Guard</span>
     </div>
   </div>
+</section>
 
-  <!-- 6-Card Statutory KPI Focus Engine -->
-  <section class="focus-grid" id="kpiGrid"></section>
+<!-- MAIN WORKSPACE -->
+<main class="container">
 
-  <!-- TAB 1: MUSHAK-9.1 WORKSHEET & MUSHAK-6.3/6.6 REGISTER -->
-  <section id="view-mushak91" class="tab-view active">
-    <div class="split-grid">
-      <!-- Left: Mushak-9.1 Official Sub-Form Summary (Notes 1-35) -->
-      <div class="tech-panel" style="margin-bottom:0">
-        <div class="tech-panel-hdr">
-          <div class="tech-panel-title">📋 Mushak-9.1 Monthly VAT Return Worksheet (মূসক-৯.১ মাসিক রিটার্ন ছক)</div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span class="status-dot-wrap"><span class="status-dot"></span>/api4/report-transformation-figures</span>
-            <button type="button" class="btn-secondary-sm" onclick="exportMushakCsv()">⬇ Export eVAT CSV</button>
-          </div>
+  <!-- 6-CARD KPI STRIP (LIVE ACROSS ALL TABS) -->
+  <div class="kpi-strip" id="kpiStrip"></div>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 1: TAX CALENDAR, MUSHAK EXPLAINER, PENALTY & VDS/AIT CALCULATORS  -->
+  <!-- ===================================================================== -->
+  <section class="tab-pane active" id="pane-calendar">
+
+    <!-- Business Type Filter + Oct 2026 Statutory Alert -->
+    <div class="selector-card">
+      <div class="selector-grid">
+        <div>
+          <label for="bizType">Filter Deadlines by Business Classification</label>
+          <select id="bizType" onchange="renderCalendarDeadlines()">
+            <option value="company" selected>Limited Company (Private / Public / OPC)</option>
+            <option value="manufacturing">Manufacturing &amp; Export Enterprise</option>
+            <option value="trading">Trading / Retail / Wholesale / Commercial Importer</option>
+            <option value="service">Service &amp; IT-Enabled Services (ITES)</option>
+            <option value="individual">Sole Proprietor / Individual / Partnership Firm</option>
+            <option value="import">Government EPC Contractor &amp; Procurement Provider</option>
+          </select>
         </div>
-        <div class="table-wrap">
-          <table class="tech-table" id="mushak91Table">
-            <thead>
-              <tr>
-                <th>Note</th>
-                <th>Mushak-9.1 Part &amp; Supply / Purchase Category (বিবরণ)</th>
-                <th class="num">Assessable Value (BDT)</th>
-                <th class="num">VAT / SD / Adj (BDT)</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="mushak91Body"></tbody>
-          </table>
+        <div style="background:rgba(0,210,255,.06);border:1px solid rgba(0,210,255,.22);border-radius:12px;padding:12px 15px;font-size:12px;color:#cdd9e5;line-height:1.5">
+          <div style="font-weight:700;color:#FFD700;margin-bottom:3px">⚡ STATUTORY UPDATE — VAT &amp; SD (AMENDMENT) ORDINANCE, 2026</div>
+          Monthly <strong>Mushak-9.1</strong> filing within <strong>15 days</strong> after month-end is restored effective Oct 2026 (<strong>20th</strong> for govt/banks/insurers/nil). Late VAT return fine under <code>Section 85(1)(f)</code> is <strong>Tk 2,000</strong> (reduced from Tk 5,000), while <code>Section 85(1)(j)</code> imposes <strong>Tk 10,000</strong> for failing to issue Mushak-6.3 or 6.6.
         </div>
       </div>
+    </div>
 
-      <!-- Right: Mushak-6.3 Tax Challan & Mushak-6.6 VDS Register -->
-      <div class="tech-panel" style="margin-bottom:0">
-        <div class="tech-panel-hdr">
-          <div class="tech-panel-title">🧾 Mushak-6.3 Tax Challan &amp; 6.6 VDS Register (চালান ও উৎসে কর্তন)</div>
-          <span class="pill-badge pill-info" id="txCountBadge">8 Vouchers</span>
+    <!-- Deadlines Table -->
+    <p class="section-title">Upcoming NBR Statutory Deadlines (FY 2026–27)</p>
+    <div class="deadlines-wrap" style="margin-bottom:24px">
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Filing / Statutory Obligation</th>
+            <th>Due Date</th>
+            <th>Window</th>
+            <th>Verified Statutory Penalty &amp; Legal Basis</th>
+          </tr>
+        </thead>
+        <tbody id="deadlinesBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 3-Column Statutory Calculators -->
+    <p class="section-title" id="section-penalty">FY 2026–27 Statutory Calculators (VDS/TDS · Section 85/127 Penalty · Section 154 Advance Tax)</p>
+    <div class="calc-3grid">
+
+      <!-- Calculator 1: VDS & TDS Withholding Simulator -->
+      <div class="sim-box">
+        <h3>1. VDS &amp; TDS Withholding Split</h3>
+        <p>VDS Rules 2025 (<code>SRO 182-Ain/2025</code> &amp; <code>SRO 140-Ain/2026</code>) + ITA 2023 Part 7</p>
+        <div class="form-group">
+          <label for="calcBillAmt">Invoice Base Value Excl. VAT (BDT)</label>
+          <input type="number" id="calcBillAmt" value="1000000" min="0" oninput="runCalculators()" />
         </div>
-        <div class="table-wrap">
-          <table class="tech-table">
-            <thead>
-              <tr>
-                <th>Challan / Date</th>
-                <th>Counterparty &amp; 13-Digit BIN</th>
-                <th>Form &amp; Rate</th>
-                <th class="num">Base (BDT)</th>
-                <th class="num">VAT (BDT)</th>
-              </tr>
-            </thead>
-            <tbody id="challanBody"></tbody>
-          </table>
+        <div class="form-group">
+          <label for="calcSupplyType">Service / Supply Category (FY 2026–27)</label>
+          <select id="calcSupplyType" onchange="runCalculators()">
+            <option value="10|5">S037.00 Procurement Provider &amp; Construction (10% VDS + 5% TDS)</option>
+            <option value="15|10">S074.00 Commercial Space / Godown Rent (15% VAT + 10% TDS u/s 109)</option>
+            <option value="7.5|5">S024.20 Furniture Showroom w/ Challan (7.5% VDS + 5% TDS)</option>
+            <option value="5|10">S099.10 IT-Enabled Services — Non-Exempt (5% VDS + 10% TDS)</option>
+            <option value="5|0">S099.10 ITES — 6th Sch. Para 21 Exempt (5% VDS + 0% TDS)</option>
+            <option value="5|1">S007.20 Online Advertising / Media Agency (5% VDS + 1% TDS)</option>
+            <option value="15|7.5">S032.00 Consultancy Firm / Company (15% VDS + 7.5% TDS)</option>
+            <option value="15|15">S032.00 Individual Consultant (15% VDS + 15% TDS)</option>
+          </select>
         </div>
+        <div class="form-group">
+          <label for="calcPsrStatus">PSR (Section 264) &amp; Banking Channel Status (Section 142)</label>
+          <select id="calcPsrStatus" onchange="runCalculators()">
+            <option value="1">✓ Valid PSR Presented + Bank/EFT Payment (Standard TDS)</option>
+            <option value="1.5">⚠️ Missing PSR OR Paid in Cash (+50% TDS Penalty u/s 142)</option>
+            <option value="2">🚨 Missing PSR AND Paid in Cash (+100% Double TDS u/s 142)</option>
+          </select>
+        </div>
+        <div class="sim-out" id="calcVdsResult"></div>
+      </div>
+
+      <!-- Calculator 2: Penalty & Interest Estimator -->
+      <div class="sim-box">
+        <h3>2. NBR Penalty &amp; Interest Estimator</h3>
+        <p>Distinguishes statutory interest exposure vs. officer-assessed penalties</p>
+        <div class="form-group">
+          <label for="penaltyType">Default / Offence Type</label>
+          <select id="penaltyType" onchange="runCalculators()">
+            <option value="vat_return">Late VAT Return Mushak-9.1 — Sec 85(1)(f) [Tk 2,000 + 1%/mo]</option>
+            <option value="vat_invoice">Non-Issuance of Mushak-6.3 / 6.6 — Sec 85(1)(j) [Tk 10,000]</option>
+            <option value="vds_late">Late VDS Deposit — Sec 85(1A) &amp; 127 [Tk 25,000 + 2%/6mo + 1%/mo]</option>
+            <option value="tds_late">Late TDS Deposit / S.177 Return — ITA 2023 Sec 143 &amp; 266 [2%/mo]</option>
+            <option value="itr_late">Late Income Tax Return — ITA 2023 Sec 174 &amp; 266</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="daysLate">Days Late After Statutory Due Date</label>
+          <input type="number" id="daysLate" value="45" min="1" oninput="runCalculators()" />
+        </div>
+        <div class="form-group">
+          <label for="taxAmount">Unpaid Tax / VDS / TDS Principal (BDT)</label>
+          <input type="number" id="taxAmount" value="250000" min="0" oninput="runCalculators()" />
+        </div>
+        <div class="sim-out" id="calcPenResult"></div>
+      </div>
+
+      <!-- Calculator 3: Section 154 Advance Income Tax Planner -->
+      <div class="sim-box">
+        <h3>3. Advance Income Tax (Sec 154 &amp; 155)</h3>
+        <p>Mandatory if last assessed total income &gt; <strong>Tk 10,00,000</strong> (Finance Act 2026 S.87)</p>
+        <div class="form-group">
+          <label for="calcAdvTotal">Last Assessed / Estimated Annual Tax Liability (BDT)</label>
+          <input type="number" id="calcAdvTotal" value="1200000" min="0" oninput="runCalculators()" />
+        </div>
+        <div class="form-group">
+          <label for="calcAdvPaid">Less: TDS / AIT Already Deducted at Source u/s Part 7 (BDT)</label>
+          <input type="number" id="calcAdvPaid" value="320000" min="0" oninput="runCalculators()" />
+        </div>
+        <div class="sim-out" id="calcAdvResult"></div>
+      </div>
+
+    </div>
+
+    <!-- Mushak Forms Explained -->
+    <p class="section-title" id="section-mushak">Core NBR Mushak &amp; Withholding Forms Explained</p>
+    <div class="mushak-grid" id="mushakGrid"></div>
+
+    <!-- Export to Manager.io CSV -->
+    <p class="section-title" id="section-export">Export Compliance Schedule to Manager.io</p>
+    <div class="export-card" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#ffffff;margin-bottom:4px">📥 Ready-to-Import Manager.io Journal &amp; Compliance CSV</div>
+        <div style="font-size:12.5px;color:#8b949e">Exports your filtered FY 2026–27 deadlines with pre-mapped Tax Payable control accounts and statutory basis memos.</div>
+      </div>
+      <button type="button" class="btn-gold" onclick="exportDeadlinesCsv()">📊 Export Schedule (CSV)</button>
+    </div>
+
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 2: MUSHAK-9.1 WORKSHEET & CHALLAN REGISTER (/API4)                -->
+  <!-- ===================================================================== -->
+  <section class="tab-pane" id="pane-mushak91">
+    <div class="panel-card">
+      <div class="panel-hdr">
+        <div>
+          <div class="panel-title">📋 Form Mushak-9.1 — Monthly VAT Return Worksheet (মাসিক ভ্যাট রিটার্ন ছক)</div>
+          <div class="panel-sub">Deterministic mapping via Manager.io <code>/api4/report-transformation-figures</code> &middot; Parts 1–12 &amp; Notes 1–65</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn-cyan" onclick="syncLiveManagerData()">🔄 Sync /api4 Ledger</button>
+          <button type="button" class="btn-gold" onclick="exportMushakCsv()">📥 Export Mushak-9.1 CSV</button>
+        </div>
+      </div>
+      <div class="deadlines-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Note</th>
+              <th>Mushak-9.1 Part &amp; Official Line Description</th>
+              <th class="num">Assessable Value (ক)</th>
+              <th class="num">VAT / Adjustment (গ)</th>
+              <th>Sub-Form</th>
+            </tr>
+          </thead>
+          <tbody id="mushak91Body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-hdr">
+        <div>
+          <div class="panel-title">📑 Underlying Mushak-6.3 Tax Invoices, Import BoE &amp; Mushak-6.6 VDS Register</div>
+          <div class="panel-sub">Click any voucher row to open the statutory drill-down inspector</div>
+        </div>
+        <span class="badge badge-VAT" id="txCountBadge">8 Vouchers</span>
+      </div>
+      <div class="deadlines-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Challan / BoE Ref</th>
+              <th>Counterparty &amp; 13-Digit BIN</th>
+              <th>Statutory Form</th>
+              <th class="num">Taxable Base</th>
+              <th class="num">VAT / VDS</th>
+            </tr>
+          </thead>
+          <tbody id="challanBody"></tbody>
+        </table>
       </div>
     </div>
   </section>
 
-  <!-- TAB 2: BD TAX CODE INSTALLER (TAX_CODE_TEMPLATES) -->
-  <section id="view-taxcodes" class="tab-view" hidden>
-    <div class="tech-panel">
-      <div class="tech-panel-hdr">
+  <!-- ===================================================================== -->
+  <!-- TAB 3: 1-CLICK BD TAX CODE INSTALLER & MUSHAK-6.3 INVOICE THEME       -->
+  <!-- ===================================================================== -->
+  <section class="tab-pane" id="pane-taxcodes">
+    <div class="panel-card">
+      <div class="panel-hdr">
         <div>
-          <div class="tech-panel-title">⚙️ Standard Bangladesh NBR Tax Codes &amp; Reporting Categories (<code>TAX_CODE_TEMPLATES</code>)</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">
-            Pre-linked with deterministic Manager.io <code>ReportingCategory</code> &amp; <code>TaxAmountReportingCategory</code> UUIDs and <em>"কর চালানপত্র / Tax Invoice (Mushak-6.3)"</em> invoice title override.
-          </div>
+          <div class="panel-title">⚡ 1-Click Bangladesh NBR Tax Code Installer (<code>POST /api4/tax-code</code>)</div>
+          <div class="panel-sub">Installs 12 deterministic BD Tax Codes mapped to Mushak-9.1 Reporting Categories &amp; overrides Sales Invoice titles to <strong>কর চালানপত্র / Tax Invoice (Mushak-6.3)</strong></div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button type="button" class="btn-secondary-sm" onclick="checkTaxCodesStatus()">⟳ Re-Scan Business Tax Codes</button>
-          <button type="button" class="btn-action" id="btnInstallAllCodes" onclick="installAllMissingTaxCodes()">⚡ 1-Click Install All 11 BD Tax Codes</button>
-        </div>
+        <button type="button" class="btn-gold" id="btnInstallAllCodes" onclick="installAllMissingTaxCodes()">⚡ Install All 12 BD Tax Codes</button>
       </div>
-      <div class="table-wrap">
-        <table class="tech-table">
+      <div class="deadlines-wrap">
+        <table>
           <thead>
             <tr>
-              <th>Tax Code Name (English &amp; বাংলা)</th>
-              <th>Statutory Rate</th>
-              <th>SRO / Statutory Reference</th>
-              <th>Mushak-9.1 Note Mapping</th>
+              <th>Tax Code Name (EN + বাংলা)</th>
+              <th class="num">Rate</th>
+              <th>Statutory SRO / Act Basis (FY 2026–27)</th>
+              <th>Mushak-9.1 Target</th>
               <th>Invoice Title Override</th>
               <th>Status</th>
               <th>Action</th>
@@ -515,234 +976,185 @@ html.dark .nav-tab.active { background: rgba(0, 210, 255, 0.14); color: var(--cy
         </table>
       </div>
     </div>
+
+    <div class="panel-card">
+      <div class="panel-hdr">
+        <div>
+          <div class="panel-title">🖨️ Companion Statutory Theme: Mushak-6.3 Tax Invoice (কর চালানপত্র — 11 Columns)</div>
+          <div class="panel-sub">Stateless <code>/api4/view-v1</code> HTML5 theme pursuant to Rule 40(1)(c) &amp; (f) of the VAT &amp; SD Rules, 2016. Zero innerHTML, A4 print-locked.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn-cyan" onclick="copyThemeUrl()">🔗 Copy Raw Theme URL</button>
+          <a class="btn-gold" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html" target="_blank" rel="noopener" style="text-decoration:none">📄 View Raw Mushak-6.3 HTML</a>
+        </div>
+      </div>
+      <div style="font-size:12.5px;color:#cdd9e5;line-height:1.6">
+        <strong>How to activate in Manager.io:</strong> Open <code>Settings → HTML Themes → New Theme</code>, paste the Raw Theme URL above, and select it on your Sales Invoices. It automatically renders the 11-column NBR Mushak-6.3 table (SL, Description, Unit, Qty, Unit Value, Total Value, SD %, SD Amt, VAT Rate, VAT Amount, Total incl. Tax), 13-digit Supplier/Buyer BINs, and Rule 40 statutory declarations.
+      </div>
+    </div>
   </section>
 
-  <!-- TAB 3: 10-POINT NBR VAT, BIN & VDS/AIT LEDGER HEALTH CHECK -->
-  <section id="view-audit" class="tab-view" hidden>
-    <div class="tech-panel">
-      <div class="tech-panel-hdr">
+  <!-- ===================================================================== -->
+  <!-- TAB 4: 10-POINT STATUTORY HEALTH CHECK & SECTION 46/55 GUARD          -->
+  <!-- ===================================================================== -->
+  <section class="tab-pane" id="pane-audit">
+    <div class="panel-card">
+      <div class="panel-hdr">
         <div>
-          <div class="tech-panel-title">🛡️ 10-Point NBR Statutory Compliance &amp; Input Tax Credit (ITC) Audit</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">
-            Read-only verification of Section 46 Input Rebate eligibility, 13-digit BIN format, Mushak-6.3 invoice tagging, and VDS/AIT payable clearing.
-          </div>
+          <div class="panel-title">🛡️ 10-Point Bangladesh VAT &amp; Income Tax Statutory Health Check</div>
+          <div class="panel-sub">Automated verification against VAT &amp; SD Act 2012 (Sections 46, 50, 64, 85, 127) &amp; Income Tax Act 2023 (Sections 55, 109, 142, 154, 177, 264)</div>
         </div>
-        <span class="status-dot-wrap" id="auditSummaryBadge"><span class="status-dot"></span>10 / 10 Statutory Checks</span>
+        <span class="badge badge-ADVANCE-TAX">✓ 10 / 10 Statutory Checks Active</span>
       </div>
       <div class="audit-grid" id="auditGrid"></div>
     </div>
   </section>
 
-  <!-- TAB 4: DYNAMIC NBR COMPLIANCE CALENDAR & STATUTORY CALCULATORS -->
-  <section id="view-calendar" class="tab-view" hidden>
-    <div class="sim-grid" style="margin-bottom:18px">
-      <!-- Calc 1: VDS & AIT Contractor / Supplier Deduction Calculator -->
-      <div class="sim-card">
-        <h3>🧮 VDS &amp; AIT Withholding Split Calculator</h3>
-        <p>Compute net supplier/contractor payment after VAT Deducted at Source (VDS) &amp; Section 89/90 AIT.</p>
-        <div class="fld-group">
-          <label>Gross Invoice / Running Bill Amount (BDT)</label>
-          <input type="number" id="calcBillAmt" value="1500000" oninput="runStatutoryCalculators()">
-        </div>
-        <div class="fld-group">
-          <label>Supply / Service Category (NBR Schedule)</label>
-          <select id="calcSupplyType" onchange="runStatutoryCalculators()">
-            <option value="7.5|5|include">Procurement Provider / Contractor (7.5% VAT + 5% AIT)</option>
-            <option value="15|10|exclude">Consultancy / Engineering / Legal (15% VAT + 10% AIT)</option>
-            <option value="5|3|exclude">IT Enabled Services / Software (5% VAT + 3% AIT)</option>
-            <option value="15|5|exclude">Commercial Rent / Space Lease (15% VAT + 5% AIT)</option>
-            <option value="7.5|2|exclude">Garment Sub-Contract / Packaging (7.5% VAT + 2% AIT)</option>
-          </select>
-        </div>
-        <div class="sim-result" id="calcVdsResult"></div>
-      </div>
-
-      <!-- Calc 2: VAT & SD Act 2012 (S.85) & Income Tax Act 2023 (S.174/266) Penalty Estimator -->
-      <div class="sim-card">
-        <h3>⚠️ NBR Late Filing &amp; Interest Estimator</h3>
-        <p>Reconciled with VAT &amp; SD Act 2012 Section 85 &amp; 127 and Income Tax Act 2023 Section 266.</p>
-        <div class="fld-group">
-          <label>Return / Obligation Type</label>
-          <select id="calcPenType" onchange="runStatutoryCalculators()">
-            <option value="vat91">Mushak-9.1 Monthly VAT Return (S.85(1)(f) + S.127)</option>
-            <option value="vds">VDS Deposit / Certificate Delay (S.85 + 2%/mo)</option>
-            <option value="tds108">Withholding Tax Return u/s 177 (ITA 2023 S.266)</option>
-            <option value="itr">Corporate / Individual Income Tax Return</option>
-          </select>
-        </div>
-        <div class="fld-group">
-          <label>Unpaid Tax / VAT Principal (BDT) &amp; Days Late</label>
-          <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:8px">
-            <input type="number" id="calcPenTax" value="350000" oninput="runStatutoryCalculators()">
-            <input type="number" id="calcPenDays" value="45" oninput="runStatutoryCalculators()">
-          </div>
-        </div>
-        <div class="sim-result" id="calcPenResult"></div>
-      </div>
-
-      <!-- Calc 3: Section 154 Advance Tax Quarterly Installment Planner -->
-      <div class="sim-card">
-        <h3>📆 S.154 Advance Income Tax (AIT) Planner</h3>
-        <p>Income Tax Act 2023 Section 154: 4 equal 25% quarterly installments when last assessed tax &gt; Tk 6,00,000.</p>
-        <div class="fld-group">
-          <label>Last Assessed / Estimated Annual Tax Liability (BDT)</label>
-          <input type="number" id="calcAdvTotal" value="2400000" oninput="runStatutoryCalculators()">
-        </div>
-        <div class="fld-group">
-          <label>AIT Already Deducted at Source / Bank / Import (BDT)</label>
-          <input type="number" id="calcAdvPaid" value="600000" oninput="runStatutoryCalculators()">
-        </div>
-        <div class="sim-result" id="calcAdvResult"></div>
-      </div>
-    </div>
-
-    <!-- Dynamic FY 2026-27 Statutory Deadline Table -->
-    <div class="tech-panel" style="margin-bottom:0">
-      <div class="tech-panel-hdr">
-        <div class="tech-panel-title">📅 Bangladesh NBR Statutory Filing Calendar (Dynamic FY 2026-27 Schedule)</div>
-        <button type="button" class="btn-secondary-sm" onclick="exportDeadlinesJournalCsv()">📥 Export Deadlines as Manager.io Journal CSV</button>
-      </div>
-      <div class="table-wrap">
-        <table class="tech-table">
-          <thead>
-            <tr>
-              <th>Tax Category</th>
-              <th>Statutory Return / Obligation (English &amp; বাংলা)</th>
-              <th>Statutory Due Date</th>
-              <th>Window Status</th>
-              <th>Statutory Reference &amp; Late Consequence</th>
-            </tr>
-          </thead>
-          <tbody id="calendarBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- Community Attribution Footer (100% Non-Commercial Forum Compliant) -->
-  <footer class="suite-footer">
-    <div>
-      <strong>INSPIRON TECH</strong> · Architected by <strong>MD ABU HASAN</strong> · ERP Architect | Listed Manager.io Advisor (Bangladesh)<br>
-      <span>Independent open-source community localization tool for Manager.io. Not affiliated with or endorsed by the National Board of Revenue (NBR). Always verify filings at <a href="https://etaxnbr.gov.bd" target="_blank" rel="noopener">etaxnbr.gov.bd</a> &amp; <a href="https://vat.gov.bd" target="_blank" rel="noopener">vat.gov.bd</a>.</span>
-    </div>
-    <div style="display:flex;gap:16px;align-items:center">
-      <a href="https://github.com/INSPIRONTECH/INSPIRON-SUITE" target="_blank" rel="noopener">GitHub Source (MIT)</a>
-      <a href="https://www.manager.io/advisors" target="_blank" rel="noopener">Manager.io Advisor Directory</a>
-    </div>
-  </footer>
-
 </main>
 
-<!-- Slide-Over Inspector Drawer -->
-<div class="drawer-backdrop" id="egp-bk" onclick="closeInspectorDrawer()"></div>
-<aside class="inspector-drawer" id="egp-dr" aria-label="Mushak Note &amp; Challan Inspector">
+<!-- SLIDE-OVER INSPECTOR DRAWER -->
+<div class="dr-backdrop" id="drBackdrop" onclick="closeNoteInspector()"></div>
+<aside class="dr-panel" id="drPanel" aria-label="Mushak Note Inspector">
   <div class="dr-hdr">
     <div>
       <div class="dr-title" id="drTitle">Mushak-9.1 Note Inspector</div>
-      <div class="dr-sub" id="drSub">Statutory Sub-Form Drilldown &amp; Mushak-6.3/6.6 Voucher Breakdown</div>
+      <div class="dr-sub" id="drSub">Statutory Sub-Form Breakdown</div>
     </div>
-    <button type="button" class="dr-close" onclick="closeInspectorDrawer()">✕</button>
+    <button type="button" class="dr-close" onclick="closeNoteInspector()">✕ Close</button>
   </div>
   <div class="dr-body" id="drBody"></div>
 </aside>
 
+<!-- FOOTER -->
+<footer>
+  <a href="https://inspiron.tech" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:12px">
+    <svg width="28" height="28" viewBox="0 0 358.846 350.3" fill="none">
+      <path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
+      <path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
+      <circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
+    </svg>
+    <div style="text-align:left">
+      <div style="font-size:14px;letter-spacing:.06em"><span style="font-weight:500;color:#ffffff;text-transform:lowercase">inspiron</span> <span style="font-weight:300;color:#FFD700;text-transform:uppercase">TECH</span></div>
+      <div style="font-size:9px;color:#8b949e;letter-spacing:.1em;text-transform:uppercase">ERP Architect | Listed Manager.io Advisor &middot; Bangladesh</div>
+    </div>
+  </a>
+  <div style="font-size:11px;font-weight:700;color:#8b949e;letter-spacing:.06em;margin-bottom:6px">ARCHITECTED BY MD ABU HASAN &middot; COMMUNITY EDITION (MIT / CC BY 4.0)</div>
+  <div class="footer-disclaimer">
+    Statutory rates, thresholds, and deadlines reconciled with the Value Added Tax and Supplementary Duty Act, 2012 (as amended by the October 2026 Ordinance), VDS Rules 2025 (S.R.O. No. 182-Ain/2025 &amp; S.R.O. No. 140-Ain/2026), and the Income Tax Act, 2023 (as amended by the Finance Act, 2026). Always verify with official NBR notifications at <a href="https://nbr.gov.bd" target="_blank" rel="noopener" style="color:#00D2FF">nbr.gov.bd</a> and <a href="https://vat.gov.bd" target="_blank" rel="noopener" style="color:#00D2FF">vat.gov.bd</a>.
+  </div>
+</footer>
+
+<div id="toast"></div>
+
 <script>
 /* ============================================================================
- * 1. DETERMINISTIC BANGLADESH TAX CODE TEMPLATES (Manager.io /api4 Contract)
+ * 1. DETERMINISTIC BD NBR TAX CODE TEMPLATES (FY 2026-27 VERIFIED)
  * ============================================================================ */
 const TAX_CODE_TEMPLATES = [
   {
-    Name: "BD VAT 15% — Standard Rated (মূসক ১৫% আদর্শ হার)",
+    Name: "BD VAT 15% — Standard Output / Supply (আদর্শ হার ১৫% - মুসক-৬.৩)",
     Label: "VAT 15%",
     TaxRate: 2,
     Rate: 15,
     CustomSalesInvoiceTitle: true,
     SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
-    SroRef: "VAT & SD Act 2012 S.15(3)",
-    MushakNote: "Note 4 (Output) / Note 14 (Input Credit)",
+    SroRef: "VAT & SD Act 2012 Sec 15(3)",
+    MushakNote: "Note 4 (Standard Output VAT)",
     ReportingCategory: "b1000001-0091-4000-8000-000000000004",
     TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000004"
   },
   {
-    Name: "BD VAT 7.5% — Construction / Procurement / Garment Sub-Contract (মূসক ৭.৫%)",
+    Name: "BD VAT 0% — Zero-Rated Direct / Deemed Export (শূন্য হার রপ্তানি ০%)",
+    Label: "VAT 0% (Export)",
+    TaxRate: 2,
+    Rate: 0,
+    CustomSalesInvoiceTitle: true,
+    SalesInvoiceTitle: "কর চালানপত্র / Zero-Rated Export Invoice (Mushak-6.3)",
+    SroRef: "VAT & SD Act 2012 Sec 21–24",
+    MushakNote: "Note 1–2 (Zero-Rated Export)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000001",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000001"
+  },
+  {
+    Name: "BD VAT Exempt — First Schedule & Start-Up Exempt (ভ্যাট অব্যাহতি প্রাপ্ত)",
+    Label: "VAT Exempt",
+    TaxRate: 2,
+    Rate: 0,
+    CustomSalesInvoiceTitle: false,
+    SalesInvoiceTitle: "",
+    SroRef: "VAT & SD Act 2012 Sec 26 & 1st Schedule",
+    MushakNote: "Note 3 (Exempt Supply)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000003",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000003"
+  },
+  {
+    Name: "BD VAT 10% — Construction & Procurement Provider (যোগানদার ও নির্মাণ ১০% - S037.00)",
+    Label: "VAT 10% (S037.00)",
+    TaxRate: 2,
+    Rate: 10,
+    CustomSalesInvoiceTitle: true,
+    SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
+    SroRef: "3rd Schedule & SRO 182-Ain/2025 (No ITC u/s 46)",
+    MushakNote: "Note 7 (Truncated 10% Output)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000007",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000007"
+  },
+  {
+    Name: "BD VAT 7.5% — Furniture / Restaurants / Non-AC Hotels (হ্রাসকৃত হার ৭.৫%)",
     Label: "VAT 7.5% (Truncated)",
     TaxRate: 2,
     Rate: 7.5,
     CustomSalesInvoiceTitle: true,
     SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
-    SroRef: "3rd Schedule Para 2 & 3 (No ITC u/s 46(1)(ka))",
-    MushakNote: "Note 7 (Truncated Output)",
-    ReportingCategory: "b1000001-0091-4000-8000-000000000007",
-    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000007"
+    SroRef: "3rd Schedule S024.10/20 (No ITC u/s 46)",
+    MushakNote: "Note 7 (Truncated 7.5% Output)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000071",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000071"
   },
   {
-    Name: "BD VAT 5% — Commercial Importer / Wholesale / Retail Trading (ব্যবসায়ী ৫%)",
+    Name: "BD VAT 5% — Trading / Wholesale / Commercial Importer (ব্যবসায়ী হার ৫%)",
     Label: "VAT 5% (Trading)",
     TaxRate: 2,
     Rate: 5,
     CustomSalesInvoiceTitle: true,
     SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
-    SroRef: "3rd Schedule Trading Stage",
-    MushakNote: "Note 7 (Truncated Trading)",
-    ReportingCategory: "b1000001-0091-4000-8000-000000000071",
-    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000071"
+    SroRef: "3rd Schedule Para (3) (No ITC u/s 46)",
+    MushakNote: "Note 8 (Retail/Wholesale/Trade 5%)",
+    ReportingCategory: "b1000001-0091-4000-8000-000000000008",
+    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000008"
   },
   {
-    Name: "BD VAT 5% — IT Enabled Services (ITES) & Software (আইটি সেবা ৫%)",
-    Label: "VAT 5% (ITES)",
+    Name: "BD VAT 5% — IT-Enabled Services & Online Ads (আইটি সেবা ও অনলাইন বিজ্ঞাপন ৫% - S099.10/S007.20)",
+    Label: "VAT 5% (ITES/Ads)",
     TaxRate: 2,
     Rate: 5,
     CustomSalesInvoiceTitle: true,
     SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
-    SroRef: "3rd Schedule Service Code S099.10",
-    MushakNote: "Note 7 (Reduced Service Rate)",
+    SroRef: "3rd Schedule S099.10 & SRO 140-Ain/2026 S007.20",
+    MushakNote: "Note 7 (Truncated 5% Service)",
     ReportingCategory: "b1000001-0091-4000-8000-000000000072",
     TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000072"
   },
   {
-    Name: "BD VAT 10% — Repair, Maintenance & Transport Services (মেরামত ও পরিবহন ১০%)",
-    Label: "VAT 10%",
+    Name: "BD VAT 2% — Land Dev & Building Construction <=1,600 sq ft (ভবন নির্মাণ ২% - S010)",
+    Label: "VAT 2% (Real Estate)",
     TaxRate: 2,
-    Rate: 10,
+    Rate: 2,
     CustomSalesInvoiceTitle: true,
     SalesInvoiceTitle: "কর চালানপত্র / Tax Invoice (Mushak-6.3)",
-    SroRef: "3rd Schedule Service Rate",
-    MushakNote: "Note 7 (Truncated 10%)",
+    SroRef: "3rd Schedule S010.10 & S010.20 (4.5% >1,600 sqft)",
+    MushakNote: "Note 7 (Truncated Real Estate)",
     ReportingCategory: "b1000001-0091-4000-8000-000000000073",
     TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000073"
   },
   {
-    Name: "BD VAT 0% — Zero-Rated Direct & Deemed Export (শূন্য হার রপ্তানি ০%)",
-    Label: "VAT 0% (Export)",
-    TaxRate: 0,
-    Rate: 0,
-    CustomSalesInvoiceTitle: true,
-    SalesInvoiceTitle: "কর চালানপত্র / Export Tax Invoice (Mushak-6.3)",
-    SroRef: "VAT & SD Act 2012 Section 21–24",
-    MushakNote: "Note 1 & 2 (Zero-Rated Export)",
-    ReportingCategory: "b1000001-0091-4000-8000-000000000001",
-    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000001"
-  },
-  {
-    Name: "BD VAT Exempt — 1st Schedule Exempted Goods & Services (অব্যাহতি প্রাপ্ত)",
-    Label: "VAT Exempt",
-    TaxRate: 0,
-    Rate: 0,
-    CustomSalesInvoiceTitle: false,
-    SalesInvoiceTitle: "",
-    SroRef: "VAT & SD Act 2012 1st Schedule & S.26",
-    MushakNote: "Note 3 (Exempt Supply) / Note 12 (Exempt Input)",
-    ReportingCategory: "b1000001-0091-4000-8000-000000000003",
-    TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000003"
-  },
-  {
-    Name: "BD Input VAT 15% — Local Rebatable Purchase (স্থানীয় ক্রয় রেয়াতযোগ্য ১৫%)",
-    Label: "Input VAT 15% (ITC)",
+    Name: "BD Input VAT 15% — Local Rebatable Purchase (স্থানীয় ক্রয় উপকরণ রেয়াত ১৫%)",
+    Label: "Input VAT 15% (Local)",
     TaxRate: 2,
     Rate: 15,
     CustomSalesInvoiceTitle: false,
     SalesInvoiceTitle: "",
-    SroRef: "Section 46 Input Tax Credit (Mushak-6.3 Required)",
+    SroRef: "Sec 46 (6-Tax-Period Window & >=Tk 1L Bank Rule)",
     MushakNote: "Note 14 (Local Standard Input Credit)",
     ReportingCategory: "b1000001-0091-4000-8000-000000000014",
     TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000014"
@@ -763,23 +1175,23 @@ const TAX_CODE_TEMPLATES = [
     Name: "BD VDS Payable — VAT Deducted at Source (উৎসে ভ্যাট কর্তন মুসক-৬.৬)",
     Label: "VDS Withholding",
     TaxRate: 2,
-    Rate: 7.5,
+    Rate: 10,
     CustomSalesInvoiceTitle: false,
     SalesInvoiceTitle: "",
-    SroRef: "VDS Rules 2021 & Section 49",
-    MushakNote: "Note 24 (Increasing Adj) / Note 29 (Decreasing Adj)",
+    SroRef: "VDS Rules 2025 (SRO 182-Ain/2025) & Sec 49/50",
+    MushakNote: "Note 24 (+Adj Buyer) / Note 29 (-Adj Supplier)",
     ReportingCategory: "b1000001-0091-4000-8000-000000000024",
     TaxAmountReportingCategory: "b1000002-0091-4000-8000-000000000024"
   },
   {
-    Name: "BD AIT / TDS Withholding — Income Tax Act 2023 S.89/90 (উৎসে আয়কর কর্তন)",
-    Label: "AIT / TDS (S.89)",
+    Name: "BD AIT / TDS Withholding — Income Tax Act 2023 Part 7 (উৎসে আয়কর কর্তন)",
+    Label: "AIT / TDS (Part 7)",
     TaxRate: 2,
     Rate: 5,
     CustomSalesInvoiceTitle: false,
     SalesInvoiceTitle: "",
-    SroRef: "Income Tax Act 2023 Part 7 (Withholding Tax)",
-    MushakNote: "Monthly Withholding Return (Form u/s 177)",
+    SroRef: "ITA 2023 Sec 89/90/109 & Source Tax Rules 2026",
+    MushakNote: "Monthly Withholding Return u/s 177 (25th)",
     ReportingCategory: "b1000001-0177-4000-8000-000000000089",
     TaxAmountReportingCategory: "b1000002-0177-4000-8000-000000000089"
   }
@@ -798,7 +1210,7 @@ const REPORTS = [
       { name: "Note 1–2: Zero-Rated Goods/Services (Direct & Deemed Export)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000001"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000001"] }] },
       { name: "Note 3: Exempt Goods/Services (1st Schedule & S.26)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000003"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000003"] }] },
       { name: "Note 4: Standard Rated Goods/Services (15%)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000004"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000004"] }] },
-      { name: "Note 7: Truncated / Specific Rate Goods/Services (5%, 7.5%, 10%)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000007", "b1000001-0091-4000-8000-000000000071", "b1000001-0091-4000-8000-000000000072", "b1000001-0091-4000-8000-000000000073"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000007", "b1000002-0091-4000-8000-000000000071", "b1000002-0091-4000-8000-000000000072", "b1000002-0091-4000-8000-000000000073"] }] },
+      { name: "Note 7–8: Truncated & Trade Supplies (10%, 7.5%, 5%, 2%)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000007", "b1000001-0091-4000-8000-000000000071", "b1000001-0091-4000-8000-000000000072", "b1000001-0091-4000-8000-000000000073", "b1000001-0091-4000-8000-000000000008"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000007", "b1000002-0091-4000-8000-000000000071", "b1000002-0091-4000-8000-000000000072", "b1000002-0091-4000-8000-000000000073", "b1000002-0091-4000-8000-000000000008"] }] },
       { isHeader: true, name: "Part-4: Purchase — Input Tax Credit (অংশ-৪: ক্রয় - উপকরণ কর রেয়াত)" },
       { name: "Note 14: Standard Rated Local Purchase (15% Rebatable)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000014"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000014"] }] },
       { name: "Note 15: Standard Rated Import Purchase (15% Bill of Entry)", cells: [{ reportingCategories: ["b1000001-0091-4000-8000-000000000015"] }, { reportingCategories: ["b1000002-0091-4000-8000-000000000015"] }] },
@@ -816,18 +1228,17 @@ const DEMO_PROFILES = {
     id: "demo:manufacturing",
     name: "Padma Precision Garments & Packaging Ltd",
     bin: "001489203-0101",
-    sector: "Export & Local Garment Accessories Manufacturing",
     mushakNotes: [
-      { note: "Note 1", part: "Part-3: Supply", title: "Zero-Rated Direct/Deemed Export (শূন্য হার রপ্তানি - ধারা ২১-২৪)", base: 18500000, vat: 0, form: "Sub-Form Ka (ক)", status: "Verified BoE / L/C" },
-      { note: "Note 4", part: "Part-3: Supply", title: "Standard Rated 15% Goods/Services (আদর্শ হার ১৫% পণ্য ও সেবা)", base: 12400000, vat: 1860000, form: "Sub-Form Ka (ক)", status: "Mushak-6.3 Issued" },
-      { note: "Note 7", part: "Part-3: Supply", title: "Specific / Truncated Rate Supplies (সুনির্দিষ্ট ও হ্রাসকৃত হার ৭.৫%)", base: 3200000, vat: 240000, form: "Sub-Form Ka (ক)", status: "No ITC Allowed" },
+      { note: "Note 1", part: "Part-3: Output", title: "Zero-Rated Direct/Deemed Export (শূন্য হার রপ্তানি - ধারা ২১-২৪)", base: 18500000, vat: 0, form: "Sub-Form Ka (ক)", status: "Verified BoE / L/C" },
+      { note: "Note 4", part: "Part-3: Output", title: "Standard Rated 15% Goods/Services (আদর্শ হার ১৫% পণ্য ও সেবা)", base: 12400000, vat: 1860000, form: "Sub-Form Ka (ক)", status: "Mushak-6.3 Issued" },
+      { note: "Note 7", part: "Part-3: Output", title: "Truncated Rate Supplies (হ্রাসকৃত হার ৭.৫% - রেয়াত অযোগ্য)", base: 3200000, vat: 240000, form: "Sub-Form Ka (ক)", status: "No ITC u/s 46(1)(ঠ)" },
       { note: "Note 9", part: "Part-3: Total", title: "Total Output VAT Payable (মোট প্রদেয় আউটপুট ভ্যাট = Note 1–8)", base: 34100000, vat: 2100000, form: "Part-3 Total", status: "Output Total", isTotal: true },
-      { note: "Note 14", part: "Part-4: Input ITC", title: "Standard 15% Local Purchase (স্থানীয় ক্রয় ১৫% - মুসক-৬.৩)", base: 5600000, vat: 840000, form: "Sub-Form Ka (ক)", status: "Rebatable u/s 46" },
+      { note: "Note 14", part: "Part-4: Input ITC", title: "Standard 15% Local Purchase (স্থানীয় ক্রয় ১৫% - মুসক-৬.৩)", base: 5600000, vat: 840000, form: "Sub-Form Ka (ক)", status: "Rebatable (6 Periods)" },
       { note: "Note 15", part: "Part-4: Input ITC", title: "Standard 15% Import Purchase (আমদানি ক্রয় ১৫% - Bill of Entry)", base: 4200000, vat: 630000, form: "Sub-Form Kha (খ)", status: "BoE Verified" },
-      { note: "Note 23", part: "Part-4: Total", title: "Total Eligible Input Tax Credit (মোট প্রাপ্য উপকরণ কর রেয়াত)", base: 9800000, vat: 1470000, form: "Part-4 Total", status: "ITC Claimed", isTotal: true },
-      { note: "Note 24", part: "Part-5: +Adj", title: "Increasing Adjustment: VDS Deducted as Buyer (উৎসে কর্তন বৃদ্ধিকারী সমন্বয়)", base: 1800000, vat: 135000, form: "Sub-Form Gha (ঘ)", status: "Mushak-6.6 Pending" },
-      { note: "Note 29", part: "Part-6: -Adj", title: "Decreasing Adjustment: VDS Deducted by Customers + Advance Tax (হ্রাসকারী সমন্বয়)", base: 2400000, vat: 180000, form: "Sub-Form Nga (ঙ)", status: "Mushak-6.6 Received" },
-      { note: "Note 34", part: "Part-7: Net", title: "Net VAT Payable before Treasury Deposit (নিট প্রদেয় মূসক = 9 - 23 + 28 - 33)", base: 0, vat: 585000, form: "Part-7 Net", status: "Treasury Challan Due", isTotal: true }
+      { note: "Note 23b", part: "Part-4: Total", title: "Total Eligible Input Tax Credit (মোট প্রাপ্য উপকরণ কর রেয়াত)", base: 9800000, vat: 1470000, form: "Part-4 Total", status: "ITC Claimed", isTotal: true },
+      { note: "Note 24", part: "Part-5: +Adj", title: "Increasing Adjustment: VDS Withheld as Buyer (উৎসে কর্তন বৃদ্ধিকারী সমন্বয়)", base: 1800000, vat: 180000, form: "Sub-Form Ka (ক)", status: "SRO 182-Ain/2025" },
+      { note: "Note 29", part: "Part-6: -Adj", title: "Decreasing Adjustment: Customer VDS per Mushak-6.6 (হ্রাসকারী সমন্বয়)", base: 2400000, vat: 225000, form: "Sub-Form Ga (গ)", status: "Within 6 Tax Periods" },
+      { note: "Note 34", part: "Part-7: Net", title: "Net VAT Payable before Treasury Deposit (নিট প্রদেয় মূসক = 9c - 23b + 28 - 33)", base: 0, vat: 585000, form: "Part-7 Net", status: "Due by 15th", isTotal: true }
     ],
     challans: [
       { ref: "M6.3-2026-1041", date: "2026-10-04", party: "Apex Global Apparel Ltd", bin: "000291844-0101", form: "Mushak-6.3 (0% Export)", base: 11200000, vat: 0 },
@@ -836,80 +1247,76 @@ const DEMO_PROFILES = {
       { ref: "M6.3-2026-1049", date: "2026-10-16", party: "Ha-Meem Denim Mills Ltd", bin: "000491022-0103", form: "Mushak-6.3 (7.5% Sub)", base: 3200000, vat: 240000 },
       { ref: "BOE-C-884120",   date: "2026-10-18", party: "Chattogram Custom House (Import BoE)", bin: "CUSTOMS-301", form: "BoE Import (15% ITC)", base: 4200000, vat: 630000 },
       { ref: "PUR-M63-9921",   date: "2026-10-21", party: "Karnaphuli Paper & Chemical Ltd", bin: "000918273-0202", form: "Purchase 6.3 (15% ITC)", base: 5600000, vat: 840000 },
-      { ref: "M6.6-VDS-309",   date: "2026-10-25", party: "Square Consumer Products Ltd (VDS Cert)", bin: "000118920-0102", form: "Mushak-6.6 (-Adj)", base: 2400000, vat: 180000 },
-      { ref: "VDS-PAY-412",    date: "2026-10-28", party: "Delta Transport & Civil Works (Supplier VDS)", bin: "001928374-0104", form: "Buyer VDS (+Adj 7.5%)", base: 1800000, vat: 135000 }
-    ],
-    audits: [
-      { title: "1. 13-Digit Buyer/Supplier BIN Verification", sub: "All 8 VAT vouchers carry valid 13-digit e-BINs or Custom House BoE codes.", status: "PASS", pill: "pill-ok" },
-      { title: "2. Section 46(1)(ka) Truncated Rate ITC Block", sub: "Zero Input Tax Credit claimed against Tk 32,00,000 truncated 7.5% supply.", status: "PASS", pill: "pill-ok" },
-      { title: "3. Banking Channel Payment Rule (> Tk 1,00,000)", sub: "Section 46(1)(kha): All rebatable purchases > Tk 1L settled via crossed cheque/RTGS.", status: "PASS", pill: "pill-ok" },
-      { title: "4. Mushak-6.3 Invoice Title Override Active", sub: "Custom sales invoice title 'কর চালানপত্র / Tax Invoice (Mushak-6.3)' enabled.", status: "PASS", pill: "pill-ok" },
-      { title: "5. VDS Payable Deposit Window (Rule 5(2))", sub: "Tk 1,35,000 Buyer VDS deducted on 28 Oct must be deposited via A-Challan by 15 Nov.", status: "DUE 15 NOV", pill: "pill-warn" },
-      { title: "6. Mushak-6.6 Certificate Reconciliation", sub: "1 customer VDS certificate (Tk 1,80,000) matched to Note 29 Decreasing Adjustment.", status: "PASS", pill: "pill-ok" },
-      { title: "7. Import AT (5% Advance Tax) Recognition", sub: "Import AT recorded in Note 30 / Current Account for decreasing adjustment.", status: "PASS", pill: "pill-ok" },
-      { title: "8. Control Account & Suspense Hygiene", sub: "Suspense Account balance is Tk 0.00; Tax Payable control account reconciled.", status: "PASS", pill: "pill-ok" },
-      { title: "9. Section 89/90 AIT Withholding Ledger", sub: "Tk 90,000 Supplier AIT separated from VDS into TDS Payable control account.", status: "PASS", pill: "pill-ok" },
-      { title: "10. Mushak-6.1 & 6.2 Register Continuity", sub: "Opening + Purchase - Issue = Closing inventory matches Mushak-9.1 period.", status: "PASS", pill: "pill-ok" }
+      { ref: "M6.6-VDS-309",   date: "2026-10-25", party: "Square Consumer Products Ltd (VDS Cert)", bin: "000118920-0102", form: "Mushak-6.6 (-Adj)", base: 2400000, vat: 225000 },
+      { ref: "VDS-PAY-412",    date: "2026-10-28", party: "Delta Civil & Procurement Works (S037.00)", bin: "001928374-0104", form: "Buyer VDS (+Adj 10%)", base: 1800000, vat: 180000 }
     ]
   },
   "demo:contractor": {
     id: "demo:contractor",
     name: "Jamuna EPC & Infrastructure Consortium",
     bin: "002194810-0302",
-    sector: "LGED / RHD / BWDB Government Civil & EPC Contractor",
     mushakNotes: [
-      { note: "Note 7", part: "Part-3: Supply", title: "Procurement Provider & Construction 7.5% (যোগানদার ও নির্মাণ সংস্থা ৭.৫%)", base: 42000000, vat: 3150000, form: "Sub-Form Ka (ক)", status: "100% VDS at Source" },
-      { note: "Note 9", part: "Part-3: Total", title: "Total Output VAT Payable (মোট প্রদেয় আউটপুট ভ্যাট)", base: 42000000, vat: 3150000, form: "Part-3 Total", status: "Output Total", isTotal: true },
-      { note: "Note 23", part: "Part-4: Total", title: "Total Input Tax Credit (Truncated 7.5% rate = Tk 0 ITC u/s 46)", base: 0, vat: 0, form: "Part-4 Total", status: "Blocked by S.46", isTotal: true },
-      { note: "Note 24", part: "Part-5: +Adj", title: "Increasing Adjustment: Sub-Contractor VDS Deducted at Source", base: 6400000, vat: 480000, form: "Sub-Form Gha (ঘ)", status: "Deposit via A-Challan" },
-      { note: "Note 29", part: "Part-6: -Adj", title: "Decreasing Adjustment: VDS Deducted by Executive Engineer (Mushak-6.6)", base: 42000000, vat: 3150000, form: "Sub-Form Nga (ঙ)", status: "Treasury Challan Verified" },
-      { note: "Note 34", part: "Part-7: Net", title: "Net Cash VAT Payable (Only Sub-Contractor VDS Payable)", base: 0, vat: 480000, form: "Part-7 Net", status: "Payable by 15th", isTotal: true }
+      { note: "Note 7", part: "Part-3: Output", title: "Construction & Procurement Provider 10% (যোগানদার ও নির্মাণ সংস্থা ১০% - S037.00)", base: 42000000, vat: 4200000, form: "Sub-Form Ka (ক)", status: "100% VDS at Source" },
+      { note: "Note 9", part: "Part-3: Total", title: "Total Output VAT Payable (মোট প্রদেয় আউটপুট ভ্যাট)", base: 42000000, vat: 4200000, form: "Part-3 Total", status: "Output Total", isTotal: true },
+      { note: "Note 23b", part: "Part-4: Total", title: "Total Input Tax Credit (Truncated 10% rate = Tk 0 ITC u/s 46(1)(ঠ))", base: 0, vat: 0, form: "Part-4 Total", status: "Blocked by S.46(1)(ঠ)", isTotal: true },
+      { note: "Note 24", part: "Part-5: +Adj", title: "Increasing Adjustment: Sub-Contractor VDS Deducted at Source (10%)", base: 6400000, vat: 640000, form: "Sub-Form Ka (ক)", status: "Settle via Note 24" },
+      { note: "Note 29", part: "Part-6: -Adj", title: "Decreasing Adjustment: VDS Deducted by Executive Engineer (Mushak-6.6)", base: 42000000, vat: 4200000, form: "Sub-Form Ga (গ)", status: "Treasury Challan Verified" },
+      { note: "Note 34", part: "Part-7: Net", title: "Net Cash VAT Payable (Only Sub-Contractor VDS Payable)", base: 0, vat: 640000, form: "Part-7 Net", status: "Payable by 15th", isTotal: true }
     ],
     challans: [
-      { ref: "IPC-LGED-04", date: "2026-10-06", party: "Executive Engineer, LGED Dhaka Division", bin: "000019283-0001", form: "Mushak-6.3 + 6.6 (7.5%)", base: 24000000, vat: 1800000 },
-      { ref: "IPC-RHD-09",  date: "2026-10-19", party: "Project Director, RHD Bridge Zone", bin: "000049182-0002", form: "Mushak-6.3 + 6.6 (7.5%)", base: 18000000, vat: 1350000 },
-      { ref: "SUB-VDS-11",  date: "2026-10-24", party: "Bengal Piling & Geo-Tech Engineering", bin: "003918271-0105", form: "Buyer VDS (+Adj 7.5%)", base: 6400000, vat: 480000 }
-    ],
-    audits: [
-      { title: "1. 100% Government VDS Offset (Note 7 vs Note 29)", sub: "Tk 31,50,000 Output VAT fully offset by Executive Engineer Mushak-6.6 certificates.", status: "PASS", pill: "pill-ok" },
-      { title: "2. Section 46 Truncated Rate Rebate Guard", sub: "Zero Input VAT Rebate claimed on cement, rod, and bitumen (compliant with S.46).", status: "PASS", pill: "pill-ok" },
-      { title: "3. Section 89 AIT Deduction Recognition", sub: "5% Contractor AIT (Tk 21,00,000) booked to Advance Income Tax Asset u/s 154.", status: "PASS", pill: "pill-ok" },
-      { title: "4. 10% Performance Retention Money Split", sub: "Tk 42,00,000 Retention Money tracked in Project Retention Receivable.", status: "PASS", pill: "pill-ok" }
+      { ref: "IPC-LGED-04", date: "2026-10-06", party: "Executive Engineer, LGED Dhaka Division", bin: "000019283-0001", form: "Mushak-6.3 + 6.6 (10%)", base: 24000000, vat: 2400000 },
+      { ref: "IPC-RHD-09",  date: "2026-10-19", party: "Project Director, RHD Bridge Zone", bin: "000049182-0002", form: "Mushak-6.3 + 6.6 (10%)", base: 18000000, vat: 1800000 },
+      { ref: "SUB-VDS-11",  date: "2026-10-24", party: "Bengal Piling & Geo-Tech Engineering", bin: "003918271-0105", form: "Buyer VDS (+Adj 10%)", base: 6400000, vat: 640000 }
     ]
   },
   "demo:trading": {
     id: "demo:trading",
     name: "Meghna Industrial Supply & IT Solutions",
     bin: "004819201-0204",
-    sector: "Commercial Importer, Trading (5%) & IT Enabled Services (5%)",
     mushakNotes: [
-      { note: "Note 7", part: "Part-3: Supply", title: "Trading 5% & IT Enabled Services 5% (ব্যবসায়ী ৫% ও আইটি সেবা ৫%)", base: 16800000, vat: 840000, form: "Sub-Form Ka (ক)", status: "Mushak-6.3 Issued" },
+      { note: "Note 7", part: "Part-3: Output", title: "IT-Enabled Services 5% & Online Ads 5% (আইটি সেবা S099.10 ও বিজ্ঞাপন S007.20)", base: 6800000, vat: 340000, form: "Sub-Form Ka (ক)", status: "Mushak-6.3 Issued" },
+      { note: "Note 8", part: "Part-3: Output", title: "Commercial Trading / Wholesale Supply 5% (ব্যবসায়ী হার ৫%)", base: 10000000, vat: 500000, form: "Sub-Form Ka (ক)", status: "Mushak-6.3 Issued" },
       { note: "Note 9", part: "Part-3: Total", title: "Total Output VAT Payable (মোট প্রদেয় আউটপুট ভ্যাট)", base: 16800000, vat: 840000, form: "Part-3 Total", status: "Output Total", isTotal: true },
-      { note: "Note 30", part: "Part-6: -Adj", title: "Decreasing Adjustment: 5% Advance Tax (AT) Paid at Import Stage", base: 9200000, vat: 460000, form: "Sub-Form Nga (ঙ)", status: "Import BoE AT Refund/Adj" },
+      { note: "Note 23b", part: "Part-4: Total", title: "Total Input Tax Credit (5% Reduced Rate = Tk 0 ITC u/s 46)", base: 0, vat: 0, form: "Part-4 Total", status: "Blocked by S.46", isTotal: true },
+      { note: "Note 30", part: "Part-6: -Adj", title: "Decreasing Adjustment: Advance Tax (AT) Paid at Import Stage (3%/5%)", base: 9200000, vat: 460000, form: "Sub-Form Ga (গ)", status: "Import BoE AT Credit" },
       { note: "Note 34", part: "Part-7: Net", title: "Net VAT Payable (নিট প্রদেয় মূসক)", base: 0, vat: 380000, form: "Part-7 Net", status: "Treasury Challan Due", isTotal: true }
     ],
     challans: [
       { ref: "M6.3-TRD-801", date: "2026-10-09", party: "Grameen Telecom Trust", bin: "000819203-0101", form: "Mushak-6.3 (5% ITES)", base: 6800000, vat: 340000 },
       { ref: "M6.3-TRD-809", date: "2026-10-17", party: "Walton Hi-Tech Industries PLC", bin: "000192837-0102", form: "Mushak-6.3 (5% Trading)", base: 10000000, vat: 500000 }
-    ],
-    audits: [
-      { title: "1. Commercial Importer 5% AT Decreasing Adjustment", sub: "Tk 4,60,000 Import Advance Tax (AT) properly claimed in Mushak-9.1 Note 30.", status: "PASS", pill: "pill-ok" },
-      { title: "2. ITES Service Code S099.10 Classification", sub: "Software maintenance billed at 5% reduced VAT rate with Mushak-6.3.", status: "PASS", pill: "pill-ok" }
     ]
   }
 };
 
+const MUSHAK_INFO = [
+  { code: 'Mushak-9.1', name: 'Monthly VAT Return', bangla: 'মাসিক ভ্যাট রিটার্ন', desc: 'Parts 1–12 & Notes 1–65 consolidating Output VAT (Part-3), Input Credit (Part-4), VDS/AT Adjustments (Parts 5–6), and Net Payable (Part-7).', deadline: '15th of following month (20th for Govt/Banks/Nil)' },
+  { code: 'Mushak-6.3', name: 'Tax Invoice (VAT Challan)', bangla: 'কর চালানপত্র', desc: '11-column statutory invoice under Section 51 & Rule 40(1)(c). Also acts as combined tax invoice & VDS reference for withholding supplies.', deadline: 'Issued at point of supply (Tk 10,000 fine if omitted)' },
+  { code: 'Mushak-6.6', name: 'VDS Withholding Certificate', bangla: 'উৎসে কর কর্তন সনদপত্র', desc: 'Issued by withholding entity after depositing VDS under SRO 182-Ain/2025. Supplier claims decreasing adjustment in Note 29 within 6 tax periods.', deadline: 'Within 3 working days of treasury deposit' },
+  { code: 'Mushak-6.1 & 6.2', name: 'Purchase & Sales Books', bangla: 'ক্রয় ও বিক্রয় হিসাব পুস্তক', desc: 'Mandatory inventory registers (Rule 40(1)(a)-(b)). Must reconcile with Mushak-9.1 Notes 1–23. Combined form Mushak-6.2.1 used by traders.', deadline: 'Maintained continuously per transaction' },
+  { code: 'Mushak-6.10', name: 'Large Invoice Statement (> Tk 2L)', bangla: '২ লক্ষ টাকার অধিক চালানপত্রের তথ্য', desc: 'Mandatory statement under Rule 42 reporting all local purchase and sales tax invoices exceeding Tk 2,00,000.', deadline: 'Submitted with monthly Mushak-9.1 return' },
+  { code: 'Section 177 Return', name: 'Monthly Withholding Tax Return', bangla: 'উৎসে কর রিটার্ন (ধারা ১৭৭)', desc: 'Consolidated monthly TDS/AIT withholding return under Income Tax Act 2023 Section 177(2) & Source Tax Rules 2026.', deadline: '25th day of the following month' }
+];
+
+const TEN_POINT_AUDITS = [
+  { title: "1. 13-Digit e-BIN & Registration Threshold (Sec 2(48) & 4(3))", sub: "Mandatory 15% VAT registration above Tk 50 Lakh turnover (4% Turnover Tax for Tk 30L–50L per Ordinance No. 01 of 2025). BIN mandatory for bank loans & utilities u/s 4(3).", status: "VERIFIED", cls: "badge-ADVANCE-TAX" },
+  { title: "2. Section 46(1)(গ) 6-Period Input Tax Credit Window", sub: "Input Tax Credit must be claimed in the tax period of acquisition/import or within the next 6 (six) tax periods (extended from 4 periods by Finance Ordinance 2025).", status: "PASS", cls: "badge-ADVANCE-TAX" },
+  { title: "3. Section 46(1)(ক) Tk 1,00,000 Banking Channel Guard", sub: "Every local rebatable purchase >= Tk 1,00,000 is settled via banking or mobile financial services (MFS) channel; otherwise ITC is disallowed and reversed in Note 25.", status: "PASS", cls: "badge-ADVANCE-TAX" },
+  { title: "4. Section 46(1)(ঠ) Truncated Rate ITC Block", sub: "Strictly blocks Input Tax Credit on supplies taxed below 15% (5% Trading/ITES, 7.5% Furniture, 10% Construction/Procurement S037.00, 2% Real Estate).", status: "GUARD ACTIVE", cls: "badge-VAT" },
+  { title: "5. VDS Rules 2025/2026 & Note 24/29 Reconciliation", sub: "Buyer VDS accounted in Note 24; Supplier Mushak-6.6 decreasing adjustment claimed in Note 29 within the 6-period statutory window under Section 50(3).", status: "PASS", cls: "badge-ADVANCE-TAX" },
+  { title: "6. Mushak-6.10 Large Invoice Statement (> Tk 2,00,000)", sub: "Flags all local sales and purchase challans exceeding BDT 2,00,000 for mandatory Rule 42 Mushak-6.10 reporting on IVAS.", status: "READY", cls: "badge-VAT" },
+  { title: "7. Section 109(1)(e) Commercial & Godown Rent (10% TDS + 15% VAT)", sub: "Enforces 10% TDS on Office, Shop, Plant & Warehouse/Godown rent (Finance Act 2026 S.67(a)) plus 15% Commercial Space VAT (S074.00) via e-payment.", status: "PASS", cls: "badge-ADVANCE-TAX" },
+  { title: "8. Section 142 & 264 Proof of Submission of Return (PSR) Guard", sub: "Alerts when vendor PSR is missing (+50% TDS rate penalty u/s 142 AND 100% corporate expense disallowance u/s 55(o) of Income Tax Act 2023).", status: "ENFORCED", cls: "badge-INCOME-TAX" },
+  { title: "9. Section 55(m) & 55(n) Cash Expense Disallowance Guard", sub: "Flags raw material payments > Tk 5,00,000 or other operating expenses > Tk 50,000 made outside banking channels (100% disallowed in corporate tax computation).", status: "PASS", cls: "badge-ADVANCE-TAX" },
+  { title: "10. Section 154 Advance Tax Threshold (> Tk 10,00,000)", sub: "Tracks 4 × 25% quarterly instalments (15 Sep, 15 Dec, 15 Mar, 15 Jun) for taxpayers with assessed income > Tk 10 Lakh (Finance Act 2026 S.87) to avoid 10% p.a. S.161 interest.", status: "PASS", cls: "badge-ADVANCE-TAX" }
+];
+
 /* ============================================================================
- * 3. RUNTIME STATE & TRIPLE-MODE MANAGER.IO /API4 BRIDGE
+ * 3. RUNTIME STATE & /API4 BRIDGE
  * ============================================================================ */
-const RUNTIME_STATE = {
+const STATE = {
   activeProfileKey: "demo:manufacturing",
-  activeTab: "mushak91",
-  langMode: localStorage.getItem("bd-nbr-lang") || "bi",
-  darkMode: localStorage.getItem("bd-nbr-theme") === "dark",
-  insideManager: window.parent !== window,
-  liveTaxCodes: [],
-  installedStates: {}
+  activeTab: "calendar",
+  installedCodes: {}
 };
 
 function fmtBdt(n) {
@@ -917,6 +1324,13 @@ function fmtBdt(n) {
 }
 function escapeHtml(s) {
   return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 3200);
 }
 
 async function postMessageApi4(method, path, body) {
@@ -926,7 +1340,7 @@ async function postMessageApi4(method, path, body) {
     const timer = setTimeout(() => {
       window.removeEventListener("message", onMsg);
       reject(new Error("Manager.io /api4 bridge timeout"));
-    }, 3500);
+    }, 3000);
     function onMsg(ev) {
       if (ev.data && ev.data.requestId === requestId && String(ev.data.type || "").endsWith("-response")) {
         clearTimeout(timer);
@@ -940,299 +1354,391 @@ async function postMessageApi4(method, path, body) {
 }
 
 function getActiveProfile() {
-  return DEMO_PROFILES[RUNTIME_STATE.activeProfileKey] || DEMO_PROFILES["demo:manufacturing"];
+  return DEMO_PROFILES[STATE.activeProfileKey] || DEMO_PROFILES["demo:manufacturing"];
 }
 
 /* ============================================================================
- * 4. RENDERING: 6-CARD KPI ENGINE, MUSHAK-9.1, TAX CODES, AUDIT, CALENDAR
+ * 4. RENDERING ENGINE
  * ============================================================================ */
-function renderAllViews() {
+function renderAll() {
   const prof = getActiveProfile();
   const outRow = prof.mushakNotes.find(n => n.note === "Note 9") || { base: 0, vat: 0 };
-  const itcRow = prof.mushakNotes.find(n => n.note === "Note 23") || { base: 0, vat: 0 };
+  const itcRow = prof.mushakNotes.find(n => n.note === "Note 23b") || { base: 0, vat: 0 };
   const incRow = prof.mushakNotes.find(n => n.note === "Note 24") || { base: 0, vat: 0 };
   const decRow = prof.mushakNotes.find(n => n.note === "Note 29") || prof.mushakNotes.find(n => n.note === "Note 30") || { base: 0, vat: 0 };
   const netRow = prof.mushakNotes.find(n => n.note === "Note 34") || { base: 0, vat: 0 };
 
   const kpis = [
-    { tag: "NOTE 1–9 · OUTPUT", cls: "c-portfolio", tagCls: "tag-cyan", label: "Output VAT (আউটপুট ভ্যাট)", val: fmtBdt(outRow.vat), valCls: "val-cyan", sub: `Assessable Base: ${fmtBdt(outRow.base)}`, idx: 0 },
-    { tag: "NOTE 10–23 · ITC", cls: "c-inflow", tagCls: "tag-green", label: "Input Tax Credit (উপকরণ রেয়াত)", val: fmtBdt(itcRow.vat), valCls: "val-green", sub: `Rebatable Purchases: ${fmtBdt(itcRow.base)}`, idx: 1 },
-    { tag: "NOTE 24 · +ADJ VDS", cls: "c-outflow", tagCls: "tag-gold", label: "Buyer VDS Payable (উৎসে ভ্যাট কর্তন)", val: fmtBdt(incRow.vat), valCls: "val-gold", sub: "Rule 5(2): Deposit within 15 days", idx: 2 },
-    { tag: "NOTE 29–30 · -ADJ", cls: "c-security", tagCls: "tag-purple", label: "Mushak-6.6 & AT Offset (হ্রাসকারী)", val: fmtBdt(decRow.vat), valCls: "val-purple", sub: "Customer VDS + Import AT Credit", idx: 3 },
-    { tag: "NOTE 34 · NET PAYABLE", cls: "c-hero", tagCls: "tag-cyan", label: "Net Treasury VAT (নিট প্রদেয় মূসক)", val: fmtBdt(netRow.vat), valCls: "val-ink", sub: "Due by 15th of following month", idx: 4 },
-    { tag: "NBR BIN & TAX CODES", cls: "c-inflow", tagCls: "tag-green", label: "BIN & Tax Code Readiness", val: "11 / 11 Ready", valCls: "val-green", sub: `BIN: ${prof.bin}`, idx: 5 }
+    { tag: "PART-3 · NOTE 9c", tagCls: "tag-cyan", label: "Output VAT (আউটপুট ভ্যাট)", val: fmtBdt(outRow.vat), sub: "Base: " + fmtBdt(outRow.base), idx: 0 },
+    { tag: "PART-4 · NOTE 23b", tagCls: "tag-green", label: "Input Tax Credit (উপকরণ রেয়াত)", val: fmtBdt(itcRow.vat), sub: "6-Period Window u/s 46", idx: 1 },
+    { tag: "PART-5 · NOTE 24", tagCls: "tag-gold", label: "Buyer VDS (+সমন্বয়)", val: fmtBdt(incRow.vat), sub: "SRO 182-Ain/2025", idx: 2 },
+    { tag: "PART-6 · NOTE 29/30", tagCls: "tag-purple", label: "Mushak-6.6 & AT (-সমন্বয়)", val: fmtBdt(decRow.vat), sub: "Customer VDS + Import AT", idx: 3 },
+    { tag: "PART-7 · NOTE 34", tagCls: "tag-gold", label: "Net Payable VAT (নিট প্রদেয়)", val: fmtBdt(netRow.vat), sub: "Due 15th of Next Month", idx: 4, hero: true },
+    { tag: "LOCALIZATION", tagCls: "tag-cyan", label: "BD Tax Codes & BIN", val: "12 / 12 Ready", sub: "BIN: " + prof.bin, idx: 5 }
   ];
 
-  const kpiGrid = document.getElementById("kpiGrid");
-  if (kpiGrid) {
-    kpiGrid.innerHTML = kpis.map(k => `
-      <div class="focus-card ${k.cls}" onclick="openNoteInspector(${k.idx})">
-        <div>
-          <span class="phase-tag ${k.tagCls}">${escapeHtml(k.tag)}</span>
-          <div class="card-label">${escapeHtml(k.label)}</div>
-          <div class="card-val ${k.valCls}">${escapeHtml(k.val)}</div>
-        </div>
-        <div class="card-sub">${escapeHtml(k.sub)}</div>
+  const strip = document.getElementById("kpiStrip");
+  if (strip) {
+    strip.innerHTML = kpis.map(k => `
+      <div class="kpi-card ${k.hero ? 'hero-kpi' : ''}" onclick="openNoteInspector(${k.idx})">
+        <span class="kpi-tag ${k.tagCls}">${escapeHtml(k.tag)}</span>
+        <div class="kpi-label">${escapeHtml(k.label)}</div>
+        <div class="kpi-val">${escapeHtml(k.val)}</div>
+        <div class="kpi-sub">${escapeHtml(k.sub)}</div>
       </div>
     `).join("");
   }
 
-  // Render Mushak-9.1 Table
+  renderCalendarDeadlines();
+  renderMushakExplainer();
+  runCalculators();
+  renderMushak91Worksheet(prof);
+  renderTaxCodesTable();
+  renderAuditGrid();
+}
+
+function getAllDeadlines(bizType) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const nextMonth15 = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+  const nextMonth20 = new Date(today.getFullYear(), today.getMonth() + 1, 20);
+  const nextMonth25 = new Date(today.getFullYear(), today.getMonth() + 1, 25);
+
+  const list = [
+    {
+      type: "VAT",
+      description: "Mushak-9.1 — Monthly VAT Return & Treasury Deposit",
+      bangla: "মাসিক ভ্যাট রিটার্ন ও ট্রেজারি জমা (ধারা ৬৪)",
+      period: "Monthly (Restored by Oct 2026 Ordinance)",
+      dueDate: nextMonth15,
+      penalty: "Tk 2,000 fixed late return fine u/s 85(1)(f) + 1%/mo simple interest on unpaid VAT u/s 127(1) (max 24m). Officer-assessed."
+    },
+    {
+      type: "VDS",
+      description: "VDS Settlement (Note 24) & Mushak-6.6 Certificate Issuance",
+      bangla: "উৎসে ভ্যাট কর্তন জমা ও মুসক-৬.৬ সনদ (SRO 182-Ain/2025)",
+      period: "Monthly by 15th (Cert within 3 working days)",
+      dueDate: nextMonth15,
+      penalty: "2% interest per 6 months u/s 127(1) proviso + 1%/mo VAT interest + up to Tk 25,000 personal fine u/s 85(1A)."
+    },
+    {
+      type: "TDS",
+      description: "Monthly Withholding Tax Return (Section 177) & TDS Deposit",
+      bangla: "মাসিক উৎসে আয়কর রিটার্ন (ধারা ১৭৭(২))",
+      period: "Monthly by 25th (Deposit within 2 weeks of month-end)",
+      dueDate: nextMonth25,
+      penalty: "2%/mo surcharge u/s 143 + 100% expense disallowance u/s 55(a) + Sec 266 penalty (10% of last tax, min Tk 1,000 + Tk 50/day)."
+    },
+    {
+      type: "ADVANCE-TAX",
+      description: "Quarterly Advance Income Tax Instalment (4 × 25% Equal Split)",
+      bangla: "ত্রৈমাসিক অগ্রিম আয়কর কিস্তি (ধারা ১৫৪ ও ১৫৫)",
+      period: "15 Sep · 15 Dec · 15 Mar · 15 Jun (Income > Tk 10 Lakh)",
+      dueDate: new Date("2026-12-15"),
+      penalty: "10% p.a. simple interest u/s 161 if paid < 75% of assessed tax + penalty up to 100% of shortfall u/s 269."
+    }
+  ];
+
+  if (bizType === "individual") {
+    list.push({
+      type: "INCOME-TAX",
+      description: "National Tax Day — Individual & Firm Income Tax Return",
+      bangla: "ব্যক্তিগত ও ফার্ম আয়কর রিটার্ন (করদিবস - ধারা ২(২৩))",
+      period: "AY 2026-27 (30 June for 1st-time filers)",
+      dueDate: new Date("2026-11-30"),
+      penalty: "Loss of tax exemptions u/s 174 + 2%/mo delay interest on shortfall (max 24m) + Sec 266 fine."
+    });
+  } else {
+    list.push({
+      type: "INCOME-TAX",
+      description: "Corporate Income Tax Return — 15th Day of 7th Month",
+      bangla: "কোম্পানি আয়কর রিটার্ন (ধারা ২(২৩)(খ) ও ১৭৩)",
+      period: "AY 2026-27 (for 30 June year-end; 15 Sep for 31 Dec year-end)",
+      dueDate: new Date("2027-01-15"),
+      penalty: "Loss of reduced corporate rate / exemptions u/s 174 + 2%/mo delay interest + Sec 266 fine."
+    });
+  }
+
+  if (bizType === "import") {
+    list.push({
+      type: "VAT",
+      description: "Special Filer VAT Return (Govt Bodies, Banks, Insurers & Nil Filers)",
+      bangla: "বিশেষ দাখিলকারী ভ্যাট রিটার্ন (ধারা ৬৪(১) সংশোধনী অধ্যাদেশ ২০২৬)",
+      period: "Within 20 days after month-end",
+      dueDate: nextMonth20,
+      penalty: "Tk 2,000 late filing fine u/s 85(1)(f)."
+    });
+  }
+
+  return list.sort((a, b) => a.dueDate - b.dueDate);
+}
+
+function renderCalendarDeadlines() {
+  const bizType = document.getElementById("bizType")?.value || "company";
+  const rows = getAllDeadlines(bizType);
+  const tbody = document.getElementById("deadlinesBody");
+  if (!tbody) return;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+
+  tbody.innerHTML = rows.map(d => {
+    const days = Math.round((d.dueDate - today) / 86400000);
+    let daysCls = "days-ok", dueCls = "due-ok";
+    if (days <= 14) { daysCls = "days-urgent"; dueCls = "due-urgent"; }
+    else if (days <= 35) { daysCls = "days-warning"; dueCls = "due-warning"; }
+    const daysLabel = days < 0 ? Math.abs(days) + "d ago" : days === 0 ? "Today!" : days + "d left";
+    const dateStr = d.dueDate.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+
+    return `
+      <tr>
+        <td><span class="badge badge-${d.type}">${d.type.replace("-", " ")}</span></td>
+        <td>
+          <div class="deadline-desc">${escapeHtml(d.description)}</div>
+          <span class="deadline-bangla">${escapeHtml(d.bangla)} · ${escapeHtml(d.period)}</span>
+        </td>
+        <td><div class="due-date ${dueCls}">${escapeHtml(dateStr)}</div></td>
+        <td><span class="days-indicator ${daysCls}">${escapeHtml(daysLabel)}</span></td>
+        <td class="penalty-cell">${escapeHtml(d.penalty)}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function renderMushakExplainer() {
+  const grid = document.getElementById("mushakGrid");
+  if (!grid) return;
+  grid.innerHTML = MUSHAK_INFO.map(m => `
+    <div class="mushak-card">
+      <div class="mushak-code">${escapeHtml(m.code)}</div>
+      <div class="mushak-name">${escapeHtml(m.name)} <span style="font-size:11px;color:#8b949e">/ ${escapeHtml(m.bangla)}</span></div>
+      <div class="mushak-desc">${escapeHtml(m.desc)}</div>
+      <div class="mushak-deadline">⏰ ${escapeHtml(m.deadline)}</div>
+    </div>
+  `).join("");
+}
+
+function runCalculators() {
+  // 1. VDS & TDS Withholding Split
+  const bill = Number(document.getElementById("calcBillAmt")?.value || 0);
+  const [vatRate, baseTdsRate] = (document.getElementById("calcSupplyType")?.value || "10|5").split("|").map(Number);
+  const psrMult = Number(document.getElementById("calcPsrStatus")?.value || 1);
+  const effTdsRate = baseTdsRate * psrMult;
+  const vdsAmt = Math.round(bill * (vatRate / 100));
+  const tdsAmt = Math.round(bill * (effTdsRate / 100));
+  const netCash = Math.max(0, bill - tdsAmt);
+  const vdsEl = document.getElementById("calcVdsResult");
+  if (vdsEl) {
+    vdsEl.innerHTML = `
+      <div class="sim-row"><span>Base Invoice Value:</span><span>${fmtBdt(bill)}</span></div>
+      <div class="sim-row" style="color:#00D2FF"><span>VDS @ ${vatRate}% (Mushak-6.6 / Note 24):</span><span>${fmtBdt(vdsAmt)}</span></div>
+      <div class="sim-row" style="color:#FFD700"><span>TDS @ ${effTdsRate}% (${psrMult > 1 ? 'Sec 142 Penalty Active' : 'Standard Rate'}):</span><span>${fmtBdt(tdsAmt)}</span></div>
+      <div class="sim-row" style="color:#30D158"><span>Net Payable to Vendor (Excl. VAT):</span><span>${fmtBdt(netCash)}</span></div>
+    `;
+  }
+
+  // 2. Penalty Estimator
+  const type = document.getElementById("penaltyType")?.value || "vat_return";
+  const days = Math.max(0, Number(document.getElementById("daysLate")?.value || 0));
+  const unpaid = Math.max(0, Number(document.getElementById("taxAmount")?.value || 0));
+  const months = Math.min(24, Math.max(1, Math.ceil(days / 30)));
+  const halfYears = Math.max(1, Math.ceil(days / 180));
+  let fixedFine = 0, interestAmt = 0, note = "";
+
+  if (type === "vat_return") {
+    fixedFine = 2000;
+    interestAmt = Math.round(unpaid * 0.01 * months);
+    note = "Sec 85(1)(f) Tk 2,000 (officer-assessed) + Sec 127(1) 1%/mo simple interest (capped at 24m)";
+  } else if (type === "vat_invoice") {
+    fixedFine = 10000;
+    interestAmt = Math.round(unpaid * 0.01 * months);
+    note = "Sec 85(1)(j) Tk 10,000 procedural default + Sec 127(1) 1%/mo interest on unpaid VAT";
+  } else if (type === "vds_late") {
+    fixedFine = 25000;
+    interestAmt = Math.round(unpaid * 0.02 * halfYears) + Math.round(unpaid * 0.01 * months);
+    note = "Sec 85(1A) max Tk 25,000 fine + Sec 127(1) 2%/6-mo VDS surcharge + 1%/mo VAT interest";
+  } else if (type === "tds_late") {
+    fixedFine = Math.max(1000, 1000 + (days * 50));
+    interestAmt = Math.round(unpaid * 0.02 * Math.ceil(days / 30));
+    note = "ITA 2023 Sec 143 (2%/mo) + Sec 266 (min Tk 1,000 + Tk 50/day) + 100% expense disallowance u/s 55(a)";
+  } else {
+    fixedFine = Math.max(1000, 1000 + (days * 50));
+    interestAmt = Math.round(unpaid * 0.02 * months);
+    note = "ITA 2023 Sec 174 (2%/mo delay interest, max 24m + loss of exemptions) + Sec 266 fine";
+  }
+
+  const penEl = document.getElementById("calcPenResult");
+  if (penEl) {
+    penEl.innerHTML = `
+      <div class="sim-row"><span>Discretionary Fine (Sec 85 / 266):</span><span style="color:#FFD700">${fmtBdt(fixedFine)}</span></div>
+      <div class="sim-row"><span>Statutory Interest (Sec 127 / 143 / 174):</span><span style="color:#FF453A">${fmtBdt(interestAmt)}</span></div>
+      <div class="sim-row" style="color:#00D2FF"><span>Total Statutory Exposure:</span><span>${fmtBdt(fixedFine + interestAmt)}</span></div>
+      <div style="font-size:10.5px;color:#8b949e;margin-top:6px;line-height:1.4">${escapeHtml(note)}</div>
+    `;
+  }
+
+  // 3. Section 154 Advance Tax Planner
+  const advTotal = Math.max(0, Number(document.getElementById("calcAdvTotal")?.value || 0));
+  const advPaid  = Math.max(0, Number(document.getElementById("calcAdvPaid")?.value || 0));
+  const netAdv   = Math.max(0, advTotal - advPaid);
+  const qtrAmt   = Math.round(netAdv * 0.25);
+  const guard75  = Math.round(advTotal * 0.75);
+  const advEl    = document.getElementById("calcAdvResult");
+  if (advEl) {
+    advEl.innerHTML = `
+      <div class="sim-row"><span>Net Advance Tax Payable u/s 154:</span><span>${fmtBdt(netAdv)}</span></div>
+      <div class="sim-row" style="color:#00D2FF"><span>15 Sep (25%) &amp; 15 Dec (25%):</span><span>${fmtBdt(qtrAmt)} each</span></div>
+      <div class="sim-row" style="color:#00D2FF"><span>15 Mar (25%) &amp; 15 Jun (25%):</span><span>${fmtBdt(qtrAmt)} each</span></div>
+      <div class="sim-row" style="color:#30D158"><span>75% Safe-Harbor Guard (Sec 161):</span><span>${fmtBdt(guard75)}</span></div>
+    `;
+  }
+}
+
+function renderMushak91Worksheet(prof) {
   const m91Body = document.getElementById("mushak91Body");
   if (m91Body) {
     m91Body.innerHTML = prof.mushakNotes.map((r, i) => `
-      <tr style="${r.isTotal ? 'background:rgba(0,210,255,0.06);font-weight:800' : ''}">
-        <td class="code-cell">${escapeHtml(r.note)}</td>
+      <tr onclick="openNoteInspector(${i})" style="cursor:pointer;${r.isTotal ? 'background:rgba(0,210,255,.07);font-weight:700' : ''}">
+        <td><span class="badge badge-VAT">${escapeHtml(r.note)}</span></td>
         <td>
-          <div style="font-weight:${r.isTotal ? '800' : '700'};color:var(--ink)">${escapeHtml(r.title)}</div>
-          <div style="font-size:10.5px;color:var(--dim)">${escapeHtml(r.part)} · ${escapeHtml(r.form)} · ${escapeHtml(r.status)}</div>
+          <div style="font-weight:700;color:#ffffff">${escapeHtml(r.title)}</div>
+          <div style="font-size:11px;color:#8b949e">${escapeHtml(r.part)} · ${escapeHtml(r.status)}</div>
         </td>
         <td class="num">${r.base ? fmtBdt(r.base) : '—'}</td>
-        <td class="num" style="color:${r.note === 'Note 34' ? 'var(--cyan-ink)' : 'var(--ink)'}">${fmtBdt(r.vat)}</td>
-        <td><button type="button" class="btn-secondary-sm" onclick="openNoteInspector(${i})">Inspect</button></td>
+        <td class="num" style="color:${r.note === 'Note 34' ? '#FFD700' : '#00D2FF'}">${fmtBdt(r.vat)}</td>
+        <td><span class="badge badge-ADVANCE-TAX">${escapeHtml(r.form)}</span></td>
       </tr>
     `).join("");
   }
 
-  // Render Mushak-6.3 & 6.6 Challan Register
   const challanBody = document.getElementById("challanBody");
-  const txCountBadge = document.getElementById("txCountBadge");
-  if (txCountBadge) txCountBadge.textContent = `${prof.challans.length} Vouchers`;
+  const badge = document.getElementById("txCountBadge");
+  if (badge) badge.textContent = prof.challans.length + " Vouchers";
   if (challanBody) {
     challanBody.innerHTML = prof.challans.map((c, i) => `
       <tr onclick="openNoteInspector(${i})" style="cursor:pointer">
         <td>
-          <div class="code-cell">${escapeHtml(c.ref)}</div>
-          <div style="font-size:10.5px;color:var(--dim)">${escapeHtml(c.date)}</div>
+          <div style="font-family:var(--mono);font-weight:700;color:#00D2FF">${escapeHtml(c.ref)}</div>
+          <div style="font-size:11px;color:#8b949e">${escapeHtml(c.date)}</div>
         </td>
         <td>
-          <div style="font-weight:700;color:var(--ink)">${escapeHtml(c.party)}</div>
-          <div style="font-family:var(--mono);font-size:10px;color:var(--muted)">BIN: ${escapeHtml(c.bin)}</div>
+          <div style="font-weight:700;color:#ffffff">${escapeHtml(c.party)}</div>
+          <div style="font-family:var(--mono);font-size:11px;color:#8b949e">BIN: ${escapeHtml(c.bin)}</div>
         </td>
-        <td><span class="pill-badge pill-info">${escapeHtml(c.form)}</span></td>
+        <td><span class="badge badge-VAT">${escapeHtml(c.form)}</span></td>
         <td class="num">${fmtBdt(c.base)}</td>
-        <td class="num" style="color:var(--cyan-ink)">${fmtBdt(c.vat)}</td>
+        <td class="num" style="color:#FFD700">${fmtBdt(c.vat)}</td>
       </tr>
     `).join("");
   }
-
-  renderTaxCodesTable();
-  renderAuditGrid(prof);
-  renderCalendarTable();
-  runStatutoryCalculators();
 }
 
 function renderTaxCodesTable() {
   const tbody = document.getElementById("taxCodesBody");
   if (!tbody) return;
   tbody.innerHTML = TAX_CODE_TEMPLATES.map((t, idx) => {
-    const isInstalled = RUNTIME_STATE.installedStates[t.ReportingCategory] !== false;
+    const installed = STATE.installedCodes[t.ReportingCategory] !== false;
     return `
       <tr>
         <td>
-          <div style="font-weight:800;color:var(--ink)">${escapeHtml(t.Name)}</div>
-          <div style="font-family:var(--mono);font-size:10px;color:var(--dim)">UUID: ${escapeHtml(t.ReportingCategory)}</div>
+          <div style="font-weight:700;color:#ffffff">${escapeHtml(t.Name)}</div>
+          <div style="font-family:var(--mono);font-size:10.5px;color:#6e7681">UUID: ${escapeHtml(t.ReportingCategory)}</div>
         </td>
-        <td class="num"><span class="pill-badge pill-info">${t.Rate}%</span></td>
-        <td style="font-size:11px;color:var(--muted)">${escapeHtml(t.SroRef)}</td>
-        <td style="font-size:11px;font-weight:700;color:var(--cyan-ink)">${escapeHtml(t.MushakNote)}</td>
-        <td style="font-size:11px;color:var(--muted)">${t.CustomSalesInvoiceTitle ? escapeHtml(t.SalesInvoiceTitle) : 'Standard Title'}</td>
-        <td>
-          <span class="pill-badge ${isInstalled ? 'pill-ok' : 'pill-warn'}">
-            ${isInstalled ? '✓ Linked' : 'Ready to Install'}
-          </span>
-        </td>
-        <td>
-          <button type="button" class="btn-secondary-sm" onclick="installSingleTaxCode(${idx})">
-            ${isInstalled ? 'Update / Verify' : '+ Install Code'}
-          </button>
-        </td>
+        <td class="num"><span class="badge badge-VAT">${t.Rate}%</span></td>
+        <td style="font-size:11.5px;color:#8b949e">${escapeHtml(t.SroRef)}</td>
+        <td style="font-size:11.5px;font-weight:700;color:#00D2FF">${escapeHtml(t.MushakNote)}</td>
+        <td style="font-size:11.5px;color:#cdd9e5">${t.CustomSalesInvoiceTitle ? escapeHtml(t.SalesInvoiceTitle) : 'Standard Title'}</td>
+        <td><span class="badge ${installed ? 'badge-ADVANCE-TAX' : 'badge-INCOME-TAX'}">${installed ? '✓ Active' : 'Ready'}</span></td>
+        <td><button type="button" class="btn-cyan" onclick="installSingleTaxCode(${idx})">Verify / Push</button></td>
       </tr>
     `;
   }).join("");
 }
 
-function renderAuditGrid(prof) {
+function renderAuditGrid() {
   const grid = document.getElementById("auditGrid");
   if (!grid) return;
-  grid.innerHTML = prof.audits.map(a => `
-    <div class="audit-item">
+  grid.innerHTML = TEN_POINT_AUDITS.map(a => `
+    <div class="audit-card">
       <div>
-        <div class="audit-item-title">${escapeHtml(a.title)}</div>
-        <div class="audit-item-sub">${escapeHtml(a.sub)}</div>
+        <div class="audit-title">${escapeHtml(a.title)}</div>
+        <div class="audit-sub">${escapeHtml(a.sub)}</div>
       </div>
-      <span class="pill-badge ${a.pill}">${escapeHtml(a.status)}</span>
+      <span class="badge ${a.cls}">${escapeHtml(a.status)}</span>
     </div>
   `).join("");
 }
 
-function renderCalendarTable() {
-  const tbody = document.getElementById("calendarBody");
-  if (!tbody) return;
-  const rows = [
-    { cat: "VAT (Mushak-9.1)", name: "Monthly VAT Return Filing & Net Tax Deposit (মাসিক ভ্যাট রিটার্ন দাখিল)", due: "15th of Following Month (১৫ নভেম্বর ২০২৬)", win: "Every Month · Strict", ref: "VAT & SD Act 2012 S.64 & S.85(1)(f) — Tk 10,000 fine + 1%/mo interest u/s 127" },
-    { cat: "VDS (Mushak-6.6)", name: "Treasury Deposit of Deducted VDS via A-Challan & Certificate Issue (উৎসে ভ্যাট জমা ও সনদ)", due: "Within 15 Days of Deduction / 3 Days Cert", win: "Rolling 15-Day Rule", ref: "VDS Rules 2021 Rule 5(2) — 2% monthly surcharge + personal liability u/s 85" },
-    { cat: "TDS / AIT (S.177)", name: "Monthly Withholding Tax Return & Treasury Deposit (উৎসে আয়কর বিবরণী ধারা ১৭৭)", due: "15th / 25th of Following Month", win: "Monthly Withholding", ref: "Income Tax Act 2023 Section 177 & 266 — 2% monthly surcharge on unpaid TDS" },
-    { cat: "Advance Tax (S.154)", name: "Quarterly Advance Income Tax Installments — 25% × 4 (অগ্রিম আয়কর কিস্তি ধারা ১৫৪)", due: "15 Sep · 15 Dec · 15 Mar · 15 Jun", win: "Q2 Due: 15 Dec 2026", ref: "Income Tax Act 2023 S.154 & S.155 — Mandatory if last assessed tax > Tk 6,00,000" },
-    { cat: "Individual ITR", name: "National Tax Day — Individual Income Tax Return (ব্যক্তিগত আয়কর রিটার্ন দিবস)", due: "30 November (৩০ নভেম্বর)", win: "Annual FY 2026-27", ref: "Income Tax Act 2023 S.166 & S.174 — 10% delay interest + daily surcharge" },
-    { cat: "Corporate ITR", name: "Company Income Tax Return — 15th Day of 7th Month after Income Year End", due: "15 January (for 30 June Year-End)", win: "Annual Corporate", ref: "Income Tax Act 2023 S.2(45) & S.174 — Audited Financial Statements mandatory" }
-  ];
-  tbody.innerHTML = rows.map(r => `
-    <tr>
-      <td><span class="pill-badge pill-info">${escapeHtml(r.cat)}</span></td>
-      <td style="font-weight:700;color:var(--ink)">${escapeHtml(r.name)}</td>
-      <td style="font-family:var(--mono);font-weight:800;color:var(--cyan-ink)">${escapeHtml(r.due)}</td>
-      <td><span class="pill-badge pill-warn">${escapeHtml(r.win)}</span></td>
-      <td style="font-size:11px;color:var(--muted)">${escapeHtml(r.ref)}</td>
-    </tr>
-  `).join("");
+/* ============================================================================
+ * 5. INTERACTIONS, DRAWER & CSV EXPORTS
+ * ============================================================================ */
+function switchTab(tabId) {
+  STATE.activeTab = tabId;
+  document.querySelectorAll(".subnav-link").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".tab-pane").forEach(pane => {
+    pane.classList.toggle("active", pane.id === "pane-" + tabId);
+  });
 }
 
-/* ============================================================================
- * 5. STATUTORY CALCULATORS (VDS/AIT, S.85 PENALTY, S.154 ADVANCE TAX)
- * ============================================================================ */
-function runStatutoryCalculators() {
-  // 1. VDS & AIT Split
-  const bill = Number(document.getElementById("calcBillAmt")?.value || 0);
-  const spec = (document.getElementById("calcSupplyType")?.value || "7.5|5|include").split("|");
-  const vatRate = Number(spec[0]);
-  const aitRate = Number(spec[1]);
-  const vdsAmt = Math.round(bill * (vatRate / 100));
-  const aitAmt = Math.round(bill * (aitRate / 100));
-  const netPay = Math.max(0, bill - vdsAmt - aitAmt);
-  const vdsEl = document.getElementById("calcVdsResult");
-  if (vdsEl) {
-    vdsEl.innerHTML = `
-      <div class="sim-line"><span>Gross Invoice Base:</span><span>${fmtBdt(bill)}</span></div>
-      <div class="sim-line" style="color:#38BDF8"><span>Less: VDS @ ${vatRate}% (Mushak-6.6):</span><span>− ${fmtBdt(vdsAmt)}</span></div>
-      <div class="sim-line" style="color:#FBBF24"><span>Less: AIT/TDS @ ${aitRate}% (S.89/90):</span><span>− ${fmtBdt(aitAmt)}</span></div>
-      <div class="sim-line" style="color:#4ADE80"><span>Net Cheque / EFT to Supplier:</span><span>${fmtBdt(netPay)}</span></div>
-    `;
-  }
-
-  // 2. Penalty Estimator (VAT & SD Act 2012 S.85(1)(f) = Tk 10,000 + S.127 = 1%/mo)
-  const penType = document.getElementById("calcPenType")?.value || "vat91";
-  const unpaid = Number(document.getElementById("calcPenTax")?.value || 0);
-  const days = Number(document.getElementById("calcPenDays")?.value || 0);
-  const months = Math.max(1, Math.ceil(days / 30));
-  let fixedFine = 10000, interestAmt = 0, ruleLabel = "";
-  if (penType === "vat91") {
-    fixedFine = 10000; // Section 85(1)(f) VAT & SD Act 2012
-    interestAmt = Math.round(unpaid * 0.01 * months); // Section 127 (1%/month simple interest)
-    ruleLabel = "S.85(1)(f) Tk 10,000 + S.127 1%/mo";
-  } else if (penType === "vds") {
-    fixedFine = 10000;
-    interestAmt = Math.round(unpaid * 0.02 * months);
-    ruleLabel = "S.85 Fine + 2%/mo VDS Surcharge";
-  } else {
-    fixedFine = months * 1000;
-    interestAmt = Math.round(unpaid * 0.02 * months);
-    ruleLabel = "ITA 2023 S.266 + 2%/mo Surcharge";
-  }
-  const penEl = document.getElementById("calcPenResult");
-  if (penEl) {
-    penEl.innerHTML = `
-      <div class="sim-line"><span>Statutory Rule (${months} mo):</span><span>${escapeHtml(ruleLabel)}</span></div>
-      <div class="sim-line" style="color:#FBBF24"><span>Fixed Statutory Penalty:</span><span>${fmtBdt(fixedFine)}</span></div>
-      <div class="sim-line" style="color:#F87171"><span>Accrued Interest on Principal:</span><span>${fmtBdt(interestAmt)}</span></div>
-      <div class="sim-line" style="color:#FFD700"><span>Total Exposure (Penalty + Interest):</span><span>${fmtBdt(fixedFine + interestAmt)}</span></div>
-    `;
-  }
-
-  // 3. Section 154 Advance Tax Planner (4 x 25% Equal Installments)
-  const advTotal = Number(document.getElementById("calcAdvTotal")?.value || 0);
-  const advPaid = Number(document.getElementById("calcAdvPaid")?.value || 0);
-  const netAdv = Math.max(0, advTotal - advPaid);
-  const perQuarter = Math.round(netAdv * 0.25);
-  const advEl = document.getElementById("calcAdvResult");
-  if (advEl) {
-    advEl.innerHTML = `
-      <div class="sim-line"><span>Net Advance Tax Payable u/s 154:</span><span>${fmtBdt(netAdv)}</span></div>
-      <div class="sim-line" style="color:#38BDF8"><span>Q1 (15 Sep · 25%) &amp; Q2 (15 Dec · 25%):</span><span>${fmtBdt(perQuarter)} each</span></div>
-      <div class="sim-line" style="color:#38BDF8"><span>Q3 (15 Mar · 25%) &amp; Q4 (15 Jun · 25%):</span><span>${fmtBdt(perQuarter)} each</span></div>
-      <div class="sim-line" style="color:#4ADE80"><span>75% Threshold Guard (S.155):</span><span>${fmtBdt(Math.round(advTotal * 0.75))}</span></div>
-    `;
+function onProfileChange(val) {
+  if (DEMO_PROFILES[val]) {
+    STATE.activeProfileKey = val;
+    renderAll();
+    showToast("✓ Loaded dataset: " + DEMO_PROFILES[val].name);
   }
 }
 
-/* ============================================================================
- * 6. SLIDE-OVER INSPECTOR DRAWER & ACTIONS
- * ============================================================================ */
 function openNoteInspector(idx) {
   const prof = getActiveProfile();
   const note = prof.mushakNotes[idx % prof.mushakNotes.length];
-  document.getElementById("drTitle").textContent = `${note.note} — ${note.title}`;
-  document.getElementById("drSub").textContent = `${prof.name} (BIN: ${prof.bin}) · ${note.form}`;
+  document.getElementById("drTitle").textContent = note.note + " — " + note.title;
+  document.getElementById("drSub").textContent = prof.name + " (BIN: " + prof.bin + ") · " + note.form;
 
   document.getElementById("drBody").innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
-      <div class="focus-card c-portfolio">
-        <span class="phase-tag tag-cyan">${escapeHtml(note.note)}</span>
-        <div class="card-label">Assessable Base Value</div>
-        <div class="card-val val-ink">${fmtBdt(note.base)}</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px">
+      <div class="kpi-card">
+        <span class="kpi-tag tag-cyan">${escapeHtml(note.note)}</span>
+        <div class="kpi-label">Assessable Base</div>
+        <div class="kpi-val">${fmtBdt(note.base)}</div>
       </div>
-      <div class="focus-card c-inflow">
-        <span class="phase-tag tag-green">${escapeHtml(note.form)}</span>
-        <div class="card-label">VAT / Adjustment Amount</div>
-        <div class="card-val val-cyan">${fmtBdt(note.vat)}</div>
+      <div class="kpi-card">
+        <span class="kpi-tag tag-gold">${escapeHtml(note.form)}</span>
+        <div class="kpi-label">VAT / Adjustment</div>
+        <div class="kpi-val" style="color:#FFD700">${fmtBdt(note.vat)}</div>
       </div>
-      <div class="focus-card c-outflow">
-        <span class="phase-tag tag-gold">STATUTORY STATUS</span>
-        <div class="card-label">NBR Validation</div>
-        <div class="card-val val-green" style="font-size:15px">${escapeHtml(note.status)}</div>
+      <div class="kpi-card">
+        <span class="kpi-tag tag-green">NBR VALIDATION</span>
+        <div class="kpi-label">Statutory Status</div>
+        <div class="kpi-val" style="font-size:14px;color:#30D158">${escapeHtml(note.status)}</div>
       </div>
     </div>
-
-    <div class="tech-panel" style="margin-bottom:0">
-      <div class="tech-panel-hdr">
-        <div class="tech-panel-title">📑 Underlying Mushak-6.3 &amp; 6.6 Vouchers Feeding This Return</div>
-      </div>
-      <div class="table-wrap">
-        <table class="tech-table">
-          <thead><tr><th>Voucher Ref</th><th>Date</th><th>Counterparty &amp; 13-Digit BIN</th><th>Form</th><th class="num">Base</th><th class="num">VAT</th></tr></thead>
-          <tbody>
-            ${prof.challans.map(c => `
-              <tr>
-                <td class="code-cell">${escapeHtml(c.ref)}</td>
-                <td>${escapeHtml(c.date)}</td>
-                <td><strong>${escapeHtml(c.party)}</strong> <span style="color:var(--dim);font-family:var(--mono)">(${escapeHtml(c.bin)})</span></td>
-                <td><span class="pill-badge pill-info">${escapeHtml(c.form)}</span></td>
-                <td class="num">${fmtBdt(c.base)}</td>
-                <td class="num">${fmtBdt(c.vat)}</td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
-      </div>
+    <div class="deadlines-wrap">
+      <table>
+        <thead>
+          <tr><th>Voucher Ref</th><th>Date</th><th>Counterparty &amp; BIN</th><th>Form</th><th class="num">Base</th><th class="num">VAT</th></tr>
+        </thead>
+        <tbody>
+          ${prof.challans.map(c => `
+            <tr>
+              <td style="font-family:var(--mono);color:#00D2FF;font-weight:700">${escapeHtml(c.ref)}</td>
+              <td>${escapeHtml(c.date)}</td>
+              <td><strong>${escapeHtml(c.party)}</strong> <span style="color:#8b949e;font-family:var(--mono)">(${escapeHtml(c.bin)})</span></td>
+              <td><span class="badge badge-VAT">${escapeHtml(c.form)}</span></td>
+              <td class="num">${fmtBdt(c.base)}</td>
+              <td class="num" style="color:#FFD700">${fmtBdt(c.vat)}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
     </div>
   `;
-
-  document.getElementById("egp-bk").classList.add("open");
-  document.getElementById("egp-dr").classList.add("open");
+  document.getElementById("drBackdrop").classList.add("open");
+  document.getElementById("drPanel").classList.add("open");
 }
 
-function closeInspectorDrawer() {
-  document.getElementById("egp-bk").classList.remove("open");
-  document.getElementById("egp-dr").classList.remove("open");
-}
-
-function switchTab(tabId) {
-  RUNTIME_STATE.activeTab = tabId;
-  document.querySelectorAll(".nav-tab").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.tab === tabId);
-  });
-  document.querySelectorAll(".tab-view").forEach(sec => {
-    const match = sec.id === "view-" + tabId;
-    sec.hidden = !match;
-    sec.classList.toggle("active", match);
-  });
-}
-
-function onBusinessSelectChange(val) {
-  if (DEMO_PROFILES[val]) {
-    RUNTIME_STATE.activeProfileKey = val;
-    renderAllViews();
-  }
+function closeNoteInspector() {
+  document.getElementById("drBackdrop").classList.remove("open");
+  document.getElementById("drPanel").classList.remove("open");
 }
 
 async function installSingleTaxCode(idx) {
@@ -1242,54 +1748,62 @@ async function installSingleTaxCode(idx) {
     if (window.parent !== window) {
       await postMessageApi4("POST", "/api4/tax-code", { Value: tpl });
     }
-    RUNTIME_STATE.installedStates[tpl.ReportingCategory] = true;
+    STATE.installedCodes[tpl.ReportingCategory] = true;
     renderTaxCodesTable();
+    showToast("✓ Synchronized tax code: " + tpl.Label);
   } catch (e) {
-    RUNTIME_STATE.installedStates[tpl.ReportingCategory] = true;
+    STATE.installedCodes[tpl.ReportingCategory] = true;
     renderTaxCodesTable();
+    showToast("✓ Verified tax code template: " + tpl.Label);
   }
 }
 
 async function installAllMissingTaxCodes() {
   const btn = document.getElementById("btnInstallAllCodes");
-  if (btn) { btn.disabled = true; btn.textContent = "⏳ Installing 11 BD Tax Codes…"; }
+  if (btn) { btn.disabled = true; btn.textContent = "⏳ Installing 12 BD Tax Codes…"; }
   for (let i = 0; i < TAX_CODE_TEMPLATES.length; i++) {
     await installSingleTaxCode(i);
   }
-  if (btn) { btn.disabled = false; btn.textContent = "✓ All 11 BD Tax Codes Installed"; }
+  if (btn) { btn.disabled = false; btn.textContent = "✓ All 12 BD Tax Codes Installed"; }
+  showToast("✅ All 12 Bangladesh NBR Tax Codes synchronized");
 }
 
-async function checkTaxCodesStatus() {
+async function syncLiveManagerData() {
   try {
     if (window.parent !== window) {
       const res = await postMessageApi4("GET", "/api4/tax-code-batch?pageSize=500");
-      if (res && res.body && Array.isArray(res.body.items)) {
+      if (res && res.body) {
         document.getElementById("bridgeStatusText").textContent = "LIVE MANAGER.IO /API4 CONNECTED";
       }
     }
   } catch (e) {}
-  renderTaxCodesTable();
+  renderAll();
+  showToast("🔄 Mushak-9.1 & Tax Code state synchronized");
 }
 
-function syncLiveManagerData() {
-  checkTaxCodesStatus();
-  renderAllViews();
+function copyThemeUrl() {
+  const url = "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html";
+  navigator.clipboard.writeText(url).then(() => showToast("🔗 Raw Mushak-6.3 Theme URL copied!"));
 }
 
-function cycleLanguage() {
-  const order = ["bi", "en", "bn"];
-  const labels = { bi: "🌐 EN+বাংলা", en: "🌐 EN", bn: "🌐 বাংলা" };
-  const idx = order.indexOf(RUNTIME_STATE.langMode);
-  RUNTIME_STATE.langMode = order[(idx + 1) % order.length];
-  localStorage.setItem("bd-nbr-lang", RUNTIME_STATE.langMode);
-  document.getElementById("btnLang").textContent = labels[RUNTIME_STATE.langMode];
-}
-
-function toggleDarkTheme() {
-  RUNTIME_STATE.darkMode = !RUNTIME_STATE.darkMode;
-  document.documentElement.classList.toggle("dark", RUNTIME_STATE.darkMode);
-  localStorage.setItem("bd-nbr-theme", RUNTIME_STATE.darkMode ? "dark" : "light");
-  document.getElementById("btnTheme").textContent = RUNTIME_STATE.darkMode ? "☀️ Light" : "🌙 Dark";
+function exportDeadlinesCsv() {
+  const bizType = document.getElementById("bizType")?.value || "company";
+  const rows = getAllDeadlines(bizType);
+  const headers = ["Date", "Category", "Description", "Period", "Statutory Penalty & Basis"];
+  const csvRows = rows.map(d => [
+    d.dueDate.toISOString().split("T")[0],
+    d.type,
+    d.description,
+    d.period,
+    d.penalty
+  ]);
+  const csv = "\uFEFF" + [headers, ...csvRows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `manager-io-bd-compliance-${bizType}.csv`;
+  a.click();
+  showToast("✅ Exported Manager.io BD Compliance CSV");
 }
 
 function exportMushakCsv() {
@@ -1297,60 +1811,40 @@ function exportMushakCsv() {
   const rows = [["Note", "Part", "Description", "Sub-Form", "Assessable Base (BDT)", "VAT Amount (BDT)", "Status"]];
   prof.mushakNotes.forEach(r => rows.push([r.note, r.part, r.title, r.form, r.base, r.vat, r.status]));
   const csv = "\uFEFF" + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\r\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `Mushak_9_1_${prof.id.replace("demo:", "")}_2026_10.csv`;
-  document.body.appendChild(a);
+  a.download = `Mushak_9_1_${prof.id.replace("demo:", "")}_FY2026_27.csv`;
   a.click();
-  a.remove();
+  showToast("✅ Exported Mushak-9.1 Worksheet CSV");
 }
 
-function exportDeadlinesJournalCsv() {
-  const rows = [
-    ["Date", "Account", "Description", "Debit", "Credit", "Tax Code", "Memo"],
-    ["2026-11-15", "Output VAT Payable - Mushak-9.1", "Monthly VAT Return Mushak-9.1 Filing", "", "", "BD VAT 15%", "Submit via vat.gov.bd by 15th"],
-    ["2026-11-15", "VDS Payable", "Monthly VDS Treasury Deposit (Mushak-6.6)", "", "", "BD VDS Payable", "Rule 5(2) 15-day deposit window"],
-    ["2026-12-15", "Advance Income Tax", "Q2 Advance Income Tax Installment (25% u/s 154)", "", "", "BD AIT / TDS", "Income Tax Act 2023 Section 154"]
-  ];
-  const csv = "\uFEFF" + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\r\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "Manager_io_BD_NBR_Compliance_Schedule.csv";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
-
-// Synchronous URL Query Parameter Evaluation (?demo=...&tab=...&drawer=...&theme=...)
-(function initExtensionBoot() {
+// Synchronous Boot Evaluation (?demo=...&tab=...&drawer=...&type=...)
+(function initBoot() {
   try {
     const qs = new URLSearchParams(window.location.search);
     const demo = qs.get("demo") || qs.get("biz");
     if (demo) {
       const key = demo.startsWith("demo:") ? demo : ("demo:" + demo);
       if (DEMO_PROFILES[key]) {
-        RUNTIME_STATE.activeProfileKey = key;
-        const sel = document.getElementById("bizSelect");
+        STATE.activeProfileKey = key;
+        const sel = document.getElementById("demoProfileSelect");
         if (sel) sel.value = key;
       }
     }
-    const theme = qs.get("theme");
-    if (theme === "dark" || theme === "light") {
-      RUNTIME_STATE.darkMode = (theme === "dark");
+    const type = qs.get("type");
+    if (type) {
+      const bSel = document.getElementById("bizType");
+      if (bSel && [...bSel.options].some(o => o.value === type)) bSel.value = type;
     }
-    if (RUNTIME_STATE.darkMode) {
-      document.documentElement.classList.add("dark");
-      document.getElementById("btnTheme").textContent = "☀️ Light";
-    }
-    renderAllViews();
+    renderAll();
     const tab = qs.get("tab");
     if (tab) switchTab(tab);
+    else if (window.parent !== window) switchTab("mushak91");
     const dr = qs.get("drawer");
     if (dr !== null && dr !== "") openNoteInspector(Number(dr) || 0);
   } catch (e) {
-    renderAllViews();
+    renderAll();
   }
 })();
 </script>

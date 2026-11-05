@@ -7,7 +7,7 @@
   <style>
     /* ============================================================
        ATLAS STATEMENT V1.0 (LIGHT)
-       NEXUS Core Engine · INSPIRON TECH Brand System v1.0 Adaptation
+       INSPIRON Core Engine · INSPIRON TECH Brand System v1.0 Adaptation
        ============================================================ */
 
     /* ============================================================
@@ -291,7 +291,7 @@
     if (window.parent !== window) document.body.classList.add('in-iframe');
 
     /* ============================================================
-       NEXUS SAFE-RENDERING KERNEL — ATLAS STATEMENT IT-v1 LIGHT
+       INSPIRON SAFE-RENDERING KERNEL — ATLAS STATEMENT IT-v1 LIGHT
        ============================================================ */
 
     const THEME_FLAGS = Object.freeze({
@@ -603,7 +603,7 @@
       if (existing) existing.parentNode.removeChild(existing);
       const overlay = document.createElement('div');
       overlay.id = THEME_DOM.debugOverlay; overlay.className = 'it-debug-overlay';
-      ['— NEXUS DEBUG —', 'Theme:     ' + safeText(meta.themeId || '—'), 'Version:   ' + safeText(meta.themeVersion || '—'), 'Archetype: ' + safeText(meta.archetype || '—'), 'Rows:      ' + safeText(meta.rowCount || 0), 'Density:   ' + (document.body.classList.contains('document-long') ? 'compact' : 'standard')].forEach(line => {
+      ['— INSPIRON DEBUG —', 'Theme:     ' + safeText(meta.themeId || '—'), 'Version:   ' + safeText(meta.themeVersion || '—'), 'Archetype: ' + safeText(meta.archetype || '—'), 'Rows:      ' + safeText(meta.rowCount || 0), 'Density:   ' + (document.body.classList.contains('document-long') ? 'compact' : 'standard')].forEach(line => {
         const p = document.createElement('p'); p.textContent = line; overlay.appendChild(p);
       });
       document.body.appendChild(overlay);

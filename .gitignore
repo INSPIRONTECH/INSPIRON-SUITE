@@ -15,14 +15,21 @@
 
 # Internal Strategy & Fleet Docs
 DOCS/STRATEGY/
+_archive/
+_kernel/
+legacy/
+*brief*
+*BRIEF*
 
 # Dependencies & Build
 node_modules/
 .next/
 dist/
 
-# Backup files
+# Backup & logs
 *.bak
+*.log
+*.tmp
 
 # AI Agent Context (internal scaffolding)
 CLAUDE.md

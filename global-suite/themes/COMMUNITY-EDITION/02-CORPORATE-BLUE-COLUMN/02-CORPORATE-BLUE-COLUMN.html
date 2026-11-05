@@ -1041,7 +1041,7 @@
       /* ---- DEBUG OVERLAY ---- */
       if (document.body.classList.contains('debug-mode')) {
         const overlay = document.createElement('div'); overlay.id = THEME_DOM.debug; overlay.className = 'it-debug-overlay';
-        [['— NEXUS DEBUG —'],['Theme: corporate-blue-column'],['Version: 1.1.0'],['Archetype: generic_invoice'],['Rows: ' + ((data.table && data.table.rows && data.table.rows.length) || 0)],['Schema: /api4/view-v1']].forEach(([line]) => {
+        [['— INSPIRON DEBUG —'],['Theme: corporate-blue-column'],['Version: 1.1.0'],['Archetype: generic_invoice'],['Rows: ' + ((data.table && data.table.rows && data.table.rows.length) || 0)],['Schema: /api4/view-v1']].forEach(([line]) => {
           const p = document.createElement('p'); p.textContent = line; overlay.appendChild(p);
         });
         document.body.appendChild(overlay);

@@ -225,6 +225,37 @@ footer{
   .stats-strip{gap:28px}.section{padding:48px 16px}
   .architect-section{padding:28px}
 }
+
+/* Theme Action Buttons */
+.btn-theme-action {
+  font-family: 'Neo Sans Pro', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  display: inline-block;
+}
+.btn-alfabase {
+  background: rgba(0, 210, 255, 0.12);
+  color: var(--cyan);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+}
+.btn-alfabase:hover {
+  background: rgba(0, 210, 255, 0.25);
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.3);
+}
+.btn-raw {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.btn-raw:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
 </style>
 </head>
 <body>
@@ -282,7 +313,7 @@ footer{
       <span class="ext-icon">📊</span>
       <div class="ext-title">Executive Dashboard &amp; Ledger Auditor</div>
       <div class="ext-desc">6-KPI focus engine, project/contract P&amp;L matrix, treasury &amp; bank control balances, 12-point forensic COA diagnostic, and Sovereign Enterprise v8.1.1 architecture guide — in one extension.</div>
-      <div class="ext-url">suite.inspiron.tech/dashboard</div>
+      <div class="ext-url">suite.inspiron.tech/dashboard · <a href="https://extensions.alfabase.com/extensions/sAwkIqGY" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:underline;">View on Alfabase Gallery ↗</a></div>
       <div class="ext-tags">
         <span class="ext-tag">Global</span>
         <span class="ext-tag">USD · EUR · GBP · SAR · BDT</span>
@@ -357,46 +388,82 @@ footer{
 <hr class="divider">
 
 <!-- THEMES -->
-<div class="section">
+<div class="section" id="themes">
   <div class="section-label">Document Themes</div>
-  <div class="section-title">SLATE-1 Series — Community Edition</div>
-  <p class="section-sub">Print-safe, A4-optimised document themes for invoices, statements, and reports. Free for all Manager.io users.</p>
+  <div class="section-title">The 6 Community Edition Themes</div>
+  <p class="section-sub">Print-safe, A4-optimised document themes for Manager.io. 100% compliant with the official <code>/api4/view-v1</code> rendering contract and sandboxed security doctrine. Install with 1-click via Alfabase or copy raw GitHub URLs.</p>
+  
   <div class="theme-grid">
-    <a class="theme-card" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html" target="_blank" rel="noopener">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#010409,#0D1117);border:1px solid rgba(0,210,255,0.2)">🌑</div>
-      <div class="theme-name">Midnight Executive</div>
-      <div class="theme-identity">Premium Sleek Datapad · EU/IE VAT-ready</div>
-      <span class="theme-status status-live">● Live</span>
-    </a>
-    <a class="theme-card" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html" target="_blank" rel="noopener">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#0A2010,#164020);border:1px solid rgba(0,210,255,0.1)">🇸🇦</div>
-      <div class="theme-name">Riyadh RTL</div>
-      <div class="theme-identity">Bilingual Arabic/English · ZATCA e-invoicing</div>
-      <span class="theme-status status-live">● Live</span>
-    </a>
-    <a class="theme-card" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-DARK.html" target="_blank" rel="noopener">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#0D1117,#1A2030);border:1px solid rgba(255,215,0,0.15)">📋</div>
-      <div class="theme-name">Atlas Statement</div>
-      <div class="theme-identity">Account Statements · Dark &amp; Light variants</div>
-      <span class="theme-status status-live">● Live</span>
-    </a>
-    <a class="theme-card" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html" target="_blank" rel="noopener">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#1A1000,#2A1A00);border:1px solid rgba(255,215,0,0.2)">🥉</div>
-      <div class="theme-name">Universal Bronze</div>
-      <div class="theme-identity">General B2B · Technical Authority</div>
-      <span class="theme-status status-legacy">Legacy</span>
-    </a>
-    <a class="theme-card" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html" target="_blank" rel="noopener">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#001828,#002840);border:1px solid rgba(0,120,200,0.3)">🏢</div>
-      <div class="theme-name">Corporate Blue Column</div>
-      <div class="theme-identity">Clean Corporate B2B Invoicing</div>
-      <span class="theme-status status-legacy">Legacy</span>
-    </a>
-    <div class="theme-card" style="opacity:0.5">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#001A10,#002818);border:1px solid rgba(0,200,100,0.15)">🏥</div>
-      <div class="theme-name">Jade Clinical</div>
-      <div class="theme-identity">Healthcare Precision · Coming Soon</div>
-      <span class="theme-status status-legacy">Planned</span>
+    <!-- Theme 1: Atlas Light -->
+    <div class="theme-card">
+      <div class="theme-preview" style="background:linear-gradient(135deg,#111827,#1F2937);border:1px solid rgba(0,210,255,0.3)">📄</div>
+      <div class="theme-name">Atlas Statement — Light</div>
+      <div class="theme-identity">Account Statements · Print &amp; PDF Optimized</div>
+      <div style="margin:8px 0 12px;font-size:11px;color:var(--gold);font-weight:700;">★ Rank #1 on Alfabase (101 Installs)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/LRgUDkiP" target="_blank" rel="noopener">⚡ Alfabase Install</a>
+        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-LIGHT.html" target="_blank" rel="noopener">Raw URL</a>
+      </div>
+    </div>
+
+    <!-- Theme 2: Atlas Dark -->
+    <div class="theme-card">
+      <div class="theme-preview" style="background:linear-gradient(135deg,#0D1117,#161B22);border:1px solid rgba(255,215,0,0.25)">📋</div>
+      <div class="theme-name">Atlas Statement — Dark</div>
+      <div class="theme-identity">Account Statements · Digital Delivery &amp; Portal</div>
+      <div style="margin:8px 0 12px;font-size:11px;color:var(--gold);font-weight:700;">★ Rank #3 on Alfabase (32 Installs)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/nCbfGayH" target="_blank" rel="noopener">⚡ Alfabase Install</a>
+        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-DARK.html" target="_blank" rel="noopener">Raw URL</a>
+      </div>
+    </div>
+
+    <!-- Theme 3: Midnight Executive -->
+    <div class="theme-card">
+      <div class="theme-preview" style="background:linear-gradient(135deg,#010409,#0D1117);border:1px solid rgba(0,210,255,0.25)">🌑</div>
+      <div class="theme-name">Midnight Executive V1.1.1</div>
+      <div class="theme-identity">Premium Sleek Enterprise Invoice · EU/IE VAT</div>
+      <div style="margin:8px 0 12px;font-size:11px;color:var(--cyan);font-weight:700;">● Alfabase Verified · Dark Category</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/q9Tj8UzY" target="_blank" rel="noopener">⚡ Alfabase Listing</a>
+        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html" target="_blank" rel="noopener">Raw URL</a>
+      </div>
+    </div>
+
+    <!-- Theme 4: Riyadh RTL -->
+    <div class="theme-card">
+      <div class="theme-preview" style="background:linear-gradient(135deg,#061F12,#0B3820);border:1px solid rgba(16,185,129,0.3)">🇸🇦</div>
+      <div class="theme-name">Riyadh RTL V1.1.0</div>
+      <div class="theme-identity">Bilingual Arabic/English · Saudi ZATCA QR</div>
+      <div style="margin:8px 0 12px;font-size:11px;color:var(--cyan);font-weight:700;">● Alfabase Verified · Modern RTL</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/qzMmReST" target="_blank" rel="noopener">⚡ Alfabase Listing</a>
+        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html" target="_blank" rel="noopener">Raw URL</a>
+      </div>
+    </div>
+
+    <!-- Theme 5: Universal Bronze -->
+    <div class="theme-card">
+      <div class="theme-preview" style="background:linear-gradient(135deg,#1F1404,#332007);border:1px solid rgba(217,119,6,0.35)">🥉</div>
+      <div class="theme-name">Universal Bronze V1.1.0</div>
+      <div class="theme-identity">Institutional B2B Invoice · Engineering &amp; Trade</div>
+      <div style="margin:8px 0 12px;font-size:11px;color:var(--cyan);font-weight:700;">● Alfabase Verified · Classic Category</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/dwbDb3mv" target="_blank" rel="noopener">⚡ Alfabase Listing</a>
+        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html" target="_blank" rel="noopener">Raw URL</a>
+      </div>
+    </div>
+
+    <!-- Theme 6: Corporate Blue Column -->
+    <div class="theme-card">
+      <div class="theme-preview" style="background:linear-gradient(135deg,#031830,#062C56);border:1px solid rgba(37,99,235,0.35)">🏢</div>
+      <div class="theme-name">Corporate Blue Column V1.1.0</div>
+      <div class="theme-identity">Executive B2B Invoicing · Balanced Dual-Column</div>
+      <div style="margin:8px 0 12px;font-size:11px;color:var(--cyan);font-weight:700;">● Alfabase Verified · Modern Category</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/HIsD356Y" target="_blank" rel="noopener">⚡ Alfabase Listing</a>
+        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html" target="_blank" rel="noopener">Raw URL</a>
+      </div>
     </div>
   </div>
 </div>

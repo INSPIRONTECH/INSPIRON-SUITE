@@ -29,7 +29,7 @@
 
 ### MIDNIGHT EXECUTIVE
 
-Dark-on-light premium invoice theme. Clean typographic hierarchy, configurable logo header, Irish/EU VAT-ready, NEXUS safe-rendering kernel.
+Dark-on-light premium invoice theme. Clean typographic hierarchy, configurable logo header, Irish/EU VAT-ready, INSPIRON safe-rendering kernel.
 
 - **Best for:** Consulting firms, professional services, EU/IE businesses
 - **RTL:** No

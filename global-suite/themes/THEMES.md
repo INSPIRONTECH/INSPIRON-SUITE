@@ -1,6 +1,6 @@
 # INSPIRON Suite — Theme Catalog
 
-**Provider:** INSPIRON TECH · Manager.io Advisor & ERP Architect  
+**Provider:** INSPIRON TECH · ERP Architect | Listed Manager.io Advisor  
 **Contact:** hello@inspiron.tech · [inspiron.tech](https://inspiron.tech)
 
 > Professionally engineered HTML invoice themes for [Manager.io](https://www.manager.io). Each theme installs in under 60 seconds — no coding required.
@@ -90,4 +90,4 @@ Pre-v1.1 files are archived in [`legacy/`](legacy/) for reference — not recomm
 
 ---
 
-*INSPIRON Suite is maintained by [INSPIRON TECH](https://inspiron.tech) — Manager.io Advisor & ERP Architect.*
+*INSPIRON Suite is maintained by [INSPIRON TECH](https://inspiron.tech) — ERP Architect | Listed Manager.io Advisor.*

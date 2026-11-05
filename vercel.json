@@ -1,27 +1,18 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    {
-      "source": "/executive-dashboard",
-      "destination": "/executive-dashboard/index.html"
-    },
-    {
-      "source": "/dashboard",
-      "destination": "/executive-dashboard/index.html"
-    }
+    { "source": "/",                    "destination": "/showroom/index.html" },
+    { "source": "/executive-dashboard", "destination": "/executive-dashboard/index.html" },
+    { "source": "/dashboard",           "destination": "/executive-dashboard/index.html" },
+    { "source": "/checklist",           "destination": "/global-suite/utilities/checklist-v1.html" },
+    { "source": "/invoice-checklist",   "destination": "/global-suite/utilities/checklist-v1.html" }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Content-Security-Policy",
-          "value": "frame-ancestors 'self' https://*.manager.io https://*.alfabase.com http://localhost:* http://127.0.0.1:*"
-        }
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Content-Security-Policy", "value": "frame-ancestors 'self' https://*.manager.io https://*.alfabase.com http://localhost:* http://127.0.0.1:*" }
       ]
     }
   ]

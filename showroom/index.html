@@ -4,261 +4,849 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>INSPIRON Suite — Global Manager.io Extensions & Themes</title>
-<meta name="description" content="Enterprise-grade extensions and themes for Manager.io. Built by MD ABU HASAN · Listed Manager.io Advisor & ERP Architect.">
+<meta name="description" content="Enterprise-grade extensions, forensic dashboards, and precision document themes for Manager.io. Built by MD ABU HASAN · Listed Manager.io Advisor & ERP Architect.">
 <meta property="og:title" content="INSPIRON Suite — Manager.io Extensions & Themes">
 <meta property="og:description" content="Executive dashboards, forensic auditors, BD compliance tools, and document themes for Manager.io businesses worldwide.">
 <meta property="og:image" content="https://suite.inspiron.tech/global-suite/themes/COMMUNITY-EDITION/previews/og-preview.png">
 <meta property="og:url" content="https://suite.inspiron.tech">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 358 350' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M87 349c-30 0-57-14-74-40-15-24-16-55-4-80 7-14 32-53 57-92 15-23 29-46 39-62 2-4 4-7 8-11 11-13 28-20 45-20s33 8 43 22c5 7 9 16 10 26l-23 42c-4-4-8-11-12-18-2-4-4-7-6-11-1-2-4-4-7-4s-4 1-5 3c-5 8-27 43-45 72-11 18-22 35-25 40-2 3-5 8-7 12-1 2-3 5-4 7l-1 3c-2 4-4 7-6 11-5 12 0 27 10 34 5 3 11 5 17 5 12 0 25-7 32-20 5-8 23-37 45-70 31-50 67-107 76-118 6-6 14-10 22-10 9 0 18 5 23 13 4 7 5 16 1 24-3 7-6 11-10 18-3 4-7 11-13 20-14 22-31 48-47 74-24 38-47 75-55 86-17 24-45 38-75 38z' fill='%2300D2FF'/%3E%3Ccircle cx='321' cy='37' r='37' fill='%23FFD700'/%3E%3C/svg%3E">
+
 <style>
 @font-face{font-family:'Neo Sans Pro';src:local('Neo Sans Pro Light'),local('NeoSansPro-Light'),url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Light.woff') format('woff');font-weight:300;font-display:swap}
 @font-face{font-family:'Neo Sans Pro';src:local('Neo Sans Pro'),local('NeoSansPro-Regular'),url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Regular.woff') format('woff');font-weight:400;font-display:swap}
 @font-face{font-family:'Neo Sans Pro';src:local('Neo Sans Pro Medium'),local('NeoSansPro-Medium'),url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Medium.woff') format('woff');font-weight:500;font-display:swap}
 @font-face{font-family:'Neo Sans Pro';src:local('Neo Sans Pro Bold'),local('NeoSansPro-Bold'),url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Bold.woff') format('woff');font-weight:700;font-display:swap}
 @font-face{font-family:'Neo Sans Pro';src:local('Neo Sans Pro Ultra'),local('NeoSansPro-Ultra'),url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Ultra.woff') format('woff');font-weight:900;font-display:swap}
-@font-face{font-family:'Li Ador Noirrit';src:local('Li Ador Noirrit'),url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
 
 :root {
-  --cyan:#00D2FF; --gold:#FFD700; --bg:#010409; --surface:#0D1117;
-  --white:#FFFFFF; --muted:#94A3B8; --border:rgba(0,210,255,0.18);
-  --cyan-ink:#006C87; --gold-ink:#8A6600; --paper:#F4F7FB; --ink:#010409;
-  --grid: rgba(0,108,135,0.055);
+  /* INSPIRON TECH Kinetic Palette (D001 Locked) */
+  --cyan: #00D2FF;
+  --gold: #FFD700;
+  --gold-lt: #FFF4CC;
+  --gold-dk: #FFC700;
+  --bg-deep: #020710;
+  --bg-oxford: #002147;
+  --surface-dark: #0D1424;
+  --surface-elevated: #111C33;
+  --white: #FFFFFF;
+  --muted: #94A3B8;
+  --border-cyan: rgba(0, 210, 255, 0.22);
+  --border-gold: rgba(255, 215, 0, 0.3);
+  --border-glass: rgba(255, 255, 255, 0.09);
+  
+  /* Blueprint Ink (D028 Approved) */
+  --paper: #F7F9FC;
+  --paper-elevated: #FFFFFF;
+  --ink-navy: #010409;
+  --cyan-ink: #006C87;
+  --gold-ink: #8A6600;
+  --border-paper: rgba(1, 4, 9, 0.12);
+  --qc-green: #00FF88;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Neo Sans Pro',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Neo Sans Pro', sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── AMBIENT LIGHTING & CAD BLUEPRINT GRID ── */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(1100px circle at 50% -10%, rgba(0, 33, 71, 0.75), transparent 75%),
+    radial-gradient(900px circle at 85% 25%, rgba(0, 210, 255, 0.08), transparent 55%),
+    radial-gradient(700px circle at 15% 65%, rgba(255, 215, 0, 0.06), transparent 50%),
+    radial-gradient(900px circle at 50% 100%, rgba(0, 33, 71, 0.6), transparent 70%);
+}
+.blueprint-cad-grid {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(0, 210, 255, 0.038) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.038) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.content-wrap {
+  position: relative;
+  z-index: 2;
+}
 
 /* ── TOP BAR ── */
-.topbar{
-  background:linear-gradient(180deg,#010409 0%,#0A1120 100%);
-  border-bottom:2px solid rgba(0,210,255,0.35);
-  padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;
+.topbar {
+  background: rgba(2, 7, 16, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-cyan);
+  padding: 0 32px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-.brandlock{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
-.wordmark{font-family:'Neo Sans Pro',sans-serif;font-size:18px;line-height:1}
-.wordmark .i{font-weight:500;color:#fff;letter-spacing:-0.3px}
-.wordmark .t{font-weight:300;color:var(--gold);letter-spacing:1px;text-transform:uppercase}
-.topbar-right{display:flex;align-items:center;gap:16px}
-.badge-advisor{
-  font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;
-  padding:5px 12px;border-radius:20px;
-  border:1.5px solid rgba(0,210,255,0.4);color:var(--cyan);
-  white-space:nowrap;
+.brandlock {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
 }
-.btn-forum{
-  font-family:'Neo Sans Pro',sans-serif;font-size:11px;font-weight:700;
-  letter-spacing:0.8px;text-transform:uppercase;
-  padding:8px 18px;border-radius:6px;
-  background:linear-gradient(135deg,var(--cyan) 0%,#0099CC 100%);
-  color:#010409;text-decoration:none;border:none;cursor:pointer;
-  transition:opacity 0.15s;
+.wordmark {
+  font-family: 'Neo Sans Pro', sans-serif;
+  font-size: 20px;
+  line-height: 1;
 }
-.btn-forum:hover{opacity:0.85}
+.wordmark .i { font-weight: 500; color: #fff; letter-spacing: -0.3px; }
+.wordmark .t { font-weight: 300; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; }
 
-/* ── HERO ── */
-.hero{
-  background:linear-gradient(180deg,#010409 0%,#030B1A 60%,#010409 100%);
-  padding:80px 32px 64px;text-align:center;position:relative;overflow:hidden;
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-.hero::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 60% 40% at 50% 30%, rgba(0,210,255,0.08) 0%, transparent 70%);
-  pointer-events:none;
+.badge-advisor {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(0, 210, 255, 0.08);
+  border: 1.5px solid var(--border-cyan);
+  color: var(--cyan);
+  white-space: nowrap;
 }
-.hero-tag{
-  display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:var(--cyan);border:1.5px solid rgba(0,210,255,0.3);padding:5px 16px;border-radius:20px;
-  margin-bottom:24px;
-}
-.hero h1{
-  font-size:clamp(32px,5vw,56px);font-weight:900;line-height:1.08;
-  letter-spacing:-1px;margin-bottom:16px;
-}
-.hero h1 span{
-  background:linear-gradient(135deg,var(--cyan) 0%,var(--gold) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.hero-sub{font-size:16px;font-weight:400;color:var(--muted);max-width:580px;margin:0 auto 36px;line-height:1.6}
-.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn-primary{
-  font-family:'Neo Sans Pro',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.5px;
-  padding:14px 28px;border-radius:8px;text-decoration:none;
-  background:linear-gradient(135deg,var(--cyan) 0%,#0099CC 100%);color:#010409;
-  border:none;cursor:pointer;transition:transform 0.15s,opacity 0.15s;
-}
-.btn-primary:hover{transform:translateY(-1px);opacity:0.9}
-.btn-ghost{
-  font-family:'Neo Sans Pro',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.5px;
-  padding:14px 28px;border-radius:8px;text-decoration:none;
-  background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,0.2);
-  transition:border-color 0.15s;
-}
-.btn-ghost:hover{border-color:rgba(0,210,255,0.5)}
-
-/* ── STATS STRIP ── */
-.stats-strip{
-  background:#0D1117;border-top:1px solid rgba(0,210,255,0.12);border-bottom:1px solid rgba(0,210,255,0.12);
-  padding:24px 32px;display:flex;justify-content:center;gap:48px;flex-wrap:wrap;
-}
-.stat{text-align:center}
-.stat-num{font-size:28px;font-weight:900;color:var(--cyan);letter-spacing:-0.5px}
-.stat-num.gold{color:var(--gold)}
-.stat-label{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-
-/* ── SECTION ── */
-.section{padding:72px 32px;max-width:1200px;margin:0 auto}
-.section-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
-.section-title{font-size:clamp(24px,3vw,36px);font-weight:900;line-height:1.15;margin-bottom:8px}
-.section-sub{font-size:15px;color:var(--muted);max-width:520px;line-height:1.6;margin-bottom:48px}
-
-/* ── EXTENSION CARDS ── */
-.ext-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
-.ext-card{
-  background:#0D1117;border:1.5px solid rgba(0,210,255,0.14);border-radius:12px;
-  padding:28px;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.15s;
-  text-decoration:none;color:inherit;display:block;
-}
-.ext-card:hover{border-color:rgba(0,210,255,0.4);transform:translateY(-2px)}
-.ext-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-}
-.ext-card.card-cyan::before{background:linear-gradient(90deg,var(--cyan),#0099CC)}
-.ext-card.card-gold::before{background:linear-gradient(90deg,var(--gold),#FFA500)}
-.ext-card.card-green::before{background:linear-gradient(90deg,#10B981,#059669)}
-.ext-card.card-purple::before{background:linear-gradient(90deg,#A855F7,#7C3AED)}
-.ext-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
-  padding:4px 10px;border-radius:12px;margin-bottom:16px;
-}
-.badge-live{background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3)}
-.badge-soon{background:rgba(251,191,36,0.1);color:#FBBF24;border:1px solid rgba(251,191,36,0.25)}
-.badge-free{background:rgba(0,210,255,0.1);color:var(--cyan);border:1px solid rgba(0,210,255,0.25)}
-.ext-icon{font-size:28px;margin-bottom:12px;display:block}
-.ext-title{font-size:17px;font-weight:800;line-height:1.2;margin-bottom:8px}
-.ext-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}
-.ext-url{
-  font-size:11px;font-weight:600;color:var(--cyan);letter-spacing:0.3px;
-  font-family:'JetBrains Mono','Courier New',monospace;
-}
-.ext-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
-.ext-tag{
-  font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;
-  background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid rgba(255,255,255,0.08);
-}
-
-/* ── THEME GRID ── */
-.theme-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-.theme-card{
-  background:#0D1117;border:1.5px solid rgba(255,255,255,0.07);border-radius:10px;
-  padding:20px;transition:border-color 0.2s;text-decoration:none;color:inherit;
-}
-.theme-card:hover{border-color:rgba(0,210,255,0.3)}
-.theme-preview{
-  height:72px;border-radius:6px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;
-  font-size:20px;overflow:hidden;
-}
-.theme-name{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
-.theme-identity{font-size:11px;color:var(--muted)}
-.theme-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;margin-top:10px;display:inline-block}
-.status-live{background:rgba(16,185,129,0.15);color:#10B981}
-.status-legacy{background:rgba(148,163,184,0.1);color:var(--muted)}
-
-/* ── ARCHITECT CARD ── */
-.architect-section{
-  background:linear-gradient(135deg,#0A1120 0%,#010409 100%);
-  border:1.5px solid rgba(0,210,255,0.15);border-radius:16px;
-  padding:48px;display:flex;gap:40px;align-items:center;flex-wrap:wrap;
-}
-.architect-bio{flex:1;min-width:260px}
-.architect-name{font-size:22px;font-weight:900;letter-spacing:-0.3px;margin-bottom:4px}
-.architect-title{font-size:13px;color:var(--cyan);font-weight:500;margin-bottom:16px}
-.architect-quote{
-  font-size:15px;font-style:italic;color:var(--muted);line-height:1.6;
-  border-left:3px solid var(--gold);padding-left:16px;margin-bottom:20px;
-}
-.architect-links{display:flex;gap:10px;flex-wrap:wrap}
-.arch-link{
-  font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;
-  padding:8px 16px;border-radius:6px;text-decoration:none;border:1.5px solid;
-  transition:opacity 0.15s;
-}
-.arch-link:hover{opacity:0.8}
-.arch-link.forum{color:var(--cyan);border-color:rgba(0,210,255,0.4)}
-.arch-link.site{color:var(--gold);border-color:rgba(255,215,0,0.3)}
-.arch-link.wa{color:#25D366;border-color:rgba(37,211,102,0.3)}
-
-/* ── INSTALL GUIDE ── */
-.install-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-.install-step{
-  background:#0D1117;border:1px solid rgba(0,210,255,0.1);border-radius:10px;padding:20px;
-}
-.step-num{
-  width:28px;height:28px;border-radius:50%;
-  background:linear-gradient(135deg,var(--cyan),#0099CC);
-  color:#010409;font-size:13px;font-weight:900;
-  display:flex;align-items:center;justify-content:center;margin-bottom:12px;
-}
-.step-title{font-size:13px;font-weight:800;margin-bottom:6px}
-.step-desc{font-size:12px;color:var(--muted);line-height:1.5}
-code{font-family:'JetBrains Mono','Courier New',monospace;background:rgba(0,210,255,0.08);padding:1px 5px;border-radius:3px;font-size:11px;color:var(--cyan)}
-
-/* ── FOOTER ── */
-footer{
-  background:linear-gradient(180deg,#0A1120 0%,#010409 100%);
-  border-top:2px solid rgba(0,210,255,0.2);
-  padding:40px 32px;text-align:center;
-}
-.footer-brand{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:8px}
-.footer-copy{font-size:11px;color:rgba(148,163,184,0.5)}
-.footer-links{display:flex;justify-content:center;gap:20px;margin-top:16px;flex-wrap:wrap}
-.footer-link{font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.15s}
-.footer-link:hover{color:var(--cyan)}
-
-/* ── DIVIDER ── */
-.divider{border:none;border-top:1px solid rgba(0,210,255,0.08);margin:0}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .topbar{padding:0 16px}.hero{padding:60px 16px 48px}
-  .stats-strip{gap:28px}.section{padding:48px 16px}
-  .architect-section{padding:28px}
-}
-
-/* Theme Action Buttons */
-.btn-theme-action {
+.btn-forum {
   font-family: 'Neo Sans Pro', sans-serif;
   font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 7px 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  background: rgba(255, 215, 0, 0.08);
+  color: var(--gold);
   text-decoration: none;
-  padding: 6px 12px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.btn-forum:hover {
+  background: rgba(255, 215, 0, 0.22);
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.25);
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 90px 32px 50px;
+  max-width: 1160px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-cyan);
+  background: rgba(0, 210, 255, 0.06);
+  color: var(--cyan);
+  margin-bottom: 24px;
+}
+.hero-tag .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--qc-green);
+  box-shadow: 0 0 8px var(--qc-green);
+}
+.hero h1 {
+  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  margin-bottom: 24px;
+  color: #FFFFFF;
+}
+.hero h1 span {
+  background: linear-gradient(135deg, #00D2FF 0%, #FFFFFF 50%, #FFD700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-weight: 300;
+  color: #C1CCE0;
+  max-width: 780px;
+  margin: 0 auto 36px;
+  line-height: 1.6;
+}
+.hero-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  font-family: 'Neo Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 14px 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00D2FF 0%, #0088B0 100%);
+  color: #010409;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 210, 255, 0.35);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(0, 210, 255, 0.55);
+}
+.btn-secondary {
+  font-family: 'Neo Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 14px 28px;
+  border-radius: 8px;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-secondary:hover {
+  background: rgba(255, 215, 0, 0.2);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+}
+.btn-ghost {
+  font-family: 'Neo Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border-glass);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ── STATS STRIP ── */
+.stats-container {
+  max-width: 1160px;
+  margin: 20px auto 70px;
+  padding: 0 32px;
+}
+.stats-strip {
+  background: rgba(13, 20, 36, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-top: 1px solid var(--border-cyan);
+  border-radius: 12px;
+  padding: 24px 32px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+@media (max-width: 768px) {
+  .stats-strip { grid-template-columns: repeat(2, 1fr); }
+}
+.stat-num {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}
+.stat-num.gold { color: var(--gold); }
+.stat-num.green { color: var(--qc-green); }
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #8C9BB5;
+}
+
+/* ── SECTION COMMONS ── */
+.section {
+  max-width: 1160px;
+  margin: 0 auto 90px;
+  padding: 0 32px;
+}
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+}
+.section-sub {
+  font-size: 15px;
+  color: #94A3B8;
+  max-width: 680px;
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+.divider {
+  border: none;
+  border-top: 1px solid rgba(0, 210, 255, 0.12);
+  margin: 80px 0;
+}
+
+/* ── EXTENSIONS GRID (RICH ELEVATED CARDS) ── */
+.ext-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .ext-grid { grid-template-columns: 1fr; }
+}
+
+.ext-card {
+  border-radius: 12px;
+  padding: 30px;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s ease;
+  overflow: hidden;
+  display: flex;
+  flex-col: column;
+  flex-direction: column;
+}
+.ext-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Card 1: Executive Dashboard (Oxford Navy Glass) */
+.card-flagship {
+  background: linear-gradient(155deg, rgba(0, 33, 71, 0.75) 0%, rgba(8, 17, 34, 0.95) 100%);
+  border: 1.5px solid rgba(0, 210, 255, 0.4);
+  box-shadow: 0 12px 36px rgba(0, 33, 71, 0.4);
+}
+.card-flagship:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 16px 48px rgba(0, 210, 255, 0.35);
+}
+
+/* Card 2: BD NBR Compliance (Emerald Ink Glass) */
+.card-bd-tax {
+  background: linear-gradient(155deg, rgba(6, 38, 20, 0.75) 0%, rgba(5, 20, 12, 0.95) 100%);
+  border: 1.5px solid rgba(0, 255, 136, 0.3);
+  box-shadow: 0 12px 36px rgba(6, 38, 20, 0.35);
+}
+.card-bd-tax:hover {
+  border-color: var(--qc-green);
+  box-shadow: 0 16px 48px rgba(0, 255, 136, 0.3);
+}
+
+/* Card 3: Checklist (Royal Indigo Glass) */
+.card-checklist {
+  background: linear-gradient(155deg, rgba(22, 24, 60, 0.75) 0%, rgba(9, 11, 30, 0.95) 100%);
+  border: 1.5px solid rgba(139, 92, 246, 0.35);
+  box-shadow: 0 12px 36px rgba(22, 24, 60, 0.35);
+}
+.card-checklist:hover {
+  border-color: #A78BFA;
+  box-shadow: 0 16px 48px rgba(139, 92, 246, 0.3);
+}
+
+.ext-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.ext-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 4px 10px;
   border-radius: 4px;
-  transition: all 0.15s ease;
-  display: inline-block;
+}
+.badge-live { background: rgba(0, 255, 136, 0.15); color: var(--qc-green); border: 1px solid rgba(0, 255, 136, 0.4); }
+.badge-gold { background: rgba(255, 215, 0, 0.15); color: var(--gold); border: 1px solid rgba(255, 215, 0, 0.4); }
+.badge-free { background: rgba(0, 210, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 210, 255, 0.4); }
+
+.ext-icon { font-size: 32px; margin-bottom: 14px; }
+.ext-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+.ext-desc {
+  font-size: 13.5px;
+  color: #A3B3CC;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+.ext-url {
+  font-family: monospace;
+  font-size: 11.5px;
+  color: var(--cyan);
+  background: rgba(0, 0, 0, 0.35);
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 16px;
+}
+.ext-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.ext-tag {
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #C3D1E8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.ext-action-btn {
+  font-family: 'Neo Sans Pro', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: all 0.2s ease;
+}
+.btn-ext-cyan {
+  background: rgba(0, 210, 255, 0.15);
+  color: var(--cyan);
+  border: 1px solid var(--border-cyan);
+}
+.btn-ext-cyan:hover {
+  background: var(--cyan);
+  color: #010409;
+}
+.btn-ext-gold {
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--gold);
+  border: 1px solid var(--border-gold);
+}
+.btn-ext-gold:hover {
+  background: var(--gold);
+  color: #010409;
+}
+
+/* ── THEMES SECTION — SOVEREIGN MIXED MODE CONTRAST ── */
+.themes-wrapper {
+  background: rgba(6, 12, 24, 0.65);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .theme-grid { grid-template-columns: 1fr; }
+}
+
+.theme-card {
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.theme-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Contrast Card 1: Blueprint Paper (Atlas Light) */
+.theme-card-paper {
+  background: var(--paper);
+  color: var(--ink-navy);
+  border: 2px solid rgba(0, 108, 135, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+.theme-card-paper:hover {
+  border-color: var(--cyan-ink);
+  box-shadow: 0 14px 40px rgba(0, 108, 135, 0.35);
+}
+.theme-card-paper .theme-title { color: var(--ink-navy); }
+.theme-card-paper .theme-desc { color: #4B5563; }
+.theme-card-paper .theme-rank { color: var(--gold-ink); font-weight: 700; }
+
+/* Contrast Card 2: Atlas Dark (Obsidian Gold) */
+.theme-card-atlas-dark {
+  background: linear-gradient(145deg, #0B111E 0%, #060B14 100%);
+  border: 1.5px solid rgba(255, 215, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.theme-card-atlas-dark:hover {
+  border-color: var(--gold);
+  box-shadow: 0 14px 40px rgba(255, 215, 0, 0.25);
+}
+
+/* Contrast Card 3: Midnight Executive (Dark Obsidian) */
+.theme-card-midnight {
+  background: linear-gradient(145deg, #070D18 0%, #03060C 100%);
+  border: 1.5px solid rgba(0, 210, 255, 0.35);
+}
+.theme-card-midnight:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 14px 40px rgba(0, 210, 255, 0.25);
+}
+
+/* Contrast Card 4: Riyadh RTL (GCC Emerald) */
+.theme-card-riyadh {
+  background: linear-gradient(145deg, #072213 0%, #031209 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+}
+.theme-card-riyadh:hover {
+  border-color: var(--qc-green);
+  box-shadow: 0 14px 40px rgba(16, 185, 129, 0.25);
+}
+
+/* Contrast Card 5: Universal Bronze (Warm Amber) */
+.theme-card-bronze {
+  background: linear-gradient(145deg, #231403 0%, #110A01 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+}
+.theme-card-bronze:hover {
+  border-color: #F59E0B;
+  box-shadow: 0 14px 40px rgba(245, 158, 11, 0.25);
+}
+
+/* Contrast Card 6: Corporate Blue (Royal Cobalt) */
+.theme-card-cobalt {
+  background: linear-gradient(145deg, #051F3D 0%, #020F1F 100%);
+  border: 1.5px solid rgba(59, 130, 246, 0.4);
+}
+.theme-card-cobalt:hover {
+  border-color: #3B82F6;
+  box-shadow: 0 14px 40px rgba(59, 130, 246, 0.25);
+}
+
+.theme-preview-box {
+  height: 90px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.theme-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+.theme-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin-bottom: 14px;
+  flex-grow: 1;
+}
+.theme-rank {
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.theme-btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .btn-alfabase {
-  background: rgba(0, 210, 255, 0.12);
+  font-family: 'Neo Sans Pro', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: rgba(0, 210, 255, 0.15);
   color: var(--cyan);
-  border: 1px solid rgba(0, 210, 255, 0.4);
+  border: 1px solid var(--border-cyan);
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.theme-card-paper .btn-alfabase {
+  background: rgba(0, 108, 135, 0.12);
+  color: var(--cyan-ink);
+  border: 1.5px solid var(--cyan-ink);
+}
+.theme-card-paper .btn-alfabase:hover {
+  background: var(--cyan-ink);
+  color: #fff;
 }
 .btn-alfabase:hover {
-  background: rgba(0, 210, 255, 0.25);
-  box-shadow: 0 0 12px rgba(0, 210, 255, 0.3);
+  background: var(--cyan);
+  color: #010409;
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.4);
 }
 .btn-raw {
+  font-family: 'Neo Sans Pro', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.05);
   color: var(--muted);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.15s ease;
+}
+.theme-card-paper .btn-raw {
+  background: rgba(0, 0, 0, 0.05);
+  color: #374151;
+  border-color: rgba(0, 0, 0, 0.15);
 }
 .btn-raw:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
 
+/* ── INSTALL STEPS ── */
+.install-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  .install-container { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 550px) {
+  .install-container { grid-template-columns: 1fr; }
+}
+.install-step-card {
+  background: rgba(13, 20, 36, 0.65);
+  border: 1px solid var(--border-glass);
+  border-top: 2px solid var(--border-cyan);
+  border-radius: 10px;
+  padding: 24px;
+}
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 210, 255, 0.12);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  font-size: 14px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.step-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+.step-desc {
+  font-size: 13px;
+  color: #94A3B8;
+  line-height: 1.55;
+}
+
+/* ── ARCHITECT DOSSIER (SOVEREIGN BRAND OS EMBED) ── */
+.architect-dossier {
+  background: linear-gradient(145deg, rgba(0, 33, 71, 0.7) 0%, rgba(6, 12, 24, 0.95) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: 16px;
+  padding: 44px;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  align-items: center;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+@media (max-width: 768px) {
+  .architect-dossier { grid-template-columns: 1fr; text-align: center; }
+}
+.architect-name {
+  font-size: 24px;
+  font-weight: 900;
+  color: #FFFFFF;
+  letter-spacing: -0.3px;
+}
+.architect-title {
+  font-size: 13.5px;
+  color: var(--cyan);
+  font-weight: 600;
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+.architect-quote {
+  font-size: 16px;
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+.architect-metrics {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.arch-metric-pill {
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #E2E8F0;
+}
+.architect-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.arch-btn {
+  font-family: 'Neo Sans Pro', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 9px 18px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+.arch-btn-gold {
+  background: var(--gold);
+  color: #010409;
+}
+.arch-btn-gold:hover {
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.4);
+  transform: translateY(-2px);
+}
+.arch-btn-cyan {
+  background: rgba(0, 210, 255, 0.12);
+  color: var(--cyan);
+  border: 1px solid var(--border-cyan);
+}
+.arch-btn-cyan:hover {
+  background: var(--cyan);
+  color: #010409;
+}
+.arch-btn-wa {
+  background: rgba(37, 211, 102, 0.15);
+  color: #25D366;
+  border: 1px solid rgba(37, 211, 102, 0.4);
+}
+.arch-btn-wa:hover {
+  background: #25D366;
+  color: #010409;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid rgba(0, 210, 255, 0.2);
+  background: rgba(2, 6, 14, 0.95);
+  padding: 48px 32px;
+  text-align: center;
+  color: var(--muted);
+}
+.footer-brand {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.footer-copy {
+  font-size: 12px;
+  margin-bottom: 24px;
+  color: #64748B;
+}
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.footer-link {
+  font-size: 12px;
+  color: #94A3B8;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.footer-link:hover { color: var(--cyan); }
 </style>
 </head>
+
 <body>
+
+<!-- AMBIENT LIGHTING POOLS & CAD BLUEPRINT GRID -->
+<div class="ambient-bg"></div>
+<div class="blueprint-cad-grid"></div>
+
+<div class="content-wrap">
 
 <!-- TOP BAR -->
 <header class="topbar">
@@ -272,85 +860,208 @@ footer{
   </a>
   <div class="topbar-right">
     <span class="badge-advisor">Listed Manager.io Advisor</span>
-    <a class="btn-forum" href="https://forum.manager.io/u/abu_hasan/summary" target="_blank" rel="noopener">Forum Profile →</a>
+    <a class="btn-forum" href="https://forum.manager.io/u/abu_hasan/summary" target="_blank" rel="noopener">Forum Profile ↗</a>
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-tag">🌐 Global Manager.io Suite · v1.3.0</div>
+  <div class="hero-tag">
+    <span class="dot"></span>
+    Sovereign Enterprise Showroom · v1.3.0
+  </div>
   <h1>The <span>Architecture</span><br>of Certainty.</h1>
-  <p class="hero-sub">Enterprise-grade extensions, forensic dashboards, and document themes for Manager.io — built for the C-Suite, the CFO, and the Industrial Architect.</p>
+  <p class="hero-sub">Enterprise-grade extensions, forensic ledger auditors, and precision document themes for Manager.io — engineered for the C-Suite, the CFO, and the Industrial Architect.</p>
   <div class="hero-cta">
-    <a class="btn-primary" href="/dashboard">📊 Executive Dashboard →</a>
-    <a class="btn-ghost" href="https://github.com/INSPIRONTECH/INSPIRON-SUITE" target="_blank" rel="noopener">GitHub →</a>
+    <a class="btn-primary" href="/dashboard">
+      <span>📊</span> Open Executive Dashboard →
+    </a>
+    <a class="btn-secondary" href="#themes">
+      <span>🎨</span> Browse 6 Themes
+    </a>
+    <a class="btn-ghost" href="https://github.com/INSPIRONTECH/INSPIRON-SUITE" target="_blank" rel="noopener">
+      GitHub Repository ↗
+    </a>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats-strip">
-  <div class="stat"><div class="stat-num">3</div><div class="stat-label">Extensions</div></div>
-  <div class="stat"><div class="stat-num">7</div><div class="stat-label">Themes</div></div>
-  <div class="stat"><div class="stat-num gold">6</div><div class="stat-label">Currencies</div></div>
-  <div class="stat"><div class="stat-num">12</div><div class="stat-label">Forensic Checks</div></div>
-  <div class="stat"><div class="stat-num gold">∞</div><div class="stat-label">Free Community</div></div>
+<!-- STATS STRIP -->
+<div class="stats-container">
+  <div class="stats-strip">
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">Extensions</div></div>
+    <div class="stat"><div class="stat-num gold">6</div><div class="stat-label">Community Themes</div></div>
+    <div class="stat"><div class="stat-num green">#1</div><div class="stat-label">Alfabase Rank</div></div>
+    <div class="stat"><div class="stat-num">12</div><div class="stat-label">Forensic Checks</div></div>
+    <div class="stat"><div class="stat-num gold">100%</div><div class="stat-label">CC BY 4.0 Free</div></div>
+  </div>
+</div>
+
+<!-- EXTENSIONS SECTION -->
+<div class="section" id="extensions">
+  <div class="section-label">Manager.io Extensions</div>
+  <div class="section-title">Workflow Intelligence Inside Manager.io</div>
+  <p class="section-sub">Self-contained data dashboards and compliance tools injected directly into your Manager.io interface via the official Extension and Custom Button API.</p>
+
+  <div class="ext-grid">
+
+    <!-- Extension 1: Executive Dashboard (Oxford Navy Glass) -->
+    <div class="ext-card card-flagship">
+      <div class="ext-badge-row">
+        <span class="ext-badge badge-live">● Live</span>
+        <span class="ext-badge badge-free">Free Community</span>
+      </div>
+      <div class="ext-icon">📊</div>
+      <div class="ext-title">Executive Dashboard &amp; Ledger Auditor</div>
+      <div class="ext-desc">6-KPI focus engine, project &amp; tender P&amp;L register, slide-over voucher inspector drawer, and 12-point automated forensic COA diagnostics — built in Sovereign Mixed Mode.</div>
+      <div class="ext-url">https://suite.inspiron.tech/dashboard</div>
+      <div class="ext-tags">
+        <span class="ext-tag">Global</span>
+        <span class="ext-tag">USD · EUR · SAR · BDT</span>
+        <span class="ext-tag">880px Drawer</span>
+        <span class="ext-tag">12-Point Audit</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;">
+        <a class="ext-action-btn btn-ext-cyan" href="/dashboard" style="flex:1;">Launch Live Demo →</a>
+        <a class="ext-action-btn btn-ext-gold" href="https://extensions.alfabase.com/extensions/sAwkIqGY" target="_blank" rel="noopener">Alfabase Listing ↗</a>
+      </div>
+    </div>
+
+    <!-- Extension 2: BD NBR Compliance Suite (Emerald Ink Glass) -->
+    <div class="ext-card card-bd-tax">
+      <div class="ext-badge-row">
+        <span class="ext-badge badge-gold">🛠️ In Development</span>
+        <span class="ext-badge badge-live">Bangladesh</span>
+      </div>
+      <div class="ext-icon">🇧🇩</div>
+      <div class="ext-title">BD NBR Statutory Tax &amp; VAT Suite</div>
+      <div class="ext-desc">Automated Mushak-9.1 monthly VAT return worksheets, AIT/VDS withholding tax validator, TDS rate engine, and live 1-click tax code installer via Manager.io API.</div>
+      <div class="ext-url">https://tax.inspiron.tech</div>
+      <div class="ext-tags">
+        <span class="ext-tag">Bangladesh</span>
+        <span class="ext-tag">Mushak-9.1</span>
+        <span class="ext-tag">Mushak-6.3</span>
+        <span class="ext-tag">VDS / TDS</span>
+      </div>
+      <a class="ext-action-btn btn-ext-gold" href="https://tax.inspiron.tech" target="_blank" rel="noopener" style="margin-top:auto;">Visit Compliance Hub ↗</a>
+    </div>
+
+    <!-- Extension 3: Invoice Checklist (Royal Indigo Glass) -->
+    <div class="ext-card card-checklist">
+      <div class="ext-badge-row">
+        <span class="ext-badge badge-live">● Live</span>
+        <span class="ext-badge badge-free">Free</span>
+      </div>
+      <div class="ext-icon">✅</div>
+      <div class="ext-title">Invoice Pre-Send Checklist</div>
+      <div class="ext-desc">Real-time validation widget that audits document context via postMessage before sending to clients. Detects missing due dates, bank details, and VAT number mismatches.</div>
+      <div class="ext-url">https://suite.inspiron.tech/checklist</div>
+      <div class="ext-tags">
+        <span class="ext-tag">Sidebar Widget</span>
+        <span class="ext-tag">Sanity Check</span>
+        <span class="ext-tag">Zero Leaks</span>
+      </div>
+      <a class="ext-action-btn btn-ext-cyan" href="/checklist" style="margin-top:auto;">Open Validator Tool →</a>
+    </div>
+
+  </div>
 </div>
 
 <hr class="divider">
 
-<!-- EXTENSIONS -->
-<div class="section">
-  <div class="section-label">Extensions</div>
-  <div class="section-title">Intelligence inside Manager.io</div>
-  <p class="section-sub">Self-contained data dashboards injected directly into your Manager.io interface via the official Extension system.</p>
+<!-- THEMES SECTION — SOVEREIGN MIXED MODE CONTRAST -->
+<div class="section" id="themes">
+  <div class="section-label">Document Themes</div>
+  <div class="section-title">The 6 Community Edition Themes</div>
+  <p class="section-sub">Print-safe, A4-optimised document themes for Manager.io. 100% compliant with the official <code>/api4/view-v1</code> rendering contract and sandboxed security doctrine. Install with 1-click via Alfabase or copy raw GitHub URLs.</p>
 
-  <div class="ext-grid">
+  <div class="themes-wrapper">
+    <div class="theme-grid">
 
-    <!-- Extension 1 -->
-    <a class="ext-card card-cyan" href="/dashboard">
-      <span class="ext-badge badge-live">● Live</span>
-      <span class="ext-badge badge-free" style="margin-left:6px">Free</span>
-      <span class="ext-icon">📊</span>
-      <div class="ext-title">Executive Dashboard &amp; Ledger Auditor</div>
-      <div class="ext-desc">6-KPI focus engine, project/contract P&amp;L matrix, treasury &amp; bank control balances, 12-point forensic COA diagnostic, and Sovereign Enterprise v8.1.1 architecture guide — in one extension.</div>
-      <div class="ext-url">suite.inspiron.tech/dashboard · <a href="https://extensions.alfabase.com/extensions/sAwkIqGY" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:underline;">View on Alfabase Gallery ↗</a></div>
-      <div class="ext-tags">
-        <span class="ext-tag">Global</span>
-        <span class="ext-tag">USD · EUR · GBP · SAR · BDT</span>
-        <span class="ext-tag">EPC · Manufacturing · Retail</span>
-        <span class="ext-tag">Forensic Audit</span>
+      <!-- Theme 1: Atlas Light (HIGH-CONTRAST BLUEPRINT PAPER CARD) -->
+      <div class="theme-card theme-card-paper">
+        <div class="theme-preview-box" style="background:rgba(0,108,135,0.08);border:1px dashed var(--cyan-ink);color:var(--cyan-ink);">
+          📄
+        </div>
+        <div class="theme-title">Atlas Statement — Light</div>
+        <div class="theme-desc">Specialized account statement theme. Built-in Portrait ⇔ Landscape toggle, Amount in Words, and multi-currency ledger support.</div>
+        <div class="theme-rank">★ Rank #1 on Alfabase · 101 Installs</div>
+        <div class="theme-btn-row">
+          <a class="btn-alfabase" href="https://themes.alfabase.com/themes/LRgUDkiP" target="_blank" rel="noopener">⚡ 1-Click Install</a>
+          <a class="btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-LIGHT.html" target="_blank" rel="noopener">Raw URL</a>
+        </div>
       </div>
-    </a>
 
-    <!-- Extension 2 -->
-    <div class="ext-card card-gold">
-      <span class="ext-badge badge-soon">⏳ Building</span>
-      <span class="ext-icon">🇧🇩</span>
-      <div class="ext-title">BD NBR Compliance Suite</div>
-      <div class="ext-desc">Mushak-9.1 VAT calculator, AIT/VDS withholding engine, TDS rate lookup, e-BIN validator, and NBR compliance calendar — purpose-built for Bangladesh SMEs and ERP clients.</div>
-      <div class="ext-url">tax.inspiron.tech</div>
-      <div class="ext-tags">
-        <span class="ext-tag">Bangladesh</span>
-        <span class="ext-tag">NBR · VAT · AIT/VDS</span>
-        <span class="ext-tag">Mushak 6.3 / 9.1</span>
+      <!-- Theme 2: Atlas Dark (Obsidian Gold Card) -->
+      <div class="theme-card theme-card-atlas-dark">
+        <div class="theme-preview-box" style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);color:var(--gold);">
+          📋
+        </div>
+        <div class="theme-title" style="color:#FFF;">Atlas Statement — Dark</div>
+        <div class="theme-desc">Dark obsidian edition of Atlas Statement. Engineered for executive portal delivery, client email previews, and screen-view audits.</div>
+        <div class="theme-rank" style="color:var(--gold);">★ Rank #3 on Alfabase · 32 Installs</div>
+        <div class="theme-btn-row">
+          <a class="btn-alfabase" href="https://themes.alfabase.com/themes/nCbfGayH" target="_blank" rel="noopener">⚡ 1-Click Install</a>
+          <a class="btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-DARK.html" target="_blank" rel="noopener">Raw URL</a>
+        </div>
       </div>
+
+      <!-- Theme 3: Midnight Executive (Dark Datapad) -->
+      <div class="theme-card theme-card-midnight">
+        <div class="theme-preview-box" style="background:rgba(0,210,255,0.08);border:1px solid rgba(0,210,255,0.3);color:var(--cyan);">
+          🌑
+        </div>
+        <div class="theme-title" style="color:#FFF;">Midnight Executive V1.1.1</div>
+        <div class="theme-desc">Dark enterprise invoice theme. Monochromatic financial lines, configurable density (?density=compact), and Irish/EU VAT ready.</div>
+        <div class="theme-rank" style="color:var(--cyan);">● Alfabase Verified · Dark Category</div>
+        <div class="theme-btn-row">
+          <a class="btn-alfabase" href="https://themes.alfabase.com/themes/q9Tj8UzY" target="_blank" rel="noopener">⚡ 1-Click Install</a>
+          <a class="btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html" target="_blank" rel="noopener">Raw URL</a>
+        </div>
+      </div>
+
+      <!-- Theme 4: Riyadh RTL (GCC Emerald) -->
+      <div class="theme-card theme-card-riyadh">
+        <div class="theme-preview-box" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:var(--qc-green);">
+          🇸🇦
+        </div>
+        <div class="theme-title" style="color:#FFF;">Riyadh RTL V1.1.0</div>
+        <div class="theme-desc">Native Arabic/English bilingual invoice theme. Right-to-left layout, dedicated ZATCA e-invoicing QR panel, and SAR multi-currency support.</div>
+        <div class="theme-rank" style="color:var(--qc-green);">● Alfabase Verified · Modern RTL</div>
+        <div class="theme-btn-row">
+          <a class="btn-alfabase" href="https://themes.alfabase.com/themes/qzMmReST" target="_blank" rel="noopener">⚡ 1-Click Install</a>
+          <a class="btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html" target="_blank" rel="noopener">Raw URL</a>
+        </div>
+      </div>
+
+      <!-- Theme 5: Universal Bronze (Warm Amber) -->
+      <div class="theme-card theme-card-bronze">
+        <div class="theme-preview-box" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#F59E0B;">
+          🥉
+        </div>
+        <div class="theme-title" style="color:#FFF;">Universal Bronze V1.1.0</div>
+        <div class="theme-desc">Institutional B2B invoice with rich amber accents and structured column hierarchy. Broad regional compatibility for engineering &amp; trade.</div>
+        <div class="theme-rank" style="color:#F59E0B;">● Alfabase Verified · Classic Category</div>
+        <div class="theme-btn-row">
+          <a class="btn-alfabase" href="https://themes.alfabase.com/themes/dwbDb3mv" target="_blank" rel="noopener">⚡ 1-Click Install</a>
+          <a class="btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html" target="_blank" rel="noopener">Raw URL</a>
+        </div>
+      </div>
+
+      <!-- Theme 6: Corporate Blue Column (Royal Cobalt) -->
+      <div class="theme-card theme-card-cobalt">
+        <div class="theme-preview-box" style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);color:#60A5FA;">
+          🏢
+        </div>
+        <div class="theme-title" style="color:#FFF;">Corporate Blue Column V1.1.0</div>
+        <div class="theme-desc">Balanced dual-column corporate layout with executive cobalt blue header accents. Optimized financial line legibility for print &amp; PDF.</div>
+        <div class="theme-rank" style="color:#60A5FA;">● Alfabase Verified · Modern Category</div>
+        <div class="theme-btn-row">
+          <a class="btn-alfabase" href="https://themes.alfabase.com/themes/HIsD356Y" target="_blank" rel="noopener">⚡ 1-Click Install</a>
+          <a class="btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html" target="_blank" rel="noopener">Raw URL</a>
+        </div>
+      </div>
+
     </div>
-
-    <!-- Extension 3 -->
-    <a class="ext-card card-green" href="/checklist">
-      <span class="ext-badge badge-live">● Live</span>
-      <span class="ext-badge badge-free" style="margin-left:6px">Free</span>
-      <span class="ext-icon">✅</span>
-      <div class="ext-title">Invoice Pre-Send Checklist</div>
-      <div class="ext-desc">Validation bridge that audits your document context via postMessage before transmission. Detects missing due dates, references, zero-balances, and enforces Mushak 6.3 BIN on Bangladesh formats.</div>
-      <div class="ext-url">suite.inspiron.tech/checklist</div>
-      <div class="ext-tags">
-        <span class="ext-tag">Sidebar Widget</span>
-        <span class="ext-tag">Mushak 6.3</span>
-        <span class="ext-tag">Validation</span>
-      </div>
-    </a>
-
   </div>
 </div>
 
@@ -358,136 +1069,60 @@ footer{
 
 <!-- HOW TO INSTALL -->
 <div class="section">
-  <div class="section-label">Quick Install</div>
-  <div class="section-title">3 steps inside Manager.io</div>
-  <p class="section-sub">No downloads. No builds. Paste a URL and you're live.</p>
-  <div class="install-steps">
-    <div class="install-step">
+  <div class="section-label">Installation Protocol</div>
+  <div class="section-title">Zero Friction Setup Inside Manager.io</div>
+  <p class="section-sub">No complex builds. No external code execution. Choose between 1-Click Alfabase injection or native Manager.io Settings.</p>
+  
+  <div class="install-container">
+    <div class="install-step-card">
       <div class="step-num">1</div>
       <div class="step-title">Open Settings → Custom Buttons</div>
       <div class="step-desc">In Manager.io, go to <strong>Settings → Custom Buttons</strong> and click <strong>New Custom Button</strong>.</div>
     </div>
-    <div class="install-step">
+    <div class="install-step-card">
       <div class="step-num">2</div>
-      <div class="step-title">Set Source = URL</div>
-      <div class="step-desc">Set Source to <strong>Url</strong>, paste the extension endpoint (e.g. <code>suite.inspiron.tech/dashboard</code>) and set Placement to <code>/summary-view</code>.</div>
+      <div class="step-title">Configure Endpoint URL</div>
+      <div class="step-desc">Set Source to <strong>Url</strong>, enter <code>https://suite.inspiron.tech/dashboard</code> and set Placement to <code>/summary-view</code>.</div>
     </div>
-    <div class="install-step">
+    <div class="install-step-card">
       <div class="step-num">3</div>
       <div class="step-title">Click Create — Done</div>
-      <div class="step-desc">Click <strong>Create</strong>. The button appears on your Summary page instantly. Click it to open the Executive Dashboard in a slide-over panel.</div>
+      <div class="step-desc">Click <strong>Create</strong>. The button appears on your Summary page immediately. Click it to open the Executive Dashboard.</div>
     </div>
-    <div class="install-step">
+    <div class="install-step-card">
       <div class="step-num">4</div>
-      <div class="step-title">Or browse on Alfabase</div>
-      <div class="step-desc">Find the extension on <a href="https://extensions.alfabase.com" target="_blank" rel="noopener" style="color:var(--cyan)">extensions.alfabase.com</a> — copy the URL shown and paste it into Manager.io Settings → Custom Buttons.</div>
+      <div class="step-title">Or Browse on Alfabase</div>
+      <div class="step-desc">Visit <a href="https://extensions.alfabase.com" target="_blank" rel="noopener" style="color:var(--cyan)">Alfabase Gallery</a> to browse verified community extensions and themes with instant 1-click install.</div>
     </div>
   </div>
 </div>
 
 <hr class="divider">
 
-<!-- THEMES -->
-<div class="section" id="themes">
-  <div class="section-label">Document Themes</div>
-  <div class="section-title">The 6 Community Edition Themes</div>
-  <p class="section-sub">Print-safe, A4-optimised document themes for Manager.io. 100% compliant with the official <code>/api4/view-v1</code> rendering contract and sandboxed security doctrine. Install with 1-click via Alfabase or copy raw GitHub URLs.</p>
-  
-  <div class="theme-grid">
-    <!-- Theme 1: Atlas Light -->
-    <div class="theme-card">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#111827,#1F2937);border:1px solid rgba(0,210,255,0.3)">📄</div>
-      <div class="theme-name">Atlas Statement — Light</div>
-      <div class="theme-identity">Account Statements · Print &amp; PDF Optimized</div>
-      <div style="margin:8px 0 12px;font-size:11px;color:var(--gold);font-weight:700;">★ Rank #1 on Alfabase (101 Installs)</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/LRgUDkiP" target="_blank" rel="noopener">⚡ Alfabase Install</a>
-        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-LIGHT.html" target="_blank" rel="noopener">Raw URL</a>
-      </div>
-    </div>
-
-    <!-- Theme 2: Atlas Dark -->
-    <div class="theme-card">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#0D1117,#161B22);border:1px solid rgba(255,215,0,0.25)">📋</div>
-      <div class="theme-name">Atlas Statement — Dark</div>
-      <div class="theme-identity">Account Statements · Digital Delivery &amp; Portal</div>
-      <div style="margin:8px 0 12px;font-size:11px;color:var(--gold);font-weight:700;">★ Rank #3 on Alfabase (32 Installs)</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/nCbfGayH" target="_blank" rel="noopener">⚡ Alfabase Install</a>
-        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-DARK.html" target="_blank" rel="noopener">Raw URL</a>
-      </div>
-    </div>
-
-    <!-- Theme 3: Midnight Executive -->
-    <div class="theme-card">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#010409,#0D1117);border:1px solid rgba(0,210,255,0.25)">🌑</div>
-      <div class="theme-name">Midnight Executive V1.1.1</div>
-      <div class="theme-identity">Premium Sleek Enterprise Invoice · EU/IE VAT</div>
-      <div style="margin:8px 0 12px;font-size:11px;color:var(--cyan);font-weight:700;">● Alfabase Verified · Dark Category</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/q9Tj8UzY" target="_blank" rel="noopener">⚡ Alfabase Listing</a>
-        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html" target="_blank" rel="noopener">Raw URL</a>
-      </div>
-    </div>
-
-    <!-- Theme 4: Riyadh RTL -->
-    <div class="theme-card">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#061F12,#0B3820);border:1px solid rgba(16,185,129,0.3)">🇸🇦</div>
-      <div class="theme-name">Riyadh RTL V1.1.0</div>
-      <div class="theme-identity">Bilingual Arabic/English · Saudi ZATCA QR</div>
-      <div style="margin:8px 0 12px;font-size:11px;color:var(--cyan);font-weight:700;">● Alfabase Verified · Modern RTL</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/qzMmReST" target="_blank" rel="noopener">⚡ Alfabase Listing</a>
-        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html" target="_blank" rel="noopener">Raw URL</a>
-      </div>
-    </div>
-
-    <!-- Theme 5: Universal Bronze -->
-    <div class="theme-card">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#1F1404,#332007);border:1px solid rgba(217,119,6,0.35)">🥉</div>
-      <div class="theme-name">Universal Bronze V1.1.0</div>
-      <div class="theme-identity">Institutional B2B Invoice · Engineering &amp; Trade</div>
-      <div style="margin:8px 0 12px;font-size:11px;color:var(--cyan);font-weight:700;">● Alfabase Verified · Classic Category</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/dwbDb3mv" target="_blank" rel="noopener">⚡ Alfabase Listing</a>
-        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html" target="_blank" rel="noopener">Raw URL</a>
-      </div>
-    </div>
-
-    <!-- Theme 6: Corporate Blue Column -->
-    <div class="theme-card">
-      <div class="theme-preview" style="background:linear-gradient(135deg,#031830,#062C56);border:1px solid rgba(37,99,235,0.35)">🏢</div>
-      <div class="theme-name">Corporate Blue Column V1.1.0</div>
-      <div class="theme-identity">Executive B2B Invoicing · Balanced Dual-Column</div>
-      <div style="margin:8px 0 12px;font-size:11px;color:var(--cyan);font-weight:700;">● Alfabase Verified · Modern Category</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <a class="btn-theme-action btn-alfabase" href="https://themes.alfabase.com/themes/HIsD356Y" target="_blank" rel="noopener">⚡ Alfabase Listing</a>
-        <a class="btn-theme-action btn-raw" href="https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html" target="_blank" rel="noopener">Raw URL</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<hr class="divider">
-
-<!-- ARCHITECT -->
+<!-- ARCHITECT DOSSIER -->
 <div class="section">
-  <div class="architect-section">
+  <div class="architect-dossier">
     <div>
-      <svg viewBox="0 0 358.846 350.3" xmlns="http://www.w3.org/2000/svg" style="width:72px;height:auto;opacity:0.9">
+      <svg viewBox="0 0 358.846 350.3" xmlns="http://www.w3.org/2000/svg" style="width:76px;height:auto;opacity:0.95">
         <path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
         <path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
         <circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
       </svg>
     </div>
-    <div class="architect-bio">
+    <div>
       <div class="architect-name">MD ABU HASAN</div>
       <div class="architect-title">Founder &amp; Chief Architect, INSPIRON TECH · ERP Architect | Listed Manager.io Advisor</div>
       <div class="architect-quote">"I do not install software. I architect logic."</div>
+      <div class="architect-metrics">
+        <span class="arch-metric-pill">14+ Years Infrastructure</span>
+        <span class="arch-metric-pill">10+ Years Manager.io</span>
+        <span class="arch-metric-pill">15+ Industries Architected</span>
+        <span class="arch-metric-pill">14,478 Transactions Zero Data Loss</span>
+      </div>
       <div class="architect-links">
-        <a class="arch-link forum" href="https://forum.manager.io/u/abu_hasan/summary" target="_blank" rel="noopener">Forum Profile</a>
-        <a class="arch-link site" href="https://inspiron.tech" target="_blank" rel="noopener">inspiron.tech</a>
-        <a class="arch-link wa" href="https://wa.me/8801719300849" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="arch-btn arch-btn-cyan" href="https://forum.manager.io/u/abu_hasan/summary" target="_blank" rel="noopener">Manager.io Forum Profile ↗</a>
+        <a class="arch-btn arch-btn-gold" href="https://inspiron.tech" target="_blank" rel="noopener">inspiron.tech ↗</a>
+        <a class="arch-btn arch-btn-wa" href="https://wa.me/8801719300849" target="_blank" rel="noopener">WhatsApp Chief Architect ↗</a>
       </div>
     </div>
   </div>
@@ -496,16 +1131,18 @@ footer{
 <!-- FOOTER -->
 <footer>
   <div class="footer-brand">INSPIRON TECH · MD ABU HASAN · suite.inspiron.tech</div>
-  <div class="footer-copy">© 2026 INSPIRON TECH. Community themes licensed under CC BY 4.0. Extensions © All rights reserved.</div>
+  <div class="footer-copy">© 2026 INSPIRON TECH. Open Community Themes licensed under CC BY 4.0. Extensions &amp; Sovereign Architectures © All rights reserved.</div>
   <div class="footer-links">
-    <a class="footer-link" href="https://github.com/INSPIRONTECH/INSPIRON-SUITE">GitHub</a>
+    <a class="footer-link" href="https://github.com/INSPIRONTECH/INSPIRON-SUITE">GitHub Repository</a>
     <a class="footer-link" href="/dashboard">Executive Dashboard</a>
-    <a class="footer-link" href="https://tax.inspiron.tech">BD Tax Suite</a>
+    <a class="footer-link" href="https://tax.inspiron.tech">BD Tax &amp; NBR Suite</a>
     <a class="footer-link" href="/checklist">Invoice Checklist</a>
     <a class="footer-link" href="https://inspiron.tech">inspiron.tech</a>
     <a class="footer-link" href="mailto:hello@inspiron.tech">hello@inspiron.tech</a>
   </div>
 </footer>
+
+</div>
 
 </body>
 </html>

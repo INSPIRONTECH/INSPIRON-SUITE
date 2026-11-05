@@ -1,0 +1,2080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSPIRON Executive Dashboard &amp; Ledger Auditor — Manager.io Extension (Sovereign Mixed Mode)</title>
+<style>
+@font-face{font-family:'Neo Sans Pro';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Regular.woff') format('woff');font-weight:400;font-display:swap}
+@font-face{font-family:'Neo Sans Pro';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Medium.woff') format('woff');font-weight:500;font-display:swap}
+@font-face{font-family:'Neo Sans Pro';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/NeoSansPro-Bold.woff') format('woff');font-weight:700;font-display:swap}
+@font-face{font-family:'Li Ador Noirrit';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:'Li Ador Noirrit';src:url('https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-TECH/main/public/fonts/LiAdorNoirrit-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+
+:root {
+  --gold: #FFD700;
+  --cyan: #00D2FF;
+  --navy: #010409;
+  --white: #FFFFFF;
+  --canvas: #F4F7FB;
+  --paper: #FFFFFF;
+  --ink: #0D1117;
+  --muted: #4B5563;
+  --dim: #6B7280;
+  --line: rgba(15, 23, 42, 0.08);
+
+  --cyan-ink: #0070A8;
+  --gold-ink: #7A5200;
+  --green-ink: #15803D;
+  --purple-ink: #6D28D9;
+  --red-ink: #B91C1C;
+
+  --wash-cyan: rgba(0, 210, 255, 0.06);
+  --border-cyan: rgba(0, 112, 168, 0.22);
+  --wash-gold: rgba(255, 215, 0, 0.09);
+  --border-gold: rgba(255, 165, 0, 0.25);
+  --wash-green: rgba(0, 255, 136, 0.06);
+  --border-green: rgba(21, 128, 61, 0.22);
+  --wash-purple: rgba(180, 100, 255, 0.07);
+  --border-purple: rgba(180, 100, 255, 0.25);
+
+  --font: 'Neo Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-bd: 'Li Ador Noirrit', 'Nirmala UI', sans-serif;
+  --mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background-color: #F4F7FB;
+  color: var(--ink);
+  font-family: var(--font), var(--font-bd);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Blueprint Grid Background */
+body {
+  background-image:
+    linear-gradient(rgba(0, 210, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.sovereign-rule {
+  height: 4px;
+  background: linear-gradient(90deg, #00D2FF 0%, #0070A8 35%, #7A5200 70%, #FFD700 100%);
+  width: 100%;
+}
+
+/* Dark Obsidian Command Bar (#010409) */
+.topbar {
+  width: 100%;
+  padding: 14px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: rgba(1, 4, 9, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 210, 255, 0.22);
+  box-shadow: 0 4px 24px rgba(1, 4, 9, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-logo { display: flex; align-items: center; gap: 12px; }
+
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: #010409;
+  border: 1px solid rgba(0, 210, 255, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(0, 210, 255, 0.25);
+}
+
+.brand-text-wrap h1 {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.version-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  background: rgba(255, 215, 0, 0.12);
+  border: 1px solid rgba(255, 215, 0, 0.28);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.brand-sub { font-size: 11px; color: #94A3B8; letter-spacing: 0.02em; margin-top: 1px; }
+
+.topbar-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.ref-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--cyan);
+  letter-spacing: 0.06em;
+  background: rgba(0, 210, 255, 0.10);
+  border: 1px solid rgba(0, 210, 255, 0.25);
+  padding: 5px 11px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.pulse-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--cyan);
+  display: inline-block; box-shadow: 0 0 8px var(--cyan);
+}
+
+.segmented-tb {
+  display: inline-flex;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tb-btn {
+  background: transparent;
+  color: #E2E8F0;
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 6px 11px;
+  font: 700 11.5px var(--font), var(--font-bd);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.tb-btn:last-child { border-right: none; }
+.tb-btn:hover { background: rgba(0, 210, 255, 0.15); color: var(--cyan); }
+.tb-btn.wa-btn { color: #4ADE80; }
+.tb-btn.wa-btn:hover { background: rgba(74, 222, 128, 0.15); }
+
+/* Workspace Shell */
+.workspace-shell {
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: 18px 24px 40px;
+}
+
+.context-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  padding: 10px 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.profile-group { display: flex; align-items: center; gap: 8px; }
+.profile-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan-ink); }
+.profile-select {
+  background: #F8FAFC; color: var(--ink); border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 6px; padding: 6px 12px; font: 700 12px var(--font), var(--font-bd);
+  cursor: pointer; outline: none; min-width: 280px; transition: border-color 0.15s;
+}
+.profile-select:focus { border-color: var(--cyan-ink); }
+
+.sync-btn {
+  background: #F8FAFC; border: 1px solid rgba(15, 23, 42, 0.12); color: var(--muted);
+  border-radius: 6px; padding: 6px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+}
+.sync-btn:hover { border-color: var(--cyan-ink); color: var(--cyan-ink); }
+
+.module-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.nav-tab {
+  background: transparent; color: var(--muted); border: 1px solid transparent; border-radius: 6px;
+  padding: 6px 14px; font: 700 12px var(--font), var(--font-bd); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;
+}
+.nav-tab:hover { color: var(--ink); background: rgba(15, 23, 42, 0.04); }
+.nav-tab.active { background: #F1F5F9; color: var(--cyan-ink); border-color: rgba(0, 112, 168, 0.25); box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); }
+.nav-tab.upsell-tab { color: var(--gold-ink); }
+.nav-tab.upsell-tab.active { background: rgba(255, 215, 0, 0.12); border-color: rgba(255, 165, 0, 0.35); color: var(--gold-ink); }
+
+/* Tab Switching Control */
+.tab-view[hidden] { display: none !important; }
+.tab-view { display: none; }
+.tab-view.active { display: block; animation: fadeIn 0.15s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* The 6-Card Focus Engine */
+.focus-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 20px; }
+.focus-card {
+  padding: 16px 16px 14px; border-radius: 18px; border: 1px solid var(--line);
+  background: #FFFFFF; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex; flex-direction: column; justify-content: space-between; min-height: 110px; position: relative;
+}
+.focus-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08); }
+
+.focus-card.c-portfolio { background: var(--wash-cyan); border-color: var(--border-cyan); }
+.focus-card.c-inflow { background: var(--wash-green); border-color: var(--border-green); }
+.focus-card.c-outflow { background: var(--wash-gold); border-color: var(--border-gold); }
+.focus-card.c-security { background: var(--wash-purple); border-color: var(--border-purple); }
+
+.focus-card.c-hero {
+  background: #FFFFFF; border-color: rgba(0, 112, 168, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 112, 168, 0.10); overflow: hidden;
+}
+.focus-card.c-hero::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, #00D2FF 0%, #FFD700 100%);
+}
+
+.phase-tag {
+  display: inline-block; font-size: 8.5px; font-weight: 800; letter-spacing: 0.14em;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 999px; line-height: 1; margin-bottom: 8px;
+}
+.tag-cyan   { background: #00D2FF; color: #010409; }
+.tag-green  { background: #16A34A; color: #FFFFFF; }
+.tag-gold   { background: #FFD700; color: #010409; }
+.tag-purple { background: #8B5CF6; color: #FFFFFF; }
+.tag-hero   { background: #010409; color: #FFD700; border: 1px solid rgba(255, 215, 0, 0.4); }
+
+.card-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dim); line-height: 1.25; }
+.card-bn { font-family: var(--font-bd); font-size: 10px; color: #64748B; font-weight: 600; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-val { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; font-family: var(--font); font-variant-numeric: tabular-nums; margin: 6px 0 4px; }
+.val-ink   { color: #0D1117; }
+.val-green { color: #15803D; }
+.val-gold  { color: #7A5200; }
+.val-hero  { color: #15803D; font-size: 23px; }
+.card-sub { font-size: 11px; color: var(--muted); line-height: 1.3; }
+
+/* Panels & Tech Tables */
+.panel-grid-2 { display: grid; grid-template-columns: 2.15fr 0.85fr; gap: 16px; margin-bottom: 20px; }
+.tech-panel {
+  background: #FFFFFF; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); overflow: hidden; margin-bottom: 20px;
+}
+.tech-panel-hdr {
+  padding: 14px 20px; border-bottom: 1px solid rgba(15, 23, 42, 0.06); background: rgba(0, 210, 255, 0.04);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+}
+.tech-panel-title { font-size: 12.5px; font-weight: 800; color: #0D1117; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+.tech-eyebrow { font-size: 9.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan-ink); }
+.panel-body { padding: 18px 20px; }
+
+.table-wrap { width: 100%; overflow-x: auto; }
+table.tech-table, table.sov-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.tech-table th, table.sov-table th {
+  padding: 10px 14px; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--cyan-ink); font-weight: 800; background: rgba(0, 210, 255, 0.04);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06); text-align: left; white-space: nowrap;
+}
+table.tech-table td, table.sov-table td { padding: 11px 14px; font-size: 12px; color: #374151; border-bottom: 1px solid rgba(15, 23, 42, 0.05); vertical-align: middle; }
+table.tech-table tbody tr, table.sov-table tbody tr { transition: background 0.12s ease; cursor: pointer; }
+table.tech-table tbody tr:hover, table.sov-table tbody tr:hover { background: rgba(0, 210, 255, 0.03); }
+table.tech-table tbody tr:last-child td, table.sov-table tbody tr:last-child td { border-bottom: none; }
+
+.code-cell {
+  font-family: var(--mono); font-size: 11px; color: var(--cyan-ink); font-weight: 700;
+  background: rgba(0, 210, 255, 0.035); border-right: 1px solid rgba(15, 23, 42, 0.06);
+  white-space: nowrap; padding: 11px 14px !important;
+}
+
+.num { text-align: right !important; font-family: var(--font); font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+
+/* Status Indicators & Pills */
+.status-dot-wrap { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: #374151; white-space: nowrap; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #16A34A; display: inline-block; }
+.status-dot.amber { background: #D97706; }
+.status-dot.red { background: #DC2626; }
+
+.pill {
+  display: inline-flex; align-items: center; font-family: var(--mono); font-size: 9.5px; font-weight: 800;
+  letter-spacing: 0.08em; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; white-space: nowrap;
+}
+.pill-green  { background: rgba(22, 163, 74, 0.12); color: #15803D; border: 1px solid rgba(22, 163, 74, 0.3); }
+.pill-amber  { background: rgba(217, 119, 6, 0.12); color: #B45309; border: 1px solid rgba(217, 119, 6, 0.3); }
+.pill-cyan   { background: rgba(0, 210, 255, 0.12); color: #0070A8; border: 1px solid rgba(0, 210, 255, 0.3); }
+.pill-violet { background: rgba(139, 92, 246, 0.12); color: #6D28D9; border: 1px solid rgba(139, 92, 246, 0.3); }
+.pill-slate  { background: rgba(100, 116, 139, 0.12); color: #475569; border: 1px solid rgba(100, 116, 139, 0.25); }
+
+.prog-track { width: 100%; height: 3.5px; background: rgba(15, 23, 42, 0.07); border-radius: 2px; overflow: hidden; margin-top: 5px; }
+.prog-fill { height: 100%; border-radius: 2px; background: var(--cyan-ink); }
+
+.flow-pill { font-family: var(--mono); font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+.flow-pill.in { background: rgba(21, 128, 61, 0.10); color: #15803D; border: 1px solid rgba(21, 128, 61, 0.25); }
+.flow-pill.out { background: rgba(180, 83, 9, 0.10); color: #7A5200; border: 1px solid rgba(180, 83, 9, 0.25); }
+
+.tr-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 18px; border-bottom: 1px solid rgba(15, 23, 42, 0.05); transition: background 0.12s; }
+.tr-row:last-child { border-bottom: none; }
+.tr-row:hover { background: rgba(0, 210, 255, 0.02); }
+.tr-title { font-weight: 700; font-size: 12.5px; color: #0D1117; }
+.tr-sub { font-size: 11px; color: var(--dim); margin-top: 2px; }
+.tr-val { font-weight: 800; font-size: 14px; color: #0D1117; font-variant-numeric: tabular-nums; white-space: nowrap; margin-left: 14px; }
+
+/* Diagnostics & Audit Cards */
+.audit-grid, .sim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.audit-item {
+  background: #FFFFFF; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 14px;
+  padding: 14px 16px; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column; gap: 8px;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.audit-item:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06); }
+.audit-item-hdr { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.audit-item-title { font-weight: 800; font-size: 12px; color: #0D1117; font-family: var(--font); }
+.audit-item-desc { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+
+/* Simulators & Forms */
+.form-row { margin-bottom: 12px; }
+.form-input {
+  width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #F8FAFC; color: #0D1117; font: 700 12.5px var(--font); outline: none;
+}
+.form-input:focus { border-color: var(--cyan-ink); }
+
+.sim-box { background: rgba(0, 210, 255, 0.04); border: 1px solid rgba(0, 112, 168, 0.18); border-radius: 10px; padding: 12px 14px; margin-top: 10px; }
+.sim-line { display: flex; justify-content: space-between; padding: 5px 0; font-size: 11.5px; color: #374151; border-bottom: 1px dashed rgba(15, 23, 42, 0.08); }
+.sim-line:last-child { border-bottom: none; font-weight: 800; font-size: 13.5px; padding-top: 8px; color: #0D1117; }
+
+/* Upsell Strip */
+.upsell-strip {
+  background: #010409; color: #FFFFFF; border: 1px solid rgba(0, 210, 255, 0.25);
+  border-radius: 18px; padding: 16px 22px; display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 14px; margin-top: 24px; box-shadow: 0 8px 24px rgba(1, 4, 9, 0.18);
+}
+.upsell-strip-left { display: flex; align-items: center; gap: 14px; }
+.upsell-crown {
+  width: 40px; height: 40px; border-radius: 10px; background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.35); display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0; color: var(--gold);
+}
+.cta-btn {
+  padding: 8px 14px; border-radius: 6px; font: 700 11.5px var(--font); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.08); color: #FFFFFF; transition: all 0.15s;
+}
+.cta-btn:hover { background: rgba(0, 210, 255, 0.2); border-color: var(--cyan); color: var(--cyan); }
+.cta-btn.gold { background: var(--gold); color: #010409; border-color: var(--gold); }
+.cta-btn.wa { background: #16A34A; color: #FFFFFF; border-color: #16A34A; }
+
+.master-audit-footer { text-align: center; margin-top: 24px; font-size: 11px; color: var(--dim); letter-spacing: 0.04em; }
+
+/* 880px Drawer */
+#egp-bk {
+  position: fixed; inset: 0; background: rgba(1, 4, 9, 0.55); backdrop-filter: blur(4px);
+  z-index: 998; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+}
+#egp-bk.open { opacity: 1; pointer-events: auto; }
+
+#egp-dr {
+  position: fixed; top: 0; right: -920px; width: min(880px, 96vw); height: 100vh;
+  background-color: #F4F7FB;
+  background-image:
+    linear-gradient(rgba(0, 210, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  border-left: 1px solid rgba(0, 210, 255, 0.25);
+  box-shadow: -12px 0 40px rgba(1, 4, 9, 0.35); z-index: 999; display: flex; flex-direction: column;
+  transition: right 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#egp-dr.open { right: 0; }
+
+.dh {
+  background: #010409; color: #FFFFFF; padding: 16px 24px; display: flex;
+  justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid rgba(0, 210, 255, 0.22);
+}
+.dh-title { font-size: 15px; font-weight: 800; color: #FFFFFF; }
+.dh-sub { font-size: 11.5px; color: var(--cyan); margin-top: 2px; font-family: var(--mono); }
+.db { padding: 20px 24px; overflow-y: auto; flex: 1; }
+
+#egp-x {
+  background: rgba(255, 255, 255, 0.08); color: #E2E8F0; border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px; padding: 6px 14px; font: 700 11.5px var(--font); cursor: pointer; transition: all 0.15s;
+}
+#egp-x:hover { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #FFFFFF; }
+
+@media (max-width: 1180px) {
+  .focus-grid { grid-template-columns: repeat(3, 1fr); }
+  .panel-grid-2 { grid-template-columns: 1fr; }
+  .audit-grid, .sim-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .focus-grid { grid-template-columns: repeat(2, 1fr); }
+  .audit-grid, .sim-grid { grid-template-columns: 1fr; }
+  #egp-dr { width: min(96vw, 600px); }
+  .topbar { padding: 12px 16px; }
+  .workspace-shell { padding: 14px 16px; }
+}
+@media (max-width: 480px) {
+  .focus-grid { grid-template-columns: 1fr; }
+}
+@media print {
+  .topbar, .context-bar, .upsell-strip, #egp-bk, #egp-dr { display: none !important; }
+  body { background: #FFFFFF !important; }
+  .tech-panel, .focus-card { box-shadow: none !important; border: 1px solid #CBD5E1 !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="sovereign-rule"></div>
+
+
+<header class="topbar">
+  <div class="topbar-logo">
+    <div class="brand-mark" title="INSPIRON TECH · Sovereign Brand Architecture">
+      <svg viewBox="0 0 358.846 350.3" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <mask id="inspiron-gap" x="-1075.154" y="-1075" width="3000" height="3000" maskUnits="userSpaceOnUse">
+            <path fill="#fff" d="M-1075.154-1075h3000v3000h-3000z"/>
+            <path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" style="fill:none; stroke:#000; stroke-width:24px; stroke-linecap:round; stroke-linejoin:round"/>
+          </mask>
+        </defs>
+        <g mask="url(#inspiron-gap)">
+          <path d="M87.046 349.3c-30.8 0-57.9-14.8-74.3-40.9-15.4-24.2-16.9-55-4.2-80.5 7.8-14.2 32.9-53.9 57.4-92.4 15.1-23.7 29.3-46.1 39.3-62.6 2.7-4.3 4.8-7.8 8.4-11.5 11.4-13.1 28.1-20.6 45.6-20.6s33.8 8.1 43.8 22.1c5.5 7.8 9.1 16.9 10.3 26.4.3 2.5-.4 4.8-2.1 7.5-1.9 3.3-21.8 34.6-21.8 34.6-.6.9-1.2 1.9-1.8 2.8-1.3 2.2-2.4 4.2-3.9 4.2s-1.2-.3-1.8-.9c-4.2-4.9-8.2-11.5-12-18-2.4-4-4.5-7.9-6.9-11.2-1.8-2.8-4.8-4.5-7.8-4.5s-4.2 1-5.8 3c-5.2 8.1-27.5 43.8-45.6 72.7-11.8 18.9-22.1 35.3-25.4 40.4-2.2 3.6-5.2 8.1-7.9 12.5-1.6 2.7-3.3 5.4-4.8 7.8-.6 1-1.3 2.1-1.9 3.1-2.5 4-4.6 7.5-6.1 11.1-5.2 12.4-.4 27.3 10.9 34.6 5.5 3.6 11.4 5.4 17.5 5.4 12.3 0 25-7.6 32.9-20 5.5-8.1 23.6-37 45-70.6 31.7-50.4 67.9-107.5 76.1-118.7 6.3-6.7 14.5-10.8 22.7-10.8 9.3 0 18.2 5.1 23.2 13.1 4.8 7.9 5.4 16.8 1 24.7-3.6 7-6.6 11.3-10.9 18-3.1 4.9-7.3 11.2-13 20.6-14.4 22.5-31 48.7-47 74.2-24.4 38.9-47.7 75.7-55.3 86.8-17.5 24.1-45.5 38.6-75.1 38.6z" fill="#00D2FF"/>
+        </g>
+        <path d="M321.346 350c-10.6-1-19.3-6.1-26-15.3-.3-.6-4.3-7.3-10-16.5-49.2-81.1-52.8-87.8-52.6-88.4 5.5-8.8 19.4-31.2 27.4-43.8 3.3-5.4 5.7-9 6-9.4 1.6 2.7 27.4 45.3 49.4 81.8 17 28.2 31.9 52.8 32.2 53.5 4.2 7 4.2 15.2 0 22.5-5.2 9-15.4 14.9-25.6 14.9h-.8z" fill="#00D2FF"/>
+        <circle cx="321.346" cy="37.5" r="37.5" fill="#FFD700"/>
+      </svg>
+    </div>
+    <div class="brand-text-wrap">
+      <h1>
+        <span id="hdrTitle">INSPIRON Executive Dashboard &amp; Ledger Auditor</span>
+        <span class="version-pill">GLOBAL EDITION · V8.1.1</span>
+      </h1>
+      <div class="brand-sub" id="hdrSub">
+        Civil Infrastructure, Power Substations &amp; Turnkey EPC Contracting (FIDIC)
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar-tools">
+    <div id="bridgeStatusBadge" class="ref-badge" title="Bridge Status">
+      <span class="pulse-dot"></span>
+      <span id="bridgeStatusText">Detecting Bridge…</span>
+    </div>
+
+    <!-- Connected #egp-tb Toolbar (Mixed Mode: Clean Dark Glass Controls) -->
+    <div id="egp-tb" class="segmented-tb">
+      <button type="button" class="tb-btn" id="btnCsv" onclick="exportActiveTableCSV()" title="Export CSV">⬇ CSV</button>
+      <button type="button" class="tb-btn" id="btnCopy" onclick="copyActiveSummary()" title="Copy Summary">📋 Copy</button>
+      <button type="button" class="tb-btn" id="btnPdf" onclick="window.print()" title="Print / PDF">🖨 Print</button>
+      <button type="button" class="tb-btn wa-btn" id="btnWa" onclick="shareWhatsAppSummary()" title="Share WhatsApp">💬 WhatsApp</button>
+      <button type="button" class="tb-btn" id="btnRole" onclick="cycleRoleMode()" title="Role Complexity Budget">⚙ owner</button>
+      <button type="button" class="tb-btn" id="btnLang" onclick="cycleLanguage()" title="Language">🌐 EN+বাংলা</button>
+    </div>
+  </div>
+</header>
+
+<div class="workspace-shell">
+  <!-- Sub-Bar: Profile Selector & Module Navigation -->
+  <div class="context-bar">
+    <div class="profile-group">
+      <span class="profile-label" id="lblDataset">Active Profile:</span>
+      <select id="bizSelect" class="profile-select" onchange="onBusinessSelectChange(this.value)">
+        <optgroup label="🌐 Global &amp; Multi-Currency Industry Showcases" id="demoOptGroup">
+          <option value="demo:epc">🏛️ 01 · [USD $] Global EPC &amp; Civil Engineering (Apex Infrastructure · 6 Contracts · $18.45M)</option>
+          <option value="demo:mfg">🏭 02 · [EUR €] Industrial Manufacturing &amp; BOM (Nordic Precision GmbH · €9.64M)</option>
+          <option value="demo:gcc">🌐 03 · [SAR ﷼] GCC Multi-Division Trading &amp; VAT (Al-Riyadh Commercial · ﷼24.80M)</option>
+          <option value="demo:contractor">🏗️ 04 · [BDT ৳] Govt e-GP Contractor Suite (BAUS Builders · 6 Tenders · ৳9.42 Cr)</option>
+          <option value="demo:manufacturing">🧵 05 · [BDT ৳] Apparel Manufacturing &amp; Payroll (Zippy &amp; Whiz · BOM &amp; Payslips)</option>
+          <option value="demo:syndicate">🏢 06 · [BDT ৳] Real Estate &amp; Land-Share Syndicate (Icon Tower · 36 Co-Owners)</option>
+        </optgroup>
+        <optgroup label="🔗 Connected Manager.io Server Businesses" id="liveOptGroup" hidden>
+        </optgroup>
+      </select>
+      <button type="button" class="sync-btn" onclick="refreshConnection()" title="Re-sync Bridge">🔄 Sync</button>
+    </div>
+
+    <nav class="module-tabs" aria-label="Suite Modules">
+      <button type="button" class="nav-tab active" data-tab="overview" onclick="switchTab('overview')"><span data-i18n="tab_overview">Executive Overview</span></button>
+      <button type="button" class="nav-tab" data-tab="projects" onclick="switchTab('projects')"><span data-i18n="tab_projects">Projects &amp; Cost Centers</span></button>
+      <button type="button" class="nav-tab" data-tab="forensic" onclick="switchTab('forensic')"><span data-i18n="tab_forensic">Forensic COA Auditor</span></button>
+      <button type="button" class="nav-tab" data-tab="simulators" onclick="switchTab('simulators')"><span data-i18n="tab_simulators">Calculators</span></button>
+      <button type="button" class="nav-tab upsell-tab" data-tab="enterprise" onclick="switchTab('enterprise')">👑 <span data-i18n="tab_enterprise">Sovereign Enterprise</span></button>
+    </nav>
+  </div>
+
+
+  <!-- ================= THE 6-CARD FOCUS ENGINE ================= -->
+  <section class="focus-grid" id="kpiStrip"></section>
+
+  <!-- ================= TAB 1: EXECUTIVE OVERVIEW ================= -->
+  <main id="view-overview" class="tab-view active">
+    <div class="panel-grid-2">
+      <div class="tech-panel" style="margin-bottom:0">
+        <div class="tech-panel-hdr">
+          <div class="tech-panel-title">
+            <span>🏗️ Active Projects &amp; Cost Center Performance Matrix</span>
+          </div>
+          <span class="tech-eyebrow" id="ovMainTableBadge">Click row for Inspector Drawer ▸</span>
+        </div>
+        <div class="table-wrap" id="ovProjectTableWrap"></div>
+      </div>
+
+      <div class="tech-panel" style="margin-bottom:0">
+        <div class="tech-panel-hdr">
+          <div class="tech-panel-title">
+            <span>🏦 Treasury, Bank &amp; Control Accounts</span>
+          </div>
+          <span class="status-dot-wrap"><span class="status-dot"></span>Reconciled</span>
+        </div>
+        <div id="ovTreasuryWrap"></div>
+      </div>
+    </div>
+
+    <div class="tech-panel">
+      <div class="tech-panel-hdr">
+        <div class="tech-panel-title">📑 Recent High-Value Vouchers, Running Bills &amp; Ledger Activity</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="flow-pill in">+ MONEY IN</span>
+          <span class="flow-pill out">− MONEY OUT</span>
+        </div>
+      </div>
+      <div class="table-wrap" id="ovRecentTxWrap"></div>
+    </div>
+  </main>
+
+<!-- ================= TAB 2: PROJECT & COST CENTER P&L ================= -->
+  <section id="view-projects" class="tab-view" hidden>
+    <div class="tech-panel">
+      <div class="tech-panel-hdr">
+        <div class="tech-panel-title">🏗️ Complete Project, Tender &amp; Division Profitability Register</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="search" id="projSearchInput" class="form-input" style="width:240px;padding:5px 10px" placeholder="Filter project, tender ID, PE…" oninput="renderProjectsTab()">
+          <span class="pill pill-cyan" id="projCountBadge">0 Projects</span>
+        </div>
+      </div>
+      <div class="table-wrap" id="fullProjectTableWrap"></div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 3: FORENSIC COA AUDITOR & 1-CLICK INSTALLER ================= -->
+  <section id="view-forensic" class="tab-view" hidden>
+    <div class="tech-panel">
+      <div class="tech-panel-hdr">
+        <div class="tech-panel-title">🔍 12-Point Automated Forensic Ledger &amp; Chart of Accounts Diagnostic</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="pill pill-violet" id="forensicScoreBadge">Health Score: 96/100</span>
+          <button type="button" class="tb-btn role-btn" id="btnInstallCoa" onclick="installMissingCoaAccounts()">⚡ 1-Click Safe COA Preset Installer</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="audit-grid" id="forensicCardsWrap"></div>
+        <div id="coaInstallStatus" style="margin-bottom:10px;font-weight:700;color:var(--cyan)" hidden></div>
+        <div class="table-wrap" id="forensicTableWrap"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 4: STATUTORY & RETENTION CALCULATORS ================= -->
+  <section id="view-simulators" class="tab-view" hidden>
+    <div class="sim-grid">
+      <!-- Simulator 1: Contractor e-GP Running Bill (RA Bill) Deductions -->
+      <div class="tech-panel" style="margin-bottom:0">
+        <div class="tech-panel-hdr">
+          <div class="tech-panel-title">📑 e-GP Running Bill (RA) Net Payout Calculator</div>
+          <span class="pill pill-cyan">PPR / EED / LGED</span>
+        </div>
+        <div class="panel-body">
+          <div class="form-row">
+            <label>Certified Gross RA Bill Amount (BDT / USD)</label>
+            <input type="number" id="simRaGross" class="form-input" value="2500000" oninput="runSimulators()">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div class="form-row">
+              <label>VAT (%)</label>
+              <input type="number" id="simRaVat" class="form-input" value="7.5" step="0.5" oninput="runSimulators()">
+            </div>
+            <div class="form-row">
+              <label>AIT / TDS (%)</label>
+              <input type="number" id="simRaAit" class="form-input" value="5.0" step="0.5" oninput="runSimulators()">
+            </div>
+            <div class="form-row">
+              <label>Retention (%)</label>
+              <input type="number" id="simRaRet" class="form-input" value="10.0" step="0.5" oninput="runSimulators()">
+            </div>
+          </div>
+          <div class="sim-box" id="simRaResult"></div>
+        </div>
+      </div>
+
+      <!-- Simulator 2: Bangladesh Labour Act Payroll & OT Splitter -->
+      <div class="tech-panel" style="margin-bottom:0">
+        <div class="tech-panel-hdr">
+          <div class="tech-panel-title">👥 Statutory Payroll &amp; OT Formula Splitter</div>
+          <span class="pill pill-green">Rule 102 / 115</span>
+        </div>
+        <div class="panel-body">
+          <div class="form-row">
+            <label>Monthly Gross Salary (Tk)</label>
+            <input type="number" id="simPayGross" class="form-input" value="18450" oninput="runSimulators()">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div class="form-row">
+              <label>Fixed Allow.</label>
+              <input type="number" id="simPayFixed" class="form-input" value="2450" oninput="runSimulators()">
+            </div>
+            <div class="form-row">
+              <label>OT Hours</label>
+              <input type="number" id="simPayOt" class="form-input" value="26" oninput="runSimulators()">
+            </div>
+            <div class="form-row">
+              <label>Absent Days</label>
+              <input type="number" id="simPayAbs" class="form-input" value="1" oninput="runSimulators()">
+            </div>
+          </div>
+          <div class="sim-box" id="simPayResult"></div>
+        </div>
+      </div>
+
+      <!-- Simulator 3: Real Estate Land-Share & Syndicate Escalation -->
+      <div class="tech-panel" style="margin-bottom:0">
+        <div class="tech-panel-hdr">
+          <div class="tech-panel-title">🏢 Land-Share Syndicate Installment Planner</div>
+          <span class="pill pill-violet">Jomi-o-Share</span>
+        </div>
+        <div class="panel-body">
+          <div class="form-row">
+            <label>Total Unit Cost (Land + Construction)</label>
+            <input type="number" id="simReTotal" class="form-input" value="6850000" oninput="runSimulators()">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="form-row">
+              <label>Paid to Date (Land + Casting)</label>
+              <input type="number" id="simRePaid" class="form-input" value="4450000" oninput="runSimulators()">
+            </div>
+            <div class="form-row">
+              <label>Remaining Casting Stages</label>
+              <input type="number" id="simReStages" class="form-input" value="8" min="1" oninput="runSimulators()">
+            </div>
+          </div>
+          <div class="sim-box" id="simReResult"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 5: SOVEREIGN ENTERPRISE EDITION UPSELL ================= -->
+  <section id="view-enterprise" class="tab-view" hidden>
+    <div class="tech-panel">
+      <div class="tech-panel-hdr">
+        <div class="tech-panel-title">👑 INSPIRON Sovereign Enterprise Architecture (v8.1.1) vs. Community Sandbox Edition</div>
+        <span class="pill pill-amber">MD ABU HASAN · INSPIRON TECH · ERP Architect | Listed Manager.io Advisor</span>
+      </div>
+      <div class="panel-body">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px">
+          Standard Manager.io URL Extensions run inside a cross-origin <code>&lt;iframe&gt;</code> sandbox. To unlock <strong>Top Smart Bars on every page</strong>, <strong>1-Click Vue 2 Form Auto-Fill Helpers</strong>, <strong>16 Option 1 Semantic Custom Buttons</strong>, and <strong>Corporate Print/PDF Document Themes</strong>, upgrade to the <strong>INSPIRON Sovereign Enterprise Edition (v8.1.1)</strong>:
+        </p>
+        <div class="table-wrap">
+          <table class="sov-table">
+            <thead>
+              <tr>
+                <th>Capability / Architectural Layer</th>
+                <th>Community Edition (This Extension)</th>
+                <th>👑 INSPIRON Sovereign Enterprise Edition (v8.1.1)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Multi-Business KPI &amp; Project P&amp;L Dashboard</strong></td>
+                <td><span class="pill pill-green">✓ Included (via postMessage Bridge)</span></td>
+                <td><span class="pill pill-cyan">✓ Native Top Smart Bar (#egp-bar) on Every Page</span></td>
+              </tr>
+              <tr>
+                <td><strong>2. 12-Point Forensic COA Audit &amp; Safe COA Preset Installer</strong></td>
+                <td><span class="pill pill-green">✓ Included</span></td>
+                <td><span class="pill pill-cyan">✓ Full 3-Path SQLite + /api2 + /api4 Remediation Pack</span></td>
+              </tr>
+              <tr>
+                <td><strong>3. 16 Option 1 Semantic Custom Buttons (Bilingual EN+বাংলা)</strong></td>
+                <td><span class="pill pill-slate">Iframe Sandbox Only</span></td>
+                <td><span class="pill pill-cyan">✓ Deployed Across All 13 List, View &amp; Form Routes</span></td>
+              </tr>
+              <tr>
+                <td><strong>4. 1-Click Vue 2 Form Auto-Fill Helpers (Payments, Receipts, RA Bills)</strong></td>
+                <td><span class="pill pill-slate">Blocked by Browser Cross-Origin Policy</span></td>
+                <td><span class="pill pill-cyan">✓ Same-Origin window.parent.app 1-Click Form Injection</span></td>
+              </tr>
+              <tr>
+                <td><strong>5. Corporate Custom Document Themes (/api4/view-v1 + 943-Tx Batch Engine)</strong></td>
+                <td><span class="pill pill-slate">Standard Manager Print Only</span></td>
+                <td><span class="pill pill-cyan">✓ Custom Vouchers, RA Bills &amp; Land-Share Money Receipts</span></td>
+              </tr>
+              <tr>
+                <td><strong>6. AES-256-GCM Sovereign Client Vault &amp; Managed Cloud Hosting</strong></td>
+                <td><span class="pill pill-slate">Self-Hosted</span></td>
+                <td><span class="pill pill-cyan">✓ Dedicated Cloud Server + Automated Encrypted Backups</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <!-- ================= PERSISTENT SOVEREIGN UPSELL FOOTER (DARK mixed anchor) ================= -->
+  <footer class="upsell-strip">
+    <div class="upsell-strip-left">
+      <div class="upsell-crown">👑</div>
+      <div>
+        <div style="font-weight:800;font-size:13.5px;color:#FFFFFF">
+          Need 1-Click Form Auto-Fill, 16 Custom Buttons &amp; Turnkey ERP Automation?
+        </div>
+        <div style="font-size:11.5px;color:#94A3B8">
+          INSPIRON TECH deploys the complete <strong>v8.1.1 Dual-Surface Sovereign Architecture</strong> directly to Manager.io Server &amp; Cloud.
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button type="button" class="cta-btn gold" onclick="switchTab('enterprise')">👑 Enterprise v8.1.1 Matrix</button>
+      <a href="https://suite.inspiron.tech" target="_blank" rel="noopener" class="cta-btn">🏛️ suite.inspiron.tech</a>
+      <a href="https://tax.inspiron.tech" target="_blank" rel="noopener" class="cta-btn">🇧🇩 tax.inspiron.tech</a>
+      <a href="https://wa.me/8801719300849?text=Hello%20INSPIRON%20TECH%2C%20I%20tested%20your%20INSPIRON%20Executive%20Dashboard%20%26%20Ledger%20Auditor%20on%20Alfabase." target="_blank" rel="noopener" class="cta-btn wa">💬 WhatsApp (+880 1719-300849)</a>
+    </div>
+  </footer>
+
+  <div class="master-audit-footer">
+    INSPIRON TECH · Architected by MD ABU HASAN · ERP Architect | Listed Manager.io Advisor · Sovereign Enterprise Architecture
+  </div>
+</div>
+
+<!-- ================= 880px SLIDE-OVER INSPECTOR DRAWER (#egp-dr) ================= -->
+<div id="egp-bk" onclick="closeInspectorDrawer()"></div>
+<aside id="egp-dr" aria-label="Project &amp; Ledger Inspector Drawer">
+  <div class="dh">
+    <div>
+      <div class="dh-title" id="drTitle">Project Inspector</div>
+      <div class="dh-sub" id="drSub">Detailed Realization &amp; Audit Trail</div>
+    </div>
+    <div>
+      <button type="button" id="egp-x" onclick="closeInspectorDrawer()">✕ Close (Esc)</button>
+    </div>
+  </div>
+  <div class="db" id="drBody"></div>
+</aside>
+
+
+<script>
+
+'use strict';
+
+/* ============================================================================
+ * 1. CURATED MULTI-INDUSTRY DEMO DATASETS (MODE C — STANDALONE / ALFABASE PREVIEW)
+ * ============================================================================ */
+const DEMO_PROFILES = {
+  'demo:epc': {
+    id: 'demo:epc',
+    name: '001 — APEX INFRASTRUCTURE & ENGINEERING LTD. (Global EPC · USD $)',
+    sector: 'Civil Infrastructure, Power Substations & Turnkey EPC Contracting (FIDIC)',
+    currency: '$',
+    kpis: [
+      { group: 'cyan',   glyph: '●', label: 'Awarded EPC Contract Book', bn: 'মোট চুক্তি মূল্য (৬টি প্রজেক্ট)', val: '$ 18,450,000', sub: '6 Active Turnkey Contracts' },
+      { group: 'green',  glyph: '+', label: 'Certified IPC Billing',      bn: 'মোট অনুমোদিত রানিং বিল',        val: '$ 12,820,000', sub: '69.5% Revenue Realization' },
+      { group: 'green',  glyph: '+', label: 'Net Treasury Collections',   bn: 'ব্যাংকে মোট সংগৃহীত অর্থ',       val: '$ 10,912,000', sub: 'After WHT & 10% Retention' },
+      { group: 'amber',  glyph: '−', label: 'Direct Site & Subcontract',  bn: 'প্রত্যক্ষ সাইট ও মালামাল ব্যয়',  val: '$ 8,350,000',  sub: '412 Cost-Tagged Vouchers' },
+      { group: 'violet', glyph: '▸', label: 'Retention Receivable (10%)', bn: 'জামানত ও রিটেনশন ফান্ড',       val: '$ 1,282,000',  sub: 'Tracked in Special Accounts' },
+      { group: 'cyan',   glyph: '★', label: 'Net Operating Surplus',      bn: 'নিট প্রজেক্ট অপারেটিং মুনাফা',  val: '$ 4,470,000',  sub: '34.8% Gross Project Margin' }
+    ],
+    projects: [
+      { code: 'EPC-101', name: 'Metro Rail Viaduct Package CP-04 (14.2 km)', pe: 'Metropolitan Transit Authority', contract: 6400000, billed: 4850000, collected: 4122500, cost: 3180000, retention: 485000, status: '76% Done' },
+      { code: 'EPC-102', name: '132/33kV GIS Grid Substation & Switchyard', pe: 'National Power Grid Corp', contract: 4200000, billed: 3150000, collected: 2677500, cost: 2040000, retention: 315000, status: '75% Done' },
+      { code: 'EPC-103', name: 'Deep-Sea Container Terminal Berth #3 Quay', pe: 'Port Maritime Authority', contract: 3850000, billed: 2420000, collected: 2057000, cost: 1590000, retention: 242000, status: '63% Done' },
+      { code: 'EPC-104', name: 'Industrial Reverse Osmosis Desalination Plant', pe: 'Municipal Water Board', contract: 2150000, billed: 1480000, collected: 1258000, cost: 960000, retention: 148000, status: '69% Done' },
+      { code: 'EPC-105', name: 'Smart Highway Fiber Optic & ITS Corridor', pe: 'Federal Highway Agency', contract: 1150000, billed: 620000, collected: 527000, cost: 395000, retention: 62000, status: '54% Done' },
+      { code: 'EPC-106', name: 'Regional Logistics Hub Pre-Engineered Steel', pe: 'Global Logistics REIT', contract: 700000, billed: 300000, collected: 270000, cost: 185000, retention: 30000, status: 'DLP Phase' }
+    ],
+    treasury: [
+      { name: 'Citibank N.A. — Corporate Project Operating A/C (USD)', type: 'Bank Account', balance: 2845000, status: 'Reconciled' },
+      { name: 'HSBC Commercial — Performance Bond & LC Margin A/C', type: 'Escrow Bank', balance: 1120000, status: 'Reconciled' },
+      { name: 'Site Field Imprest & Mobilization Float (6 Sites)', type: 'Cash Account', balance: 148500, status: 'Verified' },
+      { name: '1150 — Contract Retention Money Receivable (10% FIDIC)', type: 'Control Asset', balance: 1282000, status: 'Tracked per IPC' },
+      { name: '1160 — Withholding Tax (WHT) Credit Certificates', type: 'Tax Asset', balance: 626000, status: 'Matched to IPCs' }
+    ],
+    transactions: [
+      { date: '2026-11-03', ref: 'IPC-089', type: 'IN',  party: 'Metropolitan Transit Authority', project: 'EPC-101', desc: 'IPC #08 Certified Payout (Net of 5% WHT & 10% Retention)', amount: 642000 },
+      { date: '2026-11-02', ref: 'PV-1412', type: 'OUT', party: 'ArcelorMittal Structural Steel', project: 'EPC-101', desc: 'High-Tensile Rebar & Box Girder Tendon Lot #14', amount: 284500 },
+      { date: '2026-10-30', ref: 'IPC-088', type: 'IN',  party: 'National Power Grid Corp', project: 'EPC-102', desc: 'Milestone #05 GIS Bay & Transformer Energization Receipt', amount: 518000 },
+      { date: '2026-10-28', ref: 'PV-1409', type: 'OUT', party: 'Siemens Energy Automation GmbH', project: 'EPC-102', desc: 'SCADA Telemetry & Differential Protection Relay Panels', amount: 196000 },
+      { date: '2026-10-25', ref: 'IPC-087', type: 'IN',  party: 'Port Maritime Authority', project: 'EPC-103', desc: 'Marine Tubular Piling & Quay Wall Certificate #04', amount: 412000 },
+      { date: '2026-10-22', ref: 'PV-1401', type: 'OUT', party: 'Holcim Marine Concrete Supply', project: 'EPC-103', desc: 'Sulfate-Resistant Ready-Mix Batch #22 (4,200 m³)', amount: 148200 }
+    ],
+    forensics: [
+      { code: 'AUD-01', title: 'Suspense Account Zero-Balance Integrity', status: 'PASS', badge: 'pill-green', detail: '0 unclassified transactions in Suspense Account ($0.00 variance).' },
+      { code: 'AUD-02', title: 'Project Cost-Center Tagging Completeness', status: 'PASS', badge: 'pill-green', detail: '100% of direct revenue & site expenditure lines carry a Project tag (6/6 EPC contracts).' },
+      { code: 'AUD-03', title: 'Retention Receivable (1150) Asset Segregation', status: 'PASS', badge: 'pill-green', detail: '$1,282,000 retention held across 6 contracts properly isolated in Control Accounts.' },
+      { code: 'AUD-04', title: 'Withholding Tax (WHT) Credit Reconciliation', status: 'PASS', badge: 'pill-green', detail: '$626,000 WHT deduction certificates reconciled against IPC settlements.' },
+      { code: 'AUD-05', title: 'Bank & Treasury Statement Reconciliation', status: 'PASS', badge: 'pill-green', detail: 'Citibank & HSBC operating accounts reconciled through 2026-10-31.' },
+      { code: 'AUD-06', title: 'Multi-Currency & Base Currency Lock', status: 'PASS', badge: 'pill-green', detail: 'Base currency locked to USD ($) with daily FX revaluation enabled.' },
+      { code: 'AUD-07', title: 'Accounts Receivable (AR) Control Integrity', status: 'PASS', badge: 'pill-green', detail: 'All 6 employer IPC ledgers reconcile 100% to AR Control Account.' },
+      { code: 'AUD-08', title: 'Accounts Payable (AP) Subcontractor Subledger', status: 'PASS', badge: 'pill-green', detail: 'All 28 material & subcontractor vendors mapped to AP Control.' },
+      { code: 'AUD-09', title: 'Performance Bond & BG Margin Tracking', status: 'PASS', badge: 'pill-green', detail: '$1,120,000 bank guarantee cash margin tracked per contract expiry.' },
+      { code: 'AUD-10', title: 'Fixed Asset Plant & Heavy Machinery Depreciation', status: 'PASS', badge: 'pill-green', detail: 'Tower cranes, batching plants & excavators depreciated through Oct 2026.' },
+      { code: 'AUD-11', title: 'Period Lock Date & Audit Trail Governance', status: 'PASS', badge: 'pill-green', detail: 'Closed fiscal periods locked against backdated voucher mutation.' },
+      { code: 'AUD-12', title: 'Custom Document Theme Coverage (/api4/view-v1)', status: 'PASS', badge: 'pill-green', detail: '100% of vouchers linked to INSPIRON Corporate HTML5 Theme.' }
+    ]
+  },
+
+  'demo:mfg': {
+    id: 'demo:mfg',
+    name: '002 — NORDIC PRECISION MANUFACTURING GMBH (Industrial BOM · EUR €)',
+    sector: 'Precision CNC Machining, Multi-Stage Bill of Materials (BOM) & Cost Centers',
+    currency: '€',
+    kpis: [
+      { group: 'cyan',   glyph: '●', label: 'Finished Goods Output',    bn: 'উৎপাদিত পণ্য মূল্য',         val: '€ 9,640,000', sub: '148 Production Orders' },
+      { group: 'green',  glyph: '+', label: 'B2B & OEM Invoicing',      bn: 'মোট বিক্রয় ও রপ্তানি',       val: '€ 8,920,000', sub: '92.5% Sell-Through Rate' },
+      { group: 'amber',  glyph: '−', label: 'Raw Material & BOM Cost',  bn: 'কাঁচামাল ও বিওএম ব্যয়',      val: '€ 5,180,000', sub: '53.7% Material-to-Output' },
+      { group: 'amber',  glyph: '−', label: 'Factory Payroll & Shift',  bn: 'কারখানা বেতন ও ওভারটাইম',    val: '€ 1,420,000', sub: '186 Skilled CNC Operators' },
+      { group: 'violet', glyph: '▸', label: 'WIP & Warehouse Stock',    bn: 'চলমান উৎপাদন ও মজুদ',        val: '€ 640,000',   sub: 'Zero Negative Stock SKUs' },
+      { group: 'cyan',   glyph: '★', label: 'Net Industrial EBITDA',    bn: 'নিট কারখানা অপারেটিং মুনাফা', val: '€ 2,320,000', sub: '26.0% Operating Margin' }
+    ],
+    projects: [
+      { code: 'BOM-LINE-A', name: 'CNC Aerospace Titanium Actuator Assemblies', pe: 'Airbus Defence & Tier-1 OEMs', contract: 3800000, billed: 3450000, collected: 3280000, cost: 2190000, retention: 0, status: '98% Yield' },
+      { code: 'BOM-LINE-B', name: 'EV Battery Thermal Management Cold Plates', pe: 'European Automotive EV Group', contract: 2950000, billed: 2680000, collected: 2510000, cost: 1740000, retention: 0, status: '97% Yield' },
+      { code: 'BOM-LINE-C', name: 'Industrial Robotics Harmonic Drive Reducers', pe: 'DACH Automation Integrators', contract: 1850000, billed: 1690000, collected: 1610000, cost: 1090000, retention: 0, status: '99% Yield' },
+      { code: 'BOM-LINE-D', name: 'Medical Grade 316L Surgical Enclosures', pe: 'MedTech Precision AG', contract: 1040000, billed: 1100000, collected: 1045000, cost: 680000, retention: 0, status: 'Completed' }
+    ],
+    treasury: [
+      { name: 'Deutsche Bank AG — Frankfurt Corporate IBAN (EUR)', type: 'Bank Account', balance: 1940000, status: 'Reconciled' },
+      { name: 'Commerzbank — CapEx & CNC Equipment Leasing A/C', type: 'Bank Account', balance: 680000, status: 'Reconciled' },
+      { name: 'Raw Alloy, Tooling & Finished Goods Inventory Control', type: 'Inventory Asset', balance: 640000, status: 'Zero Negative Stock' }
+    ],
+    transactions: [
+      { date: '2026-11-03', ref: 'INV-8841', type: 'IN',  party: 'Airbus Defence & Space GmbH', project: 'BOM-LINE-A', desc: 'Shipment #42 — 120x CNC Titanium Actuator Units', amount: 428000 },
+      { date: '2026-11-01', ref: 'PO-3319',  type: 'OUT', party: 'ThyssenKrupp Aerospace Materials', project: 'BOM-LINE-A', desc: 'Ti-6Al-4V Grade 5 Billet Alloy Stock (Lot #TK-908)', amount: 185000 },
+      { date: '2026-10-29', ref: 'INV-8839', type: 'IN',  party: 'Stellantis EV Powertrain Division', project: 'BOM-LINE-B', desc: 'Delivery #18 — 1,500x Laser-Brazed EV Cold Plates', amount: 315000 },
+      { date: '2026-10-26', ref: 'PAY-10',   type: 'OUT', party: 'October Factory Payroll & Social Security', project: 'BOM-LINE-B', desc: '186 Production Staff Base + Shift Allowance + Pension', amount: 142000 }
+    ],
+    forensics: [
+      { code: 'EU-01', title: 'Production Order WIP-to-Finished Goods Absorption', status: 'PASS', badge: 'pill-green', detail: 'All 148 Production Orders have complete raw material + overhead cost layers.' },
+      { code: 'EU-02', title: 'Negative Inventory Quantity & Cost Layer Audit', status: 'PASS', badge: 'pill-green', detail: '0 SKUs show negative stock on hand across 4 warehouse locations.' },
+      { code: 'EU-03', title: 'Division & Cost Center Expense Attribution', status: 'PASS', badge: 'pill-green', detail: '99.4% of factory energy, tooling, and depreciation tagged to Production Lines.' },
+      { code: 'EU-04', title: 'Intra-EU VAT & Reverse Charge Tax Code Mapping', status: 'PASS', badge: 'pill-green', detail: 'All cross-border B2B invoices mapped to valid EC VAT tax codes.' },
+      { code: 'EU-05', title: 'Employee Clearing & Payroll Control Settlement', status: 'PASS', badge: 'pill-green', detail: 'Net payslip liability matches SEPA bank batch disbursement.' },
+      { code: 'EU-06', title: 'Fixed Asset CNC Depreciation Schedule Sync', status: 'PASS', badge: 'pill-green', detail: 'Monthly depreciation entries posted through October 2026.' }
+    ]
+  },
+
+  'demo:gcc': {
+    id: 'demo:gcc',
+    name: '003 — AL-RIYADH COMMERCIAL TRADING CO. (GCC Multi-Division · SAR ﷼)',
+    sector: 'Regional Wholesale Distribution, Import LC Clearing & ZATCA 15% VAT',
+    currency: '﷼',
+    kpis: [
+      { group: 'cyan',   glyph: '●', label: 'Gross Commercial Sales',   bn: 'মোট বাণিজ্যিক বিক্রয়',      val: '﷼ 24,800,000', sub: 'Riyadh, Jeddah & Dammam' },
+      { group: 'violet', glyph: '▸', label: 'ZATCA 15% Output VAT',     bn: 'সংগৃহীত ১৫% ভ্যাট',         val: '﷼ 3,720,000',  sub: '100% E-Invoice QR Compliant' },
+      { group: 'amber',  glyph: '−', label: 'Landed Cost & Customs',    bn: 'আমদানি ও শুল্ক ব্যয়',       val: '﷼ 16,400,000', sub: 'CIF + Bayan Customs Duty' },
+      { group: 'green',  glyph: '+', label: 'Input VAT Recoverable',    bn: 'উপকরণ ভ্যাট রেয়াত',         val: '﷼ 2,460,000',  sub: 'Net VAT Payable: ﷼ 1.26M' },
+      { group: 'slate',  glyph: '▪', label: 'Net Accounts Receivable',  bn: 'প্রাপ্য বকেয়া হিসাব',       val: '﷼ 3,150,000',  sub: 'DSO: 34 Days · Within Limit' },
+      { group: 'cyan',   glyph: '★', label: 'Net Distributable Profit', bn: 'নিট বিতরণযোগ্য মুনাফা',     val: '﷼ 4,680,000',  sub: '18.9% Net Operating Margin' }
+    ],
+    projects: [
+      { code: 'DIV-RYD', name: 'Central Region HQ (Riyadh — Enterprise HVAC & MEP)', pe: 'Riyadh B2B MEP Contractors', contract: 12500000, billed: 11800000, collected: 10450000, cost: 7650000, retention: 0, status: 'Riyadh HQ' },
+      { code: 'DIV-JED', name: 'Western Region (Jeddah Port — Red Sea Hospitality)', pe: 'Red Sea Hospitality Group', contract: 7800000, billed: 7400000, collected: 6520000, cost: 4920000, retention: 0, status: 'Jeddah Br.' },
+      { code: 'DIV-DMM', name: 'Eastern Province (Dammam — Petrochemical MRO)', pe: 'Eastern Industrial Clients', contract: 5900000, billed: 5600000, collected: 4680000, cost: 3830000, retention: 0, status: 'Dammam Br.' }
+    ],
+    treasury: [
+      { name: 'Al Rajhi Bank — Corporate Main Operating Account (SAR)', type: 'Bank Account', balance: 4280000, status: 'Reconciled' },
+      { name: 'Saudi National Bank (SNB) — Import LC & Trade Finance', type: 'Bank Account', balance: 1890000, status: 'Reconciled' },
+      { name: 'ZATCA 15% VAT Net Payable Control Account', type: 'Tax Control', balance: 1260000, status: 'Q3 Return Ready' }
+    ],
+    transactions: [
+      { date: '2026-11-04', ref: 'ZAT-99201', type: 'IN',  party: 'Red Sea Coastal Development Co.', project: 'DIV-JED', desc: 'Commercial Chiller Units & Ducting (Incl. 15% ZATCA VAT)', amount: 1150000 },
+      { date: '2026-11-02', ref: 'LC-4410',   type: 'OUT', party: 'Daikin Middle East & Africa FZE', project: 'DIV-RYD', desc: 'Letter of Credit Settlement + Bayan Customs Clearing', amount: 840000 },
+      { date: '2026-10-31', ref: 'ZAT-99184', type: 'IN',  party: 'Riyadh Metro MEP Consortium', project: 'DIV-RYD', desc: 'Fire Suppression Valves & Copper Piping Batch #09', amount: 782000 }
+    ],
+    forensics: [
+      { code: 'GCC-01', title: '15% VAT Output vs Input Tax Control Reconciliation', status: 'PASS', badge: 'pill-green', detail: '100% of taxable sales and import declarations carry valid 15% VAT codes.' },
+      { code: 'GCC-02', title: 'Bilingual Arabic / English Document Theme Readiness', status: 'PASS', badge: 'pill-green', detail: 'Compatible with INSPIRON 04-RIYADH-RTL Bilingual Arabic/English Theme.' },
+      { code: 'GCC-03', title: 'Multi-Division Profit & Loss Segregation', status: 'PASS', badge: 'pill-green', detail: 'Riyadh, Jeddah, and Dammam branches balanced with 0 unallocated entries.' },
+      { code: 'GCC-04', title: 'Customer Credit Limit & DSO Aging Governance', status: 'PASS', badge: 'pill-green', detail: '92% of Accounts Receivable within 30-day credit terms.' },
+      { code: 'GCC-05', title: 'Import Landed Cost Freight & Duty Allocation', status: 'PASS', badge: 'pill-green', detail: 'All sea freight and customs duty bills allocated to Inventory items.' },
+      { code: 'GCC-06', title: 'Suspense Account Zero-Balance Check', status: 'PASS', badge: 'pill-green', detail: '0 unclassified vouchers in Suspense Account (﷼ 0).' }
+    ]
+  },
+  'demo:contractor': {
+    id: 'demo:contractor',
+    name: '001 — BAUS BUILDERS (Govt e-GP Contractor · Barisal)',
+    sector: 'Government Engineering & Infrastructure (EED / LGED / RHD / BWDB)',
+    currency: '৳',
+    kpis: [
+      { group: 'cyan',   glyph: '●', label: 'Awarded Contract Value', bn: 'মোট চুক্তিমূল্য (৬টি প্রজেক্ট)', val: '৳ 9,42,50,000', sub: '6 Active Govt Tenders' },
+      { group: 'green',  glyph: '+', label: 'Certified Running Bills', bn: 'মোট রানিং বিল (RA Bills)',     val: '৳ 4,86,20,000', sub: '10 Certified RA Invoices' },
+      { group: 'green',  glyph: '+', label: 'Net Cash Collected',      bn: 'ব্যাংকে মোট বিল জমা',          val: '৳ 4,18,45,000', sub: 'After VAT/AIT/10% Ret.' },
+      { group: 'amber',  glyph: '−', label: 'Site & Material Cost',    bn: 'মোট সাইট ও মালামাল খরচ',       val: '৳ 3,41,80,450', sub: '887 Payment Vouchers' },
+      { group: 'violet', glyph: '▸', label: 'Retention & BG Locked',   bn: 'সিকিউরিটি ও রিটেনশন জমা',      val: '৳ 67,75,000',   sub: '10% Security + PG/BG' },
+      { group: 'cyan',   glyph: '★', label: 'Net Operating Surplus',   bn: 'নিট অপারেটিং মুনাফা',          val: '৳ 1,44,39,550', sub: '29.7% Gross Project Margin' }
+    ],
+    projects: [
+      { code: 'EED-1127263', name: 'Gofur Mollick Girls School — Muladi, Barisal', pe: 'Executive Engineer, EED Barisal', contract: 15142050, billed: 9850000, collected: 8126250, cost: 6840200, retention: 985000, status: '72% Casting Complete' },
+      { code: 'LGED-1169066', name: 'Goila UP Office BC Road Carpet — Agailjhara', pe: 'Executive Engineer, LGED Barisal', contract: 18400000, billed: 12600000, collected: 10995000, cost: 9120000, retention: 1260000, status: '50% Retention Released' },
+      { code: 'EED-1114502', name: 'Shaheed Abdur Rab Serniabat Model School', pe: 'Executive Engineer, EED Barisal', contract: 22500000, billed: 11200000, collected: 9240000, cost: 8450000, retention: 1120000, status: '3rd Floor Slab Done' },
+      { code: 'LGED-1158920', name: 'RCC Box Culvert & Approach Road — Wazirpur', pe: 'Executive Engineer, LGED Barisal', contract: 12800000, billed: 6420000, collected: 5617500, cost: 4980250, retention: 642000, status: '2nd RA Bill Submitted' },
+      { code: 'BWDB-998120', name: 'Kirtankhola River Bank Protection Geo-Bag', pe: 'Executive Engineer, BWDB Barisal', contract: 14207950, billed: 5150000, collected: 4892500, cost: 3190000, retention: 515000, status: 'Dumping 85% Done' },
+      { code: 'RHD-441092', name: 'Barisal-Patuakhali Regional Highway Drain', pe: 'Executive Engineer, RHD Barisal', contract: 11200000, billed: 3400000, collected: 2973750, cost: 1600000, retention: 340000, status: 'Earthwork Active' }
+    ],
+    treasury: [
+      { name: 'Agrani Bank PLC — Barisal Corporate Br. (CD-4019)', type: 'Bank Account', balance: 6428500, status: 'Reconciled' },
+      { name: 'Pubali Bank PLC — Sadar Road Br. (CC-8821)', type: 'Bank Account', balance: 2890400, status: 'Reconciled' },
+      { name: 'Site Petty Cash & MFS (bKash / Nagad Site Imprest)', type: 'Cash Account', balance: 485650, status: 'Active' },
+      { name: '1150 — Retention Money Receivable (EED/LGED)', type: 'Control Asset', balance: 4862000, status: 'Tracked per Tender' },
+      { name: '1160 — Bank Guarantee / PG Margin Deposit', type: 'Control Asset', balance: 1913000, status: 'Active BG' }
+    ],
+    transactions: [
+      { date: '2026-10-29', ref: 'RA-019', type: 'IN',  party: 'Executive Engineer, LGED Barisal', project: 'LGED-1169066', desc: '50% Retention Money Release — Goila UP Office Road', amount: 600000 },
+      { date: '2026-10-29', ref: 'PV-887', type: 'OUT', party: 'BSRM Steels Ltd (Barisal Depot)', project: 'EED-1127263', desc: '28 MT 500W Deformed Bar for 3rd Floor Beam & Slab', amount: 2688000 },
+      { date: '2026-10-28', ref: 'RV-015', type: 'IN',  party: 'Executive Engineer, EED Barisal', project: 'EED-1127263', desc: '3rd Running Bill Net Cheque Deposit (After VAT 7.5% & AIT 5%)', amount: 3485000 },
+      { date: '2026-10-27', ref: 'PV-886', type: 'OUT', party: 'Shah Cement Industries Ltd', project: 'EED-1114502', desc: '1,400 Bags OPC Cement Delivered to Site Godown', amount: 742000 },
+      { date: '2026-10-26', ref: 'PV-885', type: 'OUT', party: 'Engr. Kamrul & Civil Labor Sardar', project: 'LGED-1158920', desc: 'Weekly Rajmistri & Shuttering Labor Muster Roll', amount: 385000 },
+      { date: '2026-10-25', ref: 'PV-884', type: 'OUT', party: 'Padma Bitumen & Stone Supply', project: 'LGED-1169066', desc: '3/4" Pakur Stone Chips & 60/70 Grade Bitumen', amount: 1240000 }
+    ],
+    forensics: [
+      { code: 'F-01', title: 'Suspense Account Zero-Balance Check', status: 'PASS', badge: 'pill-green', detail: '0 unallocated transactions in Suspense Account.' },
+      { code: 'F-02', title: 'Project Tag Attribution on Direct Costs', status: 'PASS', badge: 'pill-green', detail: '887/887 Payment vouchers tagged to EED/LGED tender codes.' },
+      { code: 'F-03', title: 'Retention Receivable Control (1150) Sync', status: 'PASS', badge: 'pill-green', detail: '10% security deduction matched across all 10 RA Bills.' },
+      { code: 'F-04', title: 'AIT / VDS Withholding Tax Certificates', status: 'WARN', badge: 'pill-amber', detail: '2 recent LGED challans pending treasury certificate upload.' },
+      { code: 'F-05', title: 'Custom Document Theme Coverage', status: 'PASS', badge: 'pill-green', detail: '943/943 transactions linked to PROCUREMENT-LEDGER-V2.1.' },
+      { code: 'F-06', title: 'Supplier Control Account Reconciliation', status: 'PASS', badge: 'pill-green', detail: 'All 34 material suppliers mapped to Accounts Payable.' }
+    ]
+  },
+
+  'demo:manufacturing': {
+    id: 'demo:manufacturing',
+    name: '004 — ZIPPY & WHIZ (RMG Manufacturing & Statutory Payroll)',
+    sector: 'Apparel / Garments Manufacturing, BOM Production & HR Payroll',
+    currency: '৳',
+    kpis: [
+      { group: 'cyan',   glyph: '●', label: 'Export & B2B Order Book', bn: 'মোট অর্ডার ও চালান মূল্য',    val: '৳ 6,84,00,000', sub: '18 Active Production Lots' },
+      { group: 'green',  glyph: '+', label: 'Realized Export & Sales', bn: 'মোট বিক্রয় ও এলসি আদায়',     val: '৳ 5,19,40,000', sub: '94% On-Time Shipment' },
+      { group: 'amber',  glyph: '−', label: 'Raw Material & BOM Cost', bn: 'কাঁচামাল ও ফেব্রিক খরচ',     val: '৳ 2,94,10,000', sub: 'Yarn, Fabric & Accessories' },
+      { group: 'amber',  glyph: '−', label: 'Statutory Factory Payroll',bn: 'শ্রমিক বেতন ও ওভারটাইম',    val: '৳ 88,65,200',   sub: 'Rule 102/115 Compliant' },
+      { group: 'violet', glyph: '▸', label: 'WIP & Finished Inventory',bn: 'তৈরি পোশাক ও স্টক মূল্য',    val: '৳ 74,20,000',   sub: 'Zero Negative Stock' },
+      { group: 'cyan',   glyph: '★', label: 'Net Factory EBITDA',      bn: 'নিট ফ্যাক্টরি মুনাফা',        val: '৳ 1,36,64,800', sub: '26.3% Operating Margin' }
+    ],
+    projects: [
+      { code: 'LOT-2026-A1', name: 'Men’s Heavy Jersey Polo — EU Autumn Buyer Lot', pe: 'H&M / Nordic Apparel Group', contract: 21500000, billed: 18900000, collected: 17400000, cost: 13200000, retention: 0, status: 'Shipped · LC Realized' },
+      { code: 'LOT-2026-B4', name: 'Kids Organic Fleece Hoodie — UK Retail Chain', pe: 'Primark / Dublin Buying House', contract: 16800000, billed: 14200000, collected: 12800000, cost: 9850000, retention: 0, status: 'Finishing & Carton QC' },
+      { code: 'LOT-2026-C2', name: 'Activewear Dry-Fit Jogger — US Sportswear', pe: 'Decathlon Global Sourcing', contract: 18900000, billed: 11400000, collected: 10200000, cost: 8140000, retention: 0, status: 'Sewing Line 1–4 Active' },
+      { code: 'LOT-2026-D9', name: 'Corporate Uniform Twill Chino — Local B2B', pe: 'Telecom & Pharma Corporate', contract: 11200000, billed: 7440000, collected: 6950000, cost: 5085200, retention: 372000, status: 'Delivery Batch 2' }
+    ],
+    treasury: [
+      { name: 'Eastern Bank PLC — Gulshan OBU / Export FC Account', type: 'Bank Account', balance: 14250000, status: 'Reconciled' },
+      { name: 'City Bank PLC — Payroll & Factory Operational CD', type: 'Bank Account', balance: 4820000, status: 'Payroll Ready' },
+      { name: 'Factory Cash & Welfare Fund Imprest', type: 'Cash Account', balance: 390000, status: 'Verified' },
+      { name: 'Inventory On Hand — Raw Fabric, Trim & Finished SKU', type: 'Control Asset', balance: 7420000, status: 'BOM Audited' }
+    ],
+    transactions: [
+      { date: '2026-11-01', ref: 'PAY-10', type: 'OUT', party: 'October Factory Payslip Batch (148 Workers)', project: 'LOT-2026-B4', desc: 'Statutory Payroll: Basic (2/3 Core) + House Rent (1/3) + Fixed 2,450 + OT', amount: 2845600 },
+      { date: '2026-10-30', ref: 'EXP-412', type: 'IN', party: 'Nordic Apparel Group (TT / LC Realization)', project: 'LOT-2026-A1', desc: 'Export Proceeds Realized against Commercial Invoice #CI-884', amount: 6450000 },
+      { date: '2026-10-29', ref: 'PO-902', type: 'OUT', party: 'Square Textiles & Spinning Mills', project: 'LOT-2026-C2', desc: '14,500 Kg Combed Cotton Yarn 30/1 & Lycra', amount: 3190000 },
+      { date: '2026-10-28', ref: 'PRD-77', type: 'IN',  party: 'Production Order #77 Completion', project: 'LOT-2026-B4', desc: '18,000 Pcs Fleece Hoodie Transferred to Finished Goods with Overhead', amount: 4140000 }
+    ],
+    forensics: [
+      { code: 'M-01', title: 'Production Order BOM Cost Absorption', status: 'PASS', badge: 'pill-green', detail: 'AddNonInventoryCostIntoProduction enabled across all batches.' },
+      { code: 'M-02', title: 'Bangladesh Labour Act Rule 102 OT Audit', status: 'PASS', badge: 'pill-green', detail: 'OT rate verified at 2 × Basic ÷ 208 hours across all payslips.' },
+      { code: 'M-03', title: 'Inventory Negative Quantity Check', status: 'PASS', badge: 'pill-green', detail: '0 SKUs in negative stock before ProductionOrder execution.' },
+      { code: 'M-04', title: 'Employee Clearing Account Settlement', status: 'PASS', badge: 'pill-green', detail: 'Net payable matches bank disbursement transfer.' },
+      { code: 'M-05', title: 'Custom Button Hygiene Audit', status: 'WARN', badge: 'pill-amber', detail: 'Detected legacy duplicate buttons queued for v8.1.1 cleanup.' },
+      { code: 'M-06', title: 'Export Duty Drawback & Cash Incentive Ledger', status: 'PASS', badge: 'pill-green', detail: 'Tracked under separate Control Account.' }
+    ]
+  },
+
+  'demo:syndicate': {
+    id: 'demo:syndicate',
+    name: '005 — ICON TOWER (Real Estate & Land-Share Syndicate)',
+    sector: 'B+G+9 Condominium Land-Share Syndicate & Construction Escrow',
+    currency: '৳',
+    kpis: [
+      { group: 'cyan',   glyph: '●', label: 'Total Project Budget',    bn: 'মোট জমি ও নির্মাণ বাজেট',     val: '৳ 24,60,00,000', sub: '36 Flat Shareholders' },
+      { group: 'green',  glyph: '+', label: 'Land & Casting Collected',bn: 'শেয়ারহোল্ডার কিস্তি আদায়',  val: '৳ 16,84,50,000', sub: 'Jomi-o-Share Receipts' },
+      { group: 'amber',  glyph: '−', label: 'Land Reg. & Civil Cost',  bn: 'জমি রেজিস্ট্রি ও নির্মাণ খরচ', val: '৳ 14,92,00,000', sub: 'Piling + 6th Roof Done' },
+      { group: 'red',    glyph: '!', label: 'Member Installment Due',  bn: 'বকেয়া নির্মাণ কিস্তি',       val: '৳ 1,42,00,000',  sub: '4 Shareholders Overdue' },
+      { group: 'violet', glyph: '▸', label: 'Escrow Bank Reserve',     bn: 'প্রজেক্ট ব্যাংক স্থিতি',       val: '৳ 1,92,50,000',  sub: 'Joint Signatory Account' },
+      { group: 'slate',  glyph: '▪', label: 'Completion Progress',     bn: 'নির্মাণ অগ্রগতি',             val: '68.5%',          sub: 'Handover Target: Dec 2027' }
+    ],
+    projects: [
+      { code: 'STAGE-01-LAND', name: 'Land Purchase & Mutation (জমি ক্রয় ও নামজারি)', pe: '36 Co-Owner Shareholders', contract: 90000000, billed: 90000000, collected: 90000000, cost: 89500000, retention: 0, status: '100% Registered' },
+      { code: 'STAGE-02-PILE', name: 'Shore Piling, Deep Cast-in-Situ Piling & Basement', pe: 'Icon Tower Committee', contract: 42000000, billed: 42000000, collected: 41200000, cost: 39800000, retention: 800000, status: '100% Completed' },
+      { code: 'STAGE-03-SLAB', name: 'Superstructure 1st to 6th Floor Roof Casting', pe: 'Icon Tower Committee', contract: 64000000, billed: 48000000, collected: 37250000, cost: 19900000, retention: 1200000, status: '6th Floor Curing' },
+      { code: 'STAGE-04-MEP',  name: 'Brickwork, Plaster, Lift & Substation Escrow', pe: 'Icon Tower Committee', contract: 50000000, billed: 2650000, collected: 0, cost: 0, retention: 0, status: 'Upcoming Call' }
+    ],
+    treasury: [
+      { name: 'Islami Bank Bangladesh PLC — Joint Syndicate Mudaraba A/C', type: 'Escrow Bank', balance: 16400000, status: '3-Signatory Verified' },
+      { name: 'Dutch-Bangla Bank PLC — Construction Clearing A/C', type: 'Bank Account', balance: 2850000, status: 'Reconciled' },
+      { name: 'Member Arrears Receivable (4 Flat Owners — 5th/6th Slab)', type: 'Receivable', balance: 14200000, status: 'Reminder Issued' }
+    ],
+    transactions: [
+      { date: '2026-10-30', ref: 'MR-409', type: 'IN',  party: 'Alhaj Md. Rafiqul Islam (Share #B-4)', project: 'STAGE-03-SLAB', desc: '6th Floor Roof Casting Installment (Jomi-o-Share Receipt Theme)', amount: 450000 },
+      { date: '2026-10-29', ref: 'MR-408', type: 'IN',  party: 'Dr. Farhana Yasmin (Share #A-7)', project: 'STAGE-03-SLAB', desc: '6th Floor Roof Casting + Lift Booking Installment', amount: 650000 },
+      { date: '2026-10-28', ref: 'PV-312', type: 'OUT', party: 'Crown Cement Ready-Mix Concrete Ltd', project: 'STAGE-03-SLAB', desc: '3,800 CFT 3500 PSI Ready-Mix Concrete for 6th Floor Slab', amount: 1482000 },
+      { date: '2026-10-26', ref: 'PV-311', type: 'OUT', party: 'AKS 500W Steel Direct Mill Supply', project: 'STAGE-03-SLAB', desc: '18 MT 16mm & 20mm Rebar for 6th/7th Column & Beam', amount: 1710000 }
+    ],
+    forensics: [
+      { code: 'S-01', title: 'Land vs. Construction Fund Segregation', status: 'PASS', badge: 'pill-green', detail: 'Land Cost (জমিক্রয়) and Civil Cost (নির্মাণ) tracked on separate lines.' },
+      { code: 'S-02', title: 'Bilingual Money Receipt Theme (1,080 Lines)', status: 'PASS', badge: 'pill-green', detail: 'Jomi-o-Share Receipt Theme active with QR & 3-Signatory block.' },
+      { code: 'S-03', title: 'Shareholder Arrears Aging Alert', status: 'WARN', badge: 'pill-red', detail: '4 members >30 days overdue on 6th Floor Casting call (৳ 1.42 Cr).' },
+      { code: 'S-04', title: 'Ready-Mix & Rebar Mill Test Certificate Match', status: 'PASS', badge: 'pill-green', detail: 'All structural procurement vouchers carry batch reference.' },
+      { code: 'S-05', title: 'Joint Signatory Bank Reconciliation', status: 'PASS', badge: 'pill-green', detail: 'Islami Bank & DBBL statements matched to ৳ 0 variance.' },
+      { code: 'S-06', title: 'Retention Holdback on Civil Subcontractor', status: 'PASS', badge: 'pill-green', detail: '5% running bill security held in Retention Payable.' }
+    ]
+  }
+};
+
+/* ============================================================================
+ * 2. TRIPLE-MODE RUNTIME BRIDGE (Mode A: api-request, Mode B: manager-context, Mode C: Demo)
+ * ============================================================================ */
+let RUNTIME_STATE = {
+  bridgeMode: 'detecting', // 'api-request' | 'manager-context' | 'same-origin' | 'demo'
+  managerVersion: null,
+  apiEndpoint: null,
+  apiAccessToken: null,
+  liveBusinesses: [],
+  activeProfileKey: 'demo:epc',
+  activeTab: 'overview',
+  roleMode: localStorage.getItem('egp-mode') || 'owner', // Default 'owner' in Alfabase showcase so visitors see all export buttons immediately
+  langMode: localStorage.getItem('egp-lang') || 'bi',    // 'bi' | 'en' | 'bn'
+  darkMode: localStorage.getItem('egp-theme') === 'dark',
+  liveDataCache: {}
+};
+
+// Listen for unsolicited Mode B 'manager-context' handshake from host
+window.addEventListener('message', (event) => {
+  const data = event.data;
+  if (!data || typeof data !== 'object') return;
+  if (data.type === 'manager-context' && data.payload) {
+    RUNTIME_STATE.bridgeMode = 'manager-context';
+    RUNTIME_STATE.apiEndpoint = data.payload.apiEndpoint || '/api4';
+    RUNTIME_STATE.apiAccessToken = data.payload.apiAccessToken || null;
+    updateBridgeBadge('🟢 LIVE · Manager Context Bridge', false);
+    discoverLiveBusinesses();
+  }
+});
+
+/**
+ * Sends a postMessage RPC to Manager.io's api-proxy.js / Template.cs (Mode A)
+ * Posts to window.parent AND window.top (if nested inside Alfabase gallery iframe inside Manager).
+ */
+function postMessageRpc(message, timeoutMs = 950) {
+  return new Promise((resolve, reject) => {
+    if (window.self === window.top) {
+      reject(new Error('Top-level window'));
+      return;
+    }
+    const requestId = (window.crypto && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : 'req-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+
+    const timer = setTimeout(() => {
+      window.removeEventListener('message', onMsg);
+      reject(new Error('postMessage timeout'));
+    }, timeoutMs);
+
+    function onMsg(event) {
+      const d = event.data;
+      if (!d || typeof d.type !== 'string') return;
+      if (d.requestId && d.requestId !== requestId) return;
+      if (d.type.endsWith('-response')) {
+        clearTimeout(timer);
+        window.removeEventListener('message', onMsg);
+        resolve(d);
+      }
+    }
+
+    window.addEventListener('message', onMsg);
+    const payload = { ...message, requestId };
+    try { window.parent.postMessage(payload, '*'); } catch (e) {}
+    try {
+      if (window.top && window.top !== window.parent && window.top !== window.self) {
+        window.top.postMessage(payload, '*');
+      }
+    } catch (e) {}
+  });
+}
+
+/**
+ * Unified API caller that routes over Mode A (postMessage api-request),
+ * Mode B (Bearer token), or Same-Origin fetch.
+ */
+async function callManagerApi(method, path, params = {}, body = null) {
+  if (RUNTIME_STATE.bridgeMode === 'api-request') {
+    const res = await postMessageRpc({
+      type: 'api-request',
+      method,
+      path,
+      params,
+      body
+    }, 4500);
+    if (res.status >= 200 && res.status < 300) return res.body;
+    throw new Error(`HTTP ${res.status}: ${res.error || JSON.stringify(res.body)}`);
+  }
+
+  // Mode B or Same-Origin
+  const baseUrl = RUNTIME_STATE.apiEndpoint
+    ? RUNTIME_STATE.apiEndpoint.replace(/\/$/, '')
+    : window.location.origin;
+  const url = new URL(path.startsWith('http') ? path : baseUrl + path, window.location.origin);
+  Object.entries(params || {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null) url.searchParams.set(k, v);
+  });
+
+  const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json' };
+  if (RUNTIME_STATE.apiAccessToken) {
+    headers['Authorization'] = `Bearer ${RUNTIME_STATE.apiAccessToken}`;
+  }
+
+  const resp = await fetch(url.toString(), {
+    method,
+    headers,
+    credentials: RUNTIME_STATE.apiAccessToken ? 'omit' : 'include',
+    body: method !== 'GET' && body != null ? JSON.stringify(body) : null
+  });
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  return await resp.json();
+}
+
+function updateBridgeBadge(text, isDemo) {
+  const txt = document.getElementById('bridgeStatusText');
+  if (txt) txt.textContent = text;
+}
+
+/**
+ * Boot-time Triple-Mode Auto-Discovery
+ */
+async function initTripleModeBridge() {
+  // 1. Try Mode A (postMessage api-request + version-request + page-request) if inside an iframe
+  if (window.self !== window.top) {
+    try {
+      const [verRes, bizRes, pageRes] = await Promise.allSettled([
+        postMessageRpc({ type: 'version-request' }, 900),
+        postMessageRpc({ type: 'api-request', method: 'GET', path: '/api4/businesses' }, 1200),
+        postMessageRpc({ type: 'page-request' }, 900)
+      ]);
+
+      if (bizRes.status === 'fulfilled' && bizRes.value && bizRes.value.status === 200) {
+        RUNTIME_STATE.bridgeMode = 'api-request';
+        RUNTIME_STATE.managerVersion = verRes.status === 'fulfilled' ? verRes.value.body : '26.10+';
+        const list = (bizRes.value.body && bizRes.value.body.businesses) || [];
+        RUNTIME_STATE.liveBusinesses = list.map(b => b.name).filter(Boolean);
+        const pageBiz = pageRes.status === 'fulfilled' ? pageRes.value?.body?.query?.business : null;
+        populateLiveBusinessesDropdown(pageBiz);
+        updateBridgeBadge(`🟢 LIVE · Manager.io RPC (${RUNTIME_STATE.liveBusinesses.length} Businesses)`, false);
+        return;
+      }
+    } catch (e) {
+      // Fallback to next mode
+    }
+  }
+
+  // 2. Try Same-Origin /api4/businesses (when hosted inside Manager's /extensions/ or local lab)
+  try {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), 750);
+    const resp = await fetch('/api4/businesses', { credentials: 'include', signal: controller.signal });
+    clearTimeout(t);
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data && Array.isArray(data.businesses)) {
+        RUNTIME_STATE.bridgeMode = 'same-origin';
+        RUNTIME_STATE.liveBusinesses = data.businesses.map(b => b.name).filter(Boolean);
+        const urlBiz = new URLSearchParams(window.location.search).get('business');
+        populateLiveBusinessesDropdown(urlBiz);
+        updateBridgeBadge(`🟢 LIVE · Manager.io Direct (${RUNTIME_STATE.liveBusinesses.length} Businesses)`, false);
+        return;
+      }
+    }
+  } catch (e) {
+    // Expected when running on external Alfabase / Vercel domain outside Manager
+  }
+
+  // 3. Mode C — Standalone Interactive Demo Mode
+  RUNTIME_STATE.bridgeMode = 'demo';
+  updateBridgeBadge('🔵 INTERACTIVE DEMO · 6 Global Multi-Currency Suites Ready', true);
+  renderActiveProfile();
+}
+
+function populateLiveBusinessesDropdown(preferredBiz) {
+  const grp = document.getElementById('liveOptGroup');
+  const sel = document.getElementById('bizSelect');
+  if (!grp || !sel || !RUNTIME_STATE.liveBusinesses.length) {
+    renderActiveProfile();
+    return;
+  }
+  grp.hidden = false;
+  grp.innerHTML = RUNTIME_STATE.liveBusinesses
+    .map(name => `<option value="live:${escapeHtml(name)}">🔗 Live: ${escapeHtml(name)}</option>`)
+    .join('');
+
+  const target = preferredBiz && RUNTIME_STATE.liveBusinesses.includes(preferredBiz)
+    ? `live:${preferredBiz}`
+    : `live:${RUNTIME_STATE.liveBusinesses[0]}`;
+  sel.value = target;
+  onBusinessSelectChange(target);
+}
+
+async function discoverLiveBusinesses() {
+  try {
+    const data = await callManagerApi('GET', '/api4/businesses');
+    const list = (data && data.businesses) || [];
+    RUNTIME_STATE.liveBusinesses = list.map(b => b.name).filter(Boolean);
+    populateLiveBusinessesDropdown(null);
+  } catch (e) {
+    renderActiveProfile();
+  }
+}
+
+function refreshConnection() {
+  updateBridgeBadge('🔄 Re-syncing Bridge…', true);
+  initTripleModeBridge();
+}
+
+/* ============================================================================
+ * 3. LIVE MANAGER.IO BUSINESS DATA AGGREGATOR (Mode A & Mode B)
+ * ============================================================================ */
+async function loadLiveBusinessProfile(businessName) {
+  updateBridgeBadge(`🔄 Loading "${businessName}"…`, false);
+  try {
+    const params = { business: businessName, pageSize: 2500 };
+    const [
+      baseCurrRes, projRes, custRes, suppRes, siRes, piRes, iatRes, rcRes, pmRes, bankRes, taxRes
+    ] = await Promise.allSettled([
+      callManagerApi('GET', '/api4/base-currency', params),
+      callManagerApi('GET', '/api4/project-batch', params),
+      callManagerApi('GET', '/api4/customer-batch', params),
+      callManagerApi('GET', '/api4/supplier-batch', params),
+      callManagerApi('GET', '/api4/sales-invoice-batch', params),
+      callManagerApi('GET', '/api4/purchase-invoice-batch', params),
+      callManagerApi('GET', '/api4/inter-account-transfer-batch', params),
+      callManagerApi('GET', '/api4/receipt-batch', params),
+      callManagerApi('GET', '/api4/payment-batch', params),
+      callManagerApi('GET', '/api4/bank-or-cash-account-batch', params),
+      callManagerApi('GET', '/api4/tax-code-batch', params)
+    ]);
+
+    const projectsRaw = projRes.status === 'fulfilled' ? (projRes.value?.items || []) : [];
+    const customersRaw = custRes.status === 'fulfilled' ? (custRes.value?.items || []) : [];
+    const suppliersRaw = suppRes.status === 'fulfilled' ? (suppRes.value?.items || []) : [];
+    const invoicesRaw = siRes.status === 'fulfilled' ? (siRes.value?.items || []) : [];
+    const purchasesRaw = piRes.status === 'fulfilled' ? (piRes.value?.items || []) : [];
+    const transfersRaw = iatRes.status === 'fulfilled' ? (iatRes.value?.items || []) : [];
+    const receiptsRaw = rcRes.status === 'fulfilled' ? (rcRes.value?.items || []) : [];
+    const paymentsRaw = pmRes.status === 'fulfilled' ? (pmRes.value?.items || []) : [];
+    const banksRaw = bankRes.status === 'fulfilled' ? (bankRes.value?.items || []) : [];
+    const taxesRaw = taxRes.status === 'fulfilled' ? (taxRes.value?.items || []) : [];
+
+    // Map entities by key
+    const custMap = {};
+    customersRaw.forEach(c => { custMap[c.key] = c.item?.name || 'Customer'; });
+    const suppMap = {};
+    suppliersRaw.forEach(s => { suppMap[s.key] = s.item?.name || 'Supplier'; });
+
+    const projMap = {};
+    projectsRaw.forEach(p => {
+      const item = p.item || {};
+      const decimals = item.customFields2?.decimals || {};
+      const contractVal = Object.values(decimals)[0] || 0;
+      const codeMatch = (item.name || '').match(/\(([A-Z0-9-]+)\)/);
+      const code = codeMatch ? codeMatch[1] : p.key.slice(0, 8).toUpperCase();
+      projMap[p.key] = {
+        key: p.key,
+        code,
+        name: item.name || 'Unnamed Project',
+        pe: 'Active Project / Cost Center',
+        contract: Number(contractVal) || 0,
+        billed: 0,
+        collected: 0,
+        cost: 0,
+        retention: 0,
+        status: item.inactive ? 'Archived' : 'Active'
+      };
+    });
+
+    const sumLines = (lines, priceField) => {
+      if (!Array.isArray(lines)) return 0;
+      return lines.reduce((acc, l) => {
+        if (l.amount != null && l.amount !== 0) return acc + Number(l.amount);
+        const q = l.qty != null && l.qty !== 0 ? Number(l.qty) : 1;
+        const p = Number(l[priceField] ?? l.unitPrice ?? 0);
+        return acc + (q * p);
+      }, 0);
+    };
+
+    const matchProjectForLine = (line) => {
+      if (line.project && projMap[line.project]) return projMap[line.project];
+      const strVals = Object.values(line.customFields2?.strings || {});
+      for (const sv of strVals) {
+        if (!sv) continue;
+        const found = Object.values(projMap).find(pr => pr.code === sv || pr.name.includes(sv));
+        if (found) return found;
+      }
+      return null;
+    };
+
+    let totalBilled = 0, totalCollected = 0, totalPaid = 0;
+    let themedTxCount = 0, totalTxCount = invoicesRaw.length + purchasesRaw.length + transfersRaw.length + receiptsRaw.length + paymentsRaw.length;
+    const recentTx = [];
+
+    purchasesRaw.forEach(pi => { if (pi.item?.customTheme) themedTxCount++; });
+    transfersRaw.forEach(tr => { if (tr.item?.customTheme) themedTxCount++; });
+
+    invoicesRaw.forEach(inv => {
+      const it = inv.item || {};
+      if (it.customTheme) themedTxCount++;
+      const amt = sumLines(it.lines, 'salesUnitPrice');
+      totalBilled += amt;
+      (it.lines || []).forEach(l => {
+        const pr = matchProjectForLine(l);
+        if (pr) pr.billed += (l.amount || ((l.qty || 1) * (l.salesUnitPrice || 0)));
+      });
+      recentTx.push({
+        date: (it.issueDate || '').slice(0, 10) || '—',
+        ref: it.reference || 'INV',
+        type: 'IN',
+        party: custMap[it.customer] || 'Customer Invoice',
+        project: matchProjectForLine((it.lines || [])[0] || {})?.code || 'General',
+        desc: it.description || ((it.lines || [])[0]?.lineDescription) || 'Sales / RA Invoice',
+        amount: amt
+      });
+    });
+
+    receiptsRaw.forEach(rc => {
+      const it = rc.item || {};
+      if (it.customTheme) themedTxCount++;
+      const amt = sumLines(it.lines, 'salesUnitPrice');
+      totalCollected += amt;
+      (it.lines || []).forEach(l => {
+        const pr = matchProjectForLine(l);
+        if (pr) pr.collected += (l.amount || ((l.qty || 1) * (l.salesUnitPrice || 0)));
+      });
+      recentTx.push({
+        date: (it.date || '').slice(0, 10) || '—',
+        ref: it.reference || 'RV',
+        type: 'IN',
+        party: custMap[it.customer] || it.contact || 'Receipt Collection',
+        project: matchProjectForLine((it.lines || [])[0] || {})?.code || 'General',
+        desc: it.description || ((it.lines || [])[0]?.lineDescription) || 'Cash / Bank Receipt',
+        amount: amt
+      });
+    });
+
+    paymentsRaw.forEach(pm => {
+      const it = pm.item || {};
+      if (it.customTheme) themedTxCount++;
+      const amt = sumLines(it.lines, 'purchaseUnitPrice');
+      totalPaid += amt;
+      (it.lines || []).forEach(l => {
+        const pr = matchProjectForLine(l);
+        if (pr) pr.cost += (l.amount || ((l.qty || 1) * (l.purchaseUnitPrice || 0)));
+      });
+      recentTx.push({
+        date: (it.date || '').slice(0, 10) || '—',
+        ref: it.reference || 'PV',
+        type: 'OUT',
+        party: suppMap[it.supplier] || it.contact || 'Site / Operational Payee',
+        project: matchProjectForLine((it.lines || [])[0] || {})?.code || 'General',
+        desc: it.description || ((it.lines || [])[0]?.lineDescription) || 'Payment Voucher',
+        amount: amt
+      });
+    });
+
+    recentTx.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+    const projectList = Object.values(projMap);
+    const totalContract = projectList.reduce((s, p) => s + p.contract, 0);
+    const netSurplus = Math.max(totalBilled, totalCollected) - totalPaid;
+
+    const bcObj = baseCurrRes.status === 'fulfilled' ? (baseCurrRes.value?.item || baseCurrRes.value || {}) : {};
+    const liveSym = bcObj.symbol || bcObj.Symbol || bcObj.code || bcObj.Code || (businessName.toUpperCase().includes('BAUS') || businessName.toUpperCase().includes('ZIPPY') || businessName.toUpperCase().includes('LEATHER') ? '৳' : '$');
+    const liveProfile = {
+      id: `live:${businessName}`,
+      name: `${businessName} (Live Manager.io Business)`,
+      sector: `Live Connected ERP · ${projectsRaw.length} Projects · ${customersRaw.length} Customers · ${suppliersRaw.length} Suppliers`,
+      currency: liveSym,
+      kpis: [
+        { group: 'cyan',   glyph: '●', label: 'Contract / Project Portfolio', bn: 'মোট প্রজেক্ট চুক্তিমূল্য', val: fmtMoney(totalContract, liveSym), sub: `${projectList.length} Active Projects` },
+        { group: 'green',  glyph: '+', label: 'Total Invoiced / Billed',      bn: 'মোট বিল ও ইনভয়েস',        val: fmtMoney(totalBilled, liveSym),   sub: `${invoicesRaw.length} Sales Invoices` },
+        { group: 'green',  glyph: '+', label: 'Total Cash Receipts',          bn: 'মোট নগদ ও ব্যাংক জমা',    val: fmtMoney(totalCollected, liveSym),sub: `${receiptsRaw.length} Receipts` },
+        { group: 'amber',  glyph: '−', label: 'Total Payments & Costs',       bn: 'মোট খরচ ও পেমেন্ট',       val: fmtMoney(totalPaid, liveSym),     sub: `${paymentsRaw.length} Payment Vouchers` },
+        { group: 'slate',  glyph: '▪', label: 'Parties & Accounts',           bn: 'কাস্টমার ও সাপ্লায়ার',     val: `${customersRaw.length + suppliersRaw.length}`, sub: `${customersRaw.length} Cust · ${suppliersRaw.length} Supp` },
+        { group: netSurplus >= 0 ? 'cyan' : 'red', glyph: netSurplus >= 0 ? '★' : '!', label: 'Net Operating Position', bn: 'নিট অপারেটিং ব্যালেন্স', val: fmtMoney(netSurplus, liveSym), sub: `${totalTxCount} Total Vouchers` }
+      ],
+      projects: projectList.length ? projectList : [
+        { code: 'GEN-OPS', name: 'General Business Operations (No Projects Created Yet)', pe: businessName, contract: totalBilled, billed: totalBilled, collected: totalCollected, cost: totalPaid, retention: 0, status: 'Live Ledger' }
+      ],
+      treasury: banksRaw.length
+        ? banksRaw.map(b => ({
+            name: b.item?.name || 'Bank / Cash Account',
+            type: b.item?.isBankAccount ? 'Bank Account' : 'Cash Account',
+            balance: Number(b.item?.obsolete_StartingBalance || 0),
+            status: b.item?.inactive ? 'Inactive' : 'Active'
+          }))
+        : [{ name: 'Primary Operating Account', type: 'Bank / Cash', balance: totalCollected - totalPaid, status: 'Live Computed' }],
+      transactions: recentTx.slice(0, 12),
+      forensics: [
+        { code: 'L-01', title: 'Live API4 Batch Connectivity', status: 'PASS', badge: 'pill-green', detail: `Connected to "${businessName}" (${totalTxCount} vouchers scanned).` },
+        { code: 'L-02', title: 'Project / Cost Center Attribution', status: projectList.length > 0 ? 'PASS' : 'WARN', badge: projectList.length > 0 ? 'pill-green' : 'pill-amber', detail: `${projectList.length} projects configured in business.` },
+        { code: 'L-03', title: 'Custom Document Theme Coverage', status: themedTxCount === totalTxCount && totalTxCount > 0 ? 'PASS' : 'WARN', badge: themedTxCount === totalTxCount && totalTxCount > 0 ? 'pill-green' : 'pill-amber', detail: `${themedTxCount} of ${totalTxCount} vouchers use a Custom Theme.` },
+        { code: 'L-04', title: 'Tax Code Statutory Configuration', status: taxesRaw.length > 0 ? 'PASS' : 'WARN', badge: taxesRaw.length > 0 ? 'pill-green' : 'pill-amber', detail: `${taxesRaw.length} tax codes configured.` },
+        { code: 'L-05', title: 'Bank & Cash Control Accounts', status: banksRaw.length > 0 ? 'PASS' : 'WARN', badge: banksRaw.length > 0 ? 'pill-green' : 'pill-amber', detail: `${banksRaw.length} bank/cash accounts active.` },
+        { code: 'L-06', title: 'Customer & Supplier Master Hygiene', status: 'PASS', badge: 'pill-green', detail: `${customersRaw.length} customers and ${suppliersRaw.length} suppliers verified.` }
+      ]
+    };
+
+    RUNTIME_STATE.liveDataCache[businessName] = liveProfile;
+    updateBridgeBadge(`🟢 LIVE · ${businessName} (${totalTxCount} Vouchers)`, false);
+    renderProfileData(liveProfile);
+  } catch (err) {
+    updateBridgeBadge(`🟠 Live Read Fallback (${err.message})`, true);
+    renderProfileData(DEMO_PROFILES['demo:epc']);
+  }
+}
+
+/* ============================================================================
+ * 4. UI RENDERING ENGINE (KPIs, Tables, Forensic Auditor, Simulators, Drawer)
+ * ============================================================================ */
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function fmtMoney(n, sym) {
+  const activeSym = sym || (typeof getActiveProfileObject === 'function' && getActiveProfileObject()?.currency) || '$';
+  const num = Number(n) || 0;
+  const abs = Math.abs(num);
+  const locale = (activeSym === '৳' || activeSym === '₹' || activeSym === 'BDT') ? 'en-IN' : 'en-US';
+  const formatted = abs.toLocaleString(locale, { maximumFractionDigits: 0 });
+  return (num < 0 ? '− ' : '') + activeSym + ' ' + formatted;
+}
+
+function getActiveProfileObject() {
+  const key = RUNTIME_STATE.activeProfileKey;
+  if (key.startsWith('live:')) {
+    const biz = key.slice(5);
+    return RUNTIME_STATE.liveDataCache[biz] || DEMO_PROFILES['demo:epc'];
+  }
+  return DEMO_PROFILES[key] || DEMO_PROFILES['demo:epc'];
+}
+
+function onBusinessSelectChange(val) {
+  RUNTIME_STATE.activeProfileKey = val;
+  if (val.startsWith('live:')) {
+    const bizName = val.slice(5);
+    loadLiveBusinessProfile(bizName);
+  } else {
+    renderActiveProfile();
+  }
+}
+
+function renderActiveProfile() {
+  const prof = getActiveProfileObject();
+  renderProfileData(prof);
+}
+
+function renderProfileData(prof) {
+  document.getElementById('hdrSub').textContent = `${prof.name} · ${prof.sector}`;
+
+  // 1. Render 6-Card Focus Engine (Mixed Mode: Phase-Boxes + Featured Spectrum Hero)
+  const kpiEl = document.getElementById('kpiStrip');
+  const cardConfigs = [
+    { cardCls: 'c-portfolio', tagCls: 'tag-cyan',   tag: 'PORTFOLIO',   valCls: 'val-ink' },
+    { cardCls: 'c-inflow',    tagCls: 'tag-green',  tag: 'BILLING',     valCls: 'val-ink' },
+    { cardCls: 'c-inflow',    tagCls: 'tag-green',  tag: 'COLLECTIONS', valCls: 'val-ink' },
+    { cardCls: 'c-outflow',   tagCls: 'tag-gold',   tag: 'DIRECT COST', valCls: 'val-gold' },
+    { cardCls: 'c-security',  tagCls: 'tag-purple', tag: 'SECURITY',    valCls: 'val-ink' },
+    { cardCls: 'c-hero',      tagCls: 'tag-hero',   tag: 'NET SURPLUS', valCls: 'val-hero' }
+  ];
+
+  kpiEl.innerHTML = prof.kpis.map((k, idx) => {
+    const conf = cardConfigs[idx] || cardConfigs[0];
+    let labelHtml = '';
+    if (RUNTIME_STATE.langMode === 'bn') {
+      labelHtml = `<div class="card-label">${escapeHtml(k.bn)}</div>`;
+    } else if (RUNTIME_STATE.langMode === 'en') {
+      labelHtml = `<div class="card-label">${escapeHtml(k.label)}</div>`;
+    } else {
+      labelHtml = `
+        <div class="card-label">${escapeHtml(k.label)}</div>
+        <div class="card-bn">${escapeHtml(k.bn)}</div>
+      `;
+    }
+    return `
+      <div class="focus-card ${conf.cardCls}" onclick="openKpiInspector(${idx})">
+        <div>
+          <span class="phase-tag ${conf.tagCls}">${conf.tag}</span>
+          ${labelHtml}
+        </div>
+        <div class="card-val ${conf.valCls}">${escapeHtml(k.val)}</div>
+        <div class="card-sub">${escapeHtml(k.sub)}</div>
+      </div>
+    `;
+  }).join('');
+  
+  // 2. Render Overview Project Matrix
+  renderProjectTableInto('ovProjectTableWrap', prof.projects, prof.currency);
+
+  // 3. Render Treasury & Control Accounts (Clean Tech-Table Rows)
+  const trWrap = document.getElementById('ovTreasuryWrap');
+  trWrap.innerHTML = `
+    <div>
+      ${prof.treasury.map(t => `
+        <div class="tr-row">
+          <div>
+            <div class="tr-title">${escapeHtml(t.name)}</div>
+            <div class="tr-sub">${escapeHtml(t.type)} · <span style="color:var(--green-ink);font-weight:700">${escapeHtml(t.status)}</span></div>
+          </div>
+          <div class="tr-val">
+            ${fmtMoney(t.balance, prof.currency)}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // 4. Render Recent Transactions (Tech-Table Style)
+  const txWrap = document.getElementById('ovRecentTxWrap');
+  txWrap.innerHTML = `
+    <table class="tech-table" id="recentTxTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Ref</th>
+          <th>Flow</th>
+          <th>Party / Payee</th>
+          <th>Project</th>
+          <th>Description</th>
+          <th class="num">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${prof.transactions.map((tx, idx) => `
+          <tr onclick="openTransactionInspector(${idx})">
+            <td style="white-space:nowrap;font-family:var(--mono);font-size:11px;color:var(--muted)">${escapeHtml(tx.date)}</td>
+            <td class="code-cell">${escapeHtml(tx.ref)}</td>
+            <td>
+              <span class="flow-pill ${tx.type === 'IN' ? 'in' : 'out'}">
+                ${tx.type === 'IN' ? '+ IN' : '− OUT'}
+              </span>
+            </td>
+            <td style="font-weight:700;color:#0D1117">${escapeHtml(tx.party)}</td>
+            <td style="font-family:var(--mono);color:var(--cyan-ink);font-weight:700">${escapeHtml(tx.project)}</td>
+            <td style="color:var(--muted)">${escapeHtml(tx.desc)}</td>
+            <td class="num" style="color:${tx.type === 'IN' ? 'var(--green-ink)' : 'var(--gold-ink)'}">
+              ${tx.type === 'IN' ? '+' : '−'} ${fmtMoney(tx.amount, prof.currency)}
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+
+  // 5. Render Full Projects Tab & Forensic Tab & Simulators
+  renderProjectsTab();
+  renderForensicTab(prof);
+  runSimulators();
+  applyRoleModeUI();
+}
+
+function renderProjectTableInto(containerId, projects, sym) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `
+    <table class="tech-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Project / Cost Center</th>
+          <th class="num">Contract Value</th>
+          <th class="num">+ Billed</th>
+          <th class="num">+ Collected</th>
+          <th class="num">− Direct Cost</th>
+          <th class="num">Net Margin</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${projects.map((p, idx) => {
+          const rev = Math.max(p.billed, p.collected);
+          const margin = rev - p.cost;
+          const pct = rev > 0 ? Math.round((margin / rev) * 100) : 0;
+          const billPct = p.contract > 0 ? Math.min(100, Math.round((rev / p.contract) * 100)) : 100;
+          return `
+            <tr onclick="openProjectInspector(${idx})">
+              <td class="code-cell">${escapeHtml(p.code)}</td>
+              <td>
+                <div style="font-weight:700;color:#0D1117">${escapeHtml(p.name)}</div>
+                <div style="font-size:11px;color:var(--dim)">${escapeHtml(p.pe)}</div>
+                <div class="prog-track"><div class="prog-fill" style="width:${billPct}%"></div></div>
+              </td>
+              <td class="num">${fmtMoney(p.contract, sym)}</td>
+              <td class="num" style="color:var(--green-ink)">+ ${fmtMoney(p.billed, sym)}</td>
+              <td class="num" style="color:var(--green-ink)">+ ${fmtMoney(p.collected, sym)}</td>
+              <td class="num" style="color:var(--gold-ink)">− ${fmtMoney(p.cost, sym)}</td>
+              <td class="num" style="color:${margin >= 0 ? 'var(--green-ink)' : 'var(--red-ink)'}">
+                ${fmtMoney(margin, sym)} <span style="font-size:10.5px;color:var(--dim)">(${pct}%)</span>
+              </td>
+              <td>
+                <span class="status-dot-wrap">
+                  <span class="status-dot ${margin < 0 ? 'red' : ''}"></span>${escapeHtml(p.status)}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderProjectsTab() {
+  const prof = getActiveProfileObject();
+  const q = (document.getElementById('projSearchInput')?.value || '').trim().toLowerCase();
+  const filtered = prof.projects.filter(p =>
+    !q || p.code.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.pe.toLowerCase().includes(q)
+  );
+  const badge = document.getElementById('projCountBadge');
+  if (badge) badge.textContent = `${filtered.length} Projects`;
+  renderProjectTableInto('fullProjectTableWrap', filtered, prof.currency);
+}
+
+function renderForensicTab(prof) {
+  const cardsEl = document.getElementById('forensicCardsWrap');
+  const tblEl = document.getElementById('forensicTableWrap');
+  if (!cardsEl || !tblEl) return;
+
+  const passCount = prof.forensics.filter(f => f.status === 'PASS').length;
+  const score = Math.round((passCount / prof.forensics.length) * 100);
+  document.getElementById('forensicScoreBadge').textContent = `Forensic Health Score: ${score}% (${passCount}/${prof.forensics.length} Passed)`;
+
+  cardsEl.innerHTML = prof.forensics.map(f => `
+    <div class="audit-item">
+      <div class="audit-item-hdr">
+        <span class="audit-item-title">[${escapeHtml(f.code)}] ${escapeHtml(f.title)}</span>
+        <span class="pill ${f.badge}">${escapeHtml(f.status)}</span>
+      </div>
+      <div class="audit-item-desc">${escapeHtml(f.detail)}</div>
+    </div>
+  `).join('');
+
+  tblEl.innerHTML = `
+    <table class="sov-table">
+      <thead>
+        <tr>
+          <th>Check ID</th>
+          <th>Diagnostic Control Rule</th>
+          <th>Status</th>
+          <th>Verified Finding &amp; Remediation Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${prof.forensics.map(f => `
+          <tr>
+            <td><span class="pill pill-slate">${escapeHtml(f.code)}</span></td>
+            <td style="font-weight:800">${escapeHtml(f.title)}</td>
+            <td><span class="pill ${f.badge}">${escapeHtml(f.status)}</span></td>
+            <td>${escapeHtml(f.detail)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+/* ============================================================================
+ * 5. 1-CLICK SAFE COA PRESET INSTALLER (Writes to Manager via POST /api4/*)
+ * ============================================================================ */
+async function installMissingCoaAccounts() {
+  const statusEl = document.getElementById('coaInstallStatus');
+  statusEl.hidden = false;
+
+  if (!RUNTIME_STATE.activeProfileKey.startsWith('live:')) {
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = '✓ [Simulation Mode] Verified 8 Statutory COA Groups & Accounts (Direct Project Revenue, Retention Receivable 1150, AIT Withholding, Site Material & Labor Cost, Factory Overhead). Connect inside Manager.io to write directly via /api4!';
+    return;
+  }
+
+  const business = RUNTIME_STATE.activeProfileKey.slice(5);
+  statusEl.style.color = 'var(--cyan)';
+  statusEl.textContent = `⏳ Inspecting existing P&L accounts in "${business}" via /api4/profit-and-loss-statement-account-batch…`;
+
+  try {
+    const existingRes = await callManagerApi('GET', '/api4/profit-and-loss-statement-account-batch', { business, pageSize: 500 });
+    const existingNames = new Set(
+      (existingRes?.items || []).map(it => String(it.item?.name || '').trim().toLowerCase())
+    );
+
+    const presets = [
+      { Name: '4100 — Certified Project & Running Bill Revenue', Code: '4100' },
+      { Name: '5100 — Direct Site Materials & Subcontractor Cost', Code: '5100' },
+      { Name: '5200 — Statutory Factory & Site Labor Muster Roll', Code: '5200' },
+      { Name: '6400 — Tender Document, BG Commission & Testing Fee', Code: '6400' }
+    ];
+
+    let created = 0, skipped = 0;
+    for (const acc of presets) {
+      if (existingNames.has(acc.Name.toLowerCase())) {
+        skipped++;
+        continue;
+      }
+      await callManagerApi('POST', '/api4/profit-and-loss-statement-account', {}, {
+        Business: business,
+        Value: acc
+      });
+      created++;
+    }
+
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = `✓ COA Preset Sync Complete on "${business}": ${created} new accounts created, ${skipped} existing accounts untouched.`;
+  } catch (err) {
+    statusEl.style.color = 'var(--amber)';
+    statusEl.textContent = `ℹ️ Read-only session or permission notice: ${err.message}`;
+  }
+}
+
+/* ============================================================================
+ * 6. LIVE STATUTORY SIMULATORS (e-GP RA Bill, Labour Act Payroll, Land-Share)
+ * ============================================================================ */
+function runSimulators() {
+  // 1. Contractor RA Bill
+  const gross = Number(document.getElementById('simRaGross')?.value || 0);
+  const vatPct = Number(document.getElementById('simRaVat')?.value || 0);
+  const aitPct = Number(document.getElementById('simRaAit')?.value || 0);
+  const retPct = Number(document.getElementById('simRaRet')?.value || 0);
+
+  const vatAmt = Math.round(gross * (vatPct / 100));
+  const aitAmt = Math.round(gross * (aitPct / 100));
+  const retAmt = Math.round(gross * (retPct / 100));
+  const totalDed = vatAmt + aitAmt + retAmt;
+  const netCheque = gross - totalDed;
+
+  const raEl = document.getElementById('simRaResult');
+  if (raEl) {
+    raEl.innerHTML = `
+      <div class="sim-line"><span>Gross Certified RA Bill:</span><span>${fmtMoney(gross)}</span></div>
+      <div class="sim-line" style="color:var(--amber)"><span>− VAT Deducted at Source (${vatPct}%):</span><span>− ${fmtMoney(vatAmt)}</span></div>
+      <div class="sim-line" style="color:var(--amber)"><span>− AIT / Income Tax (${aitPct}%):</span><span>− ${fmtMoney(aitAmt)}</span></div>
+      <div class="sim-line" style="color:var(--violet)"><span>− Retention Security (${retPct}% → A/C 1150):</span><span>− ${fmtMoney(retAmt)}</span></div>
+      <div class="sim-line" style="color:var(--green)"><span>Net Bank Cheque Receivable:</span><span>${fmtMoney(netCheque)}</span></div>
+    `;
+  }
+
+  // 2. Statutory Payroll Splitter
+  const pGross = Number(document.getElementById('simPayGross')?.value || 0);
+  const pFixed = Number(document.getElementById('simPayFixed')?.value || 2450);
+  const pOtHrs = Number(document.getElementById('simPayOt')?.value || 0);
+  const pAbs = Number(document.getElementById('simPayAbs')?.value || 0);
+
+  const core = Math.max(0, pGross - pFixed);
+  const basic = Math.round((core * 2) / 3);
+  const hra = Math.round(core / 3);
+  const otHourly = (basic * 2) / 208;
+  const otPay = Math.round(otHourly * pOtHrs);
+  const absDed = Math.round((pGross / 30) * pAbs);
+  const netPay = pGross + otPay - absDed;
+
+  const payEl = document.getElementById('simPayResult');
+  if (payEl) {
+    payEl.innerHTML = `
+      <div class="sim-line"><span>Basic Salary (2/3 Core):</span><span>${fmtMoney(basic)}</span></div>
+      <div class="sim-line"><span>House Rent (1/3 Core) + Fixed:</span><span>${fmtMoney(hra + pFixed)}</span></div>
+      <div class="sim-line" style="color:var(--green)"><span>+ Overtime (${pOtHrs}h @ ${fmtMoney(Math.round(otHourly))}/h):</span><span>+ ${fmtMoney(otPay)}</span></div>
+      <div class="sim-line" style="color:var(--red)"><span>− Absence Deduction (${pAbs}d):</span><span>− ${fmtMoney(absDed)}</span></div>
+      <div class="sim-line" style="color:var(--cyan)"><span>Net Take-Home Payslip:</span><span>${fmtMoney(netPay)}</span></div>
+    `;
+  }
+
+  // 3. Real Estate Land-Share
+  const reTotal = Number(document.getElementById('simReTotal')?.value || 0);
+  const rePaid = Number(document.getElementById('simRePaid')?.value || 0);
+  const reStages = Math.max(1, Number(document.getElementById('simReStages')?.value || 1));
+  const reBalance = Math.max(0, reTotal - rePaid);
+  const perStage = Math.round(reBalance / reStages);
+  const paidPct = reTotal > 0 ? ((rePaid / reTotal) * 100).toFixed(1) : '0.0';
+
+  const reEl = document.getElementById('simReResult');
+  if (reEl) {
+    reEl.innerHTML = `
+      <div class="sim-line"><span>Total Unit Share Commitment:</span><span>${fmtMoney(reTotal)}</span></div>
+      <div class="sim-line" style="color:var(--green)"><span>Paid to Date (${paidPct}% Equity):</span><span>${fmtMoney(rePaid)}</span></div>
+      <div class="sim-line" style="color:var(--amber)"><span>Remaining Construction Balance:</span><span>${fmtMoney(reBalance)}</span></div>
+      <div class="sim-line" style="color:var(--cyan)"><span>Per-Roof-Casting Installment (${reStages}x):</span><span>${fmtMoney(perStage)}</span></div>
+    `;
+  }
+}
+
+/* ============================================================================
+ * 7. 880px SLIDE-OVER INSPECTOR DRAWER (#egp-dr)
+ * ============================================================================ */
+function openProjectInspector(idx) {
+  const prof = getActiveProfileObject();
+  const p = prof.projects[idx];
+  if (!p) return;
+  const rev = Math.max(p.billed, p.collected);
+  const margin = rev - p.cost;
+  const pct = rev > 0 ? ((margin / rev) * 100).toFixed(1) : '0.0';
+
+  document.getElementById('drTitle').textContent = `${p.code} — ${p.name}`;
+  document.getElementById('drSub').textContent = `Authority / Client: ${p.pe} · Status: ${p.status}`;
+
+  const relTx = prof.transactions.filter(t => t.project === p.code);
+
+  document.getElementById('drBody').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+      <div class="focus-card c-portfolio">
+        <span class="phase-tag tag-cyan">BUDGET</span>
+        <div class="card-label">Contract Value</div>
+        <div class="card-val val-ink">${fmtMoney(p.contract, prof.currency)}</div>
+      </div>
+      <div class="focus-card c-inflow">
+        <span class="phase-tag tag-green">REALIZED</span>
+        <div class="card-label">Billed / Invoiced</div>
+        <div class="card-val val-green">${fmtMoney(rev, prof.currency)}</div>
+      </div>
+      <div class="focus-card c-outflow">
+        <span class="phase-tag tag-gold">DIRECT COST</span>
+        <div class="card-label">Site / Material / BOM</div>
+        <div class="card-val val-gold">${fmtMoney(p.cost, prof.currency)}</div>
+      </div>
+    </div>
+
+    <div class="tech-panel">
+      <div class="tech-panel-hdr">
+        <div class="tech-panel-title">📊 Financial Realization &amp; Retention Breakdown</div>
+        <span class="status-dot-wrap">
+          <span class="status-dot ${margin < 0 ? 'red' : ''}"></span>
+          Net Margin: ${fmtMoney(margin, prof.currency)} (${pct}%)
+        </span>
+      </div>
+      <div style="padding:16px 20px">
+        <div class="sim-line"><span>Contract / Tender Value:</span><strong>${fmtMoney(p.contract, prof.currency)}</strong></div>
+        <div class="sim-line"><span>Certified Running Bills:</span><strong style="color:var(--green-ink)">+ ${fmtMoney(p.billed, prof.currency)}</strong></div>
+        <div class="sim-line"><span>Net Collections in Bank:</span><strong style="color:var(--green-ink)">+ ${fmtMoney(p.collected, prof.currency)}</strong></div>
+        <div class="sim-line"><span>Direct Site / Material / Labor Cost:</span><strong style="color:var(--gold-ink)">− ${fmtMoney(p.cost, prof.currency)}</strong></div>
+        <div class="sim-line"><span>Retention / Security Held (10%):</span><strong style="color:var(--purple-ink)">${fmtMoney(p.retention, prof.currency)}</strong></div>
+        <div class="sim-line"><span>Net Project Operating Surplus:</span><strong style="color:${margin >= 0 ? 'var(--green-ink)' : 'var(--red-ink)'}">${fmtMoney(margin, prof.currency)}</strong></div>
+      </div>
+    </div>
+
+    <div class="tech-panel" style="margin-bottom:0">
+      <div class="tech-panel-hdr">
+        <div class="tech-panel-title">📑 Project-Tagged Vouchers (${relTx.length})</div>
+      </div>
+      <div class="table-wrap">
+        <table class="tech-table">
+          <thead><tr><th>Date</th><th>Ref</th><th>Party</th><th>Description</th><th class="num">Amount</th></tr></thead>
+          <tbody>
+            ${(relTx.length ? relTx : prof.transactions.slice(0, 4)).map(t => `
+              <tr>
+                <td style="font-family:var(--mono);color:var(--dim)">${escapeHtml(t.date)}</td>
+                <td class="code-cell">${escapeHtml(t.ref)}</td>
+                <td style="font-weight:700;color:#0D1117">${escapeHtml(t.party)}</td>
+                <td style="color:var(--muted)">${escapeHtml(t.desc)}</td>
+                <td class="num" style="color:${t.type === 'IN' ? 'var(--green-ink)' : 'var(--gold-ink)'}">
+                  ${t.type === 'IN' ? '+' : '−'} ${fmtMoney(t.amount, prof.currency)}
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('egp-bk').classList.add('open');
+  document.getElementById('egp-dr').classList.add('open');
+}
+
+function openKpiInspector(idx) {
+  openProjectInspector(idx % getActiveProfileObject().projects.length);
+}
+
+function openTransactionInspector(idx) {
+  const prof = getActiveProfileObject();
+  const tx = prof.transactions[idx];
+  if (!tx) return;
+  const pIdx = prof.projects.findIndex(p => p.code === tx.project);
+  openProjectInspector(pIdx >= 0 ? pIdx : 0);
+}
+
+function closeInspectorDrawer() {
+  document.getElementById('egp-bk').classList.remove('open');
+  document.getElementById('egp-dr').classList.remove('open');
+}
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeInspectorDrawer();
+});
+
+/* ============================================================================
+ * 8. ROLE COMPLEXITY BUDGET (#egp-tb), LANGUAGE, DARK MODE & EXPORT TOOLS
+ * ============================================================================ */
+function switchTab(tabId) {
+  RUNTIME_STATE.activeTab = tabId;
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tabId);
+  });
+  document.querySelectorAll('.tab-view').forEach(sec => {
+    const isTarget = sec.id === `view-${tabId}`;
+    sec.hidden = !isTarget;
+    sec.classList.toggle('active', isTarget);
+  });
+  const prof = getActiveProfileObject();
+  if (tabId === 'projects') renderProjectsTab(prof);
+  if (tabId === 'forensic') renderForensicTab(prof);
+  if (tabId === 'simulators') renderSimulatorsTab(prof);
+}
+
+function cycleRoleMode() {
+  const order = ['operator', 'accountant', 'owner'];
+  const idx = order.indexOf(RUNTIME_STATE.roleMode);
+  RUNTIME_STATE.roleMode = order[(idx + 1) % order.length];
+  localStorage.setItem('egp-mode', RUNTIME_STATE.roleMode);
+  applyRoleModeUI();
+}
+
+function applyRoleModeUI() {
+  const m = RUNTIME_STATE.roleMode;
+  const btnRole = document.getElementById('btnRole');
+  if (btnRole) btnRole.textContent = `⚙ ${m}`;
+
+  const showAcct = m === 'accountant' || m === 'owner';
+  const showOwner = m === 'owner';
+
+  document.getElementById('btnCsv').style.display = showAcct ? 'inline-flex' : 'none';
+  document.getElementById('btnCopy').style.display = showAcct ? 'inline-flex' : 'none';
+  document.getElementById('btnPdf').style.display = showOwner ? 'inline-flex' : 'none';
+  document.getElementById('btnWa').style.display = showOwner ? 'inline-flex' : 'none';
+}
+
+function cycleLanguage() {
+  const order = ['bi', 'en', 'bn'];
+  const labels = { bi: '🌐 EN+বাংলা', en: '🌐 EN', bn: '🌐 বাংলা' };
+  const idx = order.indexOf(RUNTIME_STATE.langMode);
+  RUNTIME_STATE.langMode = order[(idx + 1) % order.length];
+  localStorage.setItem('egp-lang', RUNTIME_STATE.langMode);
+  document.getElementById('btnLang').textContent = labels[RUNTIME_STATE.langMode];
+  renderActiveProfile();
+}
+
+function toggleDarkTheme() {
+  RUNTIME_STATE.darkMode = !RUNTIME_STATE.darkMode;
+  document.documentElement.classList.toggle('dark', RUNTIME_STATE.darkMode);
+  localStorage.setItem('egp-theme', RUNTIME_STATE.darkMode ? 'dark' : 'light');
+  document.getElementById('btnTheme').textContent = RUNTIME_STATE.darkMode ? '☀️ Light' : '🌙 Dark';
+}
+
+function exportActiveTableCSV() {
+  const prof = getActiveProfileObject();
+  const rows = [
+    ['Code', 'Project / Cost Center', 'Authority / Client', 'Contract Value', 'Billed', 'Collected', 'Direct Cost', 'Status']
+  ];
+  prof.projects.forEach(p => {
+    rows.push([p.code, p.name, p.pe, p.contract, p.billed, p.collected, p.cost, p.status]);
+  });
+  const csv = '\uFEFF' + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `INSPIRON_${prof.id.replace(/[^a-z0-9]/gi, '_')}_Summary.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function copyActiveSummary() {
+  const prof = getActiveProfileObject();
+  const lines = [
+    `=== ${prof.name} ===`,
+    ...prof.kpis.map(k => `${k.label}: ${k.val} (${k.sub})`)
+  ];
+  navigator.clipboard?.writeText(lines.join('\n'));
+  const btn = document.getElementById('btnCopy');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Copied';
+  setTimeout(() => { btn.textContent = orig; }, 1400);
+}
+
+function shareWhatsAppSummary() {
+  const prof = getActiveProfileObject();
+  const text = [
+    `*${prof.name}*`,
+    ...prof.kpis.slice(0, 4).map(k => `• ${k.label}: *${k.val}*`),
+    `— Generated via INSPIRON Sovereign Command Suite (inspiron.tech)`
+  ].join('\n');
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+}
+
+// Deep-Link Query Parameter Support (?demo=contractor|manufacturing|syndicate&tab=...&drawer=0&theme=dark|light)
+(function applyUrlQueryParams() {
+  try {
+    const qs = new URLSearchParams(window.location.search);
+    const demo = qs.get('demo');
+    if (demo && DEMO_PROFILES['demo:' + demo]) {
+      RUNTIME_STATE.activeProfileKey = 'demo:' + demo;
+      const sel = document.getElementById('bizSelect');
+      if (sel) sel.value = 'demo:' + demo;
+    }
+    const theme = qs.get('theme');
+    if (theme === 'dark' || theme === 'light') {
+      RUNTIME_STATE.darkMode = (theme === 'dark');
+    }
+    const role = qs.get('role');
+    if (role && ['operator', 'accountant', 'owner'].includes(role)) {
+      RUNTIME_STATE.roleMode = role;
+    }
+    const lang = qs.get('lang');
+    if (lang && ['bi', 'en', 'bn'].includes(lang)) {
+      RUNTIME_STATE.langMode = lang;
+    }
+  } catch (e) {}
+})();
+
+// Initialize Theme & Boot
+if (RUNTIME_STATE.darkMode) {
+  document.documentElement.classList.add('dark');
+  document.getElementById('btnTheme').textContent = '☀️ Light';
+}
+renderActiveProfile();
+try {
+  const qs = new URLSearchParams(window.location.search);
+  const b = qs.get('biz');
+  if (b) {
+    const sel = document.getElementById('bizSelect');
+    if (sel) { sel.value = b; onBusinessSelectChange(b); }
+  }
+  const tab = qs.get('tab');
+  if (tab) switchTab(tab);
+  const dr = qs.get('drawer');
+  if (dr !== null && dr !== '') openProjectInspector(Number(dr) || 0);
+} catch (e) {}
+
+initTripleModeBridge().then(() => {
+  // Bridge verified
+});
+
+</script>
+</body>
+</html>

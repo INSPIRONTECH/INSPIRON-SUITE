@@ -2,11 +2,10 @@
   "provider": "INSPIRON TECH",
   "architect": "MD ABU HASAN",
   "contact": "hello@inspiron.tech",
-  "status": "Manager.io Advisor & ERP Architect",
+  "status": "ERP Architect | Listed Manager.io Advisor",
   "suite": "INSPIRON Suite",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "repository": "https://github.com/INSPIRONTECH/INSPIRON-SUITE",
-  "nexus": "https://inspiron.tech",
   "theme_registry": [
     {
       "id": "midnight-executive-v1.1",
@@ -100,15 +99,44 @@
       "type": "postMessage",
       "status": "live",
       "version": "1.1.0",
-      "compliance": ["global", "bd-mushak-6.3"],
-      "checks": ["billing-address", "reference-no", "mushak-6.3-bin", "total-balance", "issue-date"],
+      "compliance": [
+        "global",
+        "bd-mushak-6.3"
+      ],
+      "checks": [
+        "billing-address",
+        "reference-no",
+        "mushak-6.3-bin",
+        "total-balance",
+        "issue-date"
+      ],
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/utilities/checklist-v1.html"
     }
   ],
   "tax_registry": [
-    { "id": "bd-nbr-2026", "name": "Bangladesh NBR Compliance Calendar", "region": "BD", "status": "live", "url": "https://tools.inspiron.tech/" }
+    {
+      "id": "bd-nbr-2026",
+      "name": "Bangladesh NBR Compliance Calendar",
+      "region": "BD",
+      "status": "live",
+      "url": "https://tools.inspiron.tech/"
+    }
   ],
   "ip_protocol": "R1-R7",
   "license": "CC BY 4.0",
-  "updated": "2026-07-06"
+  "updated": "2026-11-05",
+  "website": "https://inspiron.tech",
+  "suite_url": "https://suite.inspiron.tech",
+  "extension_registry": [
+    {
+      "id": "executive-dashboard-ledger-auditor-v8.1.1",
+      "name": "INSPIRON Executive Dashboard & Ledger Auditor",
+      "type": "extension",
+      "mode": "Sovereign Mixed Mode",
+      "status": "live",
+      "version": "8.1.1",
+      "url": "https://suite.inspiron.tech/executive-dashboard",
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/extensions/executive-dashboard/index.html"
+    }
+  ]
 }

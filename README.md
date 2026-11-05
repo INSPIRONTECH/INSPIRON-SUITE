@@ -43,7 +43,12 @@ Full catalog with preview images: [**THEMES.md →**](./global-suite/themes/THEM
 ---
 
 ### 🛠️ Global Utility: Logic Extensions
-Moving beyond static layouts, INSPIRON extensions provide real-time operational intelligence inside the Manager.io sidebar.
+Moving beyond static layouts, INSPIRON extensions provide real-time operational intelligence inside the Manager.io sidebar and custom buttons.
+
+#### 📊 INSPIRON Executive Dashboard & Ledger Auditor (v8.1.1 — Sovereign Mixed Mode)
+An executive P&L, project/contract margin tracker, treasury monitor, and 12-point automated forensic COA diagnostic suite with an 880px slide-over Project Inspector drawer and 6 pre-loaded global multi-currency demo profiles (`USD`, `EUR`, `GBP`, `SAR`, `BDT`).
+- **Live Interactive Demo & Extension Endpoint:** [`https://suite.inspiron.tech/executive-dashboard`](https://suite.inspiron.tech/executive-dashboard)
+- **Raw Install:** [`global-suite/extensions/executive-dashboard/index.html`](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/extensions/executive-dashboard/index.html)
 
 #### 🔍 Invoice Pre-Send Checklist (v1.1)
 A "Validation Bridge" that audits your document context via `postMessage` before transmission.

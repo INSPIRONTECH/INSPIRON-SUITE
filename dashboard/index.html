@@ -1859,7 +1859,6 @@ function applyRoleModeUI() {
   document.getElementById('btnCsv').style.display = showAcct ? 'inline-flex' : 'none';
   document.getElementById('btnCopy').style.display = showAcct ? 'inline-flex' : 'none';
   document.getElementById('btnPdf').style.display = showOwner ? 'inline-flex' : 'none';
-  document.getElementById('btnWa').style.display = showOwner ? 'inline-flex' : 'none';
 }
 
 function cycleLanguage() {
@@ -1876,7 +1875,7 @@ function toggleDarkTheme() {
   RUNTIME_STATE.darkMode = !RUNTIME_STATE.darkMode;
   document.documentElement.classList.toggle('dark', RUNTIME_STATE.darkMode);
   localStorage.setItem('egp-theme', RUNTIME_STATE.darkMode ? 'dark' : 'light');
-  document.getElementById('btnTheme').textContent = RUNTIME_STATE.darkMode ? '☀️ Light' : '🌙 Dark';
+  (document.getElementById('btnTheme') || {}).textContent = RUNTIME_STATE.darkMode ? '☀️ Light' : '🌙 Dark';
 }
 
 function exportActiveTableCSV() {
@@ -1940,7 +1939,7 @@ function copyActiveSummary() {
 // Initialize Theme & Boot
 if (RUNTIME_STATE.darkMode) {
   document.documentElement.classList.add('dark');
-  document.getElementById('btnTheme').textContent = '☀️ Light';
+  (document.getElementById('btnTheme') || {}).textContent = '☀️ Light';
 }
 renderActiveProfile();
 try {

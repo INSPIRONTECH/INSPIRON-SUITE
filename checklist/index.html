@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSPIRON Audit Sentinel | Mushak 6.3</title>
+    <style>
+        :root { 
+            --it-cyan: #00D2FF; --it-gold: #FFD700; --it-fail: #dc2626; 
+            --it-pass: #059669; --it-bg: #010409; --it-card: #0d1117; 
+        }
+        body { 
+            font-family: 'Neo Sans Pro', sans-serif; background: var(--it-bg); 
+            color: #fff; padding: 15px; font-size: 13px; margin: 0;
+            border-left: 3px solid var(--it-cyan);
+        }
+        .header { font-weight: 800; color: var(--it-gold); margin-bottom: 15px; text-transform: uppercase; font-size: 11px; letter-spacing: 1.5px; }
+        .summary-bar { padding: 12px; border-radius: 6px; text-align: center; font-weight: 800; margin-bottom: 15px; border: 1px solid transparent; }
+        .summary-fail { background: rgba(220, 38, 38, 0.1); border-color: var(--it-fail); color: var(--it-fail); }
+        .summary-pass { background: rgba(5, 150, 105, 0.1); border-color: var(--it-pass); color: var(--it-pass); }
+        .check-item { background: var(--it-card); border: 1px solid #21262d; border-radius: 6px; padding: 10px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .msg { flex: 1; }
+        .footer { font-size: 10px; color: #8b949e; text-align: center; margin-top: 20px; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="header">INSPIRON Audit Sentinel</div>
+    <div id="summary" class="summary-bar">Scanning...</div>
+    <div id="checks"></div>
+    <div class="footer">"I do not install software. I architect logic."</div>
+
+    <script>
+        window.addEventListener("message", (event) => {
+            if (event.data.type !== 'context-response') return;
+            const data = event.data.body;
+            
+            // Logic-Neutral Validation (R1-R7 Protocol)
+            const checks = [
+                { label: "Billing Address", pass: !!(data.recipient?.address), error: "Recipient address missing" },
+                { label: "Reference No", pass: !!data.reference, error: "Invoice reference empty" },
+                { label: "Mushak 6.3 BIN", pass: !!(data.customFields?.find(f => f.label?.includes("BIN"))?.value), error: "Buyer BIN required for 6.3" },
+                { label: "Total Balance", pass: (data.table?.totals?.find(t => t.key === "Total")?.number || 0) > 0, error: "Zero balance detected" },
+                { label: "Issue Date", pass: !!data.issueDate, error: "Document date not set" }
+            ];
+
+            const hasFail = checks.some(c => !c.pass);
+            const summary = document.getElementById('summary');
+            summary.className = `summary-bar ${hasFail ? 'summary-fail' : 'summary-pass'}`;
+            summary.innerText = hasFail ? "⚠️ AUDIT FAILED" : "✅ READY TO SEND";
+
+            document.getElementById('checks').innerHTML = checks.map(c => `
+                <div class="check-item" style="border-left: 4px solid ${c.pass ? 'var(--it-pass)' : 'var(--it-fail)'}">
+                    <span class="status-icon">${c.pass ? '✓' : '✕'}</span>
+                    <div class="msg">
+                        <div style="font-weight:700; color:${c.pass ? '#fff' : 'var(--it-fail)'}">${c.label}</div>
+                        <div style="font-size:11px; color:#8b949e">${c.pass ? 'Verified' : c.error}</div>
+                    </div>
+                </div>`).join('');
+        });
+        window.parent.postMessage({ type: "context-request" }, "*");
+    </script>
+</body>
+</html>

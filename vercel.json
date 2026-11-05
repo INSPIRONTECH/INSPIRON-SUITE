@@ -1,7 +1,6 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/",                    "destination": "/showroom/index.html" },
     { "source": "/executive-dashboard", "destination": "/executive-dashboard/index.html" },
     { "source": "/dashboard",           "destination": "/executive-dashboard/index.html" },
     { "source": "/checklist",           "destination": "/global-suite/utilities/checklist-v1.html" },

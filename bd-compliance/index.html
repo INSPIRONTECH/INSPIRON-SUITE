@@ -751,6 +751,9 @@
 <!-- MAIN WORKSPACE -->
 <main class="container">
 
+  <!-- API4 ERROR BANNER (SURFACED EXPLICITLY WHEN ANY BATCH ENDPOINT FAILS) -->
+  <div id="apiErrorBanner" style="display:none;background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.45);border-radius:12px;padding:12px 16px;margin-bottom:18px;color:#FF453A;font-size:12.5px;font-weight:600;line-height:1.5"></div>
+
   <!-- 6-CARD KPI STRIP (LIVE ACROSS ALL TABS) -->
   <div class="kpi-strip" id="kpiStrip"></div>
 
@@ -954,10 +957,17 @@
     <div class="panel-card">
       <div class="panel-hdr">
         <div>
-          <div class="panel-title">⚡ 1-Click Bangladesh NBR Tax Code Installer (<code>POST /api4/tax-code</code>)</div>
-          <div class="panel-sub">Installs 12 deterministic BD Tax Codes mapped to Mushak-9.1 Reporting Categories &amp; overrides Sales Invoice titles to <strong>কর চালানপত্র / Tax Invoice (Mushak-6.3)</strong></div>
+          <div class="panel-title">⚡ Explicit-Consent Bangladesh NBR Tax Code Installer (<code>POST /api4/tax-code</code>)</div>
+          <div class="panel-sub">Previews 12 deterministic BD Tax Codes mapped to Mushak-9.1 Reporting Categories &amp; overrides Sales Invoice titles to <strong>কর চালানপত্র / Tax Invoice (Mushak-6.3)</strong></div>
         </div>
-        <button type="button" class="btn-gold" id="btnInstallAllCodes" onclick="installAllMissingTaxCodes()">⚡ Install All 12 BD Tax Codes</button>
+        <button type="button" class="btn-gold" id="btnInstallAllCodes" onclick="installAllMissingTaxCodes()" disabled style="opacity:.45;cursor:not-allowed">🔒 Tick Confirmation Box to Install All 12 Tax Codes</button>
+      </div>
+      <div style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.32);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:12.5px;color:#ffffff;font-weight:600;margin:0;text-transform:none;letter-spacing:0">
+          <input type="checkbox" id="confirmTaxCodeWrite" onchange="onTaxWriteConfirmToggle()" style="width:18px;height:18px;accent-color:#FFD700;cursor:pointer" />
+          <span><strong>Explicit Write Confirmation:</strong> I authorize this extension to create the selected Bangladesh NBR Tax Codes in my Manager.io business via <code>POST /api4/tax-code</code>.</span>
+        </label>
+        <span class="badge badge-INCOME-TAX" id="taxWriteGuardBadge">🔒 Write-Protected (Tick to Enable)</span>
       </div>
       <div class="deadlines-wrap">
         <table>
@@ -989,7 +999,70 @@
         </div>
       </div>
       <div style="font-size:12.5px;color:#cdd9e5;line-height:1.6">
-        <strong>How to activate in Manager.io:</strong> Open <code>Settings → HTML Themes → New Theme</code>, paste the Raw Theme URL above, and select it on your Sales Invoices. It automatically renders the 11-column NBR Mushak-6.3 table (SL, Description, Unit, Qty, Unit Value, Total Value, SD %, SD Amt, VAT Rate, VAT Amount, Total incl. Tax), 13-digit Supplier/Buyer BINs, and Rule 40 statutory declarations.
+        <strong>How to activate in Manager.io:</strong> Open <code>Settings → Custom Themes → New Custom Theme</code>, paste the Raw Theme URL above, and select it on your Sales Invoices. It automatically renders the 11-column NBR Mushak-6.3 table (SL, Description, Unit, Qty, Unit Value, Total Value, SD %, SD Amt, VAT Rate, VAT Amount, Total incl. Tax), 13-digit Supplier/Buyer BINs, and Rule 40 statutory declarations.
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-hdr">
+        <div>
+          <div class="panel-title">📍 Where to Place in Manager.io — 3-Method Setup &amp; Placement Guide</div>
+          <div class="panel-sub">Official Alfabase Listing: <a href="https://extensions.alfabase.com/extensions/OOeV8KF0" target="_blank" rel="noopener" style="color:#00D2FF">extensions.alfabase.com/extensions/OOeV8KF0</a> &middot; Endpoint: <code>https://tax.inspiron.tech</code></div>
+        </div>
+        <span class="badge badge-VAT">3 Placement Options</span>
+      </div>
+      <div class="deadlines-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Method &amp; Manager.io Menu Path</th>
+              <th>Exact Placement / Field Value</th>
+              <th>URL / Endpoint to Paste</th>
+              <th>What It Enables</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="font-weight:700;color:#ffffff">1. Full Workspace Extension</div>
+                <div style="font-size:11px;color:#8b949e"><code>Settings → Extensions → New Extension</code></div>
+              </td>
+              <td><span class="badge badge-VAT">Extension Tab</span></td>
+              <td style="font-family:var(--mono);font-size:11.5px;color:#00D2FF">https://tax.inspiron.tech</td>
+              <td style="font-size:11.5px;color:#cdd9e5">Full-screen Mushak-9.1 Return Worksheet, NBR Calendar, VDS/TDS Calculators, Tax Code Installer &amp; 10-Point Audit.</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-weight:700;color:#ffffff">2A. Summary Page Custom Button</div>
+                <div style="font-size:11px;color:#8b949e"><code>Settings → Custom Buttons → New Custom Button</code></div>
+              </td>
+              <td><code style="color:#FFD700;font-weight:700">/summary-view</code></td>
+              <td style="font-family:var(--mono);font-size:11.5px;color:#00D2FF">https://tax.inspiron.tech</td>
+              <td style="font-size:11.5px;color:#cdd9e5">Places a 1-click <strong>🇧🇩 BD VAT &amp; Mushak-9.1</strong> button at the top of your Manager.io Summary screen.</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-weight:700;color:#ffffff">2B. Invoice &amp; Voucher Custom Button</div>
+                <div style="font-size:11px;color:#8b949e"><code>Settings → Custom Buttons → New Custom Button</code></div>
+              </td>
+              <td>
+                <code style="color:#FFD700;font-weight:700">/sales-invoice-view</code><br/>
+                <code style="color:#00D2FF;font-size:10.5px">/purchase-invoice-view</code>
+              </td>
+              <td style="font-family:var(--mono);font-size:11.5px;color:#00D2FF">https://tax.inspiron.tech</td>
+              <td style="font-size:11.5px;color:#cdd9e5">Contextual button on individual Sales/Purchase Invoices to verify VDS withholding, Section 46 ITC, and Mushak-6.3 fields.</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-weight:700;color:#ffffff">3. Mushak-6.3 Custom Invoice Theme</div>
+                <div style="font-size:11px;color:#8b949e"><code>Settings → Custom Themes → New Custom Theme</code></div>
+              </td>
+              <td><span class="badge badge-ADVANCE-TAX">Custom Theme</span></td>
+              <td style="font-family:var(--mono);font-size:11px;color:#FFD700">Copy Raw Theme URL above</td>
+              <td style="font-size:11.5px;color:#cdd9e5">Select on Sales Invoices to print the statutory 11-column bilingual Bengali/English Mushak-6.3 VAT Challan.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -1002,9 +1075,9 @@
       <div class="panel-hdr">
         <div>
           <div class="panel-title">🛡️ 10-Point Bangladesh VAT &amp; Income Tax Statutory Health Check</div>
-          <div class="panel-sub">Automated verification against VAT &amp; SD Act 2012 (Sections 46, 50, 64, 85, 127) &amp; Income Tax Act 2023 (Sections 55, 109, 142, 154, 177, 264)</div>
+          <div class="panel-sub">Dynamic live validation of e-BIN, Section 46 6-period &amp; banking guards, truncated ITC block, VDS Note 24/29 reconciliation, Mushak-6.10 (&gt;Tk 2L), and Credit/Debit notes</div>
         </div>
-        <span class="badge badge-ADVANCE-TAX">✓ 10 / 10 Statutory Checks Active</span>
+        <span class="badge badge-ADVANCE-TAX" id="auditSummaryBadge">✓ 10 / 10 Dynamic Checks Active</span>
       </div>
       <div class="audit-grid" id="auditGrid"></div>
     </div>
@@ -1297,26 +1370,16 @@ const MUSHAK_INFO = [
   { code: 'Section 177 Return', name: 'Monthly Withholding Tax Return', bangla: 'উৎসে কর রিটার্ন (ধারা ১৭৭)', desc: 'Consolidated monthly TDS/AIT withholding return under Income Tax Act 2023 Section 177(2) & Source Tax Rules 2026.', deadline: '25th day of the following month' }
 ];
 
-const TEN_POINT_AUDITS = [
-  { title: "1. 13-Digit e-BIN & Registration Threshold (Sec 2(48) & 4(3))", sub: "Mandatory 15% VAT registration above Tk 50 Lakh turnover (4% Turnover Tax for Tk 30L–50L per Ordinance No. 01 of 2025). BIN mandatory for bank loans & utilities u/s 4(3).", status: "VERIFIED", cls: "badge-ADVANCE-TAX" },
-  { title: "2. Section 46(1)(গ) 6-Period Input Tax Credit Window", sub: "Input Tax Credit must be claimed in the tax period of acquisition/import or within the next 6 (six) tax periods (extended from 4 periods by Finance Ordinance 2025).", status: "PASS", cls: "badge-ADVANCE-TAX" },
-  { title: "3. Section 46(1)(ক) Tk 1,00,000 Banking Channel Guard", sub: "Every local rebatable purchase >= Tk 1,00,000 is settled via banking or mobile financial services (MFS) channel; otherwise ITC is disallowed and reversed in Note 25.", status: "PASS", cls: "badge-ADVANCE-TAX" },
-  { title: "4. Section 46(1)(ঠ) Truncated Rate ITC Block", sub: "Strictly blocks Input Tax Credit on supplies taxed below 15% (5% Trading/ITES, 7.5% Furniture, 10% Construction/Procurement S037.00, 2% Real Estate).", status: "GUARD ACTIVE", cls: "badge-VAT" },
-  { title: "5. VDS Rules 2025/2026 & Note 24/29 Reconciliation", sub: "Buyer VDS accounted in Note 24; Supplier Mushak-6.6 decreasing adjustment claimed in Note 29 within the 6-period statutory window under Section 50(3).", status: "PASS", cls: "badge-ADVANCE-TAX" },
-  { title: "6. Mushak-6.10 Large Invoice Statement (> Tk 2,00,000)", sub: "Flags all local sales and purchase challans exceeding BDT 2,00,000 for mandatory Rule 42 Mushak-6.10 reporting on IVAS.", status: "READY", cls: "badge-VAT" },
-  { title: "7. Section 109(1)(e) Commercial & Godown Rent (10% TDS + 15% VAT)", sub: "Enforces 10% TDS on Office, Shop, Plant & Warehouse/Godown rent (Finance Act 2026 S.67(a)) plus 15% Commercial Space VAT (S074.00) via e-payment.", status: "PASS", cls: "badge-ADVANCE-TAX" },
-  { title: "8. Section 142 & 264 Proof of Submission of Return (PSR) Guard", sub: "Alerts when vendor PSR is missing (+50% TDS rate penalty u/s 142 AND 100% corporate expense disallowance u/s 55(o) of Income Tax Act 2023).", status: "ENFORCED", cls: "badge-INCOME-TAX" },
-  { title: "9. Section 55(m) & 55(n) Cash Expense Disallowance Guard", sub: "Flags raw material payments > Tk 5,00,000 or other operating expenses > Tk 50,000 made outside banking channels (100% disallowed in corporate tax computation).", status: "PASS", cls: "badge-ADVANCE-TAX" },
-  { title: "10. Section 154 Advance Tax Threshold (> Tk 10,00,000)", sub: "Tracks 4 × 25% quarterly instalments (15 Sep, 15 Dec, 15 Mar, 15 Jun) for taxpayers with assessed income > Tk 10 Lakh (Finance Act 2026 S.87) to avoid 10% p.a. S.161 interest.", status: "PASS", cls: "badge-ADVANCE-TAX" }
-];
-
 /* ============================================================================
- * 3. RUNTIME STATE & /API4 BRIDGE
+ * 3. RUNTIME STATE, MULTI-PAGE /API4 BRIDGE & DYNAMIC STATUTORY DIAGNOSTICS
  * ============================================================================ */
 const STATE = {
   activeProfileKey: "demo:manufacturing",
   activeTab: "calendar",
-  installedCodes: {}
+  installedCodes: {},
+  isLiveConnected: false,
+  apiErrors: [],
+  liveStats: null
 };
 
 function fmtBdt(n) {
@@ -1339,8 +1402,8 @@ async function postMessageApi4(method, path, body) {
     const requestId = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ("req-" + Date.now() + "-" + Math.random());
     const timer = setTimeout(() => {
       window.removeEventListener("message", onMsg);
-      reject(new Error("Manager.io /api4 bridge timeout"));
-    }, 3000);
+      reject(new Error("Manager.io /api4 bridge timeout on " + path));
+    }, 6000);
     function onMsg(ev) {
       if (ev.data && ev.data.requestId === requestId && String(ev.data.type || "").endsWith("-response")) {
         clearTimeout(timer);
@@ -1353,8 +1416,231 @@ async function postMessageApi4(method, path, body) {
   });
 }
 
+async function fetchAllBatchPages(basePath, pageSize = 500) {
+  const allItems = [];
+  let skip = 0;
+  const maxPages = 50;
+  for (let page = 0; page < maxPages; page++) {
+    const sep = basePath.includes("?") ? "&" : "?";
+    const path = `${basePath}${sep}skip=${skip}&pageSize=${pageSize}`;
+    const res = await postMessageApi4("GET", path);
+    if (!res || (typeof res.status === "number" && res.status >= 400) || !res.body) {
+      const statusLabel = res && res.status ? `HTTP ${res.status}` : "Empty response";
+      throw new Error(`${basePath} failed (${statusLabel})`);
+    }
+    const items = Array.isArray(res.body.items) ? res.body.items : (Array.isArray(res.body) ? res.body : []);
+    allItems.push(...items);
+    const total = typeof res.body.total === "number" ? res.body.total : null;
+    if (items.length < pageSize || (total !== null && allItems.length >= total)) break;
+    skip += items.length;
+  }
+  return allItems;
+}
+
 function getActiveProfile() {
   return DEMO_PROFILES[STATE.activeProfileKey] || DEMO_PROFILES["demo:manufacturing"];
+}
+
+function extractEntityBin(obj) {
+  if (!obj || typeof obj !== "object") return "";
+  const direct = obj.TaxIdentificationNumber || obj.BusinessIdentifier || obj.VatNumber || obj.Code || "";
+  if (direct && String(direct).trim()) return String(direct).trim();
+  const cf2 = obj.CustomFields2 && obj.CustomFields2.Strings ? obj.CustomFields2.Strings : null;
+  if (cf2) {
+    for (const val of Object.values(cf2)) {
+      if (val && /\d{9,13}/.test(String(val))) return String(val).trim();
+    }
+  }
+  return "";
+}
+
+function computeDynamicBdAudits(prof) {
+  const isDemo = !STATE.isLiveConnected || String(prof.id || "").startsWith("demo:");
+  const modeTag = isDemo ? " [STANDALONE DEMO]" : " [LIVE /API4]";
+  const notes = Array.isArray(prof.mushakNotes) ? prof.mushakNotes : [];
+  const challans = Array.isArray(prof.challans) ? prof.challans : [];
+  const getNote = (code) => notes.find(n => n.note === code) || { base: 0, vat: 0 };
+
+  const note1 = getNote("Note 1");
+  const note3 = getNote("Note 3");
+  const note4 = getNote("Note 4");
+  const note7 = getNote("Note 7");
+  const note8 = getNote("Note 8");
+  const note9 = getNote("Note 9");
+  const note14 = getNote("Note 14");
+  const note15 = getNote("Note 15");
+  const note23b = getNote("Note 23b");
+  const note24 = getNote("Note 24");
+  const note29 = getNote("Note 29");
+  const note30 = getNote("Note 30");
+  const note34 = getNote("Note 34");
+
+  // NBR-01: 13-Digit e-BIN validation on Business + Counterparties
+  const cleanBizBin = String(prof.bin || "").replace(/[^0-9]/g, "");
+  const bizBinValid = cleanBizBin.length === 13;
+  const missingPartyBins = challans.filter(c => {
+    const b = String(c.bin || "").replace(/[^0-9]/g, "");
+    return b.length !== 13 && !String(c.bin || "").startsWith("CUSTOMS");
+  });
+  let aud1Status = "PASS", aud1Cls = "badge-ADVANCE-TAX";
+  let aud1Sub = `Entity BIN (${prof.bin || "None"}) is a valid 13-digit e-BIN and all ${challans.length} counterparty challans carry verified BIN/Customs IDs.${modeTag}`;
+  if (!bizBinValid) {
+    aud1Status = "FAIL"; aud1Cls = "badge-TDS";
+    aud1Sub = `Entity BIN (${prof.bin || "Missing"}) is not a valid 13-digit NBR e-BIN (Section 2(48) & 4(3)). Set a 13-digit BIN in Business Details.${modeTag}`;
+  } else if (missingPartyBins.length > 0) {
+    aud1Status = "WARN"; aud1Cls = "badge-INCOME-TAX";
+    aud1Sub = `Entity BIN (${prof.bin}) verified, but ${missingPartyBins.length} of ${challans.length} counterparty vouchers lack a 13-digit BIN (required for Mushak-6.3/6.10).${modeTag}`;
+  }
+
+  // NBR-02: Section 46(1)(গ) 6-Tax-Period Input Tax Credit Window (180 days)
+  const itcVouchers = challans.filter(c => /ITC|Purchase 6\.3|BoE Import/i.test(c.form));
+  const dates = challans.map(c => Date.parse(c.date)).filter(n => !isNaN(n));
+  const refDate = dates.length ? Math.max(...dates) : Date.now();
+  const expiredItc = itcVouchers.filter(c => {
+    const d = Date.parse(c.date);
+    return !isNaN(d) && ((refDate - d) / 86400000) > 180;
+  });
+  let aud2Status = "PASS", aud2Cls = "badge-ADVANCE-TAX";
+  let aud2Sub = "";
+  if (note23b.vat === 0 && itcVouchers.length === 0) {
+    aud2Status = "INFO"; aud2Cls = "badge-VAT";
+    aud2Sub = `No Input Tax Credit claimed in Note 23b (${fmtBdt(0)}). Section 46(1)(গ) 6-tax-period (180-day) rebate window has zero expired vouchers.${modeTag}`;
+  } else if (expiredItc.length > 0) {
+    aud2Status = "FAIL"; aud2Cls = "badge-TDS";
+    aud2Sub = `${expiredItc.length} Input VAT voucher(s) exceed the 6-tax-period (180-day) statutory window under Section 46(1)(গ) and must be excluded from Note 23b.${modeTag}`;
+  } else {
+    aud2Sub = `All ${itcVouchers.length} Input VAT voucher(s) totaling ${fmtBdt(note23b.vat)} fall within the 6-tax-period statutory window under Section 46(1)(গ).${modeTag}`;
+  }
+
+  // NBR-03: Section 46(1)(ক) Tk 1,00,000 Banking Channel Settlement Guard
+  const highValPurchases = itcVouchers.filter(c => Number(c.base || 0) >= 100000);
+  const cashFlaggedPurchases = highValPurchases.filter(c => c.cashSettled === true);
+  let aud3Status = "PASS", aud3Cls = "badge-ADVANCE-TAX";
+  let aud3Sub = "";
+  if (highValPurchases.length === 0) {
+    aud3Status = "INFO"; aud3Cls = "badge-VAT";
+    aud3Sub = `0 local/import rebatable purchase challans >= BDT 1,00,000 detected in this period under Section 46(1)(ক).${modeTag}`;
+  } else if (cashFlaggedPurchases.length > 0) {
+    aud3Status = "FAIL"; aud3Cls = "badge-TDS";
+    aud3Sub = `${cashFlaggedPurchases.length} purchase challan(s) >= BDT 1,00,000 were settled in cash; ITC must be reversed in Note 25 under Section 46(1)(ক).${modeTag}`;
+  } else {
+    const highValBase = highValPurchases.reduce((s, c) => s + Number(c.base || 0), 0);
+    aud3Sub = `Validated ${highValPurchases.length} rebatable purchase challan(s) >= BDT 1,00,000 (Base: ${fmtBdt(highValBase)}); zero cash-settled violations detected.${modeTag}`;
+  }
+
+  // NBR-04: Section 46(1)(ঠ) Truncated Rate Input Tax Credit Block
+  const stdAndExportBase = Number(note1.base || 0) + Number(note4.base || 0);
+  const truncatedAndExemptBase = Number(note3.base || 0) + Number(note7.base || 0) + Number(note8.base || 0);
+  const totalSupplyBase = stdAndExportBase + truncatedAndExemptBase;
+  const rawInputVat = Number(note14.vat || 0) + Number(note15.vat || 0);
+  const maxAllowedItc = totalSupplyBase > 0 ? Math.round(rawInputVat * (stdAndExportBase / totalSupplyBase)) : rawInputVat;
+  let aud4Status = "PASS", aud4Cls = "badge-ADVANCE-TAX";
+  let aud4Sub = "";
+  if (truncatedAndExemptBase > 0 && stdAndExportBase === 0 && Number(note23b.vat || 0) > 0) {
+    aud4Status = "FAIL"; aud4Cls = "badge-TDS";
+    aud4Sub = `Truncated/Exempt supply base is 100% (${fmtBdt(truncatedAndExemptBase)}), but ${fmtBdt(note23b.vat)} ITC is claimed in Note 23b in breach of Section 46(1)(ঠ).${modeTag}`;
+  } else if (truncatedAndExemptBase > 0 && Number(note23b.vat || 0) > maxAllowedItc + 5 && rawInputVat > 0) {
+    aud4Status = "WARN"; aud4Cls = "badge-INCOME-TAX";
+    aud4Sub = `Mixed supply detected (Truncated/Exempt Base: ${fmtBdt(truncatedAndExemptBase)} vs Standard/Export: ${fmtBdt(stdAndExportBase)}). Check partial ITC apportionment u/s 47.${modeTag}`;
+  } else if (truncatedAndExemptBase > 0 && Number(note23b.vat || 0) === 0) {
+    aud4Status = "PASS"; aud4Cls = "badge-ADVANCE-TAX";
+    aud4Sub = `Truncated supply base (${fmtBdt(truncatedAndExemptBase)}) verified with ${fmtBdt(0)} Input Tax Credit claimed in Note 23b — 100% compliant with Section 46(1)(ঠ).${modeTag}`;
+  } else {
+    aud4Sub = `Standard/Export Base: ${fmtBdt(stdAndExportBase)}, Truncated Base: ${fmtBdt(truncatedAndExemptBase)}, ITC Claimed: ${fmtBdt(note23b.vat)}. Compliant with Section 46(1)(ঠ).${modeTag}`;
+  }
+
+  // NBR-05: VDS Rules 2025/2026 — Note 24 (+Adj) & Note 29 (-Adj) Voucher Reconciliation
+  const vdsBuyerChallans = challans.filter(c => /\+Adj|Buyer VDS|Note 24/i.test(c.form));
+  const vdsSuppChallans = challans.filter(c => /-Adj|Mushak-6\.6|6\.3 \+ 6\.6/i.test(c.form));
+  const vdsBuyerSum = vdsBuyerChallans.reduce((s, c) => s + Number(c.vat || 0), 0);
+  const vdsSuppSum = vdsSuppChallans.reduce((s, c) => s + Number(c.vat || 0), 0);
+  const diff24 = Math.abs(Number(note24.vat || 0) - vdsBuyerSum);
+  const diff29 = Math.abs(Number(note29.vat || 0) - vdsSuppSum);
+  let aud5Status = "PASS", aud5Cls = "badge-ADVANCE-TAX";
+  let aud5Sub = `Reconciled Note 24 Buyer VDS (${fmtBdt(note24.vat)} across ${vdsBuyerChallans.length} voucher(s)) & Note 29 Supplier Mushak-6.6 (${fmtBdt(note29.vat)} across ${vdsSuppChallans.length} voucher(s)).${modeTag}`;
+  if (diff24 > 1 || diff29 > 1) {
+    aud5Status = "WARN"; aud5Cls = "badge-INCOME-TAX";
+    aud5Sub = `Variance detected between Mushak-9.1 worksheet (Note 24: ${fmtBdt(note24.vat)}, Note 29: ${fmtBdt(note29.vat)}) and VDS voucher register (${fmtBdt(vdsBuyerSum)} / ${fmtBdt(vdsSuppSum)}).${modeTag}`;
+  }
+
+  // NBR-06: Rule 42 Mushak-6.10 Large Invoice Statement (> BDT 2,00,000)
+  const largeChallans = challans.filter(c => Number(c.base || 0) > 200000 && !String(c.bin || "").startsWith("CUSTOMS"));
+  const largeBaseSum = largeChallans.reduce((s, c) => s + Number(c.base || 0), 0);
+  let aud6Status = largeChallans.length > 0 ? "WARN" : "PASS";
+  let aud6Cls = largeChallans.length > 0 ? "badge-INCOME-TAX" : "badge-ADVANCE-TAX";
+  let aud6Sub = largeChallans.length > 0
+    ? `Identified ${largeChallans.length} local challan(s) exceeding BDT 2,00,000 (Total Base: ${fmtBdt(largeBaseSum)}) requiring mandatory Rule 42 Mushak-6.10 filing.${modeTag}`
+    : `0 local challans exceed BDT 2,00,000 in this period; no Mushak-6.10 statement required under Rule 42.${modeTag}`;
+
+  // NBR-07: Manager.io BD Tax Code Localization Coverage
+  const installedCount = TAX_CODE_TEMPLATES.filter(t => STATE.installedCodes[t.ReportingCategory] === true).length;
+  let aud7Status = "INFO", aud7Cls = "badge-VAT";
+  let aud7Sub = "";
+  if (STATE.isLiveConnected) {
+    aud7Status = installedCount === TAX_CODE_TEMPLATES.length ? "PASS" : "WARN";
+    aud7Cls = installedCount === TAX_CODE_TEMPLATES.length ? "badge-ADVANCE-TAX" : "badge-INCOME-TAX";
+    aud7Sub = `Live Manager.io tax code check: ${installedCount} of ${TAX_CODE_TEMPLATES.length} statutory Bangladesh VAT/VDS/TDS tax codes are installed in this business.${modeTag}`;
+  } else {
+    aud7Sub = `${TAX_CODE_TEMPLATES.length} deterministic BD Tax Code templates verified (${installedCount} pushed in current session). Connect inside Manager.io to audit live Tax Codes.${modeTag}`;
+  }
+
+  // NBR-08: Section 25(1) Credit Note & Debit Note Adjustment Reconciliation (Notes 26 & 31)
+  const cnCount = STATE.liveStats ? STATE.liveStats.creditNotes : 0;
+  const dnCount = STATE.liveStats ? STATE.liveStats.debitNotes : 0;
+  const unlinkedCnDn = STATE.liveStats ? STATE.liveStats.unlinkedCnDn : 0;
+  let aud8Status = "PASS", aud8Cls = "badge-ADVANCE-TAX";
+  let aud8Sub = STATE.isLiveConnected
+    ? `Reconciled ${cnCount} Credit Note(s) (Note 31) and ${dnCount} Debit Note(s) (Note 26) against parent invoices (${unlinkedCnDn} unlinked adjustments).${modeTag}`
+    : `0 unlinked Credit Note (Note 31) or Debit Note (Note 26) VAT adjustments in active dataset.${modeTag}`;
+  if (unlinkedCnDn > 0) {
+    aud8Status = "WARN"; aud8Cls = "badge-INCOME-TAX";
+  }
+
+  // NBR-09: Part-7 Note 34 Net VAT Mathematical Reconciliation & Treasury Challan Check
+  const expectedNetVat = Math.max(0, Number(note9.vat || 0) - Number(note23b.vat || 0) + Number(note24.vat || 0) - Number(note29.vat || 0) - Number(note30.vat || 0));
+  const netFormulaDiff = Math.abs(Number(note34.vat || 0) - expectedNetVat);
+  let aud9Status = "PASS", aud9Cls = "badge-ADVANCE-TAX";
+  let aud9Sub = "";
+  if (netFormulaDiff > 1) {
+    aud9Status = "FAIL"; aud9Cls = "badge-TDS";
+    aud9Sub = `Note 34 Net Payable (${fmtBdt(note34.vat)}) does not equal Note 9 (${fmtBdt(note9.vat)}) − Note 23b (${fmtBdt(note23b.vat)}) + Note 24 (${fmtBdt(note24.vat)}) − Note 29/30 (${fmtBdt((note29.vat || 0) + (note30.vat || 0))}).${modeTag}`;
+  } else if (expectedNetVat > 0) {
+    aud9Status = "WARN"; aud9Cls = "badge-INCOME-TAX";
+    aud9Sub = `Formula verified: Net VAT Payable of ${fmtBdt(expectedNetVat)} (Note 34) requires Treasury Challan (T.R. Form No-6) deposit before the 15th filing deadline.${modeTag}`;
+  } else {
+    aud9Sub = `Formula verified: Net VAT Payable is ${fmtBdt(0)} (Closing negative balance carried forward to Note 35).${modeTag}`;
+  }
+
+  // NBR-10: API4 Multi-Page Completeness & Section 55 Withholding / Cash Expense Check
+  let aud10Status = "PASS", aud10Cls = "badge-ADVANCE-TAX";
+  let aud10Sub = "";
+  if (STATE.apiErrors.length > 0) {
+    aud10Status = "FAIL"; aud10Cls = "badge-TDS";
+    aud10Sub = `${STATE.apiErrors.length} /api4 endpoint(s) failed during sync (${STATE.apiErrors.join("; ")}). Financial totals may be incomplete.${modeTag}`;
+  } else if (STATE.isLiveConnected && STATE.liveStats) {
+    const cashDisallowed = STATE.liveStats.highCashPayments || 0;
+    if (cashDisallowed > 0) {
+      aud10Status = "WARN"; aud10Cls = "badge-INCOME-TAX";
+      aud10Sub = `Detected ${cashDisallowed} payment voucher(s) > BDT 50,000 without bank reference (Section 55(m)/(n) disallowance risk). All /api4 pages retrieved.${modeTag}`;
+    } else {
+      aud10Sub = `100% multi-page /api4 batch retrieval succeeded (${STATE.liveStats.totalVouchers} vouchers scanned, 0 failed requests, 0 Section 55 cash violations).${modeTag}`;
+    }
+  } else {
+    aud10Sub = `0 API errors. In standalone mode, switch datasets above or load inside Manager.io to run multi-page /api4 ledger validation.${modeTag}`;
+  }
+
+  return [
+    { title: "1. 13-Digit e-BIN & Counterparty BIN Verification (Sec 2(48) & Rule 40)", sub: aud1Sub, status: aud1Status, cls: aud1Cls },
+    { title: "2. Section 46(1)(গ) 6-Tax-Period Input Tax Credit Age Check", sub: aud2Sub, status: aud2Status, cls: aud2Cls },
+    { title: "3. Section 46(1)(ক) Tk 1,00,000 Banking Settlement Validation", sub: aud3Sub, status: aud3Status, cls: aud3Cls },
+    { title: "4. Section 46(1)(ঠ) Truncated Rate Input Tax Credit Block", sub: aud4Sub, status: aud4Status, cls: aud4Cls },
+    { title: "5. VDS Rules 2025/2026 — Note 24 & Note 29 Voucher Reconciliation", sub: aud5Sub, status: aud5Status, cls: aud5Cls },
+    { title: "6. Rule 42 Mushak-6.10 Large Invoice Statement (> Tk 2,00,000)", sub: aud6Sub, status: aud6Status, cls: aud6Cls },
+    { title: "7. Manager.io BD Statutory Tax Code Coverage (/api4/tax-code)", sub: aud7Sub, status: aud7Status, cls: aud7Cls },
+    { title: "8. Section 25(1) Credit & Debit Note VAT Reconciliation (Notes 26 & 31)", sub: aud8Sub, status: aud8Status, cls: aud8Cls },
+    { title: "9. Part-7 Note 34 Net Payable Formula & Treasury Deposit Check", sub: aud9Sub, status: aud9Status, cls: aud9Cls },
+    { title: "10. Multi-Page /api4 Completeness & Section 55 Cash Expense Guard", sub: aud10Sub, status: aud10Status, cls: aud10Cls }
+  ];
 }
 
 /* ============================================================================
@@ -1365,16 +1651,32 @@ function renderAll() {
   const outRow = prof.mushakNotes.find(n => n.note === "Note 9") || { base: 0, vat: 0 };
   const itcRow = prof.mushakNotes.find(n => n.note === "Note 23b") || { base: 0, vat: 0 };
   const incRow = prof.mushakNotes.find(n => n.note === "Note 24") || { base: 0, vat: 0 };
-  const decRow = prof.mushakNotes.find(n => n.note === "Note 29") || prof.mushakNotes.find(n => n.note === "Note 30") || { base: 0, vat: 0 };
+  const dec29 = prof.mushakNotes.find(n => n.note === "Note 29") || { base: 0, vat: 0 };
+  const dec30 = prof.mushakNotes.find(n => n.note === "Note 30") || { base: 0, vat: 0 };
+  const decVat = Number(dec29.vat || 0) + Number(dec30.vat || 0);
   const netRow = prof.mushakNotes.find(n => n.note === "Note 34") || { base: 0, vat: 0 };
+
+  const errBanner = document.getElementById("apiErrorBanner");
+  if (errBanner) {
+    if (STATE.apiErrors.length > 0) {
+      errBanner.style.display = "block";
+      errBanner.innerHTML = `⚠️ <strong>Incomplete /api4 Data Warning:</strong> ${STATE.apiErrors.length} request(s) failed (${escapeHtml(STATE.apiErrors.join(" · "))}). Financial figures and diagnostics reflect partial data.`;
+    } else {
+      errBanner.style.display = "none";
+      errBanner.innerHTML = "";
+    }
+  }
+
+  const installedCount = TAX_CODE_TEMPLATES.filter(t => STATE.installedCodes[t.ReportingCategory] === true).length;
+  const codeStatusLabel = STATE.isLiveConnected ? `${installedCount} / ${TAX_CODE_TEMPLATES.length} Active` : `${TAX_CODE_TEMPLATES.length} / ${TAX_CODE_TEMPLATES.length} Templates`;
 
   const kpis = [
     { tag: "PART-3 · NOTE 9c", tagCls: "tag-cyan", label: "Output VAT (আউটপুট ভ্যাট)", val: fmtBdt(outRow.vat), sub: "Base: " + fmtBdt(outRow.base), idx: 0 },
     { tag: "PART-4 · NOTE 23b", tagCls: "tag-green", label: "Input Tax Credit (উপকরণ রেয়াত)", val: fmtBdt(itcRow.vat), sub: "6-Period Window u/s 46", idx: 1 },
     { tag: "PART-5 · NOTE 24", tagCls: "tag-gold", label: "Buyer VDS (+সমন্বয়)", val: fmtBdt(incRow.vat), sub: "SRO 182-Ain/2025", idx: 2 },
-    { tag: "PART-6 · NOTE 29/30", tagCls: "tag-purple", label: "Mushak-6.6 & AT (-সমন্বয়)", val: fmtBdt(decRow.vat), sub: "Customer VDS + Import AT", idx: 3 },
+    { tag: "PART-6 · NOTE 29/30", tagCls: "tag-purple", label: "Mushak-6.6 & AT (-সমন্বয়)", val: fmtBdt(decVat), sub: "Customer VDS + Import AT", idx: 3 },
     { tag: "PART-7 · NOTE 34", tagCls: "tag-gold", label: "Net Payable VAT (নিট প্রদেয়)", val: fmtBdt(netRow.vat), sub: "Due 15th of Next Month", idx: 4, hero: true },
-    { tag: "LOCALIZATION", tagCls: "tag-cyan", label: "BD Tax Codes & BIN", val: "12 / 12 Ready", sub: "BIN: " + prof.bin, idx: 5 }
+    { tag: "LOCALIZATION", tagCls: "tag-cyan", label: "BD Tax Codes & BIN", val: codeStatusLabel, sub: "BIN: " + prof.bin, idx: 5 }
   ];
 
   const strip = document.getElementById("kpiStrip");
@@ -1394,7 +1696,7 @@ function renderAll() {
   runCalculators();
   renderMushak91Worksheet(prof);
   renderTaxCodesTable();
-  renderAuditGrid();
+  renderAuditGrid(prof);
 }
 
 function getAllDeadlines(bizType) {
@@ -1631,11 +1933,33 @@ function renderMushak91Worksheet(prof) {
   }
 }
 
+function onTaxWriteConfirmToggle() {
+  const checked = !!document.getElementById("confirmTaxCodeWrite")?.checked;
+  const badge = document.getElementById("taxWriteGuardBadge");
+  if (badge) {
+    badge.className = "badge " + (checked ? "badge-ADVANCE-TAX" : "badge-INCOME-TAX");
+    badge.textContent = checked ? "✓ Write-Confirmed (POST Enabled)" : "🔒 Write-Protected (Tick to Enable)";
+  }
+  const btn = document.getElementById("btnInstallAllCodes");
+  if (btn) {
+    btn.disabled = !checked;
+    btn.style.opacity = checked ? "1" : ".45";
+    btn.style.cursor = checked ? "pointer" : "not-allowed";
+    btn.textContent = checked ? "⚡ Install All 12 BD Tax Codes" : "🔒 Tick Confirmation Box to Install All 12 Tax Codes";
+  }
+  renderTaxCodesTable();
+}
+
 function renderTaxCodesTable() {
   const tbody = document.getElementById("taxCodesBody");
   if (!tbody) return;
+  const confirmed = !!document.getElementById("confirmTaxCodeWrite")?.checked;
   tbody.innerHTML = TAX_CODE_TEMPLATES.map((t, idx) => {
-    const installed = STATE.installedCodes[t.ReportingCategory] !== false;
+    const installed = STATE.installedCodes[t.ReportingCategory] === true;
+    const statusLabel = installed ? "✓ Installed" : (STATE.isLiveConnected ? "Missing in DB" : "Template Ready");
+    const statusCls = installed ? "badge-ADVANCE-TAX" : "badge-INCOME-TAX";
+    const btnLabel = installed ? "✓ Active" : (confirmed ? "⚡ Push to /api4" : "🔒 Confirm Above");
+    const btnDisabled = (!confirmed && !installed) ? 'disabled style="opacity:.45;cursor:not-allowed"' : "";
     return `
       <tr>
         <td>
@@ -1646,17 +1970,35 @@ function renderTaxCodesTable() {
         <td style="font-size:11.5px;color:#8b949e">${escapeHtml(t.SroRef)}</td>
         <td style="font-size:11.5px;font-weight:700;color:#00D2FF">${escapeHtml(t.MushakNote)}</td>
         <td style="font-size:11.5px;color:#cdd9e5">${t.CustomSalesInvoiceTitle ? escapeHtml(t.SalesInvoiceTitle) : 'Standard Title'}</td>
-        <td><span class="badge ${installed ? 'badge-ADVANCE-TAX' : 'badge-INCOME-TAX'}">${installed ? '✓ Active' : 'Ready'}</span></td>
-        <td><button type="button" class="btn-cyan" onclick="installSingleTaxCode(${idx})">Verify / Push</button></td>
+        <td><span class="badge ${statusCls}">${statusLabel}</span></td>
+        <td><button type="button" class="btn-cyan" onclick="installSingleTaxCode(${idx})" ${btnDisabled}>${btnLabel}</button></td>
       </tr>
     `;
   }).join("");
 }
 
-function renderAuditGrid() {
+function renderAuditGrid(prof) {
   const grid = document.getElementById("auditGrid");
   if (!grid) return;
-  grid.innerHTML = TEN_POINT_AUDITS.map(a => `
+  const activeProf = prof || getActiveProfile();
+  const audits = computeDynamicBdAudits(activeProf);
+  const passCount = audits.filter(a => a.status === "PASS" || a.status === "INFO").length;
+  const failCount = audits.filter(a => a.status === "FAIL").length;
+  const warnCount = audits.filter(a => a.status === "WARN").length;
+  const summaryBadge = document.getElementById("auditSummaryBadge");
+  if (summaryBadge) {
+    if (failCount > 0) {
+      summaryBadge.className = "badge badge-TDS";
+      summaryBadge.textContent = `🚨 ${failCount} FAIL · ${warnCount} WARN · ${passCount} PASS`;
+    } else if (warnCount > 0) {
+      summaryBadge.className = "badge badge-INCOME-TAX";
+      summaryBadge.textContent = `⚠️ ${warnCount} WARN · ${passCount} PASS / INFO`;
+    } else {
+      summaryBadge.className = "badge badge-ADVANCE-TAX";
+      summaryBadge.textContent = `✓ ${passCount} / ${audits.length} Checks Passed`;
+    }
+  }
+  grid.innerHTML = audits.map(a => `
     <div class="audit-card">
       <div>
         <div class="audit-title">${escapeHtml(a.title)}</div>
@@ -1668,7 +2010,7 @@ function renderAuditGrid() {
 }
 
 /* ============================================================================
- * 5. INTERACTIONS, DRAWER & CSV EXPORTS
+ * 5. INTERACTIONS, DRAWER, LIVE /API4 SYNC & CSV EXPORTS
  * ============================================================================ */
 function switchTab(tabId) {
   STATE.activeTab = tabId;
@@ -1744,41 +2086,347 @@ function closeNoteInspector() {
 async function installSingleTaxCode(idx) {
   const tpl = TAX_CODE_TEMPLATES[idx];
   if (!tpl) return;
+  const confirmed = !!document.getElementById("confirmTaxCodeWrite")?.checked;
+  if (!confirmed) {
+    showToast("⚠️ Please tick the Explicit Write Confirmation checkbox first.");
+    return;
+  }
   try {
     if (window.parent !== window) {
-      await postMessageApi4("POST", "/api4/tax-code", { Value: tpl });
+      const res = await postMessageApi4("POST", "/api4/tax-code", { Value: tpl });
+      if (res && typeof res.status === "number" && res.status >= 400) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      STATE.installedCodes[tpl.ReportingCategory] = true;
+      renderAll();
+      showToast("✓ Created tax code in Manager.io: " + tpl.Label);
+    } else {
+      STATE.installedCodes[tpl.ReportingCategory] = true;
+      renderAll();
+      showToast("✓ Simulated tax code creation (Standalone Preview): " + tpl.Label);
     }
-    STATE.installedCodes[tpl.ReportingCategory] = true;
-    renderTaxCodesTable();
-    showToast("✓ Synchronized tax code: " + tpl.Label);
   } catch (e) {
-    STATE.installedCodes[tpl.ReportingCategory] = true;
-    renderTaxCodesTable();
-    showToast("✓ Verified tax code template: " + tpl.Label);
+    showToast("🚨 Failed to create tax code (" + tpl.Label + "): " + (e.message || e));
   }
 }
 
 async function installAllMissingTaxCodes() {
+  const confirmed = !!document.getElementById("confirmTaxCodeWrite")?.checked;
+  if (!confirmed) {
+    showToast("⚠️ Please tick the Explicit Write Confirmation checkbox first.");
+    return;
+  }
   const btn = document.getElementById("btnInstallAllCodes");
   if (btn) { btn.disabled = true; btn.textContent = "⏳ Installing 12 BD Tax Codes…"; }
   for (let i = 0; i < TAX_CODE_TEMPLATES.length; i++) {
-    await installSingleTaxCode(i);
+    if (STATE.installedCodes[TAX_CODE_TEMPLATES[i].ReportingCategory] !== true) {
+      await installSingleTaxCode(i);
+    }
   }
   if (btn) { btn.disabled = false; btn.textContent = "✓ All 12 BD Tax Codes Installed"; }
   showToast("✅ All 12 Bangladesh NBR Tax Codes synchronized");
 }
 
 async function syncLiveManagerData() {
+  if (window.parent === window) {
+    renderAll();
+    showToast("ℹ️ Standalone Preview Mode — open inside Manager.io to sync live /api4 ledger");
+    return;
+  }
+
+  STATE.apiErrors = [];
+  const safeBatch = async (path, label) => {
+    try {
+      return await fetchAllBatchPages(path, 500);
+    } catch (err) {
+      STATE.apiErrors.push(`${label}: ${err.message || err}`);
+      return [];
+    }
+  };
+
+  let bizName = "Live Manager.io Business";
+  let bizBin = "";
   try {
-    if (window.parent !== window) {
-      const res = await postMessageApi4("GET", "/api4/tax-code-batch?pageSize=500");
-      if (res && res.body) {
-        document.getElementById("bridgeStatusText").textContent = "LIVE MANAGER.IO /API4 CONNECTED";
+    const bizRes = await postMessageApi4("GET", "/api4/business-details-form/00000000-0000-0000-0000-000000000000");
+    if (bizRes && bizRes.body) {
+      const b = bizRes.body.Value || bizRes.body;
+      if (b.Name) bizName = String(b.Name);
+      bizBin = extractEntityBin(b);
+    }
+  } catch (e) {
+    STATE.apiErrors.push("business-details: " + (e.message || e));
+  }
+
+  const [
+    taxCodes,
+    customers,
+    suppliers,
+    salesInvoices,
+    creditNotes,
+    purchaseInvoices,
+    debitNotes,
+    receipts,
+    payments
+  ] = await Promise.all([
+    safeBatch("/api4/tax-code-batch", "tax-code-batch"),
+    safeBatch("/api4/customer-batch", "customer-batch"),
+    safeBatch("/api4/supplier-batch", "supplier-batch"),
+    safeBatch("/api4/sales-invoice-batch", "sales-invoice-batch"),
+    safeBatch("/api4/credit-note-batch", "credit-note-batch"),
+    safeBatch("/api4/purchase-invoice-batch", "purchase-invoice-batch"),
+    safeBatch("/api4/debit-note-batch", "debit-note-batch"),
+    safeBatch("/api4/receipt-batch", "receipt-batch"),
+    safeBatch("/api4/payment-batch", "payment-batch")
+  ]);
+
+  STATE.isLiveConnected = true;
+  const statusEl = document.getElementById("bridgeStatusText");
+  if (statusEl) {
+    statusEl.textContent = STATE.apiErrors.length > 0
+      ? `⚠️ /API4 PARTIAL (${STATE.apiErrors.length} ERR)`
+      : `🟢 LIVE /API4 · ${bizName.toUpperCase()}`;
+  }
+
+  // Map existing tax codes & detect installed templates
+  const taxMap = {};
+  STATE.installedCodes = {};
+  for (const row of taxCodes) {
+    const key = row.Key || row.key;
+    const val = row.Value || row.value || row;
+    if (key) taxMap[key] = val;
+    const repCat = val.ReportingCategory || "";
+    const nameStr = String(val.Name || "").toLowerCase();
+    for (const tpl of TAX_CODE_TEMPLATES) {
+      if (repCat === tpl.ReportingCategory || nameStr === tpl.Name.toLowerCase()) {
+        STATE.installedCodes[tpl.ReportingCategory] = true;
       }
     }
-  } catch (e) {}
+  }
+
+  const custMap = {};
+  for (const r of customers) {
+    const k = r.Key || r.key;
+    const v = r.Value || r.value || r;
+    if (k) custMap[k] = { name: v.Name || "Customer", bin: extractEntityBin(v) || "UNSET-BIN" };
+  }
+  const suppMap = {};
+  for (const r of suppliers) {
+    const k = r.Key || r.key;
+    const v = r.Value || r.value || r;
+    if (k) suppMap[k] = { name: v.Name || "Supplier", bin: extractEntityBin(v) || "UNSET-BIN" };
+  }
+
+  // Accumulators for Mushak-9.1 Notes
+  const buckets = {
+    note1: { base: 0, vat: 0 },
+    note3: { base: 0, vat: 0 },
+    note4: { base: 0, vat: 0 },
+    note7: { base: 0, vat: 0 },
+    note8: { base: 0, vat: 0 },
+    note14: { base: 0, vat: 0 },
+    note15: { base: 0, vat: 0 },
+    note24: { base: 0, vat: 0 },
+    note29: { base: 0, vat: 0 },
+    note30: { base: 0, vat: 0 }
+  };
+  const liveChallans = [];
+  let unlinkedCnDn = 0;
+  let highCashPayments = 0;
+
+  const classifyLineTax = (tcKey, isSale, lineAmt, taxInclusive) => {
+    const tc = taxMap[tcKey] || {};
+    const rep = String(tc.ReportingCategory || "");
+    const rate = Number(tc.Rate ?? (tcKey ? 15 : 0));
+    const nm = String(tc.Name || "").toLowerCase();
+    let base = Math.abs(Number(lineAmt) || 0);
+    let vat = 0;
+    if (rate > 0) {
+      if (taxInclusive) {
+        const net = base / (1 + rate / 100);
+        vat = base - net;
+        base = net;
+      } else {
+        vat = base * (rate / 100);
+      }
+    }
+    return { rep, rate, nm, base, vat };
+  };
+
+  // Process Sales Invoices & Receipts (Output VAT)
+  const processOutputDoc = (doc, docType, sign) => {
+    const v = doc.Value || doc.value || doc;
+    const ref = v.Reference || docType;
+    const date = (v.IssueDate || v.Date || "").slice(0, 10) || new Date().toISOString().slice(0, 10);
+    const partyObj = custMap[v.Customer || v.Contact] || { name: v.Payee || "Counterparty", bin: "UNSET-BIN" };
+    const taxIncl = !!v.AmountsAreTaxInclusive;
+    const lines = Array.isArray(v.Lines) ? v.Lines : [];
+    let docBase = 0, docVat = 0, docForm = "Mushak-6.3";
+
+    for (const ln of lines) {
+      const amt = (Number(ln.Qty || 1) * Number(ln.SalesUnitPrice ?? ln.UnitPrice ?? ln.Amount ?? 0)) || Number(ln.Amount || 0);
+      if (!amt && !ln.TaxCode) continue;
+      const info = classifyLineTax(ln.TaxCode, true, amt, taxIncl);
+      docBase += sign * info.base;
+      docVat += sign * info.vat;
+
+      if (info.rep.endsWith("0001") || (info.rate === 0 && /export|zero/i.test(info.nm))) {
+        buckets.note1.base += sign * info.base;
+        docForm = "Mushak-6.3 (0% Export)";
+      } else if (info.rep.endsWith("0003") || (info.rate === 0 && /exempt/i.test(info.nm))) {
+        buckets.note3.base += sign * info.base;
+        docForm = "Exempt Supply";
+      } else if (info.rep.endsWith("0008") || (info.rate === 5 && /trad|wholesale/i.test(info.nm))) {
+        buckets.note8.base += sign * info.base;
+        buckets.note8.vat += sign * info.vat;
+        docForm = "Mushak-6.3 (5% Trading)";
+      } else if (info.rep.endsWith("0007") || info.rep.endsWith("0071") || info.rep.endsWith("0072") || info.rep.endsWith("0073") || (info.rate > 0 && info.rate < 15)) {
+        buckets.note7.base += sign * info.base;
+        buckets.note7.vat += sign * info.vat;
+        docForm = `Mushak-6.3 (${info.rate}% Sub)`;
+      } else if (info.rate >= 15 || info.rep.endsWith("0004")) {
+        buckets.note4.base += sign * info.base;
+        buckets.note4.vat += sign * info.vat;
+        docForm = "Mushak-6.3 (15% Std)";
+      }
+    }
+
+    if (v.WithholdingTax || /vds/i.test(String(v.Description || ""))) {
+      const vdsVal = Math.abs(Number(v.WithholdingTaxAmount || (docVat * 0.5) || 0));
+      if (vdsVal > 0) {
+        buckets.note29.base += Math.abs(docBase);
+        buckets.note29.vat += vdsVal;
+      }
+    }
+
+    if (Math.abs(docBase) > 0 || Math.abs(docVat) > 0) {
+      liveChallans.push({
+        ref: String(ref),
+        date,
+        party: partyObj.name,
+        bin: partyObj.bin,
+        form: docForm,
+        base: Math.round(Math.abs(docBase)),
+        vat: Math.round(Math.abs(docVat))
+      });
+    }
+  };
+
+  for (const inv of salesInvoices) processOutputDoc(inv, "INV", 1);
+  for (const cn of creditNotes) {
+    const v = cn.Value || cn.value || cn;
+    if (!v.SalesInvoice) unlinkedCnDn++;
+    processOutputDoc(cn, "CN", -1);
+  }
+
+  // Process Purchase Invoices & Payments (Input Tax Credit & Buyer VDS)
+  const processInputDoc = (doc, docType, sign, isCashPayment = false) => {
+    const v = doc.Value || doc.value || doc;
+    const ref = v.Reference || docType;
+    const date = (v.IssueDate || v.Date || "").slice(0, 10) || new Date().toISOString().slice(0, 10);
+    const partyObj = suppMap[v.Supplier || v.Contact] || { name: v.Payee || "Vendor", bin: "UNSET-BIN" };
+    const taxIncl = !!v.AmountsAreTaxInclusive;
+    const lines = Array.isArray(v.Lines) ? v.Lines : [];
+    let docBase = 0, docVat = 0, docForm = "Purchase 6.3 (15% ITC)";
+
+    for (const ln of lines) {
+      const amt = (Number(ln.Qty || 1) * Number(ln.PurchaseUnitPrice ?? ln.UnitPrice ?? ln.Amount ?? 0)) || Number(ln.Amount || 0);
+      if (!amt && !ln.TaxCode) continue;
+      const info = classifyLineTax(ln.TaxCode, false, amt, taxIncl);
+      docBase += sign * info.base;
+      docVat += sign * info.vat;
+
+      if (info.rep.endsWith("0024") || /vds/i.test(info.nm)) {
+        buckets.note24.base += sign * info.base;
+        buckets.note24.vat += sign * info.vat;
+        docForm = "Buyer VDS (+Adj)";
+      } else if (info.rep.endsWith("0015") || /import|boe|customs/i.test(info.nm)) {
+        buckets.note15.base += sign * info.base;
+        buckets.note15.vat += sign * info.vat;
+        docForm = "BoE Import (15% ITC)";
+      } else if (info.rate >= 15 || info.rep.endsWith("0014")) {
+        buckets.note14.base += sign * info.base;
+        buckets.note14.vat += sign * info.vat;
+        docForm = "Purchase 6.3 (15% ITC)";
+      }
+    }
+
+    if (Math.abs(docBase) > 0 || Math.abs(docVat) > 0) {
+      liveChallans.push({
+        ref: String(ref),
+        date,
+        party: partyObj.name,
+        bin: partyObj.bin,
+        form: docForm,
+        base: Math.round(Math.abs(docBase)),
+        vat: Math.round(Math.abs(docVat)),
+        cashSettled: isCashPayment
+      });
+    }
+  };
+
+  for (const pinv of purchaseInvoices) processInputDoc(pinv, "PINV", 1, false);
+  for (const dn of debitNotes) {
+    const v = dn.Value || dn.value || dn;
+    if (!v.PurchaseInvoice) unlinkedCnDn++;
+    processInputDoc(dn, "DN", -1, false);
+  }
+  for (const pmt of payments) {
+    const v = pmt.Value || pmt.value || pmt;
+    const lines = Array.isArray(v.Lines) ? v.Lines : [];
+    const totalAmt = lines.reduce((s, l) => s + Math.abs(Number(l.Amount || 0)), 0);
+    const isCash = /cash|petty/i.test(String(v.Description || ""));
+    if (totalAmt > 50000 && isCash) highCashPayments++;
+  }
+
+  const totalOutBase = Math.max(0, buckets.note1.base + buckets.note3.base + buckets.note4.base + buckets.note7.base + buckets.note8.base);
+  const totalOutVat = Math.max(0, buckets.note4.vat + buckets.note7.vat + buckets.note8.vat);
+  const stdAndExportBase = Math.max(0, buckets.note1.base + buckets.note4.base);
+  const rawItcBase = Math.max(0, buckets.note14.base + buckets.note15.base);
+  const rawItcVat = Math.max(0, buckets.note14.vat + buckets.note15.vat);
+  const eligibleItcVat = totalOutBase > 0 ? Math.round(rawItcVat * (stdAndExportBase / totalOutBase)) : rawItcVat;
+  const netVatPayable = Math.max(0, totalOutVat - eligibleItcVat + buckets.note24.vat - buckets.note29.vat - buckets.note30.vat);
+
+  STATE.liveStats = {
+    creditNotes: creditNotes.length,
+    debitNotes: debitNotes.length,
+    unlinkedCnDn,
+    highCashPayments,
+    totalVouchers: salesInvoices.length + creditNotes.length + purchaseInvoices.length + debitNotes.length + receipts.length + payments.length
+  };
+
+  DEMO_PROFILES["live:manager"] = {
+    id: "live:manager",
+    name: bizName + " (Live /api4 Ledger)",
+    bin: bizBin || "UNSET-BIN",
+    mushakNotes: [
+      { note: "Note 1", part: "Part-3: Output", title: "Zero-Rated Direct/Deemed Export (শূন্য হার রপ্তানি - ধারা ২১-২৪)", base: Math.round(buckets.note1.base), vat: 0, form: "Sub-Form Ka (ক)", status: "Live /api4" },
+      { note: "Note 3", part: "Part-3: Output", title: "Exempt Goods & Services (ভ্যাট অব্যাহতি প্রাপ্ত সরবরাহ - ধারা ২৬)", base: Math.round(buckets.note3.base), vat: 0, form: "Sub-Form Ka (ক)", status: "Live /api4" },
+      { note: "Note 4", part: "Part-3: Output", title: "Standard Rated 15% Goods/Services (আদর্শ হার ১৫% পণ্য ও সেবা)", base: Math.round(buckets.note4.base), vat: Math.round(buckets.note4.vat), form: "Sub-Form Ka (ক)", status: "Mushak-6.3" },
+      { note: "Note 7", part: "Part-3: Output", title: "Truncated Rate Supplies (হ্রাসকৃত হার ১০% / ৭.৫% / ৫% / ২%)", base: Math.round(buckets.note7.base), vat: Math.round(buckets.note7.vat), form: "Sub-Form Ka (ক)", status: "No ITC u/s 46(1)(ঠ)" },
+      { note: "Note 8", part: "Part-3: Output", title: "Commercial Trading / Wholesale 5% (ব্যবসায়ী হার ৫%)", base: Math.round(buckets.note8.base), vat: Math.round(buckets.note8.vat), form: "Sub-Form Ka (ক)", status: "No ITC u/s 46" },
+      { note: "Note 9", part: "Part-3: Total", title: "Total Output VAT Payable (মোট প্রদেয় আউটপুট ভ্যাট = Note 1–8)", base: Math.round(totalOutBase), vat: Math.round(totalOutVat), form: "Part-3 Total", status: "Output Total", isTotal: true },
+      { note: "Note 14", part: "Part-4: Input ITC", title: "Standard 15% Local Purchase (স্থানীয় ক্রয় ১৫% - মুসক-৬.৩)", base: Math.round(buckets.note14.base), vat: Math.round(buckets.note14.vat), form: "Sub-Form Ka (ক)", status: "Rebatable (6 Periods)" },
+      { note: "Note 15", part: "Part-4: Input ITC", title: "Standard 15% Import Purchase (আমদানি ক্রয় ১৫% - Bill of Entry)", base: Math.round(buckets.note15.base), vat: Math.round(buckets.note15.vat), form: "Sub-Form Kha (খ)", status: "BoE Input" },
+      { note: "Note 23b", part: "Part-4: Total", title: "Total Eligible Input Tax Credit (মোট প্রাপ্য উপকরণ কর রেয়াত u/s 46)", base: Math.round(rawItcBase), vat: Math.round(eligibleItcVat), form: "Part-4 Total", status: eligibleItcVat < rawItcVat ? "Apportioned u/s 46(1)(ঠ)" : "ITC Claimed", isTotal: true },
+      { note: "Note 24", part: "Part-5: +Adj", title: "Increasing Adjustment: VDS Withheld as Buyer (উৎসে কর্তন বৃদ্ধিকারী সমন্বয়)", base: Math.round(buckets.note24.base), vat: Math.round(buckets.note24.vat), form: "Sub-Form Ka (ক)", status: "SRO 182-Ain/2025" },
+      { note: "Note 29", part: "Part-6: -Adj", title: "Decreasing Adjustment: Customer VDS per Mushak-6.6 (হ্রাসকারী সমন্বয়)", base: Math.round(buckets.note29.base), vat: Math.round(buckets.note29.vat), form: "Sub-Form Ga (গ)", status: "Mushak-6.6" },
+      { note: "Note 34", part: "Part-7: Net", title: "Net VAT Payable before Treasury Deposit (নিট প্রদেয় মূসক = 9c - 23b + 28 - 33)", base: 0, vat: Math.round(netVatPayable), form: "Part-7 Net", status: "Due by 15th", isTotal: true }
+    ],
+    challans: liveChallans.slice(0, 100)
+  };
+
+  const sel = document.getElementById("demoProfileSelect");
+  if (sel && ![...sel.options].some(o => o.value === "live:manager")) {
+    const opt = document.createElement("option");
+    opt.value = "live:manager";
+    opt.textContent = "🟢 Live Business: " + bizName;
+    sel.insertBefore(opt, sel.firstChild);
+  }
+  STATE.activeProfileKey = "live:manager";
+  if (sel) sel.value = "live:manager";
+
   renderAll();
-  showToast("🔄 Mushak-9.1 & Tax Code state synchronized");
+  showToast(`✓ Synchronized live /api4 data (${STATE.liveStats.totalVouchers} vouchers)`);
 }
 
 function copyThemeUrl() {
@@ -1814,7 +2462,7 @@ function exportMushakCsv() {
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `Mushak_9_1_${prof.id.replace("demo:", "")}_FY2026_27.csv`;
+  a.download = `Mushak_9_1_${prof.id.replace("demo:", "").replace("live:", "live_")}_FY2026_27.csv`;
   a.click();
   showToast("✅ Exported Mushak-9.1 Worksheet CSV");
 }
@@ -1843,6 +2491,9 @@ function exportMushakCsv() {
     else if (window.parent !== window) switchTab("mushak91");
     const dr = qs.get("drawer");
     if (dr !== null && dr !== "") openNoteInspector(Number(dr) || 0);
+    if (window.parent !== window && !demo) {
+      syncLiveManagerData();
+    }
   } catch (e) {
     renderAll();
   }

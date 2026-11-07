@@ -15,9 +15,9 @@
 1. Open Manager.io → **Settings** → **Extensions** (or visit [themes.alfabase.com](https://themes.alfabase.com))
 2. Search for the theme title and click **Install** — or open the direct Alfabase links below.
 
-### Method 2: Manual Install via Settings → HTML Themes
-1. Open Manager.io → **Settings** → **HTML Themes**
-2. Click **New Theme**
+### Method 2: Manual Install via Settings → Custom Themes
+1. Open Manager.io → **Settings** → **Custom Themes**
+2. Click **New Custom Theme**
 3. Paste the **Raw Install URL** below (or copy-paste the standalone HTML code)
 4. Click **Create**
 

@@ -40,7 +40,7 @@ All themes and extensions are built with strict adherence to Manager.io’s sand
 
 ## 🎨 Community Edition Themes (`/api4/view-v1`)
 
-Install with one click via [themes.alfabase.com](https://themes.alfabase.com) or copy raw URLs into Manager.io **Settings → HTML Themes**:
+Install with one click via [themes.alfabase.com](https://themes.alfabase.com) or copy raw URLs into Manager.io **Settings → Custom Themes**:
 
 | # | Theme | Status | Alfabase 1-Click | Raw GitHub URL |
 |---|---|---|---|---|

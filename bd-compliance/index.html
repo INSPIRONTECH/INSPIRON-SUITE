@@ -1419,8 +1419,11 @@ async function postMessageApi4(method, path, body, params) {
 async function fetchAllBatchPages(basePath, pageSize = 500) {
   const allItems = [];
   let skip = 0;
-  const maxPages = 50;
-  for (let page = 0; page < maxPages; page++) {
+  const maxPages = 100;
+  for (let page = 0; page <= maxPages; page++) {
+    if (page === maxPages) {
+      throw new Error(`Pagination cutoff exceeded (> ${(maxPages * pageSize).toLocaleString('en-US')} records on ${basePath}); dataset is incomplete.`);
+    }
     const res = await postMessageApi4("GET", basePath, undefined, { skip, pageSize });
     if (!res || (typeof res.status === "number" && res.status >= 400) || !res.body) {
       const statusLabel = res && res.status ? `HTTP ${res.status}` : "Empty response";
@@ -1670,11 +1673,11 @@ function renderAll() {
   const codeStatusLabel = STATE.isLiveConnected ? `${installedCount} / ${TAX_CODE_TEMPLATES.length} Active` : `${TAX_CODE_TEMPLATES.length} / ${TAX_CODE_TEMPLATES.length} Templates`;
 
   const kpis = [
-    { tag: "PART-3 · NOTE 9c", tagCls: "tag-cyan", label: "Output VAT (আউটপুট ভ্যাট)", val: fmtBdt(outRow.vat), sub: "Base: " + fmtBdt(outRow.base), idx: 0 },
-    { tag: "PART-4 · NOTE 23b", tagCls: "tag-green", label: "Input Tax Credit (উপকরণ রেয়াত)", val: fmtBdt(itcRow.vat), sub: "6-Period Window u/s 46", idx: 1 },
-    { tag: "PART-5 · NOTE 24", tagCls: "tag-gold", label: "Buyer VDS (+সমন্বয়)", val: fmtBdt(incRow.vat), sub: "SRO 182-Ain/2025", idx: 2 },
-    { tag: "PART-6 · NOTE 29/30", tagCls: "tag-purple", label: "Mushak-6.6 & AT (-সমন্বয়)", val: fmtBdt(decVat), sub: "Customer VDS + Import AT", idx: 3 },
-    { tag: "PART-7 · NOTE 34", tagCls: "tag-gold", label: "Net Payable VAT (নিট প্রদেয়)", val: fmtBdt(netRow.vat), sub: "Due 15th of Next Month", idx: 4, hero: true },
+    { tag: "PART-3 · NOTE 9c", tagCls: "tag-cyan", label: "Output VAT (আউটপুট ভ্যাট)", val: (STATE.isLiveConnected && STATE.apiErrors.length > 0) ? "Unavailable" : fmtBdt(outRow.vat), sub: (STATE.isLiveConnected && STATE.apiErrors.length > 0) ? ("API Error: " + STATE.apiErrors[0]) : ("Base: " + fmtBdt(outRow.base)), idx: 0 },
+    { tag: "PART-4 · NOTE 23b", tagCls: "tag-green", label: "Input Tax Credit (উপকরণ রেয়াত)", val: (STATE.isLiveConnected && STATE.apiErrors.length > 0) ? "Unavailable" : fmtBdt(itcRow.vat), sub: (STATE.isLiveConnected && STATE.apiErrors.length > 0) ? ("API Error: " + STATE.apiErrors[0]) : "6-Period Window u/s 46", idx: 1 },
+    { tag: "PART-5 · NOTE 24", tagCls: "tag-gold", label: "Buyer VDS (+সমন্বয়)", val: (STATE.isLiveConnected && STATE.apiErrors.length > 0) ? "Unavailable" : fmtBdt(incRow.vat), sub: "SRO 182-Ain/2025", idx: 2 },
+    { tag: "PART-6 · NOTE 29/30", tagCls: "tag-purple", label: "Mushak-6.6 & AT (-সমন্বয়)", val: (STATE.isLiveConnected && STATE.apiErrors.length > 0) ? "Unavailable" : fmtBdt(decVat), sub: "Customer VDS + Import AT", idx: 3 },
+    { tag: "PART-7 · NOTE 34", tagCls: "tag-gold", label: "Net Payable VAT (নিট প্রদেয়)", val: (STATE.isLiveConnected && STATE.apiErrors.length > 0) ? "Unavailable" : fmtBdt(netRow.vat), sub: (STATE.isLiveConnected && STATE.apiErrors.length > 0) ? ("API Error: " + STATE.apiErrors[0]) : "Due 15th of Next Month", idx: 4, hero: true },
     { tag: "LOCALIZATION", tagCls: "tag-cyan", label: "BD Tax Codes & BIN", val: codeStatusLabel, sub: "BIN: " + prof.bin, idx: 5 }
   ];
 

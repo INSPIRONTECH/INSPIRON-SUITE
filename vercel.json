@@ -1,6 +1,11 @@
 {
   "cleanUrls": true,
   "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "tax.inspiron.tech" }],
+      "destination": "/tax-suite/bd-compliance/index.html"
+    },
     { "source": "/executive-dashboard", "destination": "/executive-dashboard/index.html" },
     { "source": "/dashboard",           "destination": "/executive-dashboard/index.html" },
     { "source": "/bd-compliance",       "destination": "/tax-suite/bd-compliance/index.html" },

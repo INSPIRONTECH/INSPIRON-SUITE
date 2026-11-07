@@ -547,19 +547,18 @@ table.tech-table tbody tr:last-child td, table.sov-table tbody tr:last-child td 
     </div>
   </section>
 
-  <!-- ================= TAB 3: FORENSIC COA AUDITOR & 1-CLICK INSTALLER ================= -->
+  <!-- ================= TAB 3: FORENSIC COA AUDITOR (100% READ-ONLY) ================= -->
   <section id="view-forensic" class="tab-view" hidden>
     <div class="tech-panel">
       <div class="tech-panel-hdr">
         <div class="tech-panel-title">🔍 12-Point Automated Forensic Ledger &amp; Chart of Accounts Diagnostic</div>
         <div style="display:flex;gap:8px;align-items:center">
+          <span class="pill pill-green">100% Read-Only (/api4 GET)</span>
           <span class="pill pill-violet" id="forensicScoreBadge">Health Score: 96/100</span>
-          <button type="button" class="tb-btn role-btn" id="btnInstallCoa" onclick="installMissingCoaAccounts()">⚡ 1-Click Safe COA Preset Installer</button>
         </div>
       </div>
       <div class="panel-body">
         <div class="audit-grid" id="forensicCardsWrap"></div>
-        <div id="coaInstallStatus" style="margin-bottom:10px;font-weight:700;color:var(--cyan)" hidden></div>
         <div class="table-wrap" id="forensicTableWrap"></div>
       </div>
     </div>
@@ -1597,58 +1596,7 @@ function renderForensicTab(prof) {
 }
 
 /* ============================================================================
- * 5. 1-CLICK SAFE COA PRESET INSTALLER (Writes to Manager via POST /api4/*)
- * ============================================================================ */
-async function installMissingCoaAccounts() {
-  const statusEl = document.getElementById('coaInstallStatus');
-  statusEl.hidden = false;
-
-  if (!RUNTIME_STATE.activeProfileKey.startsWith('live:')) {
-    statusEl.style.color = 'var(--green)';
-    statusEl.textContent = '✓ [Simulation Mode] Verified 8 Statutory COA Groups & Accounts (Direct Project Revenue, Retention Receivable 1150, AIT Withholding, Site Material & Labor Cost, Factory Overhead). Connect inside Manager.io to write directly via /api4!';
-    return;
-  }
-
-  const business = RUNTIME_STATE.activeProfileKey.slice(5);
-  statusEl.style.color = 'var(--cyan)';
-  statusEl.textContent = `⏳ Inspecting existing P&L accounts in "${business}" via /api4/profit-and-loss-statement-account-batch…`;
-
-  try {
-    const existingRes = await callManagerApi('GET', '/api4/profit-and-loss-statement-account-batch', { business, pageSize: 500 });
-    const existingNames = new Set(
-      (existingRes?.items || []).map(it => String(it.item?.name || '').trim().toLowerCase())
-    );
-
-    const presets = [
-      { Name: '4100 — Certified Project & Running Bill Revenue', Code: '4100' },
-      { Name: '5100 — Direct Site Materials & Subcontractor Cost', Code: '5100' },
-      { Name: '5200 — Statutory Factory & Site Labor Muster Roll', Code: '5200' },
-      { Name: '6400 — Tender Document, BG Commission & Testing Fee', Code: '6400' }
-    ];
-
-    let created = 0, skipped = 0;
-    for (const acc of presets) {
-      if (existingNames.has(acc.Name.toLowerCase())) {
-        skipped++;
-        continue;
-      }
-      await callManagerApi('POST', '/api4/profit-and-loss-statement-account', {}, {
-        Business: business,
-        Value: acc
-      });
-      created++;
-    }
-
-    statusEl.style.color = 'var(--green)';
-    statusEl.textContent = `✓ COA Preset Sync Complete on "${business}": ${created} new accounts created, ${skipped} existing accounts untouched.`;
-  } catch (err) {
-    statusEl.style.color = 'var(--amber)';
-    statusEl.textContent = `ℹ️ Read-only session or permission notice: ${err.message}`;
-  }
-}
-
-/* ============================================================================
- * 6. LIVE STATUTORY SIMULATORS (e-GP RA Bill, Labour Act Payroll, Land-Share)
+ * 5. LIVE STATUTORY SIMULATORS (e-GP RA Bill, Labour Act Payroll, Land-Share)
  * ============================================================================ */
 function runSimulators() {
   // 1. Contractor RA Bill

@@ -515,7 +515,7 @@ table.tech-table tbody tr:last-child td, table.sov-table tbody tr:last-child td 
           <div class="tech-panel-title">
             <span>🏦 Treasury, Bank &amp; Control Accounts</span>
           </div>
-          <span class="status-dot-wrap"><span class="status-dot"></span>Reconciled</span>
+          <span class="status-dot-wrap" id="ovTreasuryHdrBadge"><span class="status-dot"></span>Reconciled</span>
         </div>
         <div id="ovTreasuryWrap"></div>
       </div>
@@ -1196,43 +1196,106 @@ function refreshConnection() {
 
 /* ============================================================================
  * 3. LIVE MANAGER.IO BUSINESS DATA AGGREGATOR (Mode A & Mode B)
- *    - Multi-Page Pagination (Skip / PageSize loop until all records retrieved)
- *    - Explicit API Failure Tracking (never silently masking failed requests)
- *    - Full P&L vs. Balance Sheet Account Classification (excludes Fixed Assets & Inventory)
- *    - Includes Journal Entries, Expense Claims & Inventory Write-Offs in Project Profitability
+ *    - Multi-Page Pagination (Skip / PageSize loop; throws explicit error if > 50,000 cutoff reached)
+ *    - Per-Calculation Dataset Dependency Tracking (unavailable figures + error, zero demo fallback)
+ *    - Strict Suspense Exclusion (checked before every revenue/expense/project calculation & reported separately)
+ *    - Actual Closing Treasury Balances (starting balances + receipts - payments + transfers + journals; hides if unavailable)
+ *    - Verified Account Classification (excludes Balance Sheet postings, flags unclassified entries, AUD-03 PASS only when verified)
  * ============================================================================ */
 async function fetchAllBatchPages(path, businessName) {
   const PAGE_SIZE = 500;
+  const MAX_RECORDS = 50000;
   let skip = 0;
   const allItems = [];
   while (true) {
+    if (skip >= MAX_RECORDS) {
+      throw new Error(`Pagination cutoff exceeded (> ${MAX_RECORDS.toLocaleString('en-US')} records on ${path}); dataset is incomplete.`);
+    }
     const res = await callManagerApi('GET', path, { business: businessName, skip, pageSize: PAGE_SIZE });
-    const pageItems = Array.isArray(res?.items) ? res.items : [];
+    const pageItems = Array.isArray(res?.items) ? res.items : (Array.isArray(res?.objects) ? res.objects : []);
     allItems.push(...pageItems);
     if (pageItems.length < PAGE_SIZE) break;
-    skip += PAGE_SIZE;
-    if (skip >= 50000) break; // safety cap
+    skip += pageItems.length;
   }
   return allItems;
 }
 
+function buildUnavailableLiveProfile(businessName, statusOrErrorText, isError = false) {
+  const msg = statusOrErrorText || 'Required live API dataset failed to load.';
+  return {
+    id: `live:${businessName}`,
+    name: `${businessName} (Live Manager.io Business)`,
+    sector: isError ? `Live API Error — ${msg}` : msg,
+    currency: '—',
+    isUnavailableState: isError,
+    unavailableReason: msg,
+    kpis: [
+      { group: 'slate', glyph: '!', label: 'Contract / Project Portfolio', bn: 'মোট প্রজেক্ট চুক্তিমূল্য', val: 'Unavailable', sub: msg },
+      { group: 'slate', glyph: '!', label: 'Recognised Revenue (Net)',     bn: 'মোট অর্জিত রাজস্ব (আয়)',    val: 'Unavailable', sub: msg },
+      { group: 'slate', glyph: '!', label: 'Cash Receipts Collected',      bn: 'মোট নগদ ও ব্যাংক জমা',    val: 'Unavailable', sub: msg },
+      { group: 'slate', glyph: '!', label: 'Incurred Direct & Op. Costs',  bn: 'মোট অপারেটিং ও প্রজেক্ট খরচ', val: 'Unavailable', sub: msg },
+      { group: 'slate', glyph: '!', label: 'Cash Payments Disbursed',      bn: 'মোট নগদ ও ব্যাংক পেমেন্ট', val: 'Unavailable', sub: msg },
+      { group: 'slate', glyph: '!', label: 'Net Cash Flow (Receipts − Paid)', bn: 'নিট নগদ প্রবাহ (জমা − পেমেন্ট)', val: 'Unavailable', sub: msg }
+    ],
+    projects: [],
+    projectsUnavailableError: msg,
+    treasury: [],
+    treasuryUnavailableError: msg,
+    transactions: [],
+    transactionsUnavailableError: msg,
+    forensics: [
+      {
+        code: 'AUD-01',
+        title: 'Potential Suspense and Unallocated Postings',
+        status: 'FAIL',
+        badge: 'pill-red',
+        detail: `Unavailable — ${msg}`
+      },
+      {
+        code: 'AUD-03',
+        title: 'Profit & Loss Expense Classification Verification',
+        status: 'WARN',
+        badge: 'pill-amber',
+        detail: `Unavailable — required classification datasets could not be verified (${msg}).`
+      },
+      {
+        code: 'AUD-06',
+        title: 'Base Currency & Multi-Page API Sync Integrity',
+        status: 'FAIL',
+        badge: 'pill-red',
+        detail: `Live API retrieval error: ${msg}`
+      }
+    ]
+  };
+}
+
 async function loadLiveBusinessProfile(businessName) {
   updateBridgeBadge(`🔄 Loading all pages for "${businessName}"…`, false);
+  const loadingProfile = buildUnavailableLiveProfile(businessName, `Loading live datasets from Manager.io for "${businessName}"…`, false);
+  RUNTIME_STATE.liveDataCache[businessName] = loadingProfile;
+  renderProfileData(loadingProfile);
+
   try {
+    const endpointErrors = {};
     const failedEndpoints = [];
-    const safeFetchBatch = async (label, path) => {
+
+    const safeFetchBatch = async (key, label, path) => {
       try {
         return await fetchAllBatchPages(path, businessName);
       } catch (err) {
-        failedEndpoints.push(`${label} (${path}): ${err.message}`);
+        const errMsg = `${label} (${path}): ${err.message}`;
+        endpointErrors[key] = errMsg;
+        failedEndpoints.push(errMsg);
         return null;
       }
     };
-    const safeFetchSingle = async (label, path) => {
+    const safeFetchSingle = async (key, label, path) => {
       try {
         return await callManagerApi('GET', path, { business: businessName });
       } catch (err) {
-        failedEndpoints.push(`${label} (${path}): ${err.message}`);
+        const errMsg = `${label} (${path}): ${err.message}`;
+        endpointErrors[key] = errMsg;
+        failedEndpoints.push(errMsg);
         return null;
       }
     };
@@ -1244,6 +1307,8 @@ async function loadLiveBusinessProfile(businessName) {
       plAccountsRaw,
       bsAccountsRaw,
       nonInvRaw,
+      invItemsRaw,
+      invUnitCostsRaw,
       projectsRaw,
       customersRaw,
       suppliersRaw,
@@ -1258,43 +1323,57 @@ async function loadLiveBusinessProfile(businessName) {
       receiptsRaw,
       paymentsRaw,
       banksRaw,
-      taxesRaw
+      bankStartsRaw,
+      taxesRaw,
+      payslipsRaw,
+      earningsItemsRaw,
+      deductionItemsRaw,
+      contributionItemsRaw
     ] = await Promise.all([
-      safeFetchSingle('Base Currency', '/api4/base-currency'),
-      safeFetchSingle('Suspense Account', '/api4/balance-sheet-suspense-account'),
-      safeFetchBatch('P&L Groups', '/api4/profit-and-loss-statement-group-batch'),
-      safeFetchBatch('P&L Accounts', '/api4/profit-and-loss-statement-account-batch'),
-      safeFetchBatch('Balance Sheet Accounts', '/api4/balance-sheet-account-batch'),
-      safeFetchBatch('Non-Inventory Items', '/api4/non-inventory-item-batch'),
-      safeFetchBatch('Projects', '/api4/project-batch'),
-      safeFetchBatch('Customers', '/api4/customer-batch'),
-      safeFetchBatch('Suppliers', '/api4/supplier-batch'),
-      safeFetchBatch('Sales Invoices', '/api4/sales-invoice-batch'),
-      safeFetchBatch('Purchase Invoices', '/api4/purchase-invoice-batch'),
-      safeFetchBatch('Credit Notes', '/api4/credit-note-batch'),
-      safeFetchBatch('Debit Notes', '/api4/debit-note-batch'),
-      safeFetchBatch('Journal Entries', '/api4/journal-entry-batch'),
-      safeFetchBatch('Expense Claims', '/api4/expense-claim-batch'),
-      safeFetchBatch('Inventory Write-Offs', '/api4/inventory-write-off-batch'),
-      safeFetchBatch('Inter-Account Transfers', '/api4/inter-account-transfer-batch'),
-      safeFetchBatch('Receipts', '/api4/receipt-batch'),
-      safeFetchBatch('Payments', '/api4/payment-batch'),
-      safeFetchBatch('Bank/Cash Accounts', '/api4/bank-or-cash-account-batch'),
-      safeFetchBatch('Tax Codes', '/api4/tax-code-batch')
+      safeFetchSingle('baseCurrency', 'Base Currency', '/api4/base-currency'),
+      safeFetchSingle('suspenseAccount', 'Suspense Account', '/api4/balance-sheet-suspense-account'),
+      safeFetchBatch('plGroups', 'P&L Groups', '/api4/profit-and-loss-statement-group-batch'),
+      safeFetchBatch('plAccounts', 'P&L Accounts', '/api4/profit-and-loss-statement-account-batch'),
+      safeFetchBatch('bsAccounts', 'Balance Sheet Accounts', '/api4/balance-sheet-account-batch'),
+      safeFetchBatch('nonInvItems', 'Non-Inventory Items', '/api4/non-inventory-item-batch'),
+      safeFetchBatch('invItems', 'Inventory Items', '/api4/inventory-item-batch'),
+      safeFetchBatch('invUnitCosts', 'Inventory Unit Costs', '/api4/inventory-unit-cost-batch'),
+      safeFetchBatch('projects', 'Projects', '/api4/project-batch'),
+      safeFetchBatch('customers', 'Customers', '/api4/customer-batch'),
+      safeFetchBatch('suppliers', 'Suppliers', '/api4/supplier-batch'),
+      safeFetchBatch('invoices', 'Sales Invoices', '/api4/sales-invoice-batch'),
+      safeFetchBatch('purchases', 'Purchase Invoices', '/api4/purchase-invoice-batch'),
+      safeFetchBatch('creditNotes', 'Credit Notes', '/api4/credit-note-batch'),
+      safeFetchBatch('debitNotes', 'Debit Notes', '/api4/debit-note-batch'),
+      safeFetchBatch('journalEntries', 'Journal Entries', '/api4/journal-entry-batch'),
+      safeFetchBatch('expenseClaims', 'Expense Claims', '/api4/expense-claim-batch'),
+      safeFetchBatch('invWriteOffs', 'Inventory Write-Offs', '/api4/inventory-write-off-batch'),
+      safeFetchBatch('transfers', 'Inter-Account Transfers', '/api4/inter-account-transfer-batch'),
+      safeFetchBatch('receipts', 'Receipts', '/api4/receipt-batch'),
+      safeFetchBatch('payments', 'Payments', '/api4/payment-batch'),
+      safeFetchBatch('banks', 'Bank/Cash Accounts', '/api4/bank-or-cash-account-batch'),
+      safeFetchBatch('bankStarts', 'Bank Starting Balances', '/api4/bank-or-cash-account-starting-balance-batch'),
+      safeFetchBatch('taxes', 'Tax Codes', '/api4/tax-code-batch'),
+      safeFetchBatch('payslips', 'Payslips', '/api4/payslip-batch'),
+      safeFetchBatch('earningsItems', 'Payslip Earnings Items', '/api4/payslip-earnings-item-batch'),
+      safeFetchBatch('deductionItems', 'Payslip Deduction Items', '/api4/payslip-deduction-item-batch'),
+      safeFetchBatch('contributionItems', 'Payslip Contribution Items', '/api4/payslip-contribution-item-batch')
     ]);
 
-    // Abort and surface explicit error if core financial batches failed to load
-    const coreMissing = [
-      ['Sales Invoices', invoicesRaw],
-      ['Purchase Invoices', purchasesRaw],
-      ['Receipts', receiptsRaw],
-      ['Payments', paymentsRaw],
-      ['P&L Accounts', plAccountsRaw]
-    ].filter(([, val]) => val === null).map(([name]) => name);
+    // Dataset Dependency Map: identify exactly which datasets each financial calculation requires
+    const checkDeps = (keys) => {
+      const errs = keys.filter(k => endpointErrors[k]).map(k => endpointErrors[k]);
+      return { ok: errs.length === 0, error: errs.join(' | ') };
+    };
 
-    if (coreMissing.length > 0) {
-      throw new Error(`Incomplete API data — failed to retrieve: ${coreMissing.join(', ')}`);
-    }
+    const depPortfolio = checkDeps(['projects']);
+    const depRevenue   = checkDeps(['plGroups', 'plAccounts', 'bsAccounts', 'nonInvItems', 'invItems', 'taxes', 'invoices', 'creditNotes', 'receipts', 'journalEntries']);
+    const depReceipts  = checkDeps(['receipts', 'taxes']);
+    const depCosts     = checkDeps(['plGroups', 'plAccounts', 'bsAccounts', 'nonInvItems', 'invItems', 'invUnitCosts', 'taxes', 'purchases', 'debitNotes', 'expenseClaims', 'invWriteOffs', 'payments', 'journalEntries', 'payslips', 'earningsItems', 'deductionItems', 'contributionItems']);
+    const depPayments  = checkDeps(['payments', 'taxes']);
+    const depCashFlow  = checkDeps(['receipts', 'payments', 'taxes']);
+    const depProjects  = checkDeps(['projects', 'plGroups', 'plAccounts', 'bsAccounts', 'nonInvItems', 'invItems', 'invUnitCosts', 'taxes', 'invoices', 'creditNotes', 'purchases', 'debitNotes', 'expenseClaims', 'invWriteOffs', 'receipts', 'payments', 'journalEntries', 'payslips', 'earningsItems']);
+    const depTreasury  = checkDeps(['banks', 'bankStarts', 'receipts', 'payments', 'transfers', 'journalEntries', 'taxes']);
 
     const projects = projectsRaw || [];
     const customers = customersRaw || [];
@@ -1310,104 +1389,283 @@ async function loadLiveBusinessProfile(businessName) {
     const receipts = receiptsRaw || [];
     const payments = paymentsRaw || [];
     const banks = banksRaw || [];
+    const bankStarts = bankStartsRaw || [];
     const taxes = taxesRaw || [];
+    const payslips = payslipsRaw || [];
+    const earningsItems = earningsItemsRaw || [];
+    const deductionItems = deductionItemsRaw || [];
+    const contributionItems = contributionItemsRaw || [];
 
-    // 1. Classify Chart of Accounts (Revenue vs. Cost/Expense vs. Balance Sheet vs. Suspense)
-    const suspenseKey = suspenseAcctObj?.key || suspenseAcctObj?.id || null;
-    const plGroupTypeMap = {}; // key -> 0 (Income/Revenue) or 1 (Expense/Cost)
-    (plGroupsRaw || []).forEach(g => {
-      const it = g.item || {};
-      const isRev = it.type === 0 || /revenue|income|sales|turnover/i.test(it.name || '');
-      plGroupTypeMap[g.key] = isRev ? 'revenue' : 'expense';
+    // 1. Tax Code Map (handles compound components & tax-exclusive vs tax-inclusive lines)
+    const taxMap = {};
+    taxes.forEach(t => {
+      const it = t.item || {};
+      let rate = Number(it.rate || 0);
+      if (Array.isArray(it.components) && it.components.length) {
+        rate = it.components.reduce((s, c) => s + Number(c.componentRate || c.rate || 0), 0);
+      }
+      taxMap[t.key] = { rate, reverseCharged: Boolean(it.reverseCharged), account: it.account || null };
     });
 
-    const plAccountClass = {}; // accountKey -> 'revenue' | 'expense'
+    // Exact ManagerServer ITransactionLine.GetLineTotal + discount + tax calculation
+    const calcLineNetAndGross = (l, doc, priceField, forceQtyUnitCols = false) => {
+      const hasQty = Boolean(forceQtyUnitCols || doc.quantityColumn);
+      const hasUnitPrice = Boolean(forceQtyUnitCols || doc.unitPriceColumn);
+      let base = 0;
+      if (hasQty && hasUnitPrice) {
+        const up = Number(l[priceField] ?? l.unitPrice ?? 0);
+        base = (l.qty !== null && l.qty !== undefined) ? (Number(l.qty) * up) : up;
+      } else {
+        base = Number(l.amount ?? l.totalBeforeTax ?? 0);
+      }
+      if (doc.discount) {
+        if (doc.discountType === 1 || doc.discountType === 'ExactAmount') {
+          base -= Number(l.discountAmount || 0);
+        } else if (l.discountPercentage) {
+          base = (base / 100) * (100 - Number(l.discountPercentage || 0));
+        }
+      }
+      let net = base;
+      let gross = base;
+      if (l.taxCode && taxMap[l.taxCode] && !taxMap[l.taxCode].reverseCharged) {
+        const r = taxMap[l.taxCode].rate || 0;
+        const taxExcl = forceQtyUnitCols ? !Boolean(doc.amountsIncludeTax) : Boolean(doc.amountsAreTaxExclusive);
+        if (taxExcl) {
+          gross = base * (1 + r / 100);
+        } else {
+          net = base / (1 + r / 100);
+        }
+      }
+      return { net, gross };
+    };
+
+    // 2. Inventory Unit Cost Lookup (exact match to Database.FindInventoryUnitCost)
+    const unitCostsByItem = {};
+    (invUnitCostsRaw || []).forEach(uc => {
+      const it = uc.item || {};
+      if (!it.inventoryItem) return;
+      if (!unitCostsByItem[it.inventoryItem]) unitCostsByItem[it.inventoryItem] = [];
+      unitCostsByItem[it.inventoryItem].push({ date: String(it.date || '').slice(0, 10), unitCost: Number(it.unitCost || 0) });
+    });
+    Object.values(unitCostsByItem).forEach(arr => arr.sort((a, b) => a.date.localeCompare(b.date)));
+
+    const findInventoryUnitCost = (itemKey, dateStr) => {
+      const arr = unitCostsByItem[itemKey];
+      if (!arr || !arr.length) return null;
+      let chosen = null;
+      const target = String(dateStr || '').slice(0, 10);
+      for (let i = 0; i < arr.length; i++) {
+        if (!target || arr[i].date <= target) chosen = arr[i].unitCost;
+        else break;
+      }
+      if (chosen === null && arr.length > 0) chosen = arr[0].unitCost;
+      return chosen;
+    };
+
+    // 3. Chart of Accounts Classification (P&L Groups, Built-in AccountKeys.cs, Custom P&L Accounts, BS Accounts, Suspense)
+    const BUILTIN_SUSPENSE_KEY = '11211c9e-0988-4d16-8bf2-fa39487123aa';
+    const suspenseAccountSet = new Set([BUILTIN_SUSPENSE_KEY]);
+    const suspenseKey = suspenseAcctObj?.key || suspenseAcctObj?.id || BUILTIN_SUSPENSE_KEY;
+    if (suspenseKey) suspenseAccountSet.add(String(suspenseKey).toLowerCase());
+
+    const BUILTIN_INCOME_GROUP = '95713fac-30d3-42e4-b536-dd7bc4f7a80e';
+    const BUILTIN_EXPENSE_GROUP = 'fd003045-876e-439e-b923-1904453f5c30';
+    const groupMap = {};
+    (plGroupsRaw || []).forEach(g => {
+      const it = g.item || {};
+      groupMap[g.key] = {
+        name: String(it.name || ''),
+        type: it.type,
+        parent: it.group || null,
+        obsoleteExpense: Boolean(it.obsolete_ExpenseGroup)
+      };
+    });
+    const getGroupClass = (gid, depth = 0) => {
+      if (!gid || depth > 10) return null;
+      const k = String(gid).toLowerCase();
+      if (k === BUILTIN_INCOME_GROUP) return 'revenue';
+      if (k === BUILTIN_EXPENSE_GROUP) return 'expense';
+      const g = groupMap[gid];
+      if (!g) return null;
+      if ((g.type === 2 || g.type === 'SubgroupOf') && g.parent) {
+        const pc = getGroupClass(g.parent, depth + 1);
+        if (pc) return pc;
+      }
+      if (g.type === 0 || g.type === 'IncomeGroup') return 'revenue';
+      if (g.type === 1 || g.type === 'ExpenseGroup' || g.obsoleteExpense) return 'expense';
+      if (g.parent) {
+        const pc = getGroupClass(g.parent, depth + 1);
+        if (pc) return pc;
+      }
+      return null;
+    };
+
+    const plAccountClass = {};
+    // Built-in P&L Revenue accounts (AccountKeys.cs)
+    [
+      'ea44f579-9548-4954-baf0-48538aceff1e', // Inventory - sales
+      '8d86390b-b90f-4cf6-862b-9b4050449b91', // Billable time - invoiced
+      '03d41bd1-8dd4-4ce3-9b82-5ce17a40171a', // Billable time - movement
+      '1ae41f36-c83a-428c-be23-a99714110807', // Billable expenses - invoiced
+      '841b2acb-8bb5-4742-864e-4226fa421f44', // Late payment fees
+      'de8d014f-e862-4ab5-88cc-335d464315a6'  // Capital gains on investments
+    ].forEach(k => { plAccountClass[k] = 'revenue'; });
+    // Built-in P&L Expense accounts (AccountKeys.cs)
+    [
+      'aa80b662-3642-4c08-b328-2fccf132ceb1', // Inventory - cost
+      'eff068c3-5cc6-4746-b73b-850d30534cbb', // Inventory write-offs
+      '234d263d-cf0e-4e3e-85ca-ef899016e58a', // Billable expenses - cost
+      'fb6fdbfd-b39f-4674-8928-10c2bdd87e58', // Fixed assets - depreciation
+      '428ea9ba-4679-4568-b05b-7fcf62504893', // Fixed assets - loss on disposal
+      '83d56444-fed8-4de8-8e58-e325a370ae44', // Intangible assets - amortization
+      '43e14984-202e-4e9e-b843-d417dddcd3d2', // Intangible assets - loss on disposal
+      '635ddd64-1176-4d35-b1c2-2d7d3bb12bb6', // Foreign exchange gains (losses)
+      '2aa99eac-faca-4017-a157-edbbbcb160ac'  // Rounding expense
+    ].forEach(k => { plAccountClass[k] = 'expense'; });
+
     (plAccountsRaw || []).forEach(a => {
       const it = a.item || {};
-      const grpClass = it.group && plGroupTypeMap[it.group];
+      const grpClass = getGroupClass(it.group);
       if (grpClass) {
         plAccountClass[a.key] = grpClass;
       } else {
-        plAccountClass[a.key] = /revenue|income|sales|fee/i.test(it.name || '') ? 'revenue' : 'expense';
+        plAccountClass[a.key] = /revenue|income|sales|turnover|gain|service fee|contract billing|purchase discount/i.test(it.name || '') && !/expense|cost of/i.test(it.name || '') ? 'revenue' : 'expense';
       }
     });
 
-    const bsAccountSet = new Set((bsAccountsRaw || []).map(a => a.key));
-    const nonInvAccountMap = {}; // nonInventoryItemKey -> { soldAccount, purchasedAccount }
+    // Built-in Balance Sheet accounts (AccountKeys.cs) + custom Balance Sheet accounts
+    const bsAccountSet = new Set([
+      '6d4af96a-0959-4bb2-9160-fa825ec67c43', // Cash at bank
+      'a084e4be-981b-4b7e-8331-56b0eb3a6729', // Cash on hand
+      '74dfd025-d68e-4a99-9c78-5d43e17c0e09', // Retained earnings
+      'dac7ba37-0ccd-45e5-906e-548e6c50df37', // Accounts payable
+      'd1489e95-bb28-4f5d-b42e-67d3291b3893', // Accounts receivable
+      '0fb45a62-fc42-43a8-a776-782e8b5ffc96', // Inventory on hand
+      '4a0e8917-fee2-4033-9161-48dd513fdb73', // Fixed assets, at cost
+      'f813a6c8-1ead-46bd-8911-f12714be193c', // Fixed assets, accumulated depreciation
+      '31d369e3-32c7-4bd2-bb83-9c1c58010c1a', // Intangible assets, at cost
+      'aa12d048-bfbd-47dc-a5b8-03e35c417996', // Intangible assets, accumulated amortization
+      '054dfae1-c34a-475e-abde-49e0385ffc9a', // Capital accounts
+      '9f3c0a1a-dd0b-4b5c-ba50-3e4939a0e90c', // Billable time
+      '650a36fe-801f-4031-8d5b-ab422d061fca', // Employee clearing account
+      'f728124f-c6b6-4dad-82c5-22fc0d8d0571', // Expense claims
+      '059dbfb9-1c80-4043-887f-0fc441099fe0', // Billable expenses
+      'c66de1bf-6f63-4bc8-9452-0b019e41c47f', // Withholding tax receivable
+      '8f75a810-abd0-4d89-a6a2-66c9003a60e2', // Withholding tax
+      'a4dffac2-35d1-47e1-a4bd-b6de15975fdb', // Withholding tax payable
+      'ef49facb-203b-4b45-aebd-99af4645700b', // Special accounts
+      '30a1b83c-68a8-4f2c-ae70-25b0acc2d12a', // Production in progress
+      '30c697fa-4196-438a-ab5a-1957478034b1', // Tax payable
+      'b300e679-cf46-4c99-bef0-cfa5cb3e0271', // Inter account transfers
+      '352897d1-e7fe-462e-9965-458ed9e27b82', // Investments, at cost
+      'dd43296a-c233-4be8-93e4-fb3c2b8138f5'  // Negative inventory clearing
+    ]);
+    (bsAccountsRaw || []).forEach(a => {
+      const it = a.item || {};
+      if (/suspense/i.test(String(it.name || ''))) suspenseAccountSet.add(a.key);
+      else bsAccountSet.add(a.key);
+    });
+
+    const nonInvAccountMap = {};
     (nonInvRaw || []).forEach(ni => {
       const it = ni.item || {};
       nonInvAccountMap[ni.key] = {
-        soldAccount: it.whenSold || null,
-        purchasedAccount: it.whenPurchased || null
+        soldAccount: it.whenSold || it.salesAccount || it.incomeAccount || it.account || null,
+        purchasedAccount: it.whenPurchased || it.purchaseAccount || it.expenseAccount || it.account || null
       };
     });
 
-    // Helper: determine if a transaction line is a Balance Sheet Asset/Liability/Equity line
-    // (Fixed Asset, Intangible Asset, Inventory Item purchase, Investment, Capital, Loan/BS Account, or AP/AR settlement)
-    const isBalanceSheetCapitalOrAssetLine = (line) => {
-      if (!line) return false;
-      if (line.fixedAsset || line.intangibleAsset || line.investment || line.capitalAccount || line.specialAccount) return true;
-      // Inventory item purchases on Purchase Invoices/Payments/Expense Claims debit Inventory on Hand (Balance Sheet)
-      if (line.item || line.obsolete_InventoryItem || line.inventoryLocation) return true;
-      if (line.account && bsAccountSet.has(line.account)) return true;
-      return false;
+    const invItemMap = {};
+    (invItemsRaw || []).forEach(ii => {
+      const it = ii.item || {};
+      invItemMap[ii.key] = {
+        incomeAccount: it.customIncomeAccount ? (it.incomeAccount || 'ea44f579-9548-4954-baf0-48538aceff1e') : 'ea44f579-9548-4954-baf0-48538aceff1e',
+        expenseAccount: it.customExpenseAccount ? (it.expenseAccount || 'aa80b662-3642-4c08-b328-2fccf132ceb1') : 'aa80b662-3642-4c08-b328-2fccf132ceb1'
+      };
+    });
+
+    const earningsMap = {};
+    earningsItems.forEach(e => { earningsMap[e.key] = e.item?.expenseAccount || null; });
+    const deductionMap = {};
+    deductionItems.forEach(d => { deductionMap[d.key] = d.item?.account || null; });
+    const contributionMap = {};
+    contributionItems.forEach(c => {
+      contributionMap[c.key] = {
+        expenseAccount: c.item?.expenseAccount || null,
+        liabilityAccount: c.item?.liabilityAccount || null
+      };
+    });
+
+    // Resolve the effective General Ledger account for a transaction line (matching GeneralLedgerTransaction.From)
+    const resolveLineAccount = (line, docType) => {
+      if (!line) return null;
+      const itemKey = line.item || line.nonInventoryItem || line.inventoryItem || line.obsolete_InventoryItem;
+      if (itemKey) {
+        if (nonInvAccountMap[itemKey]) {
+          const isSales = (docType === 'SI' || docType === 'CN' || docType === 'RC');
+          return isSales ? nonInvAccountMap[itemKey].soldAccount : nonInvAccountMap[itemKey].purchasedAccount;
+        }
+        if (invItemMap[itemKey]) {
+          const isSales = (docType === 'SI' || docType === 'CN' || docType === 'RC');
+          return isSales ? invItemMap[itemKey].incomeAccount : '0fb45a62-fc42-43a8-a776-782e8b5ffc96';
+        }
+      }
+      if (line.account) return line.account;
+      return null;
     };
 
-    // Helper: check if a line posts to a P&L Expense/Cost account (or Project-tagged P&L expense)
-    const isRecognisedExpenseOrCostLine = (line, isPurchaseOrExpenseDoc = false) => {
-      if (!line) return false;
-      if (isBalanceSheetCapitalOrAssetLine(line)) return false;
-      if (line.accountsPayableSupplier || line.purchaseInvoice || line.accountsReceivableCustomer || line.accountsReceivableSalesInvoice) return false;
-      if (line.bankOrCashAccount) return false;
-      if (line.account) {
-        if (line.account === suspenseKey) return false;
-        const cls = plAccountClass[line.account];
-        if (cls === 'expense') return true;
-        if (cls === 'revenue') return false;
-      }
-      if (line.nonInventoryItem && nonInvAccountMap[line.nonInventoryItem]) {
-        const acct = nonInvAccountMap[line.nonInventoryItem].purchasedAccount;
-        if (acct && bsAccountSet.has(acct)) return false;
-        return true;
-      }
-      // In Manager.io, a line tagged to a Project on a Purchase Invoice / Expense Claim / Payment (without a BS flag) posts to Project Costs
-      if (isPurchaseOrExpenseDoc && (line.project || !line.account)) return true;
-      return false;
-    };
-
-    // Helper: check if a line posts to a P&L Revenue account (or Project-tagged Sales line)
-    const isRecognisedRevenueLine = (line, isSalesDoc = false) => {
-      if (!line) return false;
-      if (line.fixedAsset || line.intangibleAsset || line.investment || line.capitalAccount || line.specialAccount) return false;
-      if (line.accountsPayableSupplier || line.purchaseInvoice || line.accountsReceivableCustomer || line.accountsReceivableSalesInvoice) return false;
-      if (line.bankOrCashAccount) return false;
-      if (line.account) {
-        if (line.account === suspenseKey) return false;
-        if (bsAccountSet.has(line.account)) return false;
-        const cls = plAccountClass[line.account];
-        if (cls === 'revenue') return true;
-        if (cls === 'expense') return false;
-      }
-      if (isSalesDoc) return true;
-      return false;
-    };
-
-    // Helper: detect if a line falls into Manager.io's Suspense account
+    // Helper: detect if a line posts to Suspense (checked FIRST before any revenue/expense calculation)
     const isSuspenseLine = (line, docType) => {
-      if (!line) return false;
-      if (suspenseKey && line.account === suspenseKey) return true;
+      if (!line) return true;
+      const acct = resolveLineAccount(line, docType);
+      if (acct && (suspenseAccountSet.has(acct) || suspenseAccountSet.has(String(acct).toLowerCase()))) return true;
+      // Check if a Non-Inventory Item has no configured account (posts to Suspense in GeneralLedgerTransaction.cs lines 374-378)
+      const itemKey = line.item || line.nonInventoryItem;
+      if (itemKey && nonInvAccountMap[itemKey] && !acct) return true;
       const hasValidTarget = Boolean(
-        line.account || line.item || line.nonInventoryItem || line.obsolete_InventoryItem ||
+        acct || (itemKey && invItemMap[itemKey]) ||
         line.fixedAsset || line.intangibleAsset || line.investment || line.capitalAccount ||
-        line.specialAccount || line.employee || line.expenseClaimPayer || line.bankOrCashAccount ||
+        line.specialAccount || line.employee || line.expenseClaimPayer || line.expenseClaimsPayer ||
+        line.bankOrCashAccount || line.interAccountTransferAccount ||
         line.accountsReceivableCustomer || line.accountsReceivableSalesInvoice ||
         line.accountsPayableSupplier || line.purchaseInvoice ||
         line.billableExpenseCustomer || line.billableExpenseSalesInvoice ||
-        line.withholdingTaxPayableSupplier || line.project
+        line.withholdingTaxPayableSupplier
       );
-      if (!hasValidTarget) return true;
-      if (docType === 'AR' && line.accountsReceivableCustomer && !line.accountsReceivableSalesInvoice) return false;
+      return !hasValidTarget;
+    };
+
+    // Helper: determine if a transaction line is a Balance Sheet Asset/Liability/Equity line
+    const isBalanceSheetCapitalOrAssetLine = (line, docType) => {
+      if (!line) return false;
+      if (line.fixedAsset || line.intangibleAsset || line.investment || line.capitalAccount || line.specialAccount) return true;
+      if (line.accountsPayableSupplier || line.purchaseInvoice || line.accountsReceivableCustomer || line.accountsReceivableSalesInvoice) return true;
+      if (line.employee || line.expenseClaimPayer || line.expenseClaimsPayer || line.billableExpenseCustomer || line.withholdingTaxPayableSupplier) return true;
+      if (line.bankOrCashAccount || line.interAccountTransferAccount) return true;
+      const itemKey = line.item || line.inventoryItem || line.obsolete_InventoryItem;
+      // Purchasing an InventoryItem debits Inventory on Hand (Balance Sheet)
+      if (itemKey && invItemMap[itemKey] && docType !== 'SI' && docType !== 'CN' && docType !== 'RC') return true;
+      const acct = resolveLineAccount(line, docType);
+      if (acct && bsAccountSet.has(acct)) return true;
       return false;
+    };
+
+    // Helper: strictly verify posting to an appropriate Profit & Loss Expense account (NO fallback for project-tagged or unallocated lines)
+    const isRecognisedExpenseOrCostLine = (line, docType) => {
+      if (!line || isSuspenseLine(line, docType)) return false;
+      if (isBalanceSheetCapitalOrAssetLine(line, docType)) return false;
+      const acct = resolveLineAccount(line, docType);
+      if (!acct) return false;
+      return plAccountClass[acct] === 'expense';
+    };
+
+    // Helper: strictly verify posting to an appropriate Profit & Loss Revenue account
+    const isRecognisedRevenueLine = (line, docType) => {
+      if (!line || isSuspenseLine(line, docType)) return false;
+      if (isBalanceSheetCapitalOrAssetLine(line, docType)) return false;
+      const acct = resolveLineAccount(line, docType);
+      if (!acct) return false;
+      return plAccountClass[acct] === 'revenue';
     };
 
     // Map entities by key
@@ -1441,14 +1699,6 @@ async function loadLiveBusinessProfile(businessName) {
       };
     });
 
-    const calcLineAmt = (l, priceField) => {
-      if (l.amount != null && l.amount !== 0) return Number(l.amount);
-      if (l.totalBeforeTax != null && l.totalBeforeTax !== 0) return Number(l.totalBeforeTax);
-      const q = l.qty != null && l.qty !== 0 ? Number(l.qty) : 1;
-      const p = Number(l[priceField] ?? l.unitPrice ?? 0);
-      return q * p;
-    };
-
     const matchProjectForLine = (line, headerProject) => {
       if (line?.project && projMap[line.project]) return projMap[line.project];
       if (headerProject && projMap[headerProject]) return projMap[headerProject];
@@ -1467,15 +1717,51 @@ async function loadLiveBusinessProfile(businessName) {
     let totalExcludedCapexAndInventory = 0;
     let totalCashReceipts = 0, totalCashPayments = 0;
     let untaggedInvoiceLines = 0, missingRefCount = 0;
-    let suspenseEntryCount = 0, suspenseNetBalance = 0;
+    let suspenseEntryCount = 0, suspenseExcludedTotal = 0;
+    let unclassifiedCostLineCount = 0, unclassifiedCostAmount = 0;
     let orphanNoteCount = 0;
     let invalidTransferCount = 0;
     let missingCustomerOnInvoiceCount = 0, missingSupplierOnPurchaseCount = 0;
     let themedTxCount = 0;
-    const totalTxCount = invoices.length + purchases.length + creditNotes.length + debitNotes.length + journalEntries.length + expenseClaims.length + invWriteOffs.length + transfers.length + receipts.length + payments.length;
+    const totalTxCount = invoices.length + purchases.length + creditNotes.length + debitNotes.length + journalEntries.length + expenseClaims.length + invWriteOffs.length + transfers.length + receipts.length + payments.length + payslips.length;
     const recentTx = [];
 
-    // 1. Sales Invoices (Recognised Revenue)
+    const recordSuspenseExclusion = (amt) => {
+      const a = Math.abs(Number(amt) || 0);
+      if (a <= 0.005) return;
+      suspenseEntryCount++;
+      suspenseExcludedTotal += a;
+    };
+
+    const recordUnclassifiedCost = (amt) => {
+      const a = Math.abs(Number(amt) || 0);
+      if (a <= 0.005) return;
+      unclassifiedCostLineCount++;
+      unclassifiedCostAmount += a;
+    };
+
+    // Helper: Inventory COGS on Sales Invoice / Credit Note / Receipt (GeneralLedgerTransaction.cs lines 142-206)
+    const applyInventorySaleCOGS = (line, docDate, hasQtyFlag, sign, headerProject) => {
+      if (!hasQtyFlag) return;
+      const itemKey = line.item || line.inventoryItem;
+      if (!itemKey || !invItemMap[itemKey]) return;
+      if (line.qty === null || line.qty === undefined) return;
+      const uc = findInventoryUnitCost(itemKey, docDate);
+      if (uc === null) return;
+      const cogs = Math.round(Number(line.qty) * uc * 100) / 100;
+      if (!cogs) return;
+      const expAcct = invItemMap[itemKey].expenseAccount;
+      const pr = matchProjectForLine(line, headerProject);
+      if (plAccountClass[expAcct] === 'expense') {
+        totalIncurredOperatingCosts += sign * cogs;
+        if (pr) pr.cost += sign * cogs;
+      } else if (plAccountClass[expAcct] === 'revenue') {
+        totalRecognisedRevenue -= sign * cogs;
+        if (pr) pr.billed -= sign * cogs;
+      }
+    };
+
+    // 1. Sales Invoices
     invoices.forEach(inv => {
       const it = inv.item || {};
       if (it.customTheme) themedTxCount++;
@@ -1483,18 +1769,22 @@ async function loadLiveBusinessProfile(businessName) {
       if (!it.customer || !custMap[it.customer]) missingCustomerOnInvoiceCount++;
       let docRev = 0;
       (it.lines || []).forEach(l => {
-        const lineAmt = calcLineAmt(l, 'salesUnitPrice');
+        const { net } = calcLineNetAndGross(l, it, 'salesUnitPrice', true);
         if (isSuspenseLine(l, 'SI')) {
-          suspenseEntryCount++;
-          suspenseNetBalance += lineAmt;
+          recordSuspenseExclusion(net);
+          return;
         }
-        if (isRecognisedRevenueLine(l, true)) {
-          totalRecognisedRevenue += lineAmt;
-          docRev += lineAmt;
-          const pr = matchProjectForLine(l, it.project);
-          if (pr) pr.billed += lineAmt;
+        const pr = matchProjectForLine(l, it.project);
+        if (isRecognisedRevenueLine(l, 'SI')) {
+          totalRecognisedRevenue += net;
+          docRev += net;
+          if (pr) pr.billed += net;
           else untaggedInvoiceLines++;
+        } else if (isRecognisedExpenseOrCostLine(l, 'SI')) {
+          totalIncurredOperatingCosts -= net;
+          if (pr) pr.cost -= net;
         }
+        applyInventorySaleCOGS(l, it.issueDate || it.date, true, +1, it.project);
       });
       recentTx.push({
         date: (it.issueDate || '').slice(0, 10) || '—',
@@ -1507,7 +1797,7 @@ async function loadLiveBusinessProfile(businessName) {
       });
     });
 
-    // 2. Credit Notes (Reduces Recognised Revenue & validates customer/invoice link)
+    // 2. Credit Notes
     creditNotes.forEach(cn => {
       const it = cn.item || {};
       if (it.customTheme) themedTxCount++;
@@ -1515,20 +1805,24 @@ async function loadLiveBusinessProfile(businessName) {
         orphanNoteCount++;
       }
       (it.lines || []).forEach(l => {
-        const lineAmt = calcLineAmt(l, 'salesUnitPrice');
+        const { net } = calcLineNetAndGross(l, it, 'salesUnitPrice', true);
         if (isSuspenseLine(l, 'CN')) {
-          suspenseEntryCount++;
-          suspenseNetBalance -= lineAmt;
+          recordSuspenseExclusion(net);
+          return;
         }
-        if (isRecognisedRevenueLine(l, true)) {
-          totalRecognisedRevenue -= lineAmt;
-          const pr = matchProjectForLine(l, it.project);
-          if (pr) pr.billed -= lineAmt;
+        const pr = matchProjectForLine(l, it.project);
+        if (isRecognisedRevenueLine(l, 'CN')) {
+          totalRecognisedRevenue -= net;
+          if (pr) pr.billed -= net;
+        } else if (isRecognisedExpenseOrCostLine(l, 'CN')) {
+          totalIncurredOperatingCosts += net;
+          if (pr) pr.cost += net;
         }
+        applyInventorySaleCOGS(l, it.issueDate || it.date, true, -1, it.project);
       });
     });
 
-    // 3. Purchase Invoices (Distinguishes Operating/Direct Expense vs. CapEx/Inventory Asset Purchases)
+    // 3. Purchase Invoices
     purchases.forEach(pi => {
       const it = pi.item || {};
       if (it.customTheme) themedTxCount++;
@@ -1536,18 +1830,24 @@ async function loadLiveBusinessProfile(businessName) {
       if (!it.supplier || !suppMap[it.supplier]) missingSupplierOnPurchaseCount++;
       let docCost = 0;
       (it.lines || []).forEach(l => {
-        const lineAmt = calcLineAmt(l, 'purchaseUnitPrice');
+        const { net } = calcLineNetAndGross(l, it, 'purchaseUnitPrice', true);
         if (isSuspenseLine(l, 'PI')) {
-          suspenseEntryCount++;
-          suspenseNetBalance += lineAmt;
+          recordSuspenseExclusion(net);
+          recordUnclassifiedCost(net);
+          return;
         }
-        if (isBalanceSheetCapitalOrAssetLine(l)) {
-          totalExcludedCapexAndInventory += lineAmt;
-        } else if (isRecognisedExpenseOrCostLine(l, true)) {
-          totalIncurredOperatingCosts += lineAmt;
-          docCost += lineAmt;
-          const pr = matchProjectForLine(l, it.project);
-          if (pr) pr.cost += lineAmt;
+        const pr = matchProjectForLine(l, it.project);
+        if (isBalanceSheetCapitalOrAssetLine(l, 'PI')) {
+          totalExcludedCapexAndInventory += net;
+        } else if (isRecognisedExpenseOrCostLine(l, 'PI')) {
+          totalIncurredOperatingCosts += net;
+          docCost += net;
+          if (pr) pr.cost += net;
+        } else if (isRecognisedRevenueLine(l, 'PI')) {
+          totalRecognisedRevenue -= net;
+          if (pr) pr.billed -= net;
+        } else {
+          recordUnclassifiedCost(net);
         }
       });
       recentTx.push({
@@ -1561,7 +1861,7 @@ async function loadLiveBusinessProfile(businessName) {
       });
     });
 
-    // 4. Debit Notes (Reduces Incurred Costs & validates supplier/purchase invoice link)
+    // 4. Debit Notes
     debitNotes.forEach(dn => {
       const it = dn.item || {};
       if (it.customTheme) themedTxCount++;
@@ -1569,60 +1869,90 @@ async function loadLiveBusinessProfile(businessName) {
         orphanNoteCount++;
       }
       (it.lines || []).forEach(l => {
-        const lineAmt = calcLineAmt(l, 'purchaseUnitPrice');
+        const { net } = calcLineNetAndGross(l, it, 'purchaseUnitPrice', true);
         if (isSuspenseLine(l, 'DN')) {
-          suspenseEntryCount++;
-          suspenseNetBalance -= lineAmt;
+          recordSuspenseExclusion(net);
+          recordUnclassifiedCost(net);
+          return;
         }
-        if (isBalanceSheetCapitalOrAssetLine(l)) {
-          totalExcludedCapexAndInventory -= lineAmt;
-        } else if (isRecognisedExpenseOrCostLine(l, true)) {
-          totalIncurredOperatingCosts -= lineAmt;
-          const pr = matchProjectForLine(l, it.project);
-          if (pr) pr.cost -= lineAmt;
+        const pr = matchProjectForLine(l, it.project);
+        if (isBalanceSheetCapitalOrAssetLine(l, 'DN')) {
+          totalExcludedCapexAndInventory -= net;
+        } else if (isRecognisedExpenseOrCostLine(l, 'DN')) {
+          totalIncurredOperatingCosts -= net;
+          if (pr) pr.cost -= net;
+        } else if (isRecognisedRevenueLine(l, 'DN')) {
+          totalRecognisedRevenue += net;
+          if (pr) pr.billed += net;
+        } else {
+          recordUnclassifiedCost(net);
         }
       });
     });
 
-    // 5. Expense Claims (Included in Operating & Project Profitability unless CapEx/Inventory)
+    // 5. Expense Claims
     expenseClaims.forEach(ec => {
       const it = ec.item || {};
       if (it.customTheme) themedTxCount++;
       (it.lines || []).forEach(l => {
-        const lineAmt = calcLineAmt(l, 'purchaseUnitPrice');
+        const { net } = calcLineNetAndGross(l, it, 'purchaseUnitPrice', true);
         if (isSuspenseLine(l, 'EC')) {
-          suspenseEntryCount++;
-          suspenseNetBalance += lineAmt;
+          recordSuspenseExclusion(net);
+          recordUnclassifiedCost(net);
+          return;
         }
-        if (isBalanceSheetCapitalOrAssetLine(l)) {
-          totalExcludedCapexAndInventory += lineAmt;
-        } else if (isRecognisedExpenseOrCostLine(l, true)) {
-          totalIncurredOperatingCosts += lineAmt;
-          const pr = matchProjectForLine(l, it.project);
-          if (pr) pr.cost += lineAmt;
+        const pr = matchProjectForLine(l, it.project);
+        if (isBalanceSheetCapitalOrAssetLine(l, 'EC')) {
+          totalExcludedCapexAndInventory += net;
+        } else if (isRecognisedExpenseOrCostLine(l, 'EC')) {
+          totalIncurredOperatingCosts += net;
+          if (pr) pr.cost += net;
+        } else if (isRecognisedRevenueLine(l, 'EC')) {
+          totalRecognisedRevenue -= net;
+          if (pr) pr.billed -= net;
+        } else {
+          recordUnclassifiedCost(net);
         }
       });
     });
 
-    // 6. Inventory Write-Offs (Included in Operating & Project Costs when allocated to P&L / Project)
+    // 6. Inventory Write-Offs (uses InventoryUnitCost lookup per InventoryWriteOff.cs lines 122-178)
     invWriteOffs.forEach(iwo => {
       const it = iwo.item || {};
       if (it.customTheme) themedTxCount++;
-      const isCapexAllocation = Boolean(it.fixedAsset || (it.allocation && bsAccountSet.has(it.allocation)));
+      const alloc = it.allocation || 'eff068c3-5cc6-4746-b73b-850d30534cbb';
       let writeOffVal = 0;
       (it.items || []).forEach(wLine => {
+        const itemKey = wLine.inventoryItem;
         const q = Number(wLine.qty ?? wLine.obsolete_Qty ?? 0);
-        const c = Number(wLine.obsolete_UnitCost ?? wLine.unitCost ?? 0);
-        writeOffVal += (q * c);
+        if (itemKey && q) {
+          const uc = findInventoryUnitCost(itemKey, it.date);
+          if (uc !== null) {
+            writeOffVal += Math.round(q * uc * 100) / 100;
+          } else if (wLine.obsolete_UnitCost) {
+            writeOffVal += Math.round(q * Number(wLine.obsolete_UnitCost) * 100) / 100;
+          }
+        }
       });
-      if (!isCapexAllocation && writeOffVal > 0) {
-        totalIncurredOperatingCosts += writeOffVal;
-        const pr = matchProjectForLine({ project: it.project, customFields2: it.customFields2 }, it.project);
-        if (pr) pr.cost += writeOffVal;
+      if (writeOffVal !== 0) {
+        if (suspenseAccountSet.has(alloc)) {
+          recordSuspenseExclusion(writeOffVal);
+          recordUnclassifiedCost(writeOffVal);
+        } else if (it.fixedAsset || bsAccountSet.has(alloc)) {
+          totalExcludedCapexAndInventory += writeOffVal;
+        } else if (plAccountClass[alloc] === 'expense') {
+          totalIncurredOperatingCosts += writeOffVal;
+          const pr = matchProjectForLine({ project: it.project, customFields2: it.customFields2 }, it.project);
+          if (pr) pr.cost += writeOffVal;
+        } else if (plAccountClass[alloc] === 'revenue') {
+          totalRecognisedRevenue -= writeOffVal;
+        } else {
+          recordUnclassifiedCost(writeOffVal);
+        }
       }
     });
 
-    // 7. Journal Entries (Checks outOfBalance/Suspense & includes P&L Revenue/Expense lines in Operating & Project figures)
+    // 7. Journal Entries
     journalEntries.forEach(je => {
       const it = je.item || {};
       if (it.customTheme) themedTxCount++;
@@ -1633,60 +1963,123 @@ async function loadLiveBusinessProfile(businessName) {
         sumDr += dr;
         sumCr += cr;
         if (isSuspenseLine(l, 'JE')) {
-          suspenseEntryCount++;
-          suspenseNetBalance += (dr - cr);
+          recordSuspenseExclusion(dr - cr);
+          return;
         }
         const pr = matchProjectForLine(l, null);
-        if (isRecognisedRevenueLine(l, false)) {
+        if (isRecognisedRevenueLine(l, 'JE')) {
           const netRev = cr - dr;
           totalRecognisedRevenue += netRev;
           if (pr) pr.billed += netRev;
-        } else if (isRecognisedExpenseOrCostLine(l, Boolean(pr))) {
+        } else if (isRecognisedExpenseOrCostLine(l, 'JE')) {
           const netExp = dr - cr;
           totalIncurredOperatingCosts += netExp;
           if (pr) pr.cost += netExp;
+        } else if (!isBalanceSheetCapitalOrAssetLine(l, 'JE')) {
+          recordUnclassifiedCost(dr - cr);
         }
       });
       if (Math.abs(sumDr - sumCr) > 0.005) {
-        suspenseEntryCount++;
-        suspenseNetBalance += Math.abs(sumDr - sumCr);
+        recordSuspenseExclusion(sumDr - sumCr);
       }
     });
 
-    // 8. Inter-Account Transfers (Validates valid PaidFrom/ReceivedIn bank accounts & currency parity)
+    // 8. Payslips (Payslip.cs lines 150-292: Earnings, Deductions, Contributions)
+    payslips.forEach(ps => {
+      const it = ps.item || {};
+      if (it.customTheme) themedTxCount++;
+      (it.earnings || []).forEach(e => {
+        const units = (e.units !== null && e.units !== undefined) ? Number(e.units) : 1;
+        const amt = Math.round(units * Number(e.unitPrice || 0) * 100) / 100;
+        if (!amt) return;
+        const acct = e.item ? earningsMap[e.item] : null;
+        if (!acct || suspenseAccountSet.has(acct)) {
+          recordSuspenseExclusion(amt);
+          recordUnclassifiedCost(amt);
+          return;
+        }
+        const pr = e.project && projMap[e.project] ? projMap[e.project] : null;
+        if (plAccountClass[acct] === 'expense') {
+          totalIncurredOperatingCosts += amt;
+          if (pr) pr.cost += amt;
+        } else if (plAccountClass[acct] === 'revenue') {
+          totalRecognisedRevenue -= amt;
+          if (pr) pr.billed -= amt;
+        } else if (!bsAccountSet.has(acct)) {
+          recordUnclassifiedCost(amt);
+        }
+      });
+      (it.deductions || []).forEach(d => {
+        const amt = Math.round(Number(d.deductionAmount || 0) * 100) / 100;
+        if (!amt) return;
+        const acct = d.item ? deductionMap[d.item] : null;
+        if (!acct || suspenseAccountSet.has(acct)) {
+          recordSuspenseExclusion(amt);
+          return;
+        }
+        if (plAccountClass[acct] === 'expense') totalIncurredOperatingCosts -= amt;
+        else if (plAccountClass[acct] === 'revenue') totalRecognisedRevenue += amt;
+      });
+      (it.contributions || []).forEach(c => {
+        const amt = Math.round(Number(c.contributionAmount || 0) * 100) / 100;
+        if (!amt) return;
+        const info = c.item ? contributionMap[c.item] : null;
+        const expAcct = info?.expenseAccount || null;
+        const liabAcct = info?.liabilityAccount || null;
+        if (!expAcct || suspenseAccountSet.has(expAcct)) {
+          recordSuspenseExclusion(amt);
+          recordUnclassifiedCost(amt);
+        } else if (plAccountClass[expAcct] === 'expense') {
+          totalIncurredOperatingCosts += amt;
+        }
+        if (!liabAcct || suspenseAccountSet.has(liabAcct)) {
+          recordSuspenseExclusion(amt);
+        }
+      });
+    });
+
+    // 9. Inter-Account Transfers
     transfers.forEach(tr => {
       const it = tr.item || {};
       if (it.customTheme) themedTxCount++;
       const validFrom = Boolean(it.paidFrom && bankSet.has(it.paidFrom));
       const validTo = Boolean(it.receivedIn && bankSet.has(it.receivedIn) && it.paidFrom !== it.receivedIn);
       const crAmt = Number(it.creditAmount ?? it.obsolete_Amount ?? 0);
-      const drAmt = Number(it.debitAmount ?? it.obsolete_Amount ?? crAmt);
+      const drAmt = Number((it.debitAmount && it.debitAmount !== 0) ? it.debitAmount : crAmt);
       if (!validFrom || !validTo || crAmt <= 0 || drAmt <= 0) {
         invalidTransferCount++;
       }
     });
 
-    // 9. Cash / Bank Receipts (Cash Collections + direct non-invoiced revenue lines)
+    // 10. Cash / Bank Receipts (checks isSuspenseLine FIRST before adding to revenue or project totals)
     receipts.forEach(rc => {
       const it = rc.item || {};
       if (it.customTheme) themedTxCount++;
+      const headerToSuspense = !it.receivedIn || !bankSet.has(it.receivedIn);
       let docCash = 0;
       (it.lines || []).forEach(l => {
-        const lineAmt = calcLineAmt(l, 'salesUnitPrice');
-        docCash += lineAmt;
-        totalCashReceipts += lineAmt;
-        if (isSuspenseLine(l, 'RC')) {
-          suspenseEntryCount++;
-          suspenseNetBalance += lineAmt;
+        const { net, gross } = calcLineNetAndGross(l, it, 'salesUnitPrice', false);
+        docCash += gross;
+        if (headerToSuspense || isSuspenseLine(l, 'RC')) {
+          recordSuspenseExclusion(gross);
+          return;
         }
-        const isArSettlement = Boolean(it.customer || l.accountsReceivableCustomer || l.accountsReceivableSalesInvoice);
+        totalCashReceipts += gross;
         const pr = matchProjectForLine(l, it.project);
-        if (pr) pr.collected += lineAmt;
-        if (!isArSettlement && isRecognisedRevenueLine(l, false)) {
-          totalRecognisedRevenue += lineAmt;
-          if (pr) pr.billed += lineAmt;
+        if (pr) pr.collected += gross;
+        if (isRecognisedRevenueLine(l, 'RC')) {
+          totalRecognisedRevenue += net;
+          if (pr) pr.billed += net;
+        } else if (isRecognisedExpenseOrCostLine(l, 'RC')) {
+          totalIncurredOperatingCosts -= net;
+          if (pr) pr.cost -= net;
         }
+        applyInventorySaleCOGS(l, it.date, Boolean(it.quantityColumn), +1, it.project);
       });
+      if (it.fixedTotal) {
+        const diff = Number(it.fixedTotalAmount || 0) - docCash;
+        if (Math.abs(diff) > 0.005) recordSuspenseExclusion(diff);
+      }
       recentTx.push({
         date: (it.date || '').slice(0, 10) || '—',
         ref: it.reference || 'RV',
@@ -1694,35 +2087,45 @@ async function loadLiveBusinessProfile(businessName) {
         party: custMap[it.customer] || it.contact || 'Receipt Collection',
         project: matchProjectForLine((it.lines || [])[0] || {}, it.project)?.code || 'General',
         desc: it.description || ((it.lines || [])[0]?.lineDescription) || 'Cash / Bank Receipt',
-        amount: docCash
+        amount: it.fixedTotal ? Number(it.fixedTotalAmount || 0) : docCash
       });
     });
 
-    // 10. Cash / Bank Payments (Cash Outflows + direct non-AP operating expenses, excluding CapEx & Inventory)
+    // 11. Cash / Bank Payments (checks isSuspenseLine FIRST before adding to expense or project totals)
     payments.forEach(pm => {
       const it = pm.item || {};
       if (it.customTheme) themedTxCount++;
+      const headerToSuspense = !it.paidFrom || !bankSet.has(it.paidFrom);
       let docCash = 0;
       (it.lines || []).forEach(l => {
-        const lineAmt = calcLineAmt(l, 'purchaseUnitPrice');
-        docCash += lineAmt;
-        totalCashPayments += lineAmt;
-        if (isSuspenseLine(l, 'PM')) {
-          suspenseEntryCount++;
-          suspenseNetBalance += lineAmt;
+        const { net, gross } = calcLineNetAndGross(l, it, 'purchaseUnitPrice', false);
+        docCash += gross;
+        if (headerToSuspense || isSuspenseLine(l, 'PM')) {
+          recordSuspenseExclusion(gross);
+          recordUnclassifiedCost(net);
+          return;
         }
-        const isApSettlement = Boolean(it.supplier || l.accountsPayableSupplier || l.purchaseInvoice);
+        totalCashPayments += gross;
         const pr = matchProjectForLine(l, it.project);
-        if (pr) pr.paid += lineAmt;
-        if (!isApSettlement) {
-          if (isBalanceSheetCapitalOrAssetLine(l)) {
-            totalExcludedCapexAndInventory += lineAmt;
-          } else if (isRecognisedExpenseOrCostLine(l, Boolean(pr))) {
-            totalIncurredOperatingCosts += lineAmt;
-            if (pr) pr.cost += lineAmt;
-          }
+        if (pr) pr.paid += gross;
+        if (isBalanceSheetCapitalOrAssetLine(l, 'PM')) {
+          // Only count CapEx/Inventory purchases, not AP invoice settlements or inter-account transfers
+          const isApOrTransfer = Boolean(it.supplier || l.accountsPayableSupplier || l.purchaseInvoice || l.interAccountTransferAccount || l.employee || l.accountsReceivableCustomer);
+          if (!isApOrTransfer) totalExcludedCapexAndInventory += net;
+        } else if (isRecognisedExpenseOrCostLine(l, 'PM')) {
+          totalIncurredOperatingCosts += net;
+          if (pr) pr.cost += net;
+        } else if (isRecognisedRevenueLine(l, 'PM')) {
+          totalRecognisedRevenue -= net;
+          if (pr) pr.billed -= net;
+        } else {
+          recordUnclassifiedCost(net);
         }
       });
+      if (it.fixedTotal) {
+        const diff = Number(it.fixedTotalAmount || 0) - docCash;
+        if (Math.abs(diff) > 0.005) recordSuspenseExclusion(diff);
+      }
       recentTx.push({
         date: (it.date || '').slice(0, 10) || '—',
         ref: it.reference || 'PV',
@@ -1730,9 +2133,77 @@ async function loadLiveBusinessProfile(businessName) {
         party: suppMap[it.supplier] || it.contact || 'Operational Payee',
         project: matchProjectForLine((it.lines || [])[0] || {}, it.project)?.code || 'General',
         desc: it.description || ((it.lines || [])[0]?.lineDescription) || 'Payment Voucher',
-        amount: docCash
+        amount: it.fixedTotal ? Number(it.fixedTotalAmount || 0) : docCash
       });
     });
+
+    // 12. Actual Closing Bank & Cash Balances (ManagerServer BankAndCashAccounts.cs & GeneralLedgerAggregations.cs)
+    // Computes closing balance from bankStarts + receipts - payments + transfers + journals.
+    const bankClosingBalances = {};
+    const bankForeignCurrencyFlag = {};
+    banks.forEach(b => {
+      bankClosingBalances[b.key] = 0;
+      bankForeignCurrencyFlag[b.key] = Boolean(b.item?.currency);
+    });
+    if (depTreasury.ok) {
+      bankStarts.forEach(bs => {
+        const it = bs.item || {};
+        if (it.bankOrCashAccount && bankClosingBalances[it.bankOrCashAccount] !== undefined) {
+          bankClosingBalances[it.bankOrCashAccount] += Number(it.startingBalance || 0);
+        }
+      });
+      receipts.forEach(rc => {
+        const it = rc.item || {};
+        const bk = it.receivedIn;
+        if (bk && bankClosingBalances[bk] !== undefined) {
+          if (it.fixedTotal) {
+            bankClosingBalances[bk] += Number(it.fixedTotalAmount || 0);
+          } else {
+            (it.lines || []).forEach(l => {
+              bankClosingBalances[bk] += calcLineNetAndGross(l, it, 'salesUnitPrice', false).gross;
+            });
+          }
+        }
+        (it.lines || []).forEach(l => {
+          if (l.interAccountTransferAccount && bankClosingBalances[l.interAccountTransferAccount] !== undefined) {
+            bankClosingBalances[l.interAccountTransferAccount] -= calcLineNetAndGross(l, it, 'salesUnitPrice', false).gross;
+          }
+        });
+      });
+      payments.forEach(pm => {
+        const it = pm.item || {};
+        const bk = it.paidFrom;
+        if (bk && bankClosingBalances[bk] !== undefined) {
+          if (it.fixedTotal) {
+            bankClosingBalances[bk] -= Number(it.fixedTotalAmount || 0);
+          } else {
+            (it.lines || []).forEach(l => {
+              bankClosingBalances[bk] -= calcLineNetAndGross(l, it, 'purchaseUnitPrice', false).gross;
+            });
+          }
+        }
+        (it.lines || []).forEach(l => {
+          if (l.interAccountTransferAccount && bankClosingBalances[l.interAccountTransferAccount] !== undefined) {
+            bankClosingBalances[l.interAccountTransferAccount] += calcLineNetAndGross(l, it, 'purchaseUnitPrice', false).gross;
+          }
+        });
+      });
+      transfers.forEach(tr => {
+        const it = tr.item || {};
+        const cr = Number(it.creditAmount ?? it.obsolete_Amount ?? 0);
+        const dr = Number((it.debitAmount && it.debitAmount !== 0) ? it.debitAmount : cr);
+        if (it.paidFrom && bankClosingBalances[it.paidFrom] !== undefined) bankClosingBalances[it.paidFrom] -= cr;
+        if (it.receivedIn && bankClosingBalances[it.receivedIn] !== undefined) bankClosingBalances[it.receivedIn] += dr;
+      });
+      journalEntries.forEach(je => {
+        const it = je.item || {};
+        (it.lines || []).forEach(l => {
+          if (l.bankOrCashAccount && bankClosingBalances[l.bankOrCashAccount] !== undefined) {
+            bankClosingBalances[l.bankOrCashAccount] += (Number(l.debit || 0) - Number(l.credit || 0));
+          }
+        });
+      });
+    }
 
     recentTx.sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
@@ -1742,69 +2213,105 @@ async function loadLiveBusinessProfile(businessName) {
     const inactiveProjectsCount = projectList.filter(p => p.status === 'Archived').length;
 
     const bcItem = baseCurrObj?.item || baseCurrObj || {};
-    const liveSym = bcItem.symbol || bcItem.Symbol || bcItem.code || bcItem.Code || (businessName.toUpperCase().includes('BAUS') || businessName.toUpperCase().includes('ZIPPY') || businessName.toUpperCase().includes('LEATHER') ? '৳' : '$');
+    const liveSym = bcItem.symbol || bcItem.Symbol || bcItem.code || bcItem.Code || (businessName.toUpperCase().includes('BAUS') || businessName.toUpperCase().includes('ZIPPY') || businessName.toUpperCase().includes('LEATHER') || businessName.toUpperCase().includes('NOBIN') || businessName.toUpperCase().includes('OPTIMA') ? '৳' : '$');
+
+    const suspenseNotice = suspenseEntryCount > 0
+      ? ` · Excludes ${suspenseEntryCount} Suspense lines (${fmtMoney(suspenseExcludedTotal, liveSym)})`
+      : '';
+
     const liveProfile = {
       id: `live:${businessName}`,
       name: `${businessName} (Live Manager.io Business)`,
-      sector: `Live Connected ERP · ${projects.length} Projects · ${customers.length} Customers · ${suppliers.length} Suppliers${failedEndpoints.length ? ` · ${failedEndpoints.length} Non-Core Warnings` : ''}`,
+      sector: `Live Connected ERP · ${projects.length} Projects · ${customers.length} Customers · ${suppliers.length} Suppliers${failedEndpoints.length ? ` · ${failedEndpoints.length} API Errors` : ''}${suspenseEntryCount > 0 ? ` · ${suspenseEntryCount} Suspense Postings Flagged (${fmtMoney(suspenseExcludedTotal, liveSym)})` : ''}`,
       currency: liveSym,
       kpis: [
-        { group: 'cyan',   glyph: '●', label: 'Contract / Project Portfolio', bn: 'মোট প্রজেক্ট চুক্তিমূল্য', val: fmtMoney(totalContract, liveSym),               sub: `${projectList.length} Active Projects` },
-        { group: 'green',  glyph: '+', label: 'Recognised Revenue (Net)',     bn: 'মোট অর্জিত রাজস্ব (আয়)',    val: fmtMoney(totalRecognisedRevenue, liveSym),      sub: `${invoices.length} Invoices · ${creditNotes.length} CN · ${journalEntries.length} JE` },
-        { group: 'green',  glyph: '+', label: 'Cash Receipts Collected',      bn: 'মোট নগদ ও ব্যাংক জমা',    val: fmtMoney(totalCashReceipts, liveSym),           sub: `${receipts.length} Receipt Vouchers` },
-        { group: 'amber',  glyph: '−', label: 'Incurred Direct & Op. Costs',  bn: 'মোট অপারেটিং ও প্রজেক্ট খরচ', val: fmtMoney(totalIncurredOperatingCosts, liveSym), sub: `Excludes ${fmtMoney(totalExcludedCapexAndInventory, liveSym)} CapEx/Inv` },
-        { group: 'slate',  glyph: '−', label: 'Cash Payments Disbursed',      bn: 'মোট নগদ ও ব্যাংক পেমেন্ট', val: fmtMoney(totalCashPayments, liveSym),           sub: `${payments.length} Payment Vouchers` },
-        { group: netCashMovement >= 0 ? 'cyan' : 'red', glyph: netCashMovement >= 0 ? '★' : '!', label: 'Net Cash Flow (Receipts − Paid)', bn: 'নিট নগদ প্রবাহ (জমা − পেমেন্ট)', val: fmtMoney(netCashMovement, liveSym), sub: `Cash Flow Across ${receipts.length + payments.length} Vouchers` }
+        depPortfolio.ok
+          ? { group: 'cyan',   glyph: '●', label: 'Contract / Project Portfolio', bn: 'মোট প্রজেক্ট চুক্তিমূল্য', val: fmtMoney(totalContract, liveSym), sub: `${projectList.length} Active Projects` }
+          : { group: 'red',    glyph: '!', label: 'Contract / Project Portfolio', bn: 'মোট প্রজেক্ট চুক্তিমূল্য', val: 'Unavailable', sub: `API Error: ${depPortfolio.error}` },
+        depRevenue.ok
+          ? { group: 'green',  glyph: '+', label: 'Recognised Revenue (Net)',     bn: 'মোট অর্জিত রাজস্ব (আয়)',    val: fmtMoney(totalRecognisedRevenue, liveSym), sub: `${invoices.length} Invoices · ${creditNotes.length} CN · ${journalEntries.length} JE${suspenseNotice}` }
+          : { group: 'red',    glyph: '!', label: 'Recognised Revenue (Net)',     bn: 'মোট অর্জিত রাজস্ব (আয়)',    val: 'Unavailable', sub: `API Error: ${depRevenue.error}` },
+        depReceipts.ok
+          ? { group: 'green',  glyph: '+', label: 'Cash Receipts Collected',      bn: 'মোট নগদ ও ব্যাংক জমা',    val: fmtMoney(totalCashReceipts, liveSym), sub: `${receipts.length} Receipt Vouchers${suspenseNotice}` }
+          : { group: 'red',    glyph: '!', label: 'Cash Receipts Collected',      bn: 'মোট নগদ ও ব্যাংক জমা',    val: 'Unavailable', sub: `API Error: ${depReceipts.error}` },
+        depCosts.ok
+          ? { group: 'amber',  glyph: '−', label: 'Incurred Direct & Op. Costs',  bn: 'মোট অপারেটিং ও প্রজেক্ট খরচ', val: fmtMoney(totalIncurredOperatingCosts, liveSym), sub: `Excludes ${fmtMoney(totalExcludedCapexAndInventory, liveSym)} BS/CapEx${suspenseNotice}` }
+          : { group: 'red',    glyph: '!', label: 'Incurred Direct & Op. Costs',  bn: 'মোট অপারেটিং ও প্রজেক্ট খরচ', val: 'Unavailable', sub: `API Error: ${depCosts.error}` },
+        depPayments.ok
+          ? { group: 'slate',  glyph: '−', label: 'Cash Payments Disbursed',      bn: 'মোট নগদ ও ব্যাংক পেমেন্ট', val: fmtMoney(totalCashPayments, liveSym), sub: `${payments.length} Payment Vouchers${suspenseNotice}` }
+          : { group: 'red',    glyph: '!', label: 'Cash Payments Disbursed',      bn: 'মোট নগদ ও ব্যাংক পেমেন্ট', val: 'Unavailable', sub: `API Error: ${depPayments.error}` },
+        depCashFlow.ok
+          ? { group: netCashMovement >= 0 ? 'cyan' : 'red', glyph: netCashMovement >= 0 ? '★' : '!', label: 'Net Cash Flow (Receipts − Paid)', bn: 'নিট নগদ প্রবাহ (জমা − পেমেন্ট)', val: fmtMoney(netCashMovement, liveSym), sub: `Verified Cash Flow (${receipts.length + payments.length} Vouchers)` }
+          : { group: 'red',    glyph: '!', label: 'Net Cash Flow (Receipts − Paid)', bn: 'নিট নগদ প্রবাহ (জমা − পেমেন্ট)', val: 'Unavailable', sub: `API Error: ${depCashFlow.error}` }
       ],
-      projects: projectList.length ? projectList : [
-        { code: 'GEN-OPS', name: 'General Business Operations (Unallocated)', pe: businessName, contract: totalRecognisedRevenue, billed: totalRecognisedRevenue, collected: totalCashReceipts, cost: totalIncurredOperatingCosts, paid: totalCashPayments, retention: 0, status: 'Live Ledger' }
-      ],
-      treasury: banks.length
-        ? banks.map(b => ({
-            name: b.item?.name || 'Bank / Cash Account',
-            type: b.item?.isBankAccount ? 'Bank Account' : 'Cash Account',
-            balance: Number(b.item?.obsolete_StartingBalance || 0),
-            status: b.item?.inactive ? 'Inactive' : 'Active'
-          }))
-        : [{ name: 'Primary Operating Cash Flow', type: 'Receipts − Payments', balance: netCashMovement, status: 'Live Computed' }],
-      transactions: recentTx.slice(0, 12),
+      projects: depProjects.ok
+        ? (projectList.length ? projectList : [
+            { code: 'GEN-OPS', name: 'General Business Operations (Unallocated)', pe: businessName, contract: totalRecognisedRevenue, billed: totalRecognisedRevenue, collected: totalCashReceipts, cost: totalIncurredOperatingCosts, paid: totalCashPayments, retention: 0, status: 'Live Ledger' }
+          ])
+        : [],
+      projectsUnavailableError: depProjects.ok ? null : `Project profitability unavailable — required dataset failed: ${depProjects.error}`,
+      treasury: depTreasury.ok
+        ? banks.map(b => {
+            const hasForeignCurr = bankForeignCurrencyFlag[b.key];
+            return {
+              name: b.item?.name || 'Bank / Cash Account',
+              type: b.item?.isBankAccount ? 'Bank Account' : 'Cash Account',
+              balance: hasForeignCurr ? null : Math.round(bankClosingBalances[b.key] * 100) / 100,
+              hideBalance: hasForeignCurr,
+              status: b.item?.inactive ? 'Inactive' : (hasForeignCurr ? 'Foreign Currency (Balance Hidden)' : 'Closing Balance Reconciled')
+            };
+          })
+        : [],
+      treasuryUnavailableError: depTreasury.ok ? null : `Treasury closing balances unavailable — required dataset failed: ${depTreasury.error}`,
+      transactions: (depReceipts.ok && depPayments.ok) ? recentTx.slice(0, 12) : [],
+      transactionsUnavailableError: (depReceipts.ok && depPayments.ok) ? null : `Recent voucher stream unavailable — ${depReceipts.error || depPayments.error}`,
       forensics: [
         {
           code: 'AUD-01',
-          title: 'Suspense Account & Out-of-Balance Entry Scan',
-          status: suspenseEntryCount === 0 ? 'PASS' : 'FAIL',
-          badge: suspenseEntryCount === 0 ? 'pill-green' : 'pill-red',
-          detail: suspenseEntryCount === 0
-            ? `0 lines posted to Suspense (${suspenseKey ? suspenseKey.slice(0, 8) : 'verified'}) and 0 out-of-balance journal entries across ${totalTxCount} vouchers.`
-            : `${suspenseEntryCount} unallocated/Suspense entries or out-of-balance journals detected (variance: ${fmtMoney(suspenseNetBalance, liveSym)}).`
+          title: 'Potential Suspense and Unallocated Postings',
+          status: (depRevenue.ok && depCosts.ok && suspenseEntryCount === 0) ? 'PASS' : 'FAIL',
+          badge: (depRevenue.ok && depCosts.ok && suspenseEntryCount === 0) ? 'pill-green' : 'pill-red',
+          detail: (!depRevenue.ok || !depCosts.ok)
+            ? `Cannot complete Suspense scan — required transaction datasets failed: ${depRevenue.error || depCosts.error}`
+            : (suspenseEntryCount === 0
+                ? `0 potential Suspense or unallocated transaction lines and 0 out-of-balance journals detected across ${totalTxCount} scanned vouchers (excluded from P&L totals).`
+                : `${suspenseEntryCount} potential Suspense or unallocated lines/journals detected across scanned vouchers (total excluded from revenue & expense calculations: ${fmtMoney(suspenseExcludedTotal, liveSym)}) — flagged for investigation.`)
         },
         {
           code: 'AUD-02',
           title: 'Project Cost-Center Tagging Completeness',
-          status: projectList.length > 0 && untaggedInvoiceLines === 0 ? 'PASS' : 'WARN',
-          badge: projectList.length > 0 && untaggedInvoiceLines === 0 ? 'pill-green' : 'pill-amber',
-          detail: `${projectList.length} projects configured; ${untaggedInvoiceLines} recognised revenue lines lack a project assignment.`
+          status: depProjects.ok && projectList.length > 0 && untaggedInvoiceLines === 0 ? 'PASS' : 'WARN',
+          badge: depProjects.ok && projectList.length > 0 && untaggedInvoiceLines === 0 ? 'pill-green' : 'pill-amber',
+          detail: depProjects.ok
+            ? `${projectList.length} projects configured; ${untaggedInvoiceLines} recognised revenue lines lack a project assignment.`
+            : `Project tagging check incomplete: ${depProjects.error}`
         },
         {
           code: 'AUD-03',
-          title: 'Capital & Inventory Cost Segregation',
-          status: (purchases.length + payments.length + expenseClaims.length) > 0 && failedEndpoints.length === 0 ? 'PASS' : 'WARN',
-          badge: (purchases.length + payments.length + expenseClaims.length) > 0 && failedEndpoints.length === 0 ? 'pill-green' : 'pill-amber',
-          detail: `Validated ${purchases.length} bills, ${expenseClaims.length} expense claims & ${invWriteOffs.length} write-offs: ${fmtMoney(totalIncurredOperatingCosts, liveSym)} recognised as operating/project cost; ${fmtMoney(totalExcludedCapexAndInventory, liveSym)} CapEx/Inventory excluded.`
+          title: 'Profit & Loss Expense Classification Verification',
+          status: (depCosts.ok && unclassifiedCostLineCount === 0) ? 'PASS' : 'WARN',
+          badge: (depCosts.ok && unclassifiedCostLineCount === 0) ? 'pill-green' : 'pill-amber',
+          detail: !depCosts.ok
+            ? `Required classification datasets failed to load (${depCosts.error}) — expense recognition could not be verified.`
+            : (unclassifiedCostLineCount === 0
+                ? `All cost lines across ${purchases.length} purchase invoices, ${debitNotes.length} debit notes, ${expenseClaims.length} expense claims, ${invWriteOffs.length} write-offs, ${payments.length} payments & ${payslips.length} payslips verified against P&L expense accounts (${fmtMoney(totalIncurredOperatingCosts, liveSym)} recognised; ${fmtMoney(totalExcludedCapexAndInventory, liveSym)} Balance Sheet postings excluded; 0 unclassified entries).`
+                : `${unclassifiedCostLineCount} unclassified or unallocated cost entries (${fmtMoney(unclassifiedCostAmount, liveSym)}) excluded from incurred costs pending account classification; ${fmtMoney(totalIncurredOperatingCosts, liveSym)} verified P&L expenses recognised; ${fmtMoney(totalExcludedCapexAndInventory, liveSym)} Balance Sheet postings excluded.`)
         },
         {
           code: 'AUD-04',
           title: 'Tax Code Statutory Configuration',
-          status: taxes.length > 0 ? 'PASS' : 'WARN',
-          badge: taxes.length > 0 ? 'pill-green' : 'pill-amber',
-          detail: `${taxes.length} tax codes configured in business settings.`
+          status: !endpointErrors.taxes && taxes.length > 0 ? 'PASS' : 'WARN',
+          badge: !endpointErrors.taxes && taxes.length > 0 ? 'pill-green' : 'pill-amber',
+          detail: endpointErrors.taxes ? `Tax code check failed: ${endpointErrors.taxes}` : `${taxes.length} tax codes configured in business settings.`
         },
         {
           code: 'AUD-05',
           title: 'Bank & Cash Control Account Hygiene',
-          status: banks.length > 0 ? 'PASS' : 'WARN',
-          badge: banks.length > 0 ? 'pill-green' : 'pill-amber',
-          detail: `${banks.length} bank/cash control accounts verified.`
+          status: depTreasury.ok && banks.length > 0 ? 'PASS' : 'WARN',
+          badge: depTreasury.ok && banks.length > 0 ? 'pill-green' : 'pill-amber',
+          detail: depTreasury.ok
+            ? `${banks.length} bank/cash accounts verified with closing balances computed from starting balances, receipts, payments, transfers, and journals.`
+            : `Bank/Cash closing balance verification incomplete: ${depTreasury.error}`
         },
         {
           code: 'AUD-06',
@@ -1812,64 +2319,80 @@ async function loadLiveBusinessProfile(businessName) {
           status: Boolean(bcItem.symbol || bcItem.code) && failedEndpoints.length === 0 ? 'PASS' : 'WARN',
           badge: Boolean(bcItem.symbol || bcItem.code) && failedEndpoints.length === 0 ? 'pill-green' : 'pill-amber',
           detail: failedEndpoints.length === 0
-            ? `All 21 API endpoints retrieved across all pages with 0 failed requests (Base currency: "${liveSym}").`
-            : `${failedEndpoints.length} non-core endpoint warnings: ${failedEndpoints.join('; ')}`
+            ? `All 28 API endpoints retrieved across all pages with 0 failed requests (Base currency: "${liveSym}").`
+            : `${failedEndpoints.length} endpoint error(s) encountered: ${failedEndpoints.join('; ')}`
         },
         {
           code: 'AUD-07',
           title: 'Accounts Receivable (AR) Customer Subledger',
-          status: customers.length > 0 && missingCustomerOnInvoiceCount === 0 ? 'PASS' : 'WARN',
-          badge: customers.length > 0 && missingCustomerOnInvoiceCount === 0 ? 'pill-green' : 'pill-amber',
-          detail: `${customers.length} customers active; ${missingCustomerOnInvoiceCount} sales invoices lack a valid customer subledger link.`
+          status: !endpointErrors.customers && !endpointErrors.invoices && customers.length > 0 && missingCustomerOnInvoiceCount === 0 ? 'PASS' : 'WARN',
+          badge: !endpointErrors.customers && !endpointErrors.invoices && customers.length > 0 && missingCustomerOnInvoiceCount === 0 ? 'pill-green' : 'pill-amber',
+          detail: (endpointErrors.customers || endpointErrors.invoices)
+            ? `AR check incomplete: ${endpointErrors.customers || endpointErrors.invoices}`
+            : `${customers.length} customers active; ${missingCustomerOnInvoiceCount} sales invoices lack a valid customer subledger link.`
         },
         {
           code: 'AUD-08',
           title: 'Accounts Payable (AP) Supplier Subledger',
-          status: suppliers.length > 0 && missingSupplierOnPurchaseCount === 0 ? 'PASS' : 'WARN',
-          badge: suppliers.length > 0 && missingSupplierOnPurchaseCount === 0 ? 'pill-green' : 'pill-amber',
-          detail: `${suppliers.length} suppliers active; ${missingSupplierOnPurchaseCount} purchase invoices lack a valid supplier subledger link.`
+          status: !endpointErrors.suppliers && !endpointErrors.purchases && suppliers.length > 0 && missingSupplierOnPurchaseCount === 0 ? 'PASS' : 'WARN',
+          badge: !endpointErrors.suppliers && !endpointErrors.purchases && suppliers.length > 0 && missingSupplierOnPurchaseCount === 0 ? 'pill-green' : 'pill-amber',
+          detail: (endpointErrors.suppliers || endpointErrors.purchases)
+            ? `AP check incomplete: ${endpointErrors.suppliers || endpointErrors.purchases}`
+            : `${suppliers.length} suppliers active; ${missingSupplierOnPurchaseCount} purchase invoices lack a valid supplier subledger link.`
         },
         {
           code: 'AUD-09',
           title: 'Credit & Debit Note Subledger Linkage',
-          status: orphanNoteCount === 0 ? 'PASS' : 'WARN',
-          badge: orphanNoteCount === 0 ? 'pill-green' : 'pill-amber',
-          detail: orphanNoteCount === 0
-            ? `All ${creditNotes.length} credit notes and ${debitNotes.length} debit notes are linked to valid customer/supplier subledgers and invoices.`
-            : `${orphanNoteCount} credit/debit notes reference missing customers, suppliers, or cancelled invoices.`
+          status: !endpointErrors.creditNotes && !endpointErrors.debitNotes && orphanNoteCount === 0 ? 'PASS' : 'WARN',
+          badge: !endpointErrors.creditNotes && !endpointErrors.debitNotes && orphanNoteCount === 0 ? 'pill-green' : 'pill-amber',
+          detail: (endpointErrors.creditNotes || endpointErrors.debitNotes)
+            ? `Credit/Debit note check incomplete: ${endpointErrors.creditNotes || endpointErrors.debitNotes}`
+            : (orphanNoteCount === 0
+                ? `All ${creditNotes.length} credit notes and ${debitNotes.length} debit notes are linked to valid customer/supplier subledgers and invoices.`
+                : `${orphanNoteCount} credit/debit notes reference missing customers, suppliers, or cancelled invoices.`)
         },
         {
           code: 'AUD-10',
           title: 'Inter-Account Treasury Transfer Validation',
-          status: invalidTransferCount === 0 ? 'PASS' : 'WARN',
-          badge: invalidTransferCount === 0 ? 'pill-green' : 'pill-amber',
-          detail: invalidTransferCount === 0
-            ? `All ${transfers.length} inter-account transfers verified with distinct active PaidFrom/ReceivedIn bank/cash accounts and positive amounts.`
-            : `${invalidTransferCount} of ${transfers.length} inter-account transfers have missing/identical bank accounts or zero amounts.`
+          status: !endpointErrors.transfers && !endpointErrors.banks && invalidTransferCount === 0 ? 'PASS' : 'WARN',
+          badge: !endpointErrors.transfers && !endpointErrors.banks && invalidTransferCount === 0 ? 'pill-green' : 'pill-amber',
+          detail: (endpointErrors.transfers || endpointErrors.banks)
+            ? `Transfer validation incomplete: ${endpointErrors.transfers || endpointErrors.banks}`
+            : (invalidTransferCount === 0
+                ? `All ${transfers.length} inter-account transfers verified with distinct active PaidFrom/ReceivedIn bank/cash accounts and positive amounts.`
+                : `${invalidTransferCount} of ${transfers.length} inter-account transfers have missing/identical bank accounts or zero amounts.`)
         },
         {
           code: 'AUD-11',
           title: 'Voucher Reference Number Completeness',
-          status: missingRefCount === 0 ? 'PASS' : 'WARN',
-          badge: missingRefCount === 0 ? 'pill-green' : 'pill-amber',
+          status: !endpointErrors.invoices && !endpointErrors.purchases && missingRefCount === 0 ? 'PASS' : 'WARN',
+          badge: !endpointErrors.invoices && !endpointErrors.purchases && missingRefCount === 0 ? 'pill-green' : 'pill-amber',
           detail: `${missingRefCount} sales/purchase invoices missing a document reference number.`
         },
         {
           code: 'AUD-12',
           title: 'Custom Document Theme Coverage (/api4/view-v1)',
-          status: themedTxCount === totalTxCount && totalTxCount > 0 ? 'PASS' : 'WARN',
-          badge: themedTxCount === totalTxCount && totalTxCount > 0 ? 'pill-green' : 'pill-amber',
+          status: failedEndpoints.length === 0 && themedTxCount === totalTxCount && totalTxCount > 0 ? 'PASS' : 'WARN',
+          badge: failedEndpoints.length === 0 && themedTxCount === totalTxCount && totalTxCount > 0 ? 'pill-green' : 'pill-amber',
           detail: `${themedTxCount} of ${totalTxCount} vouchers (${inactiveProjectsCount} archived projects) use a custom HTML theme.`
         }
       ]
     };
 
     RUNTIME_STATE.liveDataCache[businessName] = liveProfile;
-    updateBridgeBadge(`🟢 LIVE · ${businessName} (${totalTxCount} Vouchers)`, false);
+    updateBridgeBadge(
+      failedEndpoints.length === 0
+        ? `🟢 LIVE · ${businessName} (${totalTxCount} Vouchers)`
+        : `🟠 LIVE (PARTIAL ERROR) · ${businessName} (${failedEndpoints.length} Failed Requests)`,
+      failedEndpoints.length > 0
+    );
     renderProfileData(liveProfile);
   } catch (err) {
-    updateBridgeBadge(`🟠 Live Read Error (${err.message})`, true);
-    renderProfileData(DEMO_PROFILES['demo:epc']);
+    // Never fall back to demonstration data when a live business fails to load
+    const errProfile = buildUnavailableLiveProfile(businessName, err.message || 'Live business failed to load.', true);
+    RUNTIME_STATE.liveDataCache[businessName] = errProfile;
+    updateBridgeBadge(`🔴 Live Load Failed · ${businessName}: ${err.message}`, true);
+    renderProfileData(errProfile);
   }
 }
 
@@ -1893,7 +2416,7 @@ function getActiveProfileObject() {
   const key = RUNTIME_STATE.activeProfileKey;
   if (key.startsWith('live:')) {
     const biz = key.slice(5);
-    return RUNTIME_STATE.liveDataCache[biz] || DEMO_PROFILES['demo:epc'];
+    return RUNTIME_STATE.liveDataCache[biz] || buildUnavailableLiveProfile(biz, 'Live business profile not loaded.', true);
   }
   return DEMO_PROFILES[key] || DEMO_PROFILES['demo:epc'];
 }
@@ -1946,69 +2469,102 @@ function renderProfileData(prof) {
           <span class="phase-tag ${conf.tagCls}">${conf.tag}</span>
           ${labelHtml}
         </div>
-        <div class="card-val ${conf.valCls}">${escapeHtml(k.val)}</div>
-        <div class="card-sub">${escapeHtml(k.sub)}</div>
+        <div class="card-val ${conf.valCls}" style="${k.val === 'Unavailable' ? 'color:var(--red-ink);font-size:16px' : ''}">${escapeHtml(k.val)}</div>
+        <div class="card-sub" style="${k.val === 'Unavailable' ? 'color:var(--red-ink)' : ''}">${escapeHtml(k.sub)}</div>
       </div>
     `;
   }).join('');
-  
+
   // 2. Render Overview Project Matrix
-  renderProjectTableInto('ovProjectTableWrap', prof.projects, prof.currency);
+  renderProjectTableInto('ovProjectTableWrap', prof.projects, prof.currency, prof.projectsUnavailableError);
 
   // 3. Render Treasury & Control Accounts (Clean Tech-Table Rows)
   const trWrap = document.getElementById('ovTreasuryWrap');
-  trWrap.innerHTML = `
-    <div>
-      ${prof.treasury.map(t => `
-        <div class="tr-row">
-          <div>
-            <div class="tr-title">${escapeHtml(t.name)}</div>
-            <div class="tr-sub">${escapeHtml(t.type)} · <span style="color:var(--green-ink);font-weight:700">${escapeHtml(t.status)}</span></div>
+  const trHdrBadge = document.getElementById('ovTreasuryHdrBadge');
+  if (prof.treasuryUnavailableError) {
+    if (trHdrBadge) {
+      trHdrBadge.innerHTML = `<span class="status-dot red"></span>Unavailable`;
+    }
+    trWrap.innerHTML = `
+      <div style="padding:18px;color:var(--red-ink);font-size:12px;font-weight:700">
+        ⚠️ Treasury Balances Unavailable — ${escapeHtml(prof.treasuryUnavailableError)}
+      </div>
+    `;
+  } else if (!prof.treasury || prof.treasury.length === 0) {
+    if (trHdrBadge) {
+      trHdrBadge.innerHTML = `<span class="status-dot"></span>No Accounts`;
+    }
+    trWrap.innerHTML = `
+      <div style="padding:18px;color:var(--muted);font-size:12px">
+        No Bank or Cash Accounts configured in this business.
+      </div>
+    `;
+  } else {
+    if (trHdrBadge) {
+      trHdrBadge.innerHTML = `<span class="status-dot"></span>Closing Balance`;
+    }
+    trWrap.innerHTML = `
+      <div>
+        ${prof.treasury.map(t => `
+          <div class="tr-row">
+            <div>
+              <div class="tr-title">${escapeHtml(t.name)}</div>
+              <div class="tr-sub">${escapeHtml(t.type)} · <span style="color:var(--green-ink);font-weight:700">${escapeHtml(t.status)}</span></div>
+            </div>
+            ${(t.hideBalance || t.balance === null || t.balance === undefined)
+              ? ''
+              : `<div class="tr-val">${fmtMoney(t.balance, prof.currency)}</div>`
+            }
           </div>
-          <div class="tr-val">
-            ${fmtMoney(t.balance, prof.currency)}
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  `;
+        `).join('')}
+      </div>
+    `;
+  }
 
   // 4. Render Recent Transactions (Tech-Table Style)
   const txWrap = document.getElementById('ovRecentTxWrap');
-  txWrap.innerHTML = `
-    <table class="tech-table" id="recentTxTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Ref</th>
-          <th>Flow</th>
-          <th>Party / Payee</th>
-          <th>Project</th>
-          <th>Description</th>
-          <th class="num">Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${prof.transactions.map((tx, idx) => `
-          <tr onclick="openTransactionInspector(${idx})">
-            <td style="white-space:nowrap;font-family:var(--mono);font-size:11px;color:var(--muted)">${escapeHtml(tx.date)}</td>
-            <td class="code-cell">${escapeHtml(tx.ref)}</td>
-            <td>
-              <span class="flow-pill ${tx.type === 'IN' ? 'in' : 'out'}">
-                ${tx.type === 'IN' ? '+ IN' : '− OUT'}
-              </span>
-            </td>
-            <td style="font-weight:700;color:#0D1117">${escapeHtml(tx.party)}</td>
-            <td style="font-family:var(--mono);color:var(--cyan-ink);font-weight:700">${escapeHtml(tx.project)}</td>
-            <td style="color:var(--muted)">${escapeHtml(tx.desc)}</td>
-            <td class="num" style="color:${tx.type === 'IN' ? 'var(--green-ink)' : 'var(--gold-ink)'}">
-              ${tx.type === 'IN' ? '+' : '−'} ${fmtMoney(tx.amount, prof.currency)}
-            </td>
+  if (prof.transactionsUnavailableError) {
+    txWrap.innerHTML = `
+      <div style="padding:18px;color:var(--red-ink);font-size:12px;font-weight:700">
+        ⚠️ Recent Voucher Activity Unavailable — ${escapeHtml(prof.transactionsUnavailableError)}
+      </div>
+    `;
+  } else {
+    txWrap.innerHTML = `
+      <table class="tech-table" id="recentTxTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Ref</th>
+            <th>Flow</th>
+            <th>Party / Payee</th>
+            <th>Project</th>
+            <th>Description</th>
+            <th class="num">Amount</th>
           </tr>
-        `).join('')}
-      </tbody>
-    </table>
-  `;
+        </thead>
+        <tbody>
+          ${prof.transactions.map((tx, idx) => `
+            <tr onclick="openTransactionInspector(${idx})">
+              <td style="white-space:nowrap;font-family:var(--mono);font-size:11px;color:var(--muted)">${escapeHtml(tx.date)}</td>
+              <td class="code-cell">${escapeHtml(tx.ref)}</td>
+              <td>
+                <span class="flow-pill ${tx.type === 'IN' ? 'in' : 'out'}">
+                  ${tx.type === 'IN' ? '+ IN' : '− OUT'}
+                </span>
+              </td>
+              <td style="font-weight:700;color:#0D1117">${escapeHtml(tx.party)}</td>
+              <td style="font-family:var(--mono);color:var(--cyan-ink);font-weight:700">${escapeHtml(tx.project)}</td>
+              <td style="color:var(--muted)">${escapeHtml(tx.desc)}</td>
+              <td class="num" style="color:${tx.type === 'IN' ? 'var(--green-ink)' : 'var(--gold-ink)'}">
+                ${tx.type === 'IN' ? '+' : '−'} ${fmtMoney(tx.amount, prof.currency)}
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
 
   // 5. Render Full Projects Tab & Forensic Tab & Simulators
   renderProjectsTab();
@@ -2017,9 +2573,17 @@ function renderProfileData(prof) {
   applyRoleModeUI();
 }
 
-function renderProjectTableInto(containerId, projects, sym) {
+function renderProjectTableInto(containerId, projects, sym, unavailableError) {
   const el = document.getElementById(containerId);
   if (!el) return;
+  if (unavailableError) {
+    el.innerHTML = `
+      <div style="padding:18px;color:var(--red-ink);font-size:12px;font-weight:700">
+        ⚠️ Project Profitability Unavailable — ${escapeHtml(unavailableError)}
+      </div>
+    `;
+    return;
+  }
   el.innerHTML = `
     <table class="tech-table">
       <thead>
@@ -2072,12 +2636,12 @@ function renderProjectTableInto(containerId, projects, sym) {
 function renderProjectsTab() {
   const prof = getActiveProfileObject();
   const q = (document.getElementById('projSearchInput')?.value || '').trim().toLowerCase();
-  const filtered = prof.projects.filter(p =>
+  const filtered = (prof.projects || []).filter(p =>
     !q || p.code.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.pe.toLowerCase().includes(q)
   );
   const badge = document.getElementById('projCountBadge');
-  if (badge) badge.textContent = `${filtered.length} Projects`;
-  renderProjectTableInto('fullProjectTableWrap', filtered, prof.currency);
+  if (badge) badge.textContent = prof.projectsUnavailableError ? 'Unavailable' : `${filtered.length} Projects`;
+  renderProjectTableInto('fullProjectTableWrap', filtered, prof.currency, prof.projectsUnavailableError);
 }
 
 function renderForensicTab(prof) {
@@ -2278,7 +2842,9 @@ function openProjectInspector(idx) {
 }
 
 function openKpiInspector(idx) {
-  openProjectInspector(idx % getActiveProfileObject().projects.length);
+  const projs = getActiveProfileObject().projects || [];
+  if (!projs.length) return;
+  openProjectInspector(idx % projs.length);
 }
 
 function openTransactionInspector(idx) {

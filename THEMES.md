@@ -12,8 +12,8 @@
 ## Quick Install (Two Methods)
 
 ### Method 1: 1-Click Install via Alfabase (Recommended)
-1. Open Manager.io → **Settings** → **Extensions** (or visit [themes.alfabase.com](https://themes.alfabase.com))
-2. Search for the theme title and click **Install** — or open the direct Alfabase links below.
+1. Visit [themes.alfabase.com](https://themes.alfabase.com) (or open the direct Alfabase links below)
+2. Search for the theme title and click **Install** — or copy the theme HTML into Manager.io.
 
 ### Method 2: Manual Install via Settings → Custom Themes
 1. Open Manager.io → **Settings** → **Custom Themes**

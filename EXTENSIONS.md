@@ -10,14 +10,14 @@
 
 ## 📍 Where to Place Extensions, Custom Buttons & Themes in Manager.io
 
-Every extension in this repository supports both **Full Workspace Extension Mode** (`Settings → Extensions`) and **Contextual Custom Button Mode** (`Settings → Custom Buttons`).
+In Manager.io (`v26.10+`), extensions can be launched from the top-bar **`Extensions`** catalog ([extensions.alfabase.com](https://extensions.alfabase.com)) or configured inside any business under **`Settings → Custom Buttons → New Custom Button`** (which opens the **Extension** configuration form with `Source: ExternalURL`).
 
-| Extension / Tool | Method 1: Full Workspace Extension (`Settings → Extensions`) | Method 2: Contextual Custom Button (`Settings → Custom Buttons`) | Exact `Placement` Values for Custom Buttons |
+| Extension / Tool | Method 1: Top-Bar `Extensions` Catalog / Alfabase | Method 2: Business `Settings → Custom Buttons` (`New Custom Button`) | Exact `Placement` Values for `Settings → Custom Buttons` |
 |---|---|---|---|
-| **1. Executive Dashboard & Ledger Auditor** ([`HEw6dQld`](https://extensions.alfabase.com/extensions/HEw6dQld)) | Endpoint: `https://suite.inspiron.tech/dashboard` | Source: `Url` · Url: `https://suite.inspiron.tech/dashboard` | `/summary-view` (Summary Page)<br>`/project-view` (Project Screen)<br>`/sales-invoice-view` (Sales Invoice)<br>`/purchase-invoice-view` (Purchase Invoice) |
-| **2. Bangladesh VAT & NBR Toolkit** ([`OOeV8KF0`](https://extensions.alfabase.com/extensions/OOeV8KF0)) | Endpoint: `https://tax.inspiron.tech` *(or `https://suite.inspiron.tech/bd-compliance`)* | Source: `Url` · Url: `https://tax.inspiron.tech` | `/summary-view` (Summary Page)<br>`/sales-invoice-view` (Mushak-6.3 & VDS Check)<br>`/purchase-invoice-view` (Sec 46 ITC & VDS Check)<br>`/receipt-view` & `/payment-view` |
-| **3. Invoice Pre-Send Checklist** | Endpoint: `https://suite.inspiron.tech/checklist` | Source: `Url` · Url: `https://suite.inspiron.tech/checklist` | `/sales-invoice-view` (Sales Invoice)<br>`/purchase-invoice-view` (Purchase Invoice) |
-| **4. Mushak-6.3 Statutory Invoice Theme** (11-Column VAT Challan) | `Settings → Custom Themes → New Custom Theme` | Paste Raw URL: [`06-MUSHAK-63-TAX-INVOICE.html`](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html) | Select under **Custom Theme** on any Sales Invoice or Credit Note |
+| **1. Executive Dashboard & Ledger Auditor** ([`HEw6dQld`](https://extensions.alfabase.com/extensions/HEw6dQld)) | [Alfabase `HEw6dQld`](https://extensions.alfabase.com/extensions/HEw6dQld) | `Source: ExternalURL` · `Endpoint:` `https://suite.inspiron.tech/dashboard` | `/summary-view` (Summary Page)<br>`/reports` (Reports Tab)<br>`/project-view` (Project Screen)<br>`/sales-invoice-view` & `/purchase-invoice-view` |
+| **2. Bangladesh VAT & NBR Toolkit** ([`OOeV8KF0`](https://extensions.alfabase.com/extensions/OOeV8KF0)) | [Alfabase `OOeV8KF0`](https://extensions.alfabase.com/extensions/OOeV8KF0) | `Source: ExternalURL` · `Endpoint:` `https://tax.inspiron.tech` | `/summary-view` (Summary Page)<br>`/reports` (Reports Tab)<br>`/sales-invoice-view` (Mushak-6.3 & VDS Check)<br>`/purchase-invoice-view` (Sec 46 ITC & VDS Check)<br>`/receipt-view` & `/payment-view` |
+| **3. Invoice Pre-Send Checklist** | `https://suite.inspiron.tech/checklist` | `Source: ExternalURL` · `Endpoint:` `https://suite.inspiron.tech/checklist` | `/sales-invoice-view` (Sales Invoice)<br>`/purchase-invoice-view` (Purchase Invoice) |
+| **4. Mushak-6.3 Statutory Invoice Theme** (11-Column VAT Challan) | `Settings → Custom Themes → New Custom Theme` | Copy & paste HTML from [`06-MUSHAK-63-TAX-INVOICE.html`](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html) | Select under **Custom Theme** on any Sales Invoice or Credit Note |
 
 ---
 
@@ -37,8 +37,8 @@ Every extension in this repository supports both **Full Workspace Extension Mode
   - **12-Point Automated Forensic COA & Ledger Diagnostics:** Live validation of the actual Suspense Account (`balance-sheet-suspense-account`), negative cash accounts, unlinked Credit/Debit Notes, and excluded Inter-Account Transfers.
 
 #### How to Install in Manager.io:
-1. **As a Full Extension:** Go to `Settings → Extensions → New Extension`, enter `https://suite.inspiron.tech/dashboard`, and click **Create**.
-2. **As a Summary Page Button:** Go to `Settings → Custom Buttons → New Custom Button`, set **Label** to `📊 Executive Dashboard & Audit`, **Placement** to `/summary-view`, **Source** to `Url`, **Url** to `https://suite.inspiron.tech/dashboard`, and click **Create**.
+1. **Via Official Extension Catalog:** Open [Alfabase `HEw6dQld`](https://extensions.alfabase.com/extensions/HEw6dQld) *(or click **Extensions** in the Manager.io top bar)*.
+2. **Inside Your Business (`Settings → Custom Buttons`):** Go to `Settings → Custom Buttons → New Custom Button`, set **Name** to `📊 Executive Dashboard & Audit`, **Source** to `ExternalURL`, **Endpoint** to `https://suite.inspiron.tech/dashboard`, **Placement** to `/summary-view` (or `/reports` / `/project-view`), and click **Create**.
 
 ---
 
@@ -54,9 +54,9 @@ Every extension in this repository supports both **Full Workspace Extension Mode
   - **Dynamic 10-Point NBR Statutory Compliance Audit:** Live validation of 13-digit e-BINs, Section 46(1)(গ) 6-period input rebate windows, Section 46(1)(ক) `>= Tk 1,00,000` banking settlement, Section 46(1)(ঠ) truncated-rate ITC blocking, Note 24/29 VDS reconciliation, and Rule 42 Mushak-6.10 (`> Tk 2,00,000`) statements.
 
 #### How to Install in Manager.io:
-1. **As a Full Extension:** Go to `Settings → Extensions → New Extension`, enter `https://tax.inspiron.tech`, and click **Create**.
-2. **As a Summary or Invoice Custom Button:** Go to `Settings → Custom Buttons → New Custom Button`, set **Label** to `🇧🇩 BD VAT & Mushak-9.1`, **Placement** to `/summary-view` (or `/sales-invoice-view` / `/purchase-invoice-view`), **Source** to `Url`, **Url** to `https://tax.inspiron.tech`, and click **Create**.
-3. **Companion Mushak-6.3 Theme:** Go to `Settings → Custom Themes → New Custom Theme`, paste [`https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html`](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html), and select it on your Sales Invoices.
+1. **Via Official Extension Catalog:** Open [Alfabase `OOeV8KF0`](https://extensions.alfabase.com/extensions/OOeV8KF0) *(or click **Extensions** in the Manager.io top bar)*.
+2. **Inside Your Business (`Settings → Custom Buttons`):** Go to `Settings → Custom Buttons → New Custom Button`, set **Name** to `🇧🇩 BD VAT & Mushak-9.1`, **Source** to `ExternalURL`, **Endpoint** to `https://tax.inspiron.tech`, **Placement** to `/summary-view` (or `/reports`, `/sales-invoice-view`, `/purchase-invoice-view`), and click **Create**.
+3. **Companion Mushak-6.3 Theme:** Go to `Settings → Custom Themes → New Custom Theme`, copy-paste the HTML code from [`06-MUSHAK-63-TAX-INVOICE.html`](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html), and select it under **Custom Theme** on your Sales Invoices.
 
 ---
 

@@ -19,30 +19,31 @@ Regional compliance extension and statutory document theme for the Bangladesh Na
 
 ---
 
-## 📍 Where to Place in Manager.io (3-Method Setup Guide)
+## 📍 Where to Place in Manager.io (Setup & Placement Guide)
 
-### Method 1 — As a Full Workspace Extension (Recommended for Monthly Mushak-9.1 Return & Tax Code Setup)
-1. Open Manager.io → **Settings** → **Extensions** → **New Extension**.
-2. **Name:** `Bangladesh VAT & NBR Toolkit (Mushak-9.1 & 6.3)`
-3. **Endpoint URL:** `https://tax.inspiron.tech` *(or install via [Alfabase `OOeV8KF0`](https://extensions.alfabase.com/extensions/OOeV8KF0))*
-4. Click **Create**.
+In Manager.io (`v26.10+`), extensions inside a business are configured under **`Settings → Custom Buttons`** (where the form creates an **Extension** iframe), or launched from the top-bar **`Extensions`** catalog:
 
-### Method 2 — As a Contextual Custom Button (`Settings → Custom Buttons`)
-Go to **Settings** → **Custom Buttons** → **New Custom Button** and use any of the following placements:
+### Method 1 — Via Official Manager.io Extension Catalog (`Extensions` Top Bar / Alfabase)
+1. Open the official catalog listing: **[https://extensions.alfabase.com/extensions/OOeV8KF0](https://extensions.alfabase.com/extensions/OOeV8KF0)** *(or click **Extensions** in the Manager.io top navigation bar)*.
+2. Select **Bangladesh VAT (Mushak-9.1 & 6.3), VDS & NBR Tax Toolkit** to launch or install it into your business.
 
-| Where the Button Appears | Button Label | Exact `Placement` Value | Source | URL to Paste |
+### Method 2 — Inside a Business via `Settings → Custom Buttons` (`New Custom Button`)
+Go to **Settings** → **Custom Buttons** → **New Custom Button** (which opens the **Extension** configuration form), set **Source** to `ExternalURL`, set **Endpoint** to `https://tax.inspiron.tech`, and choose any of these `Placement` paths:
+
+| Where the Extension / Button Appears | Name / Button Label | Exact `Placement` Value | `Source` | `Endpoint` URL |
 |---|---|---|---|---|
-| **Top of Summary Screen** | `🇧🇩 BD VAT & Mushak-9.1` | `/summary-view` | `Url` | `https://tax.inspiron.tech` |
-| **Inside Every Sales Invoice** | `🔍 Check Mushak-6.3 & VDS` | `/sales-invoice-view` | `Url` | `https://tax.inspiron.tech` |
-| **Inside Every Purchase Invoice** | `🔍 Check Sec 46 ITC & VDS` | `/purchase-invoice-view` | `Url` | `https://tax.inspiron.tech` |
-| **Inside Receipts / Payments** | `🔍 Check VDS & TDS` | `/receipt-view` or `/payment-view` | `Url` | `https://tax.inspiron.tech` |
+| **Top of Business Summary Page** *(Full Mushak-9.1 Return, Tax Code Setup & Audit)* | `🇧🇩 BD VAT & Mushak-9.1` | `/summary-view` | `ExternalURL` | `https://tax.inspiron.tech` |
+| **Inside Reports Tab** | `🇧🇩 Mushak-9.1 & NBR Reports` | `/reports` | `ExternalURL` | `https://tax.inspiron.tech` |
+| **Inside Every Sales Invoice** | `🔍 Check Mushak-6.3 & VDS` | `/sales-invoice-view` | `ExternalURL` | `https://tax.inspiron.tech` |
+| **Inside Every Purchase Invoice** | `🔍 Check Sec 46 ITC & VDS` | `/purchase-invoice-view` | `ExternalURL` | `https://tax.inspiron.tech` |
+| **Inside Receipts / Payments** | `🔍 Check VDS & TDS` | `/receipt-view` or `/payment-view` | `ExternalURL` | `https://tax.inspiron.tech` |
 
 ### Method 3 — Companion Mushak-6.3 Statutory Custom Theme (`Settings → Custom Themes`)
-1. Open Manager.io → **Settings** → **Custom Themes** → **New Custom Theme**.
+1. **Via Alfabase Themes Catalog** *(or manual install)*: Open **Settings** → **Custom Themes** → **New Custom Theme**.
 2. **Name:** `Mushak-6.3 Statutory VAT Challan (11-Column Bilingual)`
-3. Paste the Raw Theme HTML from:
+3. Copy and paste the HTML template code from:
    [`https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html`](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html)
-4. When creating or editing a Sales Invoice, tick **Custom Theme** and select `Mushak-6.3 Statutory VAT Challan`.
+4. When creating or editing a Sales Invoice (or via **Sales Invoices → Form Defaults**), tick **Custom Theme** and select `Mushak-6.3 Statutory VAT Challan`.
 
 ---
 

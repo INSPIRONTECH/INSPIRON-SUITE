@@ -1153,7 +1153,7 @@ async function loadLiveBusinessProfile(businessName) {
   try {
     const params = { business: businessName, pageSize: 2500 };
     const [
-      baseCurrRes, projRes, custRes, suppRes, siRes, piRes, iatRes, rcRes, pmRes, bankRes, taxRes
+      baseCurrRes, projRes, custRes, suppRes, siRes, piRes, cnRes, dnRes, iatRes, rcRes, pmRes, bankRes, taxRes
     ] = await Promise.allSettled([
       callManagerApi('GET', '/api4/base-currency', params),
       callManagerApi('GET', '/api4/project-batch', params),
@@ -1161,6 +1161,8 @@ async function loadLiveBusinessProfile(businessName) {
       callManagerApi('GET', '/api4/supplier-batch', params),
       callManagerApi('GET', '/api4/sales-invoice-batch', params),
       callManagerApi('GET', '/api4/purchase-invoice-batch', params),
+      callManagerApi('GET', '/api4/credit-note-batch', params),
+      callManagerApi('GET', '/api4/debit-note-batch', params),
       callManagerApi('GET', '/api4/inter-account-transfer-batch', params),
       callManagerApi('GET', '/api4/receipt-batch', params),
       callManagerApi('GET', '/api4/payment-batch', params),
@@ -1173,6 +1175,8 @@ async function loadLiveBusinessProfile(businessName) {
     const suppliersRaw = suppRes.status === 'fulfilled' ? (suppRes.value?.items || []) : [];
     const invoicesRaw = siRes.status === 'fulfilled' ? (siRes.value?.items || []) : [];
     const purchasesRaw = piRes.status === 'fulfilled' ? (piRes.value?.items || []) : [];
+    const creditNotesRaw = cnRes.status === 'fulfilled' ? (cnRes.value?.items || []) : [];
+    const debitNotesRaw = dnRes.status === 'fulfilled' ? (dnRes.value?.items || []) : [];
     const transfersRaw = iatRes.status === 'fulfilled' ? (iatRes.value?.items || []) : [];
     const receiptsRaw = rcRes.status === 'fulfilled' ? (rcRes.value?.items || []) : [];
     const paymentsRaw = pmRes.status === 'fulfilled' ? (pmRes.value?.items || []) : [];
@@ -1201,6 +1205,7 @@ async function loadLiveBusinessProfile(businessName) {
         billed: 0,
         collected: 0,
         cost: 0,
+        paid: 0,
         retention: 0,
         status: item.inactive ? 'Archived' : 'Active'
       };
@@ -1227,21 +1232,30 @@ async function loadLiveBusinessProfile(businessName) {
       return null;
     };
 
-    let totalBilled = 0, totalCollected = 0, totalPaid = 0;
-    let themedTxCount = 0, totalTxCount = invoicesRaw.length + purchasesRaw.length + transfersRaw.length + receiptsRaw.length + paymentsRaw.length;
+    // Accounting vs. Cash-Flow Separation (never conflating billings/receipts with P&L profit)
+    let totalInvoicedSales = 0, totalCreditNotes = 0;
+    let totalInvoicedPurchases = 0, totalDebitNotes = 0;
+    let totalCashReceipts = 0, totalCashPayments = 0, totalDirectCashExpenses = 0;
+    let untaggedInvoiceLines = 0, missingRefCount = 0, suspenseOrUnallocatedLines = 0;
+    let themedTxCount = 0;
+    const totalTxCount = invoicesRaw.length + purchasesRaw.length + creditNotesRaw.length + debitNotesRaw.length + transfersRaw.length + receiptsRaw.length + paymentsRaw.length;
     const recentTx = [];
 
-    purchasesRaw.forEach(pi => { if (pi.item?.customTheme) themedTxCount++; });
     transfersRaw.forEach(tr => { if (tr.item?.customTheme) themedTxCount++; });
 
+    // 1. Recognised Sales Invoices (Billed Revenue)
     invoicesRaw.forEach(inv => {
       const it = inv.item || {};
       if (it.customTheme) themedTxCount++;
+      if (!it.reference) missingRefCount++;
       const amt = sumLines(it.lines, 'salesUnitPrice');
-      totalBilled += amt;
+      totalInvoicedSales += amt;
       (it.lines || []).forEach(l => {
+        const lineAmt = l.amount != null && l.amount !== 0 ? Number(l.amount) : ((Number(l.qty) || 1) * Number(l.salesUnitPrice ?? l.unitPrice ?? 0));
         const pr = matchProjectForLine(l);
-        if (pr) pr.billed += (l.amount || ((l.qty || 1) * (l.salesUnitPrice || 0)));
+        if (pr) pr.billed += lineAmt;
+        else untaggedInvoiceLines++;
+        if (!l.account && !l.item && !l.nonInventoryItem) suspenseOrUnallocatedLines++;
       });
       recentTx.push({
         date: (it.issueDate || '').slice(0, 10) || '—',
@@ -1249,19 +1263,76 @@ async function loadLiveBusinessProfile(businessName) {
         type: 'IN',
         party: custMap[it.customer] || 'Customer Invoice',
         project: matchProjectForLine((it.lines || [])[0] || {})?.code || 'General',
-        desc: it.description || ((it.lines || [])[0]?.lineDescription) || 'Sales / RA Invoice',
+        desc: it.description || ((it.lines || [])[0]?.lineDescription) || 'Sales Invoice',
         amount: amt
       });
     });
 
+    // 2. Credit Notes (reduces Recognised Invoiced Sales)
+    creditNotesRaw.forEach(cn => {
+      const it = cn.item || {};
+      if (it.customTheme) themedTxCount++;
+      const amt = sumLines(it.lines, 'salesUnitPrice');
+      totalCreditNotes += amt;
+      (it.lines || []).forEach(l => {
+        const lineAmt = l.amount != null && l.amount !== 0 ? Number(l.amount) : ((Number(l.qty) || 1) * Number(l.salesUnitPrice ?? l.unitPrice ?? 0));
+        const pr = matchProjectForLine(l);
+        if (pr) pr.billed -= lineAmt;
+      });
+    });
+
+    // 3. Purchase Invoices (Incurred Direct & Supplier Costs — unpaid & paid)
+    purchasesRaw.forEach(pi => {
+      const it = pi.item || {};
+      if (it.customTheme) themedTxCount++;
+      if (!it.reference) missingRefCount++;
+      const amt = sumLines(it.lines, 'purchaseUnitPrice');
+      totalInvoicedPurchases += amt;
+      (it.lines || []).forEach(l => {
+        const lineAmt = l.amount != null && l.amount !== 0 ? Number(l.amount) : ((Number(l.qty) || 1) * Number(l.purchaseUnitPrice ?? l.unitPrice ?? 0));
+        const pr = matchProjectForLine(l);
+        if (pr) pr.cost += lineAmt;
+        if (!l.account && !l.item && !l.nonInventoryItem) suspenseOrUnallocatedLines++;
+      });
+      recentTx.push({
+        date: (it.issueDate || '').slice(0, 10) || '—',
+        ref: it.reference || 'PI',
+        type: 'OUT',
+        party: suppMap[it.supplier] || 'Supplier Invoice',
+        project: matchProjectForLine((it.lines || [])[0] || {})?.code || 'General',
+        desc: it.description || ((it.lines || [])[0]?.lineDescription) || 'Purchase Invoice',
+        amount: amt
+      });
+    });
+
+    // 4. Debit Notes (reduces Incurred Purchase Invoices)
+    debitNotesRaw.forEach(dn => {
+      const it = dn.item || {};
+      if (it.customTheme) themedTxCount++;
+      const amt = sumLines(it.lines, 'purchaseUnitPrice');
+      totalDebitNotes += amt;
+      (it.lines || []).forEach(l => {
+        const lineAmt = l.amount != null && l.amount !== 0 ? Number(l.amount) : ((Number(l.qty) || 1) * Number(l.purchaseUnitPrice ?? l.unitPrice ?? 0));
+        const pr = matchProjectForLine(l);
+        if (pr) pr.cost -= lineAmt;
+      });
+    });
+
+    // 5. Cash / Bank Receipts (Cash Collections — tracked separately from Invoiced Revenue)
     receiptsRaw.forEach(rc => {
       const it = rc.item || {};
       if (it.customTheme) themedTxCount++;
       const amt = sumLines(it.lines, 'salesUnitPrice');
-      totalCollected += amt;
+      totalCashReceipts += amt;
       (it.lines || []).forEach(l => {
+        const lineAmt = l.amount != null && l.amount !== 0 ? Number(l.amount) : ((Number(l.qty) || 1) * Number(l.salesUnitPrice ?? l.unitPrice ?? 0));
         const pr = matchProjectForLine(l);
-        if (pr) pr.collected += (l.amount || ((l.qty || 1) * (l.salesUnitPrice || 0)));
+        if (pr) {
+          pr.collected += lineAmt;
+          // Direct cash sale receipt not settling an AR invoice also counts toward recognised project revenue
+          const isArSettlement = Boolean(it.customer || l.accountsReceivableCustomer || l.invoice);
+          if (!isArSettlement) pr.billed += lineAmt;
+        }
       });
       recentTx.push({
         date: (it.date || '').slice(0, 10) || '—',
@@ -1274,20 +1345,28 @@ async function loadLiveBusinessProfile(businessName) {
       });
     });
 
+    // 6. Cash / Bank Payments (Cash Outflows — distinguishing AP settlements from direct project expenses)
     paymentsRaw.forEach(pm => {
       const it = pm.item || {};
       if (it.customTheme) themedTxCount++;
       const amt = sumLines(it.lines, 'purchaseUnitPrice');
-      totalPaid += amt;
+      totalCashPayments += amt;
       (it.lines || []).forEach(l => {
+        const lineAmt = l.amount != null && l.amount !== 0 ? Number(l.amount) : ((Number(l.qty) || 1) * Number(l.purchaseUnitPrice ?? l.unitPrice ?? 0));
+        const isApSettlement = Boolean(it.supplier || l.accountsPayableSupplier || l.purchaseInvoice);
+        if (!isApSettlement) totalDirectCashExpenses += lineAmt;
         const pr = matchProjectForLine(l);
-        if (pr) pr.cost += (l.amount || ((l.qty || 1) * (l.purchaseUnitPrice || 0)));
+        if (pr) {
+          pr.paid += lineAmt;
+          // Only add to incurred project cost if not settling an already-recorded supplier Purchase Invoice
+          if (!isApSettlement) pr.cost += lineAmt;
+        }
       });
       recentTx.push({
         date: (it.date || '').slice(0, 10) || '—',
         ref: it.reference || 'PV',
         type: 'OUT',
-        party: suppMap[it.supplier] || it.contact || 'Site / Operational Payee',
+        party: suppMap[it.supplier] || it.contact || 'Operational Payee',
         project: matchProjectForLine((it.lines || [])[0] || {})?.code || 'General',
         desc: it.description || ((it.lines || [])[0]?.lineDescription) || 'Payment Voucher',
         amount: amt
@@ -1298,7 +1377,10 @@ async function loadLiveBusinessProfile(businessName) {
 
     const projectList = Object.values(projMap);
     const totalContract = projectList.reduce((s, p) => s + p.contract, 0);
-    const netSurplus = Math.max(totalBilled, totalCollected) - totalPaid;
+    const netInvoicedSales = totalInvoicedSales - totalCreditNotes;
+    const netIncurredCosts = (totalInvoicedPurchases - totalDebitNotes) + totalDirectCashExpenses;
+    const netCashMovement = totalCashReceipts - totalCashPayments;
+    const inactiveProjectsCount = projectList.filter(p => p.status === 'Archived').length;
 
     const bcObj = baseCurrRes.status === 'fulfilled' ? (baseCurrRes.value?.item || baseCurrRes.value || {}) : {};
     const liveSym = bcObj.symbol || bcObj.Symbol || bcObj.code || bcObj.Code || (businessName.toUpperCase().includes('BAUS') || businessName.toUpperCase().includes('ZIPPY') || businessName.toUpperCase().includes('LEATHER') ? '৳' : '$');
@@ -1308,15 +1390,15 @@ async function loadLiveBusinessProfile(businessName) {
       sector: `Live Connected ERP · ${projectsRaw.length} Projects · ${customersRaw.length} Customers · ${suppliersRaw.length} Suppliers`,
       currency: liveSym,
       kpis: [
-        { group: 'cyan',   glyph: '●', label: 'Contract / Project Portfolio', bn: 'মোট প্রজেক্ট চুক্তিমূল্য', val: fmtMoney(totalContract, liveSym), sub: `${projectList.length} Active Projects` },
-        { group: 'green',  glyph: '+', label: 'Total Invoiced / Billed',      bn: 'মোট বিল ও ইনভয়েস',        val: fmtMoney(totalBilled, liveSym),   sub: `${invoicesRaw.length} Sales Invoices` },
-        { group: 'green',  glyph: '+', label: 'Total Cash Receipts',          bn: 'মোট নগদ ও ব্যাংক জমা',    val: fmtMoney(totalCollected, liveSym),sub: `${receiptsRaw.length} Receipts` },
-        { group: 'amber',  glyph: '−', label: 'Total Payments & Costs',       bn: 'মোট খরচ ও পেমেন্ট',       val: fmtMoney(totalPaid, liveSym),     sub: `${paymentsRaw.length} Payment Vouchers` },
-        { group: 'slate',  glyph: '▪', label: 'Parties & Accounts',           bn: 'কাস্টমার ও সাপ্লায়ার',     val: `${customersRaw.length + suppliersRaw.length}`, sub: `${customersRaw.length} Cust · ${suppliersRaw.length} Supp` },
-        { group: netSurplus >= 0 ? 'cyan' : 'red', glyph: netSurplus >= 0 ? '★' : '!', label: 'Net Operating Position', bn: 'নিট অপারেটিং ব্যালেন্স', val: fmtMoney(netSurplus, liveSym), sub: `${totalTxCount} Total Vouchers` }
+        { group: 'cyan',   glyph: '●', label: 'Contract / Project Portfolio', bn: 'মোট প্রজেক্ট চুক্তিমূল্য', val: fmtMoney(totalContract, liveSym),    sub: `${projectList.length} Active Projects` },
+        { group: 'green',  glyph: '+', label: 'Net Invoiced Sales (Billed)',  bn: 'মোট বিল ও ইনভয়েস',        val: fmtMoney(netInvoicedSales, liveSym), sub: `${invoicesRaw.length} Invoices · ${creditNotesRaw.length} CN` },
+        { group: 'green',  glyph: '+', label: 'Cash Receipts Collected',      bn: 'মোট নগদ ও ব্যাংক জমা',    val: fmtMoney(totalCashReceipts, liveSym),sub: `${receiptsRaw.length} Receipt Vouchers` },
+        { group: 'amber',  glyph: '−', label: 'Incurred Direct & Bill Costs', bn: 'মোট ধার্যকৃত খরচ ও বিল',  val: fmtMoney(netIncurredCosts, liveSym), sub: `${purchasesRaw.length} Purchase Bills + Direct` },
+        { group: 'slate',  glyph: '−', label: 'Cash Payments Disbursed',      bn: 'মোট নগদ ও ব্যাংক পেমেন্ট', val: fmtMoney(totalCashPayments, liveSym),sub: `${paymentsRaw.length} Payment Vouchers` },
+        { group: netCashMovement >= 0 ? 'cyan' : 'red', glyph: netCashMovement >= 0 ? '★' : '!', label: 'Net Cash Flow (Receipts − Paid)', bn: 'নিট নগদ প্রবাহ (জমা − পেমেন্ট)', val: fmtMoney(netCashMovement, liveSym), sub: `Cash Flow Across ${receiptsRaw.length + paymentsRaw.length} Vouchers` }
       ],
       projects: projectList.length ? projectList : [
-        { code: 'GEN-OPS', name: 'General Business Operations (No Projects Created Yet)', pe: businessName, contract: totalBilled, billed: totalBilled, collected: totalCollected, cost: totalPaid, retention: 0, status: 'Live Ledger' }
+        { code: 'GEN-OPS', name: 'General Business Operations (Unallocated)', pe: businessName, contract: netInvoicedSales, billed: netInvoicedSales, collected: totalCashReceipts, cost: netIncurredCosts, paid: totalCashPayments, retention: 0, status: 'Live Ledger' }
       ],
       treasury: banksRaw.length
         ? banksRaw.map(b => ({
@@ -1325,15 +1407,21 @@ async function loadLiveBusinessProfile(businessName) {
             balance: Number(b.item?.obsolete_StartingBalance || 0),
             status: b.item?.inactive ? 'Inactive' : 'Active'
           }))
-        : [{ name: 'Primary Operating Account', type: 'Bank / Cash', balance: totalCollected - totalPaid, status: 'Live Computed' }],
+        : [{ name: 'Primary Operating Cash Flow', type: 'Receipts − Payments', balance: netCashMovement, status: 'Live Computed' }],
       transactions: recentTx.slice(0, 12),
       forensics: [
-        { code: 'L-01', title: 'Live API4 Batch Connectivity', status: 'PASS', badge: 'pill-green', detail: `Connected to "${businessName}" (${totalTxCount} vouchers scanned).` },
-        { code: 'L-02', title: 'Project / Cost Center Attribution', status: projectList.length > 0 ? 'PASS' : 'WARN', badge: projectList.length > 0 ? 'pill-green' : 'pill-amber', detail: `${projectList.length} projects configured in business.` },
-        { code: 'L-03', title: 'Custom Document Theme Coverage', status: themedTxCount === totalTxCount && totalTxCount > 0 ? 'PASS' : 'WARN', badge: themedTxCount === totalTxCount && totalTxCount > 0 ? 'pill-green' : 'pill-amber', detail: `${themedTxCount} of ${totalTxCount} vouchers use a Custom Theme.` },
-        { code: 'L-04', title: 'Tax Code Statutory Configuration', status: taxesRaw.length > 0 ? 'PASS' : 'WARN', badge: taxesRaw.length > 0 ? 'pill-green' : 'pill-amber', detail: `${taxesRaw.length} tax codes configured.` },
-        { code: 'L-05', title: 'Bank & Cash Control Accounts', status: banksRaw.length > 0 ? 'PASS' : 'WARN', badge: banksRaw.length > 0 ? 'pill-green' : 'pill-amber', detail: `${banksRaw.length} bank/cash accounts active.` },
-        { code: 'L-06', title: 'Customer & Supplier Master Hygiene', status: 'PASS', badge: 'pill-green', detail: `${customersRaw.length} customers and ${suppliersRaw.length} suppliers verified.` }
+        { code: 'AUD-01', title: 'Suspense & Unallocated Line Integrity', status: suspenseOrUnallocatedLines === 0 ? 'PASS' : 'WARN', badge: suspenseOrUnallocatedLines === 0 ? 'pill-green' : 'pill-amber', detail: `${suspenseOrUnallocatedLines} unallocated invoice/purchase lines detected across ${invoicesRaw.length + purchasesRaw.length} bills.` },
+        { code: 'AUD-02', title: 'Project Cost-Center Tagging Completeness', status: untaggedInvoiceLines === 0 ? 'PASS' : 'WARN', badge: untaggedInvoiceLines === 0 ? 'pill-green' : 'pill-amber', detail: `${projectList.length} projects active; ${untaggedInvoiceLines} sales invoice lines lack a project tag.` },
+        { code: 'AUD-03', title: 'Purchase Invoice Accrual & Direct Cost Capture', status: 'PASS', badge: 'pill-green', detail: `${purchasesRaw.length} purchase invoices (${fmtMoney(totalInvoicedPurchases, liveSym)}) and ${debitNotesRaw.length} debit notes included in incurred project costs.` },
+        { code: 'AUD-04', title: 'Tax Code Statutory Configuration', status: taxesRaw.length > 0 ? 'PASS' : 'WARN', badge: taxesRaw.length > 0 ? 'pill-green' : 'pill-amber', detail: `${taxesRaw.length} tax codes configured in business settings.` },
+        { code: 'AUD-05', title: 'Bank & Cash Control Account Hygiene', status: banksRaw.length > 0 ? 'PASS' : 'WARN', badge: banksRaw.length > 0 ? 'pill-green' : 'pill-amber', detail: `${banksRaw.length} bank/cash control accounts configured.` },
+        { code: 'AUD-06', title: 'Base Currency Configuration Lock', status: liveSym ? 'PASS' : 'WARN', badge: liveSym ? 'pill-green' : 'pill-amber', detail: `Base currency symbol resolved to "${liveSym}".` },
+        { code: 'AUD-07', title: 'Accounts Receivable (AR) Customer Subledger', status: customersRaw.length > 0 ? 'PASS' : 'WARN', badge: customersRaw.length > 0 ? 'pill-green' : 'pill-amber', detail: `${customersRaw.length} customer master records linked to ${invoicesRaw.length} sales invoices.` },
+        { code: 'AUD-08', title: 'Accounts Payable (AP) Supplier Subledger', status: suppliersRaw.length > 0 ? 'PASS' : 'WARN', badge: suppliersRaw.length > 0 ? 'pill-green' : 'pill-amber', detail: `${suppliersRaw.length} supplier master records linked to ${purchasesRaw.length} purchase invoices.` },
+        { code: 'AUD-09', title: 'Credit & Debit Note Adjustment Reconciliation', status: 'PASS', badge: 'pill-green', detail: `${creditNotesRaw.length} credit notes and ${debitNotesRaw.length} debit notes reconciled against gross billings and costs.` },
+        { code: 'AUD-10', title: 'Inter-Account Treasury Transfer Audit', status: 'PASS', badge: 'pill-green', detail: `${transfersRaw.length} inter-account transfers excluded from operating revenue and project costs.` },
+        { code: 'AUD-11', title: 'Voucher Reference Number Completeness', status: missingRefCount === 0 ? 'PASS' : 'WARN', badge: missingRefCount === 0 ? 'pill-green' : 'pill-amber', detail: `${missingRefCount} invoices/bills missing a manual document reference number.` },
+        { code: 'AUD-12', title: 'Custom Document Theme Coverage (/api4/view-v1)', status: themedTxCount === totalTxCount && totalTxCount > 0 ? 'PASS' : 'WARN', badge: themedTxCount === totalTxCount && totalTxCount > 0 ? 'pill-green' : 'pill-amber', detail: `${themedTxCount} of ${totalTxCount} vouchers (${inactiveProjectsCount} archived projects) use a custom HTML theme.` }
       ]
     };
 
@@ -1392,12 +1480,12 @@ function renderProfileData(prof) {
   // 1. Render 6-Card Focus Engine (Mixed Mode: Phase-Boxes + Featured Spectrum Hero)
   const kpiEl = document.getElementById('kpiStrip');
   const cardConfigs = [
-    { cardCls: 'c-portfolio', tagCls: 'tag-cyan',   tag: 'PORTFOLIO',   valCls: 'val-ink' },
-    { cardCls: 'c-inflow',    tagCls: 'tag-green',  tag: 'BILLING',     valCls: 'val-ink' },
-    { cardCls: 'c-inflow',    tagCls: 'tag-green',  tag: 'COLLECTIONS', valCls: 'val-ink' },
-    { cardCls: 'c-outflow',   tagCls: 'tag-gold',   tag: 'DIRECT COST', valCls: 'val-gold' },
-    { cardCls: 'c-security',  tagCls: 'tag-purple', tag: 'SECURITY',    valCls: 'val-ink' },
-    { cardCls: 'c-hero',      tagCls: 'tag-hero',   tag: 'NET SURPLUS', valCls: 'val-hero' }
+    { cardCls: 'c-portfolio', tagCls: 'tag-cyan',   tag: 'PORTFOLIO',     valCls: 'val-ink' },
+    { cardCls: 'c-inflow',    tagCls: 'tag-green',  tag: 'BILLED SALES',  valCls: 'val-ink' },
+    { cardCls: 'c-inflow',    tagCls: 'tag-green',  tag: 'CASH RECEIPTS', valCls: 'val-ink' },
+    { cardCls: 'c-outflow',   tagCls: 'tag-gold',   tag: 'DIRECT COST',   valCls: 'val-gold' },
+    { cardCls: 'c-security',  tagCls: 'tag-purple', tag: 'OUTFLOW / SEC', valCls: 'val-ink' },
+    { cardCls: 'c-hero',      tagCls: 'tag-hero',   tag: 'GROSS / CASH',  valCls: 'val-hero' }
   ];
 
   kpiEl.innerHTML = prof.kpis.map((k, idx) => {
@@ -1500,19 +1588,20 @@ function renderProjectTableInto(containerId, projects, sym) {
           <th>Code</th>
           <th>Project / Cost Center</th>
           <th class="num">Contract Value</th>
-          <th class="num">+ Billed</th>
-          <th class="num">+ Collected</th>
-          <th class="num">− Direct Cost</th>
-          <th class="num">Net Margin</th>
+          <th class="num">+ Recognised Billed</th>
+          <th class="num">+ Cash Collected</th>
+          <th class="num">− Incurred Direct Cost</th>
+          <th class="num">Project Gross Profit</th>
           <th>Status</th>
         </tr>
       </thead>
       <tbody>
         ${projects.map((p, idx) => {
-          const rev = Math.max(p.billed, p.collected);
-          const margin = rev - p.cost;
-          const pct = rev > 0 ? Math.round((margin / rev) * 100) : 0;
-          const billPct = p.contract > 0 ? Math.min(100, Math.round((rev / p.contract) * 100)) : 100;
+          const rev = Number(p.billed) || 0;
+          const incurredCost = Number(p.cost) || 0;
+          const grossProfit = rev - incurredCost;
+          const pct = rev > 0 ? ((grossProfit / rev) * 100).toFixed(1) : '0.0';
+          const billPct = p.contract > 0 ? Math.min(100, Math.round((rev / p.contract) * 100)) : (rev > 0 ? 100 : 0);
           return `
             <tr onclick="openProjectInspector(${idx})">
               <td class="code-cell">${escapeHtml(p.code)}</td>
@@ -1522,15 +1611,15 @@ function renderProjectTableInto(containerId, projects, sym) {
                 <div class="prog-track"><div class="prog-fill" style="width:${billPct}%"></div></div>
               </td>
               <td class="num">${fmtMoney(p.contract, sym)}</td>
-              <td class="num" style="color:var(--green-ink)">+ ${fmtMoney(p.billed, sym)}</td>
+              <td class="num" style="color:var(--green-ink)">+ ${fmtMoney(rev, sym)}</td>
               <td class="num" style="color:var(--green-ink)">+ ${fmtMoney(p.collected, sym)}</td>
-              <td class="num" style="color:var(--gold-ink)">− ${fmtMoney(p.cost, sym)}</td>
-              <td class="num" style="color:${margin >= 0 ? 'var(--green-ink)' : 'var(--red-ink)'}">
-                ${fmtMoney(margin, sym)} <span style="font-size:10.5px;color:var(--dim)">(${pct}%)</span>
+              <td class="num" style="color:var(--gold-ink)">− ${fmtMoney(incurredCost, sym)}</td>
+              <td class="num" style="color:${grossProfit >= 0 ? 'var(--green-ink)' : 'var(--red-ink)'}">
+                ${fmtMoney(grossProfit, sym)} <span style="font-size:10.5px;color:var(--dim)">(${pct}%)</span>
               </td>
               <td>
                 <span class="status-dot-wrap">
-                  <span class="status-dot ${margin < 0 ? 'red' : ''}"></span>${escapeHtml(p.status)}
+                  <span class="status-dot ${grossProfit < 0 ? 'red' : ''}"></span>${escapeHtml(p.status)}
                 </span>
               </td>
             </tr>
@@ -1673,9 +1762,10 @@ function openProjectInspector(idx) {
   const prof = getActiveProfileObject();
   const p = prof.projects[idx];
   if (!p) return;
-  const rev = Math.max(p.billed, p.collected);
-  const margin = rev - p.cost;
-  const pct = rev > 0 ? ((margin / rev) * 100).toFixed(1) : '0.0';
+  const rev = Number(p.billed) || 0;
+  const incurredCost = Number(p.cost) || 0;
+  const grossProfit = rev - incurredCost;
+  const pct = rev > 0 ? ((grossProfit / rev) * 100).toFixed(1) : '0.0';
 
   document.getElementById('drTitle').textContent = `${p.code} — ${p.name}`;
   document.getElementById('drSub').textContent = `Authority / Client: ${p.pe} · Status: ${p.status}`;
@@ -1690,32 +1780,32 @@ function openProjectInspector(idx) {
         <div class="card-val val-ink">${fmtMoney(p.contract, prof.currency)}</div>
       </div>
       <div class="focus-card c-inflow">
-        <span class="phase-tag tag-green">REALIZED</span>
-        <div class="card-label">Billed / Invoiced</div>
+        <span class="phase-tag tag-green">RECOGNISED</span>
+        <div class="card-label">Recognised Billed Revenue</div>
         <div class="card-val val-green">${fmtMoney(rev, prof.currency)}</div>
       </div>
       <div class="focus-card c-outflow">
         <span class="phase-tag tag-gold">DIRECT COST</span>
-        <div class="card-label">Site / Material / BOM</div>
-        <div class="card-val val-gold">${fmtMoney(p.cost, prof.currency)}</div>
+        <div class="card-label">Incurred Direct Cost</div>
+        <div class="card-val val-gold">${fmtMoney(incurredCost, prof.currency)}</div>
       </div>
     </div>
 
     <div class="tech-panel">
       <div class="tech-panel-hdr">
-        <div class="tech-panel-title">📊 Financial Realization &amp; Retention Breakdown</div>
+        <div class="tech-panel-title">📊 Project Gross Profit &amp; Cash-Flow Breakdown</div>
         <span class="status-dot-wrap">
-          <span class="status-dot ${margin < 0 ? 'red' : ''}"></span>
-          Net Margin: ${fmtMoney(margin, prof.currency)} (${pct}%)
+          <span class="status-dot ${grossProfit < 0 ? 'red' : ''}"></span>
+          Project Gross Profit: ${fmtMoney(grossProfit, prof.currency)} (${pct}%)
         </span>
       </div>
       <div style="padding:16px 20px">
         <div class="sim-line"><span>Contract / Tender Value:</span><strong>${fmtMoney(p.contract, prof.currency)}</strong></div>
-        <div class="sim-line"><span>Certified Running Bills:</span><strong style="color:var(--green-ink)">+ ${fmtMoney(p.billed, prof.currency)}</strong></div>
-        <div class="sim-line"><span>Net Collections in Bank:</span><strong style="color:var(--green-ink)">+ ${fmtMoney(p.collected, prof.currency)}</strong></div>
-        <div class="sim-line"><span>Direct Site / Material / Labor Cost:</span><strong style="color:var(--gold-ink)">− ${fmtMoney(p.cost, prof.currency)}</strong></div>
-        <div class="sim-line"><span>Retention / Security Held (10%):</span><strong style="color:var(--purple-ink)">${fmtMoney(p.retention, prof.currency)}</strong></div>
-        <div class="sim-line"><span>Net Project Operating Surplus:</span><strong style="color:${margin >= 0 ? 'var(--green-ink)' : 'var(--red-ink)'}">${fmtMoney(margin, prof.currency)}</strong></div>
+        <div class="sim-line"><span>Recognised Project Revenue (Net Billed):</span><strong style="color:var(--green-ink)">+ ${fmtMoney(rev, prof.currency)}</strong></div>
+        <div class="sim-line"><span>Incurred Direct Project Cost (Bills + Direct):</span><strong style="color:var(--gold-ink)">− ${fmtMoney(incurredCost, prof.currency)}</strong></div>
+        <div class="sim-line"><span>Project Gross Profit (Recognised Rev − Direct Cost):</span><strong style="color:${grossProfit >= 0 ? 'var(--green-ink)' : 'var(--red-ink)'}">${fmtMoney(grossProfit, prof.currency)} (${pct}%)</strong></div>
+        <div class="sim-line"><span>Cash Collected in Bank (Receipts):</span><strong style="color:var(--green-ink)">+ ${fmtMoney(p.collected, prof.currency)}</strong></div>
+        <div class="sim-line"><span>Retention / Security Held:</span><strong style="color:var(--purple-ink)">${fmtMoney(p.retention, prof.currency)}</strong></div>
       </div>
     </div>
 

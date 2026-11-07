@@ -1396,7 +1396,7 @@ function showToast(msg) {
   setTimeout(() => el.classList.remove("show"), 3200);
 }
 
-async function postMessageApi4(method, path, body) {
+async function postMessageApi4(method, path, body, params) {
   if (window.parent === window) throw new Error("Standalone mode");
   return new Promise((resolve, reject) => {
     const requestId = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ("req-" + Date.now() + "-" + Math.random());
@@ -1412,7 +1412,7 @@ async function postMessageApi4(method, path, body) {
       }
     }
     window.addEventListener("message", onMsg);
-    window.parent.postMessage({ type: "api-request", requestId, method, path, body }, "*");
+    window.parent.postMessage({ type: "api-request", requestId, method, path, params, body }, "*");
   });
 }
 
@@ -1421,9 +1421,7 @@ async function fetchAllBatchPages(basePath, pageSize = 500) {
   let skip = 0;
   const maxPages = 50;
   for (let page = 0; page < maxPages; page++) {
-    const sep = basePath.includes("?") ? "&" : "?";
-    const path = `${basePath}${sep}skip=${skip}&pageSize=${pageSize}`;
-    const res = await postMessageApi4("GET", path);
+    const res = await postMessageApi4("GET", basePath, undefined, { skip, pageSize });
     if (!res || (typeof res.status === "number" && res.status >= 400) || !res.body) {
       const statusLabel = res && res.status ? `HTTP ${res.status}` : "Empty response";
       throw new Error(`${basePath} failed (${statusLabel})`);
@@ -1443,9 +1441,10 @@ function getActiveProfile() {
 
 function extractEntityBin(obj) {
   if (!obj || typeof obj !== "object") return "";
-  const direct = obj.TaxIdentificationNumber || obj.BusinessIdentifier || obj.VatNumber || obj.Code || "";
+  const direct = obj.taxIdentificationNumber || obj.TaxIdentificationNumber || obj.businessIdentifier || obj.BusinessIdentifier || obj.vatNumber || obj.VatNumber || obj.code || obj.Code || "";
   if (direct && String(direct).trim()) return String(direct).trim();
-  const cf2 = obj.CustomFields2 && obj.CustomFields2.Strings ? obj.CustomFields2.Strings : null;
+  const cf2Obj = obj.customFields2 || obj.CustomFields2;
+  const cf2 = cf2Obj && (cf2Obj.strings || cf2Obj.Strings) ? (cf2Obj.strings || cf2Obj.Strings) : null;
   if (cf2) {
     for (const val of Object.values(cf2)) {
       if (val && /\d{9,13}/.test(String(val))) return String(val).trim();
@@ -2147,14 +2146,19 @@ async function syncLiveManagerData() {
   let bizName = "Live Manager.io Business";
   let bizBin = "";
   try {
-    const bizRes = await postMessageApi4("GET", "/api4/business-details-form/00000000-0000-0000-0000-000000000000");
-    if (bizRes && bizRes.body) {
-      const b = bizRes.body.Value || bizRes.body;
-      if (b.Name) bizName = String(b.Name);
+    const bizRes = await postMessageApi4("GET", "/api4/business-details");
+    if (bizRes && bizRes.status === 200 && bizRes.body) {
+      const b = bizRes.body.item || bizRes.body.Value || bizRes.body.value || bizRes.body;
+      const nm = b.name || b.Name;
+      if (nm) bizName = String(nm);
       bizBin = extractEntityBin(b);
+    } else {
+      const listRes = await postMessageApi4("GET", "/api4/businesses");
+      const list = listRes && listRes.body && Array.isArray(listRes.body.businesses) ? listRes.body.businesses : [];
+      if (list.length > 0 && list[0].name) bizName = String(list[0].name);
     }
   } catch (e) {
-    STATE.apiErrors.push("business-details: " + (e.message || e));
+    // Non-fatal metadata lookup; batch endpoints below carry strict error tracking
   }
 
   const [
@@ -2192,12 +2196,12 @@ async function syncLiveManagerData() {
   STATE.installedCodes = {};
   for (const row of taxCodes) {
     const key = row.Key || row.key;
-    const val = row.Value || row.value || row;
+    const val = row.item || row.Value || row.value || row;
     if (key) taxMap[key] = val;
-    const repCat = val.ReportingCategory || "";
-    const nameStr = String(val.Name || "").toLowerCase();
+    const repCat = String(val.reportingCategory || val.ReportingCategory || "").toLowerCase();
+    const nameStr = String(val.name || val.Name || "").toLowerCase();
     for (const tpl of TAX_CODE_TEMPLATES) {
-      if (repCat === tpl.ReportingCategory || nameStr === tpl.Name.toLowerCase()) {
+      if (repCat === String(tpl.ReportingCategory || "").toLowerCase() || nameStr === tpl.Name.toLowerCase()) {
         STATE.installedCodes[tpl.ReportingCategory] = true;
       }
     }
@@ -2206,14 +2210,14 @@ async function syncLiveManagerData() {
   const custMap = {};
   for (const r of customers) {
     const k = r.Key || r.key;
-    const v = r.Value || r.value || r;
-    if (k) custMap[k] = { name: v.Name || "Customer", bin: extractEntityBin(v) || "UNSET-BIN" };
+    const v = r.item || r.Value || r.value || r;
+    if (k) custMap[k] = { name: v.name || v.Name || "Customer", bin: extractEntityBin(v) || "UNSET-BIN" };
   }
   const suppMap = {};
   for (const r of suppliers) {
     const k = r.Key || r.key;
-    const v = r.Value || r.value || r;
-    if (k) suppMap[k] = { name: v.Name || "Supplier", bin: extractEntityBin(v) || "UNSET-BIN" };
+    const v = r.item || r.Value || r.value || r;
+    if (k) suppMap[k] = { name: v.name || v.Name || "Supplier", bin: extractEntityBin(v) || "UNSET-BIN" };
   }
 
   // Accumulators for Mushak-9.1 Notes
@@ -2235,9 +2239,9 @@ async function syncLiveManagerData() {
 
   const classifyLineTax = (tcKey, isSale, lineAmt, taxInclusive) => {
     const tc = taxMap[tcKey] || {};
-    const rep = String(tc.ReportingCategory || "");
-    const rate = Number(tc.Rate ?? (tcKey ? 15 : 0));
-    const nm = String(tc.Name || "").toLowerCase();
+    const rep = String(tc.reportingCategory || tc.ReportingCategory || "").toLowerCase();
+    const rate = Number(tc.rate ?? tc.Rate ?? (tcKey ? 15 : 0));
+    const nm = String(tc.name || tc.Name || "").toLowerCase();
     let base = Math.abs(Number(lineAmt) || 0);
     let vat = 0;
     if (rate > 0) {
@@ -2254,18 +2258,21 @@ async function syncLiveManagerData() {
 
   // Process Sales Invoices & Receipts (Output VAT)
   const processOutputDoc = (doc, docType, sign) => {
-    const v = doc.Value || doc.value || doc;
-    const ref = v.Reference || docType;
-    const date = (v.IssueDate || v.Date || "").slice(0, 10) || new Date().toISOString().slice(0, 10);
-    const partyObj = custMap[v.Customer || v.Contact] || { name: v.Payee || "Counterparty", bin: "UNSET-BIN" };
-    const taxIncl = !!v.AmountsAreTaxInclusive;
-    const lines = Array.isArray(v.Lines) ? v.Lines : [];
+    const v = doc.item || doc.Value || doc.value || doc;
+    const ref = v.reference || v.Reference || docType;
+    const date = String(v.issueDate || v.IssueDate || v.date || v.Date || "").slice(0, 10) || new Date().toISOString().slice(0, 10);
+    const partyObj = custMap[v.customer || v.Customer || v.contact || v.Contact] || { name: v.payee || v.Payee || "Counterparty", bin: "UNSET-BIN" };
+    const taxIncl = !!(v.amountsAreTaxInclusive ?? v.AmountsAreTaxInclusive);
+    const lines = Array.isArray(v.lines || v.Lines) ? (v.lines || v.Lines) : [];
     let docBase = 0, docVat = 0, docForm = "Mushak-6.3";
 
     for (const ln of lines) {
-      const amt = (Number(ln.Qty || 1) * Number(ln.SalesUnitPrice ?? ln.UnitPrice ?? ln.Amount ?? 0)) || Number(ln.Amount || 0);
-      if (!amt && !ln.TaxCode) continue;
-      const info = classifyLineTax(ln.TaxCode, true, amt, taxIncl);
+      const qty = Number(ln.qty ?? ln.Qty ?? 1) || 1;
+      const unitPrice = Number(ln.salesUnitPrice ?? ln.SalesUnitPrice ?? ln.unitPrice ?? ln.UnitPrice ?? ln.amount ?? ln.Amount ?? 0);
+      const amt = (qty * unitPrice) || Number(ln.amount ?? ln.Amount ?? 0);
+      const tcKey = ln.taxCode || ln.TaxCode;
+      if (!amt && !tcKey) continue;
+      const info = classifyLineTax(tcKey, true, amt, taxIncl);
       docBase += sign * info.base;
       docVat += sign * info.vat;
 
@@ -2290,8 +2297,8 @@ async function syncLiveManagerData() {
       }
     }
 
-    if (v.WithholdingTax || /vds/i.test(String(v.Description || ""))) {
-      const vdsVal = Math.abs(Number(v.WithholdingTaxAmount || (docVat * 0.5) || 0));
+    if ((v.withholdingTax || v.WithholdingTax) || /vds/i.test(String(v.description || v.Description || ""))) {
+      const vdsVal = Math.abs(Number(v.withholdingTaxAmount ?? v.WithholdingTaxAmount ?? (docVat * 0.5) ?? 0));
       if (vdsVal > 0) {
         buckets.note29.base += Math.abs(docBase);
         buckets.note29.vat += vdsVal;
@@ -2313,25 +2320,28 @@ async function syncLiveManagerData() {
 
   for (const inv of salesInvoices) processOutputDoc(inv, "INV", 1);
   for (const cn of creditNotes) {
-    const v = cn.Value || cn.value || cn;
-    if (!v.SalesInvoice) unlinkedCnDn++;
+    const v = cn.item || cn.Value || cn.value || cn;
+    if (!(v.salesInvoice || v.SalesInvoice)) unlinkedCnDn++;
     processOutputDoc(cn, "CN", -1);
   }
 
   // Process Purchase Invoices & Payments (Input Tax Credit & Buyer VDS)
   const processInputDoc = (doc, docType, sign, isCashPayment = false) => {
-    const v = doc.Value || doc.value || doc;
-    const ref = v.Reference || docType;
-    const date = (v.IssueDate || v.Date || "").slice(0, 10) || new Date().toISOString().slice(0, 10);
-    const partyObj = suppMap[v.Supplier || v.Contact] || { name: v.Payee || "Vendor", bin: "UNSET-BIN" };
-    const taxIncl = !!v.AmountsAreTaxInclusive;
-    const lines = Array.isArray(v.Lines) ? v.Lines : [];
+    const v = doc.item || doc.Value || doc.value || doc;
+    const ref = v.reference || v.Reference || docType;
+    const date = String(v.issueDate || v.IssueDate || v.date || v.Date || "").slice(0, 10) || new Date().toISOString().slice(0, 10);
+    const partyObj = suppMap[v.supplier || v.Supplier || v.contact || v.Contact] || { name: v.payee || v.Payee || "Vendor", bin: "UNSET-BIN" };
+    const taxIncl = !!(v.amountsAreTaxInclusive ?? v.AmountsAreTaxInclusive);
+    const lines = Array.isArray(v.lines || v.Lines) ? (v.lines || v.Lines) : [];
     let docBase = 0, docVat = 0, docForm = "Purchase 6.3 (15% ITC)";
 
     for (const ln of lines) {
-      const amt = (Number(ln.Qty || 1) * Number(ln.PurchaseUnitPrice ?? ln.UnitPrice ?? ln.Amount ?? 0)) || Number(ln.Amount || 0);
-      if (!amt && !ln.TaxCode) continue;
-      const info = classifyLineTax(ln.TaxCode, false, amt, taxIncl);
+      const qty = Number(ln.qty ?? ln.Qty ?? 1) || 1;
+      const unitPrice = Number(ln.purchaseUnitPrice ?? ln.PurchaseUnitPrice ?? ln.unitPrice ?? ln.UnitPrice ?? ln.amount ?? ln.Amount ?? 0);
+      const amt = (qty * unitPrice) || Number(ln.amount ?? ln.Amount ?? 0);
+      const tcKey = ln.taxCode || ln.TaxCode;
+      if (!amt && !tcKey) continue;
+      const info = classifyLineTax(tcKey, false, amt, taxIncl);
       docBase += sign * info.base;
       docVat += sign * info.vat;
 
@@ -2366,15 +2376,15 @@ async function syncLiveManagerData() {
 
   for (const pinv of purchaseInvoices) processInputDoc(pinv, "PINV", 1, false);
   for (const dn of debitNotes) {
-    const v = dn.Value || dn.value || dn;
-    if (!v.PurchaseInvoice) unlinkedCnDn++;
+    const v = dn.item || dn.Value || dn.value || dn;
+    if (!(v.purchaseInvoice || v.PurchaseInvoice)) unlinkedCnDn++;
     processInputDoc(dn, "DN", -1, false);
   }
   for (const pmt of payments) {
-    const v = pmt.Value || pmt.value || pmt;
-    const lines = Array.isArray(v.Lines) ? v.Lines : [];
-    const totalAmt = lines.reduce((s, l) => s + Math.abs(Number(l.Amount || 0)), 0);
-    const isCash = /cash|petty/i.test(String(v.Description || ""));
+    const v = pmt.item || pmt.Value || pmt.value || pmt;
+    const lines = Array.isArray(v.lines || v.Lines) ? (v.lines || v.Lines) : [];
+    const totalAmt = lines.reduce((s, l) => s + Math.abs(Number(l.amount ?? l.Amount ?? 0)), 0);
+    const isCash = /cash|petty/i.test(String(v.description || v.Description || ""));
     if (totalAmt > 50000 && isCash) highCashPayments++;
   }
 

@@ -15,6 +15,7 @@
       "tier": "community",
       "status": "live",
       "version": "1.1.1",
+      "alfabase": "https://themes.alfabase.com/themes/q9Tj8UzY",
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html"
     },
     {
@@ -25,6 +26,7 @@
       "tier": "community",
       "status": "live",
       "version": "1.1.0",
+      "alfabase": "https://themes.alfabase.com/themes/qzMmReST",
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html"
     },
     {
@@ -36,6 +38,7 @@
       "tier": "community",
       "status": "live",
       "version": "1.0",
+      "alfabase": "https://themes.alfabase.com/themes/nCbfGayH",
       "archetypes": [
         "customer-statement-transactions",
         "customer-statement-unpaid-invoices",
@@ -55,6 +58,7 @@
       "tier": "community",
       "status": "live",
       "version": "1.0",
+      "alfabase": "https://themes.alfabase.com/themes/LRgUDkiP",
       "archetypes": [
         "customer-statement-transactions",
         "customer-statement-unpaid-invoices",
@@ -70,8 +74,9 @@
       "name": "UNIVERSAL BRONZE",
       "identity": "Warm Authority",
       "tier": "community",
-      "status": "legacy",
+      "status": "live",
       "version": "1.1.0",
+      "alfabase": "https://themes.alfabase.com/themes/dwbDb3mv",
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html"
     },
     {
@@ -79,17 +84,19 @@
       "name": "CORPORATE BLUE COLUMN",
       "identity": "Clean Corporate Structure",
       "tier": "community",
-      "status": "legacy",
+      "status": "live",
       "version": "1.1.0",
+      "alfabase": "https://themes.alfabase.com/themes/HIsD356Y",
       "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html"
     },
     {
-      "id": "jade-clinical-v2",
-      "name": "JADE CLINICAL",
-      "identity": "Healthcare Precision",
-      "series": "SLATE-1",
+      "id": "mushak-63-tax-invoice-v1.0",
+      "name": "MUSHAK-6.3 STATUTORY TAX INVOICE",
+      "identity": "Bangladesh NBR Statutory Challan",
       "tier": "community",
-      "status": "planned"
+      "status": "live",
+      "version": "1.0.0",
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html"
     }
   ],
   "utility_registry": [
@@ -116,27 +123,29 @@
   "tax_registry": [
     {
       "id": "bd-nbr-2026",
-      "name": "Bangladesh NBR Compliance Calendar",
+      "name": "Bangladesh VAT & NBR Compliance Toolkit (Mushak-9.1, 6.3, VDS & Tax Codes)",
       "region": "BD",
       "status": "live",
-      "url": "https://tools.inspiron.tech/"
+      "alfabase": "https://extensions.alfabase.com/extensions/OOeV8KF0",
+      "url": "https://tax.inspiron.tech",
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/tax-suite/bd-compliance/index.html"
     }
   ],
-  "ip_protocol": "R1-R7",
   "license": "CC BY 4.0",
-  "updated": "2026-11-05",
-  "website": "https://inspiron.tech",
+  "updated": "2026-11-08",
   "suite_url": "https://suite.inspiron.tech",
   "extension_registry": [
     {
       "id": "executive-dashboard-ledger-auditor-v8.1.1",
       "name": "INSPIRON Executive Dashboard & Ledger Auditor",
       "type": "extension",
-      "mode": "Sovereign Mixed Mode",
+      "data_access": "read-only (GET /api4/*)",
+      "mode": "Mixed Mode",
       "status": "live",
       "version": "8.1.1",
-      "url": "https://suite.inspiron.tech/executive-dashboard",
-      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/extensions/executive-dashboard/index.html"
+      "alfabase": "https://extensions.alfabase.com/extensions/HEw6dQld",
+      "url": "https://suite.inspiron.tech/dashboard",
+      "raw": "https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/executive-dashboard/index.html"
     }
   ]
 }

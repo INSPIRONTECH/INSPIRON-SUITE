@@ -1,93 +1,65 @@
-# INSPIRON Suite — Theme Catalog
+# INSPIRON Suite — Community Theme Catalog
 
-**Provider:** INSPIRON TECH · ERP Architect | Listed Manager.io Advisor  
-**Contact:** hello@inspiron.tech · [inspiron.tech](https://inspiron.tech)
+**Author:** MD ABU HASAN · INSPIRON TECH (*ERP Architect | Listed Manager.io Advisor*)  
+**Manager.io Forum:** [@Abu_Hasan](https://forum.manager.io/u/abu_hasan/summary)  
+**Interactive Gallery:** [https://suite.inspiron.tech](https://suite.inspiron.tech)  
+**License:** CC BY 4.0 Open Community Edition  
 
-> Professionally engineered HTML invoice themes for [Manager.io](https://www.manager.io). Each theme installs in under 60 seconds — no coding required.
+> Precision HTML5 document themes for [Manager.io](https://www.manager.io). Fully compliant with the official `/api4/view-v1` rendering pipeline and community security standards.
 
 ---
 
-## How to Install
+## Quick Install (Two Methods)
 
+### Method 1: 1-Click Install via Alfabase (Recommended)
+1. Open Manager.io → **Settings** → **Extensions** (or visit [themes.alfabase.com](https://themes.alfabase.com))
+2. Search for the theme title and click **Install** — or open the direct Alfabase links below.
+
+### Method 2: Manual Install via Settings → HTML Themes
 1. Open Manager.io → **Settings** → **HTML Themes**
 2. Click **New Theme**
-3. Paste the raw file URL below into the URL field (or copy-paste the file content directly)
-4. Save and apply to your business
+3. Paste the **Raw Install URL** below (or copy-paste the standalone HTML code)
+4. Click **Create**
 
 ---
 
-## SLATE-1 Series
+## 🎨 Community Edition Themes
 
-> The current release series. Two distinct architectural acts — a premium dark enterprise theme and a bilingual Arabic/English RTL theme with Saudi ZATCA e-invoicing compliance.
-
-| Theme | Version | Preview | Install |
-|---|---|---|---|
-| **MIDNIGHT EXECUTIVE** | v1.1.1 | [Screen View](COMMUNITY-EDITION/previews/03-MIDNIGHT-EXECUTIVE/MIDNIGHT-EXECUTIVE_SCREEN-VIEW.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html) |
-| **RIYADH RTL** | v1.1.0 | [Screen View](COMMUNITY-EDITION/previews/04-RIYADH-RTL/RIYADH-RTL_SCREEN-VIEW.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html) |
-| **ATLAS STATEMENT** (Dark) | v1.0 | [Portrait Preview](COMMUNITY-EDITION/previews/05-ATLAS-STATEMENT/ATLAS-STATEMENT_SUPPLIER-STATEMENT-TRANSACTIONS_DARK_PORTRAIT_1.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-DARK.html) |
-| **ATLAS STATEMENT** (Light) | v1.0 | [Portrait Preview](COMMUNITY-EDITION/previews/05-ATLAS-STATEMENT/ATLAS-STATEMENT_CUSTOMER-STATEMENT-TRANSACTIONS_LIGHT_PORTRAIT_1.png) | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-LIGHT.html) |
-
-### MIDNIGHT EXECUTIVE
-
-Dark-on-light premium invoice theme. Clean typographic hierarchy, configurable logo header, Irish/EU VAT-ready, INSPIRON safe-rendering kernel.
-
-- **Best for:** Consulting firms, professional services, EU/IE businesses
-- **RTL:** No
-- **Regulatory:** EU VAT, Irish 13.5%
-
-### RIYADH RTL
-
-Bilingual Arabic/English RTL invoice theme. Native right-to-left layout, ZATCA QR panel, SAR currency, 15% VAT line, gradient stripe branding.
-
-- **Best for:** Saudi Arabia, GCC businesses, Arabic-primary invoicing
-- **RTL:** Yes (native)
-- **Regulatory:** KSA ZATCA e-invoicing, 15% VAT
-
-### ATLAS STATEMENT
-
-Purpose-built account statement theme. Covers all Manager.io statement archetypes: Customer Statement (Transactions), Customer Statement (Unpaid Invoices), Supplier Statement (Transactions), Supplier Statement (Unpaid Invoices), Receipts & Payments Summary, and Customer Summary (multi-currency grid). Features a built-in Portrait ⇔ Landscape orientation toggle and automatic Amount in Words rendering.
-
-- **Best for:** Account statements, client balance summaries, multi-currency operations (PKR, BDT, AED, USD)
-- **Variants:** Dark (screen/portal delivery) · Light (print/PDF)
-- **RTL:** No
-- **Regulatory:** Universal (no region-specific compliance)
-- **Orientation:** Portrait ⇔ Landscape toggle built-in
+| # | Theme | Category | Status | Alfabase 1-Click | Raw GitHub Install |
+|---|---|---|---|---|---|
+| 01 | **Atlas Statement V1.0 — Light** | Light | ✅ **Live** (111+ installs) | [Install on Alfabase](https://themes.alfabase.com/themes/LRgUDkiP) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-LIGHT.html) |
+| 02 | **Atlas Statement V1.0 — Dark** | Dark | ✅ **Live** (34+ installs) | [Install on Alfabase](https://themes.alfabase.com/themes/nCbfGayH) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/05-ATLAS-STATEMENT/05-ATLAS-STATEMENT-V1.0-DARK.html) |
+| 03 | **Midnight Executive V1.1.1** | Dark | ✅ **Live** | [Install on Alfabase](https://themes.alfabase.com/themes/q9Tj8UzY) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/03-MIDNIGHT-EXECUTIVE/03-MIDNIGHT-EXECUTIVE.html) |
+| 04 | **Riyadh RTL V1.1.0** | Modern | ✅ **Live** | [Install on Alfabase](https://themes.alfabase.com/themes/qzMmReST) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html) |
+| 05 | **Universal Bronze V1.1.0** | Classic | ✅ **Live** | [Install on Alfabase](https://themes.alfabase.com/themes/dwbDb3mv) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html) |
+| 06 | **Corporate Blue Column V1.1.0** | Modern | ✅ **Live** | [Install on Alfabase](https://themes.alfabase.com/themes/HIsD356Y) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html) |
+| 07 | **Mushak-6.3 Statutory Tax Invoice (BD)** | Statutory | ✅ **Live (Raw URL)** | Regional Statutory | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html) |
 
 ---
 
-## Hardened Originals
+### Detailed Profiles
 
-> Pre-series themes. Maintained and security-hardened following community review, but not part of the SLATE-1 series. Reliable for general use.
+#### 1. Atlas Statement V1.0 (Light & Dark)
+- **Archetype:** Account Statements (Customer Statements, Supplier Statements, Unpaid Invoices, Transactions)
+- **Features:** Built-in Portrait ⇔ Landscape orientation toggle, automatic Amount in Words rendering, multi-currency support (USD, EUR, GBP, SAR, AED, BDT, PKR).
+- **Variants:** Light (Print/PDF) · Dark (Digital delivery / Screen)
 
-| Theme | Version | Install |
-|---|---|---|
-| **UNIVERSAL BRONZE** | v1.1.0 | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html) |
-| **CORPORATE BLUE COLUMN** | v1.1.0 | [Raw Install Link](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html) |
+#### 2. Midnight Executive V1.1.1
+- **Archetype:** Dark Enterprise Invoice
+- **Features:** Dark obsidian command styling, high-contrast monochrome financial lines, configurable density (`?density=compact|balanced|relaxed`), Irish/EU VAT breakdown.
 
-### UNIVERSAL BRONZE
+#### 3. Riyadh RTL V1.1.0
+- **Archetype:** Bilingual Arabic/English ZATCA Invoice
+- **Features:** Native right-to-left layout, dedicated Saudi ZATCA e-invoicing QR panel, SAR multi-currency support, 15% VAT line breakdown.
 
-Warm, authoritative invoice theme. Amber accent palette, clean column layout, broad regional compatibility.
+#### 4. Universal Bronze V1.1.0
+- **Archetype:** Institutional B2B Invoice
+- **Features:** Warm bronze accent palette, structured column hierarchy, universal transaction form compatibility.
 
-### CORPORATE BLUE COLUMN
+#### 5. Corporate Blue Column V1.1.0
+- **Archetype:** Executive B2B Invoice
+- **Features:** Clean two-column layout, executive cobalt accents, optimized financial line contrast for print and PDF generation.
 
-Clean corporate two-column layout. Professional blue palette, strong for B2B invoicing contexts.
-
----
-
-## Coming in SLATE-1
-
-| Theme | Identity | Status |
-|---|---|---|
-| **JADE CLINICAL** | Healthcare Precision | Planned |
-
----
-
-## Security
-
-All v1.1 themes were hardened following community security feedback and strict DOM isolation reviews. Review the [commit history](https://github.com/INSPIRONTECH/INSPIRON-SUITE/commits/main) for the full change log.
-
-Pre-v1.1 files are archived in [`legacy/`](legacy/) for reference — not recommended for new installs.
-
----
-
-*INSPIRON Suite is maintained by [INSPIRON TECH](https://inspiron.tech) — ERP Architect | Listed Manager.io Advisor.*
+#### 6. Mushak-6.3 Statutory Tax Invoice (করের চালানপত্র)
+- **Archetype:** Bangladesh NBR Statutory Tax Challan (VAT & SD Act 2012, Rule 40(1)(Ga))
+- **Features:** Bilingual Bengali/English 11-column statutory layout, automatic Col 5 → Col 11 back-calculation from `/api4/view-v1`, 13-digit BIN formatting, and BDT Taka/Poisha in Words.

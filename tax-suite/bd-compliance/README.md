@@ -1,17 +1,20 @@
-# BD Compliance — Tax Suite
+# BD Compliance — Bangladesh VAT & NBR Localization Suite
 
-Regional compliance modules for the Bangladesh NBR environment.
+Regional compliance extension and statutory document themes for the Bangladesh NBR environment (`FY 2026–27`).
 
-## Planned Modules
+## Live Modules
 
 | Module | Description | Status |
 |---|---|---|
-| `mushak-6.3/` | Mushak 6.3 VAT Invoice template | 🔵 Planned |
-| `mushak-9.1/` | Annual VAT Return module | 🔵 Planned |
-| `ai-guidance/` | Claude-powered real-time VAT interpretation | 🔵 Planned |
+| **NBR Tax Calendar & Calculators** | Monthly 15th VAT countdown, Section 127 `1%/mo` simple interest, VDS `15%-to-7.5%` solver & IT Act 2023 slabs | ✅ Live |
+| **Mushak-9.1 Return Worksheet (`/api4`)** | Maps Manager.io sales & purchase invoices into Mushak-9.1 Parts 3, 4, 5, 6 & 7 with Note Inspector drawer | ✅ Live |
+| **Explicit-Consent BD Tax Code Installer** | Previews 9 standard Bangladesh VAT/VDS tax codes with explicit user confirmation before creation | ✅ Live |
+| **Mushak-6.3 Statutory Challan Theme** | 11-column bilingual Bengali/English Tax Invoice theme on `/api4/view-v1` | ✅ Live |
+| **10-Point NBR Statutory Audit** | Read-only check for 13-digit BINs, Mushak-6.6 VDS certificates, and 4-tax-period rebate deadlines | ✅ Live |
 
-**Live Portal:** [tools.inspiron.tech](https://tools.inspiron.tech)
+- **Live Extension Endpoint:** [https://tax.inspiron.tech](https://tax.inspiron.tech) *(or [https://suite.inspiron.tech/bd-compliance](https://suite.inspiron.tech/bd-compliance))*
+- **Alfabase Listing:** [https://extensions.alfabase.com/extensions/OOeV8KF0](https://extensions.alfabase.com/extensions/OOeV8KF0)
 
 ---
 
-*Maintained by INSPIRON TECH · hello@inspiron.tech*
+*Architected by MD ABU HASAN · INSPIRON TECH (ERP Architect | Listed Manager.io Advisor)*

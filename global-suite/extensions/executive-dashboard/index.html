@@ -173,7 +173,6 @@ body {
 }
 .tb-btn:last-child { border-right: none; }
 .tb-btn:hover { background: rgba(0, 210, 255, 0.15); color: var(--cyan); }
-.tb-btn.wa-btn { color: #4ADE80; }
 .tb-btn.wa-btn:hover { background: rgba(74, 222, 128, 0.15); }
 
 /* Workspace Shell */
@@ -220,8 +219,6 @@ body {
 }
 .nav-tab:hover { color: var(--ink); background: rgba(15, 23, 42, 0.04); }
 .nav-tab.active { background: #F1F5F9; color: var(--cyan-ink); border-color: rgba(0, 112, 168, 0.25); box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); }
-.nav-tab.upsell-tab { color: var(--gold-ink); }
-.nav-tab.upsell-tab.active { background: rgba(255, 215, 0, 0.12); border-color: rgba(255, 165, 0, 0.35); color: var(--gold-ink); }
 
 /* Tab Switching Control */
 .tab-view[hidden] { display: none !important; }
@@ -360,27 +357,6 @@ table.tech-table tbody tr:last-child td, table.sov-table tbody tr:last-child td 
 .sim-line { display: flex; justify-content: space-between; padding: 5px 0; font-size: 11.5px; color: #374151; border-bottom: 1px dashed rgba(15, 23, 42, 0.08); }
 .sim-line:last-child { border-bottom: none; font-weight: 800; font-size: 13.5px; padding-top: 8px; color: #0D1117; }
 
-/* Upsell Strip */
-.upsell-strip {
-  background: #010409; color: #FFFFFF; border: 1px solid rgba(0, 210, 255, 0.25);
-  border-radius: 18px; padding: 16px 22px; display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 14px; margin-top: 24px; box-shadow: 0 8px 24px rgba(1, 4, 9, 0.18);
-}
-.upsell-strip-left { display: flex; align-items: center; gap: 14px; }
-.upsell-crown {
-  width: 40px; height: 40px; border-radius: 10px; background: rgba(255, 215, 0, 0.15);
-  border: 1px solid rgba(255, 215, 0, 0.35); display: flex; align-items: center; justify-content: center;
-  font-size: 20px; flex-shrink: 0; color: var(--gold);
-}
-.cta-btn {
-  padding: 8px 14px; border-radius: 6px; font: 700 11.5px var(--font); text-decoration: none;
-  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.08); color: #FFFFFF; transition: all 0.15s;
-}
-.cta-btn:hover { background: rgba(0, 210, 255, 0.2); border-color: var(--cyan); color: var(--cyan); }
-.cta-btn.gold { background: var(--gold); color: #010409; border-color: var(--gold); }
-.cta-btn.wa { background: #16A34A; color: #FFFFFF; border-color: #16A34A; }
-
 .master-audit-footer { text-align: center; margin-top: 24px; font-size: 11px; color: var(--dim); letter-spacing: 0.04em; }
 
 /* 880px Drawer */
@@ -433,7 +409,7 @@ table.tech-table tbody tr:last-child td, table.sov-table tbody tr:last-child td 
   .focus-grid { grid-template-columns: 1fr; }
 }
 @media print {
-  .topbar, .context-bar, .upsell-strip, #egp-bk, #egp-dr { display: none !important; }
+  .topbar, .context-bar, #egp-bk, #egp-dr { display: none !important; }
   body { background: #FFFFFF !important; }
   .tech-panel, .focus-card { box-shadow: none !important; border: 1px solid #CBD5E1 !important; }
 }
@@ -483,7 +459,6 @@ table.tech-table tbody tr:last-child td, table.sov-table tbody tr:last-child td 
       <button type="button" class="tb-btn" id="btnCsv" onclick="exportActiveTableCSV()" title="Export CSV">⬇ CSV</button>
       <button type="button" class="tb-btn" id="btnCopy" onclick="copyActiveSummary()" title="Copy Summary">📋 Copy</button>
       <button type="button" class="tb-btn" id="btnPdf" onclick="window.print()" title="Print / PDF">🖨 Print</button>
-      <button type="button" class="tb-btn wa-btn" id="btnWa" onclick="shareWhatsAppSummary()" title="Share WhatsApp">💬 WhatsApp</button>
       <button type="button" class="tb-btn" id="btnRole" onclick="cycleRoleMode()" title="Role Complexity Budget">⚙ owner</button>
       <button type="button" class="tb-btn" id="btnLang" onclick="cycleLanguage()" title="Language">🌐 EN+বাংলা</button>
     </div>
@@ -515,7 +490,6 @@ table.tech-table tbody tr:last-child td, table.sov-table tbody tr:last-child td 
       <button type="button" class="nav-tab" data-tab="projects" onclick="switchTab('projects')"><span data-i18n="tab_projects">Projects &amp; Cost Centers</span></button>
       <button type="button" class="nav-tab" data-tab="forensic" onclick="switchTab('forensic')"><span data-i18n="tab_forensic">Forensic COA Auditor</span></button>
       <button type="button" class="nav-tab" data-tab="simulators" onclick="switchTab('simulators')"><span data-i18n="tab_simulators">Calculators</span></button>
-      <button type="button" class="nav-tab upsell-tab" data-tab="enterprise" onclick="switchTab('enterprise')">👑 <span data-i18n="tab_enterprise">Sovereign Enterprise</span></button>
     </nav>
   </div>
 
@@ -573,19 +547,18 @@ table.tech-table tbody tr:last-child td, table.sov-table tbody tr:last-child td 
     </div>
   </section>
 
-  <!-- ================= TAB 3: FORENSIC COA AUDITOR & 1-CLICK INSTALLER ================= -->
+  <!-- ================= TAB 3: FORENSIC COA AUDITOR (100% READ-ONLY) ================= -->
   <section id="view-forensic" class="tab-view" hidden>
     <div class="tech-panel">
       <div class="tech-panel-hdr">
         <div class="tech-panel-title">🔍 12-Point Automated Forensic Ledger &amp; Chart of Accounts Diagnostic</div>
         <div style="display:flex;gap:8px;align-items:center">
+          <span class="pill pill-green">100% Read-Only (/api4 GET)</span>
           <span class="pill pill-violet" id="forensicScoreBadge">Health Score: 96/100</span>
-          <button type="button" class="tb-btn role-btn" id="btnInstallCoa" onclick="installMissingCoaAccounts()">⚡ 1-Click Safe COA Preset Installer</button>
         </div>
       </div>
       <div class="panel-body">
         <div class="audit-grid" id="forensicCardsWrap"></div>
-        <div id="coaInstallStatus" style="margin-bottom:10px;font-weight:700;color:var(--cyan)" hidden></div>
         <div class="table-wrap" id="forensicTableWrap"></div>
       </div>
     </div>
@@ -679,89 +652,8 @@ table.tech-table tbody tr:last-child td, table.sov-table tbody tr:last-child td 
     </div>
   </section>
 
-  <!-- ================= TAB 5: SOVEREIGN ENTERPRISE EDITION UPSELL ================= -->
-  <section id="view-enterprise" class="tab-view" hidden>
-    <div class="tech-panel">
-      <div class="tech-panel-hdr">
-        <div class="tech-panel-title">👑 INSPIRON Sovereign Enterprise Architecture (v8.1.1) vs. Community Sandbox Edition</div>
-        <span class="pill pill-amber">MD ABU HASAN · INSPIRON TECH · ERP Architect | Listed Manager.io Advisor</span>
-      </div>
-      <div class="panel-body">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:14px">
-          Standard Manager.io URL Extensions run inside a cross-origin <code>&lt;iframe&gt;</code> sandbox. To unlock <strong>Top Smart Bars on every page</strong>, <strong>1-Click Vue 2 Form Auto-Fill Helpers</strong>, <strong>16 Option 1 Semantic Custom Buttons</strong>, and <strong>Corporate Print/PDF Document Themes</strong>, upgrade to the <strong>INSPIRON Sovereign Enterprise Edition (v8.1.1)</strong>:
-        </p>
-        <div class="table-wrap">
-          <table class="sov-table">
-            <thead>
-              <tr>
-                <th>Capability / Architectural Layer</th>
-                <th>Community Edition (This Extension)</th>
-                <th>👑 INSPIRON Sovereign Enterprise Edition (v8.1.1)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>1. Multi-Business KPI &amp; Project P&amp;L Dashboard</strong></td>
-                <td><span class="pill pill-green">✓ Included (via postMessage Bridge)</span></td>
-                <td><span class="pill pill-cyan">✓ Native Top Smart Bar (#egp-bar) on Every Page</span></td>
-              </tr>
-              <tr>
-                <td><strong>2. 12-Point Forensic COA Audit &amp; Safe COA Preset Installer</strong></td>
-                <td><span class="pill pill-green">✓ Included</span></td>
-                <td><span class="pill pill-cyan">✓ Full 3-Path SQLite + /api2 + /api4 Remediation Pack</span></td>
-              </tr>
-              <tr>
-                <td><strong>3. 16 Option 1 Semantic Custom Buttons (Bilingual EN+বাংলা)</strong></td>
-                <td><span class="pill pill-slate">Iframe Sandbox Only</span></td>
-                <td><span class="pill pill-cyan">✓ Deployed Across All 13 List, View &amp; Form Routes</span></td>
-              </tr>
-              <tr>
-                <td><strong>4. 1-Click Vue 2 Form Auto-Fill Helpers (Payments, Receipts, RA Bills)</strong></td>
-                <td><span class="pill pill-slate">Blocked by Browser Cross-Origin Policy</span></td>
-                <td><span class="pill pill-cyan">✓ Same-Origin window.parent.app 1-Click Form Injection</span></td>
-              </tr>
-              <tr>
-                <td><strong>5. Corporate Custom Document Themes (/api4/view-v1 + 943-Tx Batch Engine)</strong></td>
-                <td><span class="pill pill-slate">Standard Manager Print Only</span></td>
-                <td><span class="pill pill-cyan">✓ Custom Vouchers, RA Bills &amp; Land-Share Money Receipts</span></td>
-              </tr>
-              <tr>
-                <td><strong>6. AES-256-GCM Sovereign Client Vault &amp; Managed Cloud Hosting</strong></td>
-                <td><span class="pill pill-slate">Self-Hosted</span></td>
-                <td><span class="pill pill-cyan">✓ Dedicated Cloud Server + Automated Encrypted Backups</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  
-
-  <!-- ================= PERSISTENT SOVEREIGN UPSELL FOOTER (DARK mixed anchor) ================= -->
-  <footer class="upsell-strip">
-    <div class="upsell-strip-left">
-      <div class="upsell-crown">👑</div>
-      <div>
-        <div style="font-weight:800;font-size:13.5px;color:#FFFFFF">
-          Need 1-Click Form Auto-Fill, 16 Custom Buttons &amp; Turnkey ERP Automation?
-        </div>
-        <div style="font-size:11.5px;color:#94A3B8">
-          INSPIRON TECH deploys the complete <strong>v8.1.1 Dual-Surface Sovereign Architecture</strong> directly to Manager.io Server &amp; Cloud.
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <button type="button" class="cta-btn gold" onclick="switchTab('enterprise')">👑 Enterprise v8.1.1 Matrix</button>
-      <a href="https://suite.inspiron.tech" target="_blank" rel="noopener" class="cta-btn">🏛️ suite.inspiron.tech</a>
-      <a href="https://tax.inspiron.tech" target="_blank" rel="noopener" class="cta-btn">🇧🇩 tax.inspiron.tech</a>
-      <a href="https://wa.me/8801719300849?text=Hello%20INSPIRON%20TECH%2C%20I%20tested%20your%20INSPIRON%20Executive%20Dashboard%20%26%20Ledger%20Auditor%20on%20Alfabase." target="_blank" rel="noopener" class="cta-btn wa">💬 WhatsApp (+880 1719-300849)</a>
-    </div>
-  </footer>
-
   <div class="master-audit-footer">
-    INSPIRON TECH · Architected by MD ABU HASAN · ERP Architect | Listed Manager.io Advisor · Sovereign Enterprise Architecture
+    INSPIRON Executive Dashboard &amp; Ledger Auditor · Community Edition · Built for Manager.io (/api4 Sandboxed Bridge)
   </div>
 </div>
 
@@ -1704,58 +1596,7 @@ function renderForensicTab(prof) {
 }
 
 /* ============================================================================
- * 5. 1-CLICK SAFE COA PRESET INSTALLER (Writes to Manager via POST /api4/*)
- * ============================================================================ */
-async function installMissingCoaAccounts() {
-  const statusEl = document.getElementById('coaInstallStatus');
-  statusEl.hidden = false;
-
-  if (!RUNTIME_STATE.activeProfileKey.startsWith('live:')) {
-    statusEl.style.color = 'var(--green)';
-    statusEl.textContent = '✓ [Simulation Mode] Verified 8 Statutory COA Groups & Accounts (Direct Project Revenue, Retention Receivable 1150, AIT Withholding, Site Material & Labor Cost, Factory Overhead). Connect inside Manager.io to write directly via /api4!';
-    return;
-  }
-
-  const business = RUNTIME_STATE.activeProfileKey.slice(5);
-  statusEl.style.color = 'var(--cyan)';
-  statusEl.textContent = `⏳ Inspecting existing P&L accounts in "${business}" via /api4/profit-and-loss-statement-account-batch…`;
-
-  try {
-    const existingRes = await callManagerApi('GET', '/api4/profit-and-loss-statement-account-batch', { business, pageSize: 500 });
-    const existingNames = new Set(
-      (existingRes?.items || []).map(it => String(it.item?.name || '').trim().toLowerCase())
-    );
-
-    const presets = [
-      { Name: '4100 — Certified Project & Running Bill Revenue', Code: '4100' },
-      { Name: '5100 — Direct Site Materials & Subcontractor Cost', Code: '5100' },
-      { Name: '5200 — Statutory Factory & Site Labor Muster Roll', Code: '5200' },
-      { Name: '6400 — Tender Document, BG Commission & Testing Fee', Code: '6400' }
-    ];
-
-    let created = 0, skipped = 0;
-    for (const acc of presets) {
-      if (existingNames.has(acc.Name.toLowerCase())) {
-        skipped++;
-        continue;
-      }
-      await callManagerApi('POST', '/api4/profit-and-loss-statement-account', {}, {
-        Business: business,
-        Value: acc
-      });
-      created++;
-    }
-
-    statusEl.style.color = 'var(--green)';
-    statusEl.textContent = `✓ COA Preset Sync Complete on "${business}": ${created} new accounts created, ${skipped} existing accounts untouched.`;
-  } catch (err) {
-    statusEl.style.color = 'var(--amber)';
-    statusEl.textContent = `ℹ️ Read-only session or permission notice: ${err.message}`;
-  }
-}
-
-/* ============================================================================
- * 6. LIVE STATUTORY SIMULATORS (e-GP RA Bill, Labour Act Payroll, Land-Share)
+ * 5. LIVE STATUTORY SIMULATORS (e-GP RA Bill, Labour Act Payroll, Land-Share)
  * ============================================================================ */
 function runSimulators() {
   // 1. Contractor RA Bill
@@ -1966,7 +1807,6 @@ function applyRoleModeUI() {
   document.getElementById('btnCsv').style.display = showAcct ? 'inline-flex' : 'none';
   document.getElementById('btnCopy').style.display = showAcct ? 'inline-flex' : 'none';
   document.getElementById('btnPdf').style.display = showOwner ? 'inline-flex' : 'none';
-  document.getElementById('btnWa').style.display = showOwner ? 'inline-flex' : 'none';
 }
 
 function cycleLanguage() {
@@ -1983,7 +1823,7 @@ function toggleDarkTheme() {
   RUNTIME_STATE.darkMode = !RUNTIME_STATE.darkMode;
   document.documentElement.classList.toggle('dark', RUNTIME_STATE.darkMode);
   localStorage.setItem('egp-theme', RUNTIME_STATE.darkMode ? 'dark' : 'light');
-  document.getElementById('btnTheme').textContent = RUNTIME_STATE.darkMode ? '☀️ Light' : '🌙 Dark';
+  (document.getElementById('btnTheme') || {}).textContent = RUNTIME_STATE.darkMode ? '☀️ Light' : '🌙 Dark';
 }
 
 function exportActiveTableCSV() {
@@ -2017,15 +1857,7 @@ function copyActiveSummary() {
   setTimeout(() => { btn.textContent = orig; }, 1400);
 }
 
-function shareWhatsAppSummary() {
-  const prof = getActiveProfileObject();
-  const text = [
-    `*${prof.name}*`,
-    ...prof.kpis.slice(0, 4).map(k => `• ${k.label}: *${k.val}*`),
-    `— Generated via INSPIRON Sovereign Command Suite (inspiron.tech)`
-  ].join('\n');
-  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
-}
+
 
 // Deep-Link Query Parameter Support (?demo=contractor|manufacturing|syndicate&tab=...&drawer=0&theme=dark|light)
 (function applyUrlQueryParams() {
@@ -2055,7 +1887,7 @@ function shareWhatsAppSummary() {
 // Initialize Theme & Boot
 if (RUNTIME_STATE.darkMode) {
   document.documentElement.classList.add('dark');
-  document.getElementById('btnTheme').textContent = '☀️ Light';
+  (document.getElementById('btnTheme') || {}).textContent = '☀️ Light';
 }
 renderActiveProfile();
 try {

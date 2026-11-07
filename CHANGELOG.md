@@ -43,5 +43,5 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Comparison table: TAX-CALENDAR-BD vs Prime VAT, Troyee, eVAT
 - Mobile-first responsive layout
 - SEO: canonical, og:url, og:image, og:type, twitter:card, inline SVG favicon
-- Deployed to `tools.inspiron.tech` via Vercel
+- Deployed to `tax.inspiron.tech` via Vercel
 - MIT licensed, public under `INSPIRONTECH/COMMUNITY-TOOLS`

@@ -39,11 +39,11 @@ Go to **Settings** → **Custom Buttons** → **New Custom Button** (which opens
 | **Inside Receipts / Payments** | `🔍 Check VDS & TDS` | `/receipt-view` or `/payment-view` | `ExternalURL` | `https://tax.inspiron.tech` |
 
 ### Method 3 — Companion Mushak-6.3 Statutory Custom Theme (`Settings → Custom Themes`)
-1. **Via Alfabase Themes Catalog** *(or manual install)*: Open **Settings** → **Custom Themes** → **New Custom Theme**.
-2. **Name:** `Mushak-6.3 Statutory VAT Challan (11-Column Bilingual)`
+1. **Via Alfabase Themes Catalog ([`themes.alfabase.com/themes/aqa9zT1P`](https://themes.alfabase.com/themes/aqa9zT1P))** *(or manual install)*: Open **Settings** → **Custom Themes** → **New Custom Theme**.
+2. **Name:** `Mushak-6.3 Statutory Tax Invoice V1.1.0 — Bilingual Bengali/English NBR Challan`
 3. Copy and paste the HTML template code from:
    [`https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html`](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html)
-4. When creating or editing a Sales Invoice (or via **Sales Invoices → Form Defaults**), tick **Custom Theme** and select `Mushak-6.3 Statutory VAT Challan`.
+4. When creating or editing a Sales Invoice (or via **Sales Invoices → Form Defaults**), tick **Custom Theme** and select `Mushak-6.3 Statutory Tax Invoice V1.1.0`.
 
 ---
 

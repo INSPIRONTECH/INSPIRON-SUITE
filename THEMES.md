@@ -33,7 +33,7 @@
 | 04 | **Riyadh RTL V1.1.0** | Modern | ✅ **Live** | [Install on Alfabase](https://themes.alfabase.com/themes/qzMmReST) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/04-RIYADH-RTL/04-RIYADH-RTL.html) |
 | 05 | **Universal Bronze V1.1.0** | Classic | ✅ **Live** | [Install on Alfabase](https://themes.alfabase.com/themes/dwbDb3mv) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/01-UNIVERSAL-BRONZE/01-UNIVERSAL-BRONZE.html) |
 | 06 | **Corporate Blue Column V1.1.0** | Modern | ✅ **Live** | [Install on Alfabase](https://themes.alfabase.com/themes/HIsD356Y) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/02-CORPORATE-BLUE-COLUMN/02-CORPORATE-BLUE-COLUMN.html) |
-| 07 | **Mushak-6.3 Statutory Tax Invoice (BD)** | Statutory | ✅ **Live (Raw URL)** | Regional Statutory | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html) |
+| 07 | **Mushak-6.3 Statutory Tax Invoice V1.1.0 (BD)** | Statutory / Light | ✅ **Alfabase + Raw URL** | [Install on Alfabase](https://themes.alfabase.com/themes/aqa9zT1P) | [Raw URL](https://raw.githubusercontent.com/INSPIRONTECH/INSPIRON-SUITE/main/global-suite/themes/COMMUNITY-EDITION/06-MUSHAK-63-TAX-INVOICE/06-MUSHAK-63-TAX-INVOICE.html) |
 
 ---
 
